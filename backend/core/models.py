@@ -20,18 +20,17 @@ class Student(models.Model):
     lastname = models.CharField(max_length=100)
     firstname = models.CharField(max_length=100)
     lastname_first = models.BooleanField(default=True)
-
-    lastname_rm = models.CharField(max_length=100, blank=True)
-    firstname_rm = models.CharField(max_length=100, blank=True)
+    preferred_name = models.CharField(max_length=50, blank=True)
 
     gender = models.CharField(max_length=20)
     citizenship = models.CharField(max_length=100)
     date_of_birth = models.DateField(blank=True, null=True)
 
-    base_city = models.CharField(max_length=100, blank=True)
+    base_country = models.CharField(max_length=100)
     base_state = models.CharField(max_length=50, blank=True)
+    base_city = models.CharField(max_length=100, blank=True)
 
-    comments = models.TextField(max_length=1000, blank=True)
+    comments = models.TextField(max_length=5000, blank=True)
 
     def __str__(self) -> str:
         return self.fullname
