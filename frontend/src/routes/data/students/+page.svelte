@@ -4,20 +4,30 @@
 		createGrid,
 		type GridOptions,
 		type ValueFormatterParams,
-		type ValueGetterParams
+		type ValueGetterParams,
+		type ICellRendererParams
 	} from 'ag-grid-community';
 
+	import type { StudentListItem, Contract } from '$lib/api/student.js';
+	import AgCellRenderer from '$lib/abstract/agCellRenderer.js';
 	import stateAbbreviations from '$lib/constants/states.js';
 	import countryFlags from '$lib/constants/flags.js';
 
 	export let data;
 
-	function nameValueGetter(params: ValueGetterParams): string {
-		const student = params.data;
-		if (student.preferred_name && student.preferred_name !== student.firstname) {
-			return `${student.fullname} ${student.preferred_name}`;
+	class NameRenderer extends AgCellRenderer {
+		declare eGui: HTMLAnchorElement;
+
+		init(params: ICellRendererParams<any, any, any>): void {
+			this.eGui = document.createElement('a');
+			const student: StudentListItem = params.data;
+			this.eGui.href = `../student/${student.id}/`;
+			if (student.preferred_name && student.preferred_name !== student.firstname) {
+				this.eGui.innerHTML = `${student.fullname} ${student.preferred_name}`;
+			} else {
+				this.eGui.innerHTML = student.fullname;
+			}
 		}
-		return student.fullname;
 	}
 
 	function genderValueFormatter(params: ValueFormatterParams): string {
@@ -56,8 +66,30 @@
 		return `${flag}\xa0\xa0${student.base_city}, ${state}`;
 	}
 
+	function _getLatestContract(student: StudentListItem): Contract | null {
+		if (!student.contracts_sorted.length) {
+			return null;
+		}
+		return student.contracts_sorted[0];
+	}
+
+	function latestContractTypeValueGetter(params: ValueGetterParams): string {
+		const latestContract = _getLatestContract(params.data);
+		return latestContract?.type ?? '';
+	}
+
+	function lastestTargetYearValueGetter(params: ValueGetterParams): number | null {
+		const latestContract = _getLatestContract(params.data);
+		return latestContract?.target_year ?? null;
+	}
+
+	function contractStatusValueGetter(params: ValueGetterParams): string {
+		const latestContract = _getLatestContract(params.data);
+		return latestContract?.status ?? '';
+	}
+
 	const columnDefs = [
-		{ headerName: 'Name', filter: true, valueGetter: nameValueGetter },
+		{ headerName: 'Name', filter: true, cellRenderer: NameRenderer },
 		{
 			headerName: 'Gender',
 			field: 'gender',
@@ -71,7 +103,14 @@
 			valueFormatter: citizenshipValueFormatter
 		},
 		{ headerName: 'Date of birth', field: 'date_of_birth', filter: 'agDateColumnFilter' },
-		{ headerName: 'Home', filter: true, valueGetter: homeValueGetter }
+		{ headerName: 'Home', filter: true, valueGetter: homeValueGetter },
+		{ headerName: 'App. type', filter: true, valueGetter: latestContractTypeValueGetter },
+		{
+			headerName: 'Target year',
+			filter: 'agNumberColumnFilter',
+			valueGetter: lastestTargetYearValueGetter
+		},
+		{ headerName: 'Contract status', filter: true, valueGetter: contractStatusValueGetter }
 	];
 
 	const gridOptions: GridOptions = {
@@ -96,13 +135,13 @@
 <style>
 	main {
 		padding: 0.5rem 1rem;
-		font-family: 'Fira Sans', 'Twemoji Country Flags', Roboto, Arial, sans-serif;
 	}
 	#grid {
 		height: 80vh;
 	}
 	.ag-theme-alpine {
-		--ag-font-family: 'Fira Sans', 'Twemoji Country Flags', Roboto, Arial, sans-serif;
+		--ag-font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial,
+			sans-serif;
 		font-variant-numeric: tabular-nums;
 	}
 </style>
