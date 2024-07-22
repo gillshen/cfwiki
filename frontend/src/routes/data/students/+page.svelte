@@ -9,12 +9,22 @@
 	} from 'ag-grid-community';
 
 	import type { StudentListItem, Contract } from '$lib/api/student';
-	import AgCellRenderer from '$lib/abstract/agCellRenderer.js';
-	import americanStates from '$lib/constants/americanStates.js';
+	import AgCellRenderer from '$lib/abstract/agCellRenderer';
+	import americanStates from '$lib/constants/americanStates';
 	import canadianProvinces from '$lib/constants/canadianProvinces';
-	import countryFlags from '$lib/constants/flags';
+	import countryFlags from '$lib/constants/countryFlags';
 
 	export let data;
+
+	function _getName(student: StudentListItem): string {
+		if (student.preferred_name && student.preferred_name !== student.given_name) {
+			return `${student.fullname} ${student.preferred_name}`;
+		} else if (student.surname_first) {
+			return student.fullname;
+		} else {
+			return `${student.surname}, ${student.given_name}`;
+		}
+	}
 
 	class NameRenderer extends AgCellRenderer {
 		declare eGui: HTMLAnchorElement;
@@ -23,22 +33,22 @@
 			this.eGui = document.createElement('a');
 			const student: StudentListItem = params.data;
 			this.eGui.href = `../student/${student.id}/`;
-			if (student.preferred_name && student.preferred_name !== student.given_name) {
-				this.eGui.innerHTML = `${student.fullname} ${student.preferred_name}`;
-			} else {
-				this.eGui.innerHTML = student.fullname;
-			}
+			this.eGui.innerHTML = _getName(student);
 		}
+	}
+
+	function nameValueGetter(params: ValueGetterParams): string {
+		return _getName(params.data);
 	}
 
 	function genderValueFormatter(params: ValueFormatterParams): string {
 		if (params.value === 'female') {
 			return 'F';
-		}
-		if (params.value === 'male') {
+		} else if (params.value === 'male') {
 			return 'M';
+		} else {
+			return params.value;
 		}
-		return params.value;
 	}
 
 	function citizenshipValueFormatter(params: ValueFormatterParams): string {
@@ -46,26 +56,26 @@
 		return `${flag}\xa0\xa0${params.value}`;
 	}
 
-	function homeValueGetter(params: ValueGetterParams): string {
-		const student: StudentListItem = params.data;
-		const flag = countryFlags[student.base_country];
-
+	function _getHome(student: StudentListItem): string {
+		if (!student.base_country) {
+			return '';
+		}
 		if (!student.base_city && !student.base_subnational) {
-			return `${flag}\xa0\xa0${student.base_country}`;
+			return student.base_country;
 		}
 
 		// the subnational division is known but not the city
 		if (!student.base_city) {
-			return `${flag}\xa0\xa0${student.base_subnational}`;
+			return student.base_subnational;
 		}
 		// the city is known, but no subnational division
 		if (!student.base_subnational) {
-			return `${flag}\xa0\xa0${student.base_city}`;
+			return student.base_city;
 		}
 
 		// both the subnational division and the city are known
 		if (student.base_country === 'China') {
-			return `${flag}\xa0\xa0${student.base_city}`;
+			return student.base_city;
 		}
 
 		let subnationalAbbr: string;
@@ -76,7 +86,20 @@
 		} else {
 			subnationalAbbr = '';
 		}
-		return `${flag}\xa0\xa0${student.base_city}, ${subnationalAbbr}`;
+		return `${student.base_city}, ${subnationalAbbr}`;
+	}
+
+	function homeValueGetter(params: ValueGetterParams): string {
+		return _getHome(params.data);
+	}
+
+	function homeValueFormatter(params: ValueFormatterParams): string {
+		const home = _getHome(params.data);
+		if (!home) {
+			return '';
+		}
+		const flag = countryFlags[params.data.base_country];
+		return `${flag}\xa0\xa0${home}`;
 	}
 
 	function _getLatestContract(student: StudentListItem): Contract | null {
@@ -101,8 +124,18 @@
 		return latestContract?.status ?? '';
 	}
 
+	const localeCmp = (a: string, b: string, nodeA: any, nodeB: any, isDescending: boolean) => {
+		return a.localeCompare(b, 'zh-CN');
+	};
+
 	const columnDefs = [
-		{ headerName: 'Name', filter: true, cellRenderer: NameRenderer },
+		{
+			headerName: 'Name',
+			filter: true,
+			valueGetter: nameValueGetter,
+			comparator: localeCmp,
+			cellRenderer: NameRenderer
+		},
 		{
 			headerName: 'Gender',
 			field: 'gender',
@@ -116,7 +149,13 @@
 			valueFormatter: citizenshipValueFormatter
 		},
 		{ headerName: 'Date of birth', field: 'date_of_birth', filter: 'agDateColumnFilter' },
-		{ headerName: 'Home', filter: true, valueGetter: homeValueGetter },
+		{
+			headerName: 'Home',
+			filter: true,
+			valueGetter: homeValueGetter,
+			comparator: localeCmp,
+			valueFormatter: homeValueFormatter
+		},
 		{ headerName: 'App. type', filter: true, valueGetter: latestContractTypeValueGetter },
 		{
 			headerName: 'Target year',
@@ -128,7 +167,7 @@
 
 	const gridOptions: GridOptions = {
 		columnDefs,
-		rowData: data.students,
+		rowData: data.students.sort((a, b) => a.fullname.localeCompare(b.fullname, 'zh-CN')),
 		suppressDragLeaveHidesColumns: true
 	};
 

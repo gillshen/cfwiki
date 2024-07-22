@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Label, Radio, Select, Input } from 'flowbite-svelte';
-	import countryFlags from '$lib/constants/flags';
+	import countryFlags, { sortChinaUnitedStatesFirst } from '$lib/constants/countryFlags';
 
 	export let form: any;
 
-	const countries = ['Canada', 'China', 'Hong Kong', 'Japan', 'Singapore', 'United States'];
+	const countries = Object.keys(countryFlags).sort(sortChinaUnitedStatesFirst);
 </script>
 
 <div>
