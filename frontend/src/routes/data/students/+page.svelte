@@ -8,10 +8,11 @@
 		type ICellRendererParams
 	} from 'ag-grid-community';
 
-	import type { StudentListItem, Contract } from '$lib/api/student.js';
+	import type { StudentListItem, Contract } from '$lib/api/student';
 	import AgCellRenderer from '$lib/abstract/agCellRenderer.js';
-	import stateAbbreviations from '$lib/constants/states.js';
-	import countryFlags from '$lib/constants/flags.js';
+	import americanStates from '$lib/constants/americanStates.js';
+	import canadianProvinces from '$lib/constants/canadianProvinces';
+	import countryFlags from '$lib/constants/flags';
 
 	export let data;
 
@@ -22,7 +23,7 @@
 			this.eGui = document.createElement('a');
 			const student: StudentListItem = params.data;
 			this.eGui.href = `../student/${student.id}/`;
-			if (student.preferred_name && student.preferred_name !== student.firstname) {
+			if (student.preferred_name && student.preferred_name !== student.given_name) {
 				this.eGui.innerHTML = `${student.fullname} ${student.preferred_name}`;
 			} else {
 				this.eGui.innerHTML = student.fullname;
@@ -46,24 +47,36 @@
 	}
 
 	function homeValueGetter(params: ValueGetterParams): string {
-		const student = params.data;
+		const student: StudentListItem = params.data;
 		const flag = countryFlags[student.base_country];
 
-		if (!student.base_city && !student.base_state) {
+		if (!student.base_city && !student.base_subnational) {
 			return `${flag}\xa0\xa0${student.base_country}`;
 		}
 
-		// the state is known but not the city
+		// the subnational division is known but not the city
 		if (!student.base_city) {
-			return `${flag}\xa0\xa0${student.base_state}`;
+			return `${flag}\xa0\xa0${student.base_subnational}`;
 		}
-		// the city is known, but no state (probably not in US/Canada)
-		if (!student.base_state) {
+		// the city is known, but no subnational division
+		if (!student.base_subnational) {
 			return `${flag}\xa0\xa0${student.base_city}`;
 		}
 
-		const state = stateAbbreviations[student.base_state];
-		return `${flag}\xa0\xa0${student.base_city}, ${state}`;
+		// both the subnational division and the city are known
+		if (student.base_country === 'China') {
+			return `${flag}\xa0\xa0${student.base_city}`;
+		}
+
+		let subnationalAbbr: string;
+		if (student.base_country === 'United States') {
+			subnationalAbbr = americanStates[student.base_subnational];
+		} else if (student.base_country == 'Canada') {
+			subnationalAbbr = canadianProvinces[student.base_subnational];
+		} else {
+			subnationalAbbr = '';
+		}
+		return `${flag}\xa0\xa0${student.base_city}, ${subnationalAbbr}`;
 	}
 
 	function _getLatestContract(student: StudentListItem): Contract | null {
@@ -137,7 +150,7 @@
 		padding: 0.5rem 1rem;
 	}
 	#grid {
-		height: 80vh;
+		height: calc(100vh - 4rem);
 	}
 	.ag-theme-alpine {
 		--ag-font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial,

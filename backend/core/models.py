@@ -19,9 +19,9 @@ class CFUser(AbstractUser):
 
 
 class Student(models.Model):
-    lastname = models.CharField(max_length=100)
-    firstname = models.CharField(max_length=100)
-    lastname_first = models.BooleanField(default=True)
+    surname = models.CharField(max_length=100)
+    given_name = models.CharField(max_length=100)
+    surname_first = models.BooleanField(default=True)
     preferred_name = models.CharField(max_length=50, blank=True)
 
     gender = models.CharField(max_length=20)
@@ -29,7 +29,7 @@ class Student(models.Model):
     date_of_birth = models.DateField(blank=True, null=True)
 
     base_country = models.CharField(max_length=100)
-    base_state = models.CharField(max_length=50, blank=True)
+    base_subnational = models.CharField(max_length=50, blank=True)
     base_city = models.CharField(max_length=100, blank=True)
 
     comments = models.TextField(max_length=5000, blank=True)
@@ -39,10 +39,10 @@ class Student(models.Model):
 
     @property
     def fullname(self):
-        if self.lastname_first:
-            return f"{self.lastname}{self.firstname}"
+        if self.surname_first:
+            return f"{self.surname}{self.given_name}"
         else:
-            return f"{self.firstname} {self.lastname}"
+            return f"{self.given_name} {self.surname}"
 
     @property
     def contracts_sorted(self):

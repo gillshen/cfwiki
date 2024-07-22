@@ -1,0 +1,28 @@
+<script lang="ts">
+	import { Label, Input, Checkbox } from 'flowbite-svelte';
+
+	export let form: any;
+</script>
+
+<div>
+	<Label for="surname" class="form-label">Surname</Label>
+	<Input type="text" id="surname" name="surname" bind:value={$form.surname} required />
+</div>
+
+<div>
+	<Label for="given-name" class="form-label">Given name</Label>
+	<Input type="text" id="given-name" name="given_name" bind:value={$form.given_name} required />
+</div>
+
+<Checkbox
+	class="mt-4 mb-6 space-x-1 font-normal"
+	name="surname_first"
+	bind:checked={$form.surname_first}
+>
+	The surname comes first, followed by the given name.
+</Checkbox>
+
+<div>
+	<Label for="preferred-name" class="form-label optional">Preferred name</Label>
+	<Input type="text" id="preferred-name" name="preferred_name" bind:value={$form.preferred_name} />
+</div>

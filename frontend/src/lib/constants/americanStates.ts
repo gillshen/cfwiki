@@ -1,5 +1,4 @@
-const stateAbbreviations: { [key: string]: string } = {
-	// US States
+const americanStates: { [key: string]: string } = {
 	Alabama: 'AL',
 	Alaska: 'AK',
 	Arizona: 'AZ',
@@ -49,22 +48,7 @@ const stateAbbreviations: { [key: string]: string } = {
 	Washington: 'WA',
 	'West Virginia': 'WV',
 	Wisconsin: 'WI',
-	Wyoming: 'WY',
-
-	// Canadian Provinces and Territories
-	Alberta: 'AB',
-	'British Columbia': 'BC',
-	Manitoba: 'MB',
-	'New Brunswick': 'NB',
-	'Newfoundland and Labrador': 'NL',
-	'Nova Scotia': 'NS',
-	Ontario: 'ON',
-	'Prince Edward Island': 'PE',
-	Quebec: 'QC',
-	Saskatchewan: 'SK',
-	'Northwest Territories': 'NT',
-	Nunavut: 'NU',
-	Yukon: 'YT'
+	Wyoming: 'WY'
 };
 
-export default stateAbbreviations;
+export default americanStates;

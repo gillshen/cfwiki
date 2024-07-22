@@ -14,3 +14,9 @@ class StudentSerializer(serializers.ModelSerializer):
 
     fullname = serializers.CharField()
     contracts_sorted = ContractSerializer(many=True)
+
+
+class NewStudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = "__all__"

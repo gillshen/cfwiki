@@ -1,4 +1,4 @@
-import { get } from '$lib/api/api';
+import { get, post } from '$lib/api/api';
 
 export type Contract = {
 	id: number;
@@ -11,16 +11,16 @@ export type Contract = {
 
 export type StudentListItem = {
 	id: number;
-	lastname: string;
-	firstname: string;
-	lastname_first: boolean;
+	surname: string;
+	given_name: string;
+	surname_first: boolean;
 	preferred_name: string;
 	gender: 'female' | 'male' | 'other';
 	citizenship: string;
 	date_of_birth: string | null;
 	base_country: string;
+	base_subnational: string;
 	base_city: string;
-	base_state: string;
 	comments: string;
 	fullname: string;
 	contracts_sorted: Contract[];
@@ -28,4 +28,12 @@ export type StudentListItem = {
 
 export async function fetchStudents(): Promise<StudentListItem[]> {
 	return await get('students/');
+}
+
+export async function fetchStudent(id: number): Promise<StudentListItem> {
+	return await get(`students/${id}/`);
+}
+
+export async function createStudent(data: any) {
+	return await post(`students/new/`, data);
 }
