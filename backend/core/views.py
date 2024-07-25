@@ -1,8 +1,13 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
+from rest_framework.generics import (
+    ListAPIView,
+    RetrieveAPIView,
+    CreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
 
 from core.models import Student
 
-from core.serializers import StudentSerializer, NewStudentSerializer
+from core.serializers import StudentSerializer, StudentCRUDSerializer
 
 
 class StudentListView(ListAPIView):
@@ -17,4 +22,9 @@ class StudentDetailView(RetrieveAPIView):
 
 class StudentCreateView(CreateAPIView):
     queryset = Student.objects.all()
-    serializer_class = NewStudentSerializer
+    serializer_class = StudentCRUDSerializer
+
+
+class StudentRUDView(RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentCRUDSerializer

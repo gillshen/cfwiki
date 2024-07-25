@@ -7,12 +7,12 @@
 		type ValueGetterParams,
 		type ICellRendererParams
 	} from 'ag-grid-community';
+	import { Heading } from 'flowbite-svelte';
 
-	import type { StudentListItem, Contract } from '$lib/api/student';
+	import { type StudentListItem, type Contract, formatLocation } from '$lib/api/student';
 	import AgCellRenderer from '$lib/abstract/agCellRenderer';
-	import americanStates from '$lib/constants/americanStates';
-	import canadianProvinces from '$lib/constants/canadianProvinces';
 	import countryFlags from '$lib/constants/countryFlags';
+	import { makeDate, toISODate } from '$lib/utils/dateUtils';
 
 	export let data;
 
@@ -42,12 +42,13 @@
 	}
 
 	function genderValueFormatter(params: ValueFormatterParams): string {
-		if (params.value === 'female') {
-			return 'F';
-		} else if (params.value === 'male') {
-			return 'M';
-		} else {
-			return params.value;
+		switch (params.value) {
+			case 'female':
+				return 'F';
+			case 'male':
+				return 'M';
+			default:
+				return params.value;
 		}
 	}
 
@@ -56,45 +57,24 @@
 		return `${flag}\xa0\xa0${params.value}`;
 	}
 
-	function _getHome(student: StudentListItem): string {
-		if (!student.base_country) {
-			return '';
+	function dobValueGetter(params: ValueGetterParams): Date | null {
+		const dob = params.data.date_of_birth;
+		if (!dob) {
+			return null;
 		}
-		if (!student.base_city && !student.base_subnational) {
-			return student.base_country;
-		}
+		return makeDate(dob);
+	}
 
-		// the subnational division is known but not the city
-		if (!student.base_city) {
-			return student.base_subnational;
-		}
-		// the city is known, but no subnational division
-		if (!student.base_subnational) {
-			return student.base_city;
-		}
-
-		// both the subnational division and the city are known
-		if (student.base_country === 'China') {
-			return student.base_city;
-		}
-
-		let subnationalAbbr: string;
-		if (student.base_country === 'United States') {
-			subnationalAbbr = americanStates[student.base_subnational];
-		} else if (student.base_country == 'Canada') {
-			subnationalAbbr = canadianProvinces[student.base_subnational];
-		} else {
-			subnationalAbbr = '';
-		}
-		return `${student.base_city}, ${subnationalAbbr}`;
+	function dobValueFormatter(params: ValueFormatterParams): string {
+		return toISODate(params.value);
 	}
 
 	function homeValueGetter(params: ValueGetterParams): string {
-		return _getHome(params.data);
+		return formatLocation(params.data);
 	}
 
 	function homeValueFormatter(params: ValueFormatterParams): string {
-		const home = _getHome(params.data);
+		const home = formatLocation(params.data);
 		if (!home) {
 			return '';
 		}
@@ -148,7 +128,12 @@
 			filter: true,
 			valueFormatter: citizenshipValueFormatter
 		},
-		{ headerName: 'Date of birth', field: 'date_of_birth', filter: 'agDateColumnFilter' },
+		{
+			headerName: 'Date of birth',
+			filter: 'agDateColumnFilter',
+			valueGetter: dobValueGetter,
+			valueFormatter: dobValueFormatter
+		},
 		{
 			headerName: 'Home',
 			filter: true,
@@ -179,7 +164,7 @@
 </script>
 
 <main>
-	<h1>Students</h1>
+	<Heading tag="h1" class="text-3xl font-bold py-6">Students</Heading>
 
 	<div id="grid" class="data-grid ag-theme-alpine" />
 </main>
@@ -189,11 +174,6 @@
 		padding: 0.5rem 1rem;
 	}
 	#grid {
-		height: calc(100vh - 4rem);
-	}
-	.ag-theme-alpine {
-		--ag-font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial,
-			sans-serif;
-		font-variant-numeric: tabular-nums;
+		height: calc(100vh - 8rem);
 	}
 </style>

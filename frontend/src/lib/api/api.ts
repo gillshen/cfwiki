@@ -12,3 +12,11 @@ export async function post(url: string, data: any) {
 		body: JSON.stringify(data)
 	});
 }
+
+export async function patch(url: string, data: any) {
+	return await fetch(`${BASE}${url}`, {
+		method: 'PATCH',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(data)
+	});
+}

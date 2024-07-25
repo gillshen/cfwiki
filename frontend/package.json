@@ -39,6 +39,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"ag-grid-community": "^32.0.2"
+		"ag-grid-community": "^32.0.2",
+		"date-fns": "^3.6.0"
 	}
 }

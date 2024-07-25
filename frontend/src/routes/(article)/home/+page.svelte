@@ -1,41 +1,16 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
-	import { Button, Heading, Hr } from 'flowbite-svelte';
-
-	import NameFields from '$lib/components/student-form/NameFields.svelte';
-	import BirthFields from '$lib/components/student-form/BirthFields.svelte';
-	import LocationFields from '$lib/components/student-form/LocationFields.svelte';
-	import CommentsField from '$lib/components/student-form/CommentsField.svelte';
-
-	export let data;
-
-	const { form, enhance } = superForm(data.newStudentForm);
+	import { Button } from 'flowbite-svelte';
+	import { Tabs, TabItem } from 'flowbite-svelte';
 </script>
 
-<div class="p-24 w-min">
-	<Heading tag="h2" class="px-8">Create a student file</Heading>
+<div class="p-24 w-[60rem]">
+	<Tabs tabStyle="underline">
+		<TabItem title="Students" open>
+			<Button href="/student/new">Create a student file</Button>
+		</TabItem>
 
-	<Hr />
-
-	<form method="post" action="?/createStudent" use:enhance class="w-auto">
-		<div class="w-[30rem] px-8">
-			<NameFields {form} />
-		</div>
-		<Hr />
-		<div class="w-[30rem] px-8">
-			<BirthFields {form} />
-		</div>
-		<Hr />
-		<div class="w-[30rem] px-8">
-			<LocationFields {form} />
-		</div>
-		<Hr />
-		<div class="w-[40rem] px-8">
-			<CommentsField {form} />
-		</div>
-		<Hr />
-		<div class="w-[30rem] px-8">
-			<Button type="submit">Submit</Button>
-		</div>
-	</form>
+		<TabItem title="Applications">
+			<Button href="">Create an application</Button>
+		</TabItem>
+	</Tabs>
 </div>
