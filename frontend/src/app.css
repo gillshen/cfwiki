@@ -27,3 +27,6 @@
 	--ag-font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial, sans-serif;
 	font-variant-numeric: tabular-nums;
 }
+.data-grid a {
+	@apply text-primary-800 hover:text-primary-600;
+}

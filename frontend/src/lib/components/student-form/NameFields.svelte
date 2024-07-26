@@ -19,10 +19,10 @@
 	name="surname_first"
 	bind:checked={$form.surname_first}
 >
-	The surname comes first, followed by the given name.
+	Place the surname before the given name
 </Checkbox>
 
-<div>
+<div class="mt-8">
 	<Label for="preferred-name" class="form-label optional">Preferred name</Label>
 	<Input type="text" id="preferred-name" name="preferred_name" bind:value={$form.preferred_name} />
 </div>

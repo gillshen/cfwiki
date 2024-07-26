@@ -20,3 +20,17 @@ class StudentCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = "__all__"
+
+
+class ContractSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contract
+        fields = "__all__"
+
+    student_name = serializers.CharField()
+
+
+class ContractCRUDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contract
+        fields = "__all__"

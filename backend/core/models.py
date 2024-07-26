@@ -93,7 +93,7 @@ class Contract(models.Model):
     target_year = models.IntegerField()
     date = models.DateField(blank=True, null=True)
     status = models.CharField(max_length=50, choices=Status.choices)
-    student_initial_progression = models.CharField(max_length=50, blank=True)
+    student_progression_when_signed = models.CharField(max_length=50, blank=True)
 
     class Meta:
         constraints = [
@@ -107,3 +107,7 @@ class Contract(models.Model):
 
     def __str__(self) -> str:
         return f"{self.student} >> {self.type}"
+
+    @property
+    def student_name(self) -> str:
+        return self.student.fullname

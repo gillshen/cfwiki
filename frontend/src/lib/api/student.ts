@@ -7,8 +7,8 @@ export type Contract = {
 	type: string;
 	target_year: number;
 	date: string | null;
-	status: 'Effective' | 'Fulfilled' | 'Terminated';
-	student_initial_progression: string;
+	status: 'In effect' | 'Fulfilled' | 'Terminated';
+	student_progression_when_signed: string;
 };
 
 export type StudentListItem = {

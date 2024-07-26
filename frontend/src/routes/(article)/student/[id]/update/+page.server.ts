@@ -1,13 +1,12 @@
 import type { PageServerLoadEvent } from './$types';
-import { error, fail, redirect } from '@sveltejs/kit';
-import { message, superValidate } from 'sveltekit-superforms';
+import { error, redirect } from '@sveltejs/kit';
+import { message, fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchStudent, updateStudent, type StudentListItem } from '$lib/api/student';
 import { studentSchema } from '$lib/schemas/student';
 
 export async function load(event: PageServerLoadEvent) {
-	console.log('$ update');
 	const id = parseInt(event.params.id, 10);
 
 	if (isNaN(id)) {

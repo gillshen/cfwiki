@@ -15,9 +15,7 @@
 	<Hr />
 
 	<form method="post" action="?/updateStudent" use:enhance>
-		<div class="hidden">
-			<input type="number" name="id" bind:value={$form.id} />
-		</div>
+		<input class="hidden" type="number" name="id" bind:value={$form.id} />
 		<StudentForm {form} submitButtonText="Update" />
 	</form>
 </div>

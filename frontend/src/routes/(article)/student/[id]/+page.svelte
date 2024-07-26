@@ -1,11 +1,23 @@
 <script lang="ts">
-	import { Table, TableBody, TableBodyCell, TableBodyRow, Button, Heading } from 'flowbite-svelte';
+	import {
+		Card,
+		Table,
+		TableBody,
+		TableBodyCell,
+		TableBodyRow,
+		Button,
+		Heading
+	} from 'flowbite-svelte';
 
 	import { formatLocation } from '$lib/api/student';
 	import countryFlags from '$lib/constants/countryFlags';
 	import { toLongDate } from '$lib/utils/dateUtils';
+	import { superForm } from 'sveltekit-superforms';
+	import ContractForm from '$lib/components/contract-form/ContractForm.svelte';
 
 	export let data;
+
+	const { form, enhance } = superForm(data.newContractForm);
 
 	const formatGender = (gender: string): string => {
 		switch (gender) {
@@ -19,9 +31,9 @@
 	};
 </script>
 
-<Heading tag="h1" class="p-6 font-normal">{data.student.fullname}</Heading>
+<Heading tag="h1" class="px-8 py-6 font-normal">{data.student.fullname}</Heading>
 
-<div class="w-[36rem] p-6">
+<div class="w-[36rem] px-8 py-6">
 	<Table>
 		<TableBody>
 			<TableBodyRow>
@@ -85,4 +97,25 @@
 			</TableBodyRow>
 		</TableBody>
 	</Table>
+</div>
+
+<div class="flex px-12 py-6 gap-8">
+	{#each data.student.contracts_sorted as contract}
+		<Card size="xs">
+			<div class="text-sm bg-gray-200">
+				<pre>{JSON.stringify(contract, null, 1)}</pre>
+			</div>
+			<div class="flex justify-center mt-4 space-x-3">
+				<Button outline href={`/contract-update/${contract.id}`}>Update</Button>
+				<Button color="light" class="dark:text-white" disabled>Delete</Button>
+			</div>
+		</Card>
+	{/each}
+</div>
+
+<div class="w-[36rem] px-6 py-6">
+	<form method="post" action="?/createContract" use:enhance>
+		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
+		<ContractForm {form} />
+	</form>
 </div>

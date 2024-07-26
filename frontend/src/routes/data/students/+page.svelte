@@ -141,7 +141,7 @@
 			comparator: localeCmp,
 			valueFormatter: homeValueFormatter
 		},
-		{ headerName: 'App. type', filter: true, valueGetter: latestContractTypeValueGetter },
+		{ headerName: 'Contract type', filter: true, valueGetter: latestContractTypeValueGetter },
 		{
 			headerName: 'Target year',
 			filter: 'agNumberColumnFilter',

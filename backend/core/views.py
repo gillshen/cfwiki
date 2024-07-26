@@ -5,9 +5,14 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
-from core.models import Student
+from core.models import Student, Contract
 
-from core.serializers import StudentSerializer, StudentCRUDSerializer
+from core.serializers import (
+    StudentSerializer,
+    StudentCRUDSerializer,
+    ContractSerializer,
+    ContractCRUDSerializer,
+)
 
 
 class StudentListView(ListAPIView):
@@ -28,3 +33,18 @@ class StudentCreateView(CreateAPIView):
 class StudentRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentCRUDSerializer
+
+
+class ContractDetailView(RetrieveAPIView):
+    queryset = Contract.objects.all()
+    serializer_class = ContractSerializer
+
+
+class ContractCreateView(CreateAPIView):
+    queryset = Contract.objects.all()
+    serializer_class = ContractCRUDSerializer
+
+
+class ContractRUDView(RetrieveUpdateDestroyAPIView):
+    queryset = Contract.objects.all()
+    serializer_class = ContractCRUDSerializer
