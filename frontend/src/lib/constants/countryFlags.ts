@@ -225,3 +225,29 @@ export function sortChinaUnitedStatesFirst(a: string, b: string) {
 		return a.localeCompare(b);
 	}
 }
+
+enum MostApplied {
+	'United States',
+	'United Kingdom',
+	'Australia',
+	'Canada',
+	'Hong Kong',
+	'Singapore'
+}
+
+export function sortMostAppliedFirst(a: string, b: string) {
+	const index = (country: string): number => {
+		if (country in MostApplied) {
+			return MostApplied[country as keyof typeof MostApplied];
+		} else {
+			return 99;
+		}
+	};
+
+	const indexDiff = index(a) - index(b);
+	if (indexDiff) {
+		return indexDiff;
+	} else {
+		return a.localeCompare(b);
+	}
+}

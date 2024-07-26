@@ -1,0 +1,66 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import {
+		createGrid,
+		type GridOptions,
+		type ICellRendererParams,
+		type ValueFormatterParams
+	} from 'ag-grid-community';
+	import { Heading } from 'flowbite-svelte';
+
+	import countryFlags from '$lib/constants/countryFlags';
+	import AgCellRenderer from '$lib/abstract/agCellRenderer.js';
+	import type { School } from '$lib/api/school.js';
+
+	export let data;
+
+	class NameRenderer extends AgCellRenderer {
+		declare eGui: HTMLAnchorElement;
+
+		init(params: ICellRendererParams<any, any, any>): void {
+			this.eGui = document.createElement('a');
+			const school: School = params.data;
+			this.eGui.href = `/school/${school.id}/`;
+			this.eGui.innerHTML = school.name;
+		}
+	}
+
+	function countryValueFormatter(params: ValueFormatterParams): string {
+		const flag = countryFlags[params.value];
+		return `${flag}\xa0\xa0${params.value}`;
+	}
+
+	const columnDefs = [
+		{ headerName: 'Name', field: 'name', filter: true, cellRenderer: NameRenderer },
+		{ headerName: 'Alt. name', field: 'alt_name', filter: true },
+		{ headerName: 'Type', field: 'type', filter: true },
+		{ headerName: 'Country', field: 'country', filter: true, valueFormatter: countryValueFormatter }
+	];
+
+	const gridOptions: GridOptions = {
+		columnDefs,
+		rowData: data.schools.sort((a, b) => a.name.localeCompare(b.name)),
+		suppressDragLeaveHidesColumns: true
+	};
+
+	onMount(() => {
+		const gridElement: HTMLElement = document.querySelector('#grid')!;
+		const gridApi = createGrid(gridElement, gridOptions);
+		gridApi.sizeColumnsToFit();
+	});
+</script>
+
+<main>
+	<Heading tag="h1" class="text-3xl font-bold py-6">Schools</Heading>
+
+	<div id="grid" class="data-grid ag-theme-alpine" />
+</main>
+
+<style>
+	main {
+		padding: 0.5rem 1rem;
+	}
+	#grid {
+		height: calc(100vh - 8rem);
+	}
+</style>

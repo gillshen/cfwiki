@@ -32,7 +32,7 @@
 		init(params: ICellRendererParams<any, any, any>): void {
 			this.eGui = document.createElement('a');
 			const student: StudentListItem = params.data;
-			this.eGui.href = `../student/${student.id}/`;
+			this.eGui.href = `/student/${student.id}/`;
 			this.eGui.innerHTML = _getName(student);
 		}
 	}

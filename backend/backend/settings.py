@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "core",
+    "target",
 ]
 
 AUTH_USER_MODEL = "core.CFUser"
