@@ -30,3 +30,73 @@ class School(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+
+class Program(models.Model):
+    # It would be nice to have a unique constraint at the database level
+    # but this is not possible because `schools` is a many-to-many field
+    # and consequently not allowed in constraints.
+    # We have to rely on serializers to ensure program uniqueness.
+    type = models.CharField(max_length=50)
+    schools = models.ManyToManyField(School, related_name="programs")
+    name = models.CharField(max_length=100, blank=True)
+    degree = models.CharField(max_length=100, blank=True)
+
+    def __str__(self) -> str:
+        school_names = " + ".join(s.name for s in self.schools.all())
+        return f"{school_names} | {self.display_name}".strip()
+
+    @property
+    def display_name(self) -> str:
+        degree = f"({self.degree})" if self.degree else ""
+        return f"{self.name or self.type} {degree}".strip()
+
+
+class ProgramIteration(models.Model):
+
+    program = models.ForeignKey(
+        Program,
+        related_name="targets",
+        on_delete=models.CASCADE,
+    )
+    year = models.IntegerField()
+    term = models.CharField(max_length=20)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                "program",
+                "year",
+                Lower("term"),
+                name="programiteration_unique_program_year_term",
+            )
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.program} ({self.term} {self.year})"
+
+
+class ApplicationRound(models.Model):
+
+    program_iteration = models.ForeignKey(
+        ProgramIteration,
+        related_name="application_rounds",
+        on_delete=models.CASCADE,
+    )
+    name = models.CharField(max_length=50)
+    due_date = models.DateField(blank=True, null=True)
+    due_time = models.TimeField(blank=True, null=True)
+    timezone = models.CharField(max_length=50, blank=True)
+    decision_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                "program_iteration",
+                Lower("name"),
+                name="applicationround_unique_programiteration_name",
+            )
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.program_iteration} | {self.name}"

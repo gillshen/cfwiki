@@ -14,6 +14,9 @@
 
 		<TabItem title="Applications">
 			<Button class="mb-4" href="">Create an application</Button>
+			<div>
+				<A href="/data/applications/">List of applications</A>
+			</div>
 		</TabItem>
 
 		<TabItem title="Schools">

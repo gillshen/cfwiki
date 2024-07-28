@@ -4,7 +4,7 @@
 	export let form: any;
 </script>
 
-<P size="base">Anything special you want to note about the student?</P>
+<P size="sm">Anything special you want to note about the student?</P>
 
 <div>
 	<Label for="comments" class="form-label optional">Comments</Label>

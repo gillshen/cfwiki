@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Label, Select, Input, Button, Hr } from 'flowbite-svelte';
+	import { Label, Select, Input, Radio, Button, Hr } from 'flowbite-svelte';
+	import { activeYears } from '$lib/constants/dates';
+	import { contractStatuses, contractTypes } from '$lib/api/contract';
 
 	export let form: any;
 	export let submitButtonText = 'Submit';
@@ -7,25 +9,31 @@
 
 <div class="w-[30rem] px-8">
 	<Label for="contract-type" class="form-label">Contract type</Label>
-	<Select id="contract-type" name="type" bind:value={$form.type}>
-		{#each ['UG Freshman', 'UG Transfer', "Master's", 'PhD'] as contractType}
+	<Select id="contract-type" name="type" bind:value={$form.type} required>
+		{#each contractTypes as contractType}
 			<option value={contractType}>{contractType}</option>
 		{/each}
 	</Select>
 
 	<Label for="target-year" class="form-label">Target year</Label>
-	<Select id="target-year" name="target_year" bind:value={$form.target_year}>
-		{#each [2021, 2022, 2023, 2024, 2025, 2026, 2027] as year}
+	<Select id="target-year" name="target_year" bind:value={$form.target_year} required>
+		{#each activeYears as year}
 			<option value={year}>{year}</option>
 		{/each}
 	</Select>
 
-	<Label for="contract-status" class="form-label">Contract status</Label>
-	<Select id="contract-status" name="status" bind:value={$form.status}>
-		{#each ['In effect', 'Fulfilled', 'Terminated'] as contractStatus}
-			<option value={contractStatus}>{contractStatus}</option>
+	<Label class="form-label">Contract status</Label>
+	<div class="grid grid-cols-1 mb-4 gap-2">
+		{#each contractStatuses as contractStatus}
+			<Radio
+				name="status"
+				value={contractStatus}
+				class="font-normal"
+				bind:group={$form.status}
+				required>{contractStatus}</Radio
+			>
 		{/each}
-	</Select>
+	</div>
 
 	<Label for="contract-date" class="form-label optional">Date signed</Label>
 	<Input id="contract-date" type="date" name="date" bind:value={$form.date} />

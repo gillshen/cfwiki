@@ -8,7 +8,7 @@
 	export let form: any;
 
 	const countries = Object.keys(countryFlags).sort(sortChinaUnitedStatesFirst);
-	const cityStates = ['Hong Kong', 'Singapore'];
+	const cityStates = ['Hong Kong', 'Macau', 'Monaco', 'Singapore', 'Vatican City'];
 	const chineseMunicipalities = ['北京', '上海', '天津', '重庆'];
 
 	const countriesWithDivisions = new Map();
@@ -16,9 +16,16 @@
 	countriesWithDivisions.set('Canada', Object.keys(canadianProvinces));
 	countriesWithDivisions.set('United States', Object.keys(americanStates));
 
+	let subnationalLabel = '';
+
 	const onCountryChange = () => {
 		$form.base_subnational = '';
 		$form.base_city = '';
+		if ($form.base_country === 'United States') {
+			subnationalLabel = 'State';
+		} else {
+			subnationalLabel = 'Province';
+		}
 	};
 
 	const onSubnationalChange = () => {
@@ -30,7 +37,7 @@
 	};
 </script>
 
-<P size="base">Where is the student from?</P>
+<P size="sm">Where is the student from?</P>
 
 <div>
 	<Label for="country" class="form-label optional">Country</Label>
@@ -48,7 +55,7 @@
 
 <div>
 	{#if !!countriesWithDivisions.get($form.base_country)}
-		<Label for="subnational" class="form-label optional">Province/state</Label>
+		<Label for="subnational" class="form-label optional">{subnationalLabel}</Label>
 		<Select
 			id="subnational"
 			name="base_subnational"
@@ -63,8 +70,11 @@
 </div>
 
 <div>
-	{#if !!$form.base_subnational}
+	<!-- Show the city field if the country is not one of Canada, China, and US,
+	 or if it is and a subnational division has been selected -->
+	{#if $form.base_country && ($form.base_subnational || !countriesWithDivisions.get($form.base_country))}
 		{#if $form.base_country === 'China'}
+			<!-- If the country is China, let the user select a city -->
 			<Label for="city" class="form-label optional">City</Label>
 			<Select id="city" name="base_city" bind:value={$form.base_city}>
 				{#each chineseProvinces[$form.base_subnational] ?? [] as city}
@@ -72,6 +82,7 @@
 				{/each}
 			</Select>
 		{:else if !cityStates.includes($form.base_country)}
+			<!-- Else if the country is not Hong Kong or Sinapore, let the user write in a city -->
 			<Label for="city" class="form-label optional">City</Label>
 			<Input type="text" id="city" name="base_city" bind:value={$form.base_city} />
 		{/if}

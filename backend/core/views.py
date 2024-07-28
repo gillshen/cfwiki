@@ -5,13 +5,16 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
-from core.models import Student, Contract
+from core.models import Student, Contract, Application
 
 from core.serializers import (
     StudentSerializer,
     StudentCRUDSerializer,
     ContractSerializer,
     ContractCRUDSerializer,
+    ApplicationListSerializer,
+    ApplicationCreateSerializer,
+    ApplicationRUDSerializer,
 )
 
 
@@ -48,3 +51,23 @@ class ContractCreateView(CreateAPIView):
 class ContractRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Contract.objects.all()
     serializer_class = ContractCRUDSerializer
+
+
+class ApplicationListView(ListAPIView):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationListSerializer
+
+
+class ApplicationDetailView(RetrieveAPIView):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationListSerializer
+
+
+class ApplicationCreateView(CreateAPIView):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationCreateSerializer
+
+
+class ApplicationRUDView(RetrieveUpdateDestroyAPIView):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationRUDSerializer

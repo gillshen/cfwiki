@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
 from .managers import CFUserManager
+from target.models import ApplicationRound
 
 
 class CFUser(AbstractUser):
@@ -111,3 +112,59 @@ class Contract(models.Model):
     @property
     def student_name(self) -> str:
         return self.student.fullname
+
+
+class Application(models.Model):
+
+    student = models.ForeignKey(
+        Student,
+        related_name="applications",
+        on_delete=models.CASCADE,
+    )
+    round = models.ForeignKey(
+        ApplicationRound,
+        related_name="applications",
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                "student",
+                "round",
+                name="application_unique_student_round",
+            )
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.student} > {self.round}"
+
+    @property
+    def schools(self):
+        return self.round.program_iteration.program.schools
+
+    @property
+    def program(self):
+        return self.round.program_iteration.program
+
+    @property
+    def program_iteration(self):
+        return self.round.program_iteration
+
+    # useful for the serializer with custom creation logic
+
+    @property
+    def program_id(self):
+        return self.program.id
+
+    @property
+    def year(self):
+        return self.program_iteration.year
+
+    @property
+    def term(self):
+        return self.program_iteration.term
+
+    @property
+    def round_name(self):
+        return self.round.name

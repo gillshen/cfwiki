@@ -22,6 +22,9 @@
 	color: #aaa;
 	content: ' (optional)';
 }
+.form-radio-group {
+	@apply grid grid-cols-1 mb-4 gap-2;
+}
 
 .ag-theme-alpine {
 	--ag-font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial, sans-serif;

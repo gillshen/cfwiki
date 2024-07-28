@@ -5,8 +5,14 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
-from target.models import School
-from target.serializers import SchoolSerializer, SchoolCRUDSerializer
+from target.models import School, Program
+
+from target.serializers import (
+    SchoolSerializer,
+    SchoolCRUDSerializer,
+    ProgramSerializer,
+    ProgramCRUDSerializer,
+)
 
 
 class SchoolListView(ListAPIView):
@@ -27,3 +33,18 @@ class SchoolCreateView(CreateAPIView):
 class SchoolRUDView(RetrieveUpdateDestroyAPIView):
     queryset = School.objects.all()
     serializer_class = SchoolCRUDSerializer
+
+
+class ProgramListView(ListAPIView):
+    queryset = Program.objects.all()
+    serializer_class = ProgramSerializer
+
+
+class ProgramCreateView(CreateAPIView):
+    queryset = Program.objects.all()
+    serializer_class = ProgramCRUDSerializer
+
+
+class ProgramRUDView(RetrieveUpdateDestroyAPIView):
+    queryset = Program.objects.all()
+    serializer_class = ProgramCRUDSerializer
