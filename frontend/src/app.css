@@ -25,6 +25,12 @@
 .form-radio-group {
 	@apply grid grid-cols-1 mb-4 gap-2;
 }
+.form-checkbox {
+	@apply mt-8 mb-6 space-x-1 font-normal;
+}
+form.modal {
+	@apply px-16 pb-12;
+}
 
 .ag-theme-alpine {
 	--ag-font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial, sans-serif;

@@ -5,9 +5,10 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 import { createApplication } from '$lib/api/application';
 import { newApplicationSchema } from '$lib/schemas/application';
+import { newProgramSchema } from '$lib/schemas/program';
 import { fetchStudent, type StudentListItem } from '$lib/api/student';
 import { fetchSchools } from '$lib/api/school';
-import { fetchPrograms } from '$lib/api/program';
+import { createProgram, fetchPrograms } from '$lib/api/program';
 
 export async function load(event: PageServerLoadEvent) {
 	const id = parseInt(event.params.id, 10);
@@ -25,8 +26,9 @@ export async function load(event: PageServerLoadEvent) {
 	const schools = await fetchSchools();
 	const programs = await fetchPrograms();
 	const newApplicationForm = await superValidate(zod(newApplicationSchema));
+	const newProgramForm = await superValidate(zod(newProgramSchema));
 
-	return { student, schools, programs, newApplicationForm };
+	return { student, schools, programs, newApplicationForm, newProgramForm };
 }
 
 export const actions = {
@@ -49,5 +51,23 @@ export const actions = {
 		// Redirect to the application page
 		const createdApplication = await response.json();
 		throw redirect(303, `/application/${createdApplication.id}`);
+	},
+
+	createProgram: async ({ request }) => {
+		const form = await superValidate(request, zod(newProgramSchema));
+		console.log(form);
+
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+
+		// Create the program
+		const response = await createProgram(form.data);
+		if (!response.ok) {
+			console.log(response);
+			return message(form, 'Sorry, an error occurred', { status: 400 });
+		}
+
+		return message(form, 'success');
 	}
 };

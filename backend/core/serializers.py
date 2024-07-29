@@ -101,8 +101,9 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
     round_name = serializers.CharField()
 
     def create(self, validated_data):
+        program = Program.objects.get(id=validated_data["program_id"])
         program_iteration, _ = ProgramIteration.objects.get_or_create(
-            program=validated_data["program_id"],
+            program=program,
             year=validated_data["year"],
             term=validated_data["term"],
         )

@@ -14,11 +14,7 @@
 	<Input type="text" id="given-name" name="given_name" bind:value={$form.given_name} required />
 </div>
 
-<Checkbox
-	class="mt-4 mb-6 space-x-1 font-normal"
-	name="surname_first"
-	bind:checked={$form.surname_first}
->
+<Checkbox class="form-checkbox" name="surname_first" bind:checked={$form.surname_first}>
 	Place the surname before the given name
 </Checkbox>
 

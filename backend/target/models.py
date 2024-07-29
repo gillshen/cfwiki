@@ -48,8 +48,7 @@ class Program(models.Model):
 
     @property
     def display_name(self) -> str:
-        degree = f"({self.degree})" if self.degree else ""
-        return f"{self.name or self.type} {degree}".strip()
+        return f"{self.name or self.type}, {self.degree}".strip(", ")
 
 
 class ProgramIteration(models.Model):

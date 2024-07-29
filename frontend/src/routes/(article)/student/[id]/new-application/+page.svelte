@@ -1,13 +1,35 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
-	import { Label, Input, Button, Select, Radio, P, A, Helper, Hr } from 'flowbite-svelte';
+	import {
+		Label,
+		Input,
+		Button,
+		Select,
+		Radio,
+		A,
+		Helper,
+		Hr,
+		Modal,
+		Checkbox
+	} from 'flowbite-svelte';
 
 	import { programTypes } from '$lib/api/program';
 	import { activeYears } from '$lib/constants/dates';
+	import NameFields from '$lib/components/program-form/NameFields.svelte';
 
 	export let data;
 
-	const { form, enhance } = superForm(data.newApplicationForm);
+	const { form: newApplicationForm, enhance: newApplicationEnhance } = superForm(
+		data.newApplicationForm
+	);
+
+	const { form: newProgramForm, enhance: newProgramEnhance } = superForm(data.newProgramForm, {
+		onUpdated({ form }) {
+			if (form.valid) {
+				createProgramModal = false;
+			}
+		}
+	});
 
 	let schoolType = 'University';
 	$: schools = data.schools
@@ -24,10 +46,20 @@
 
 	let roundNames: string[] = [];
 
+	let createProgramModal = false;
+	let newProgramIsJoint = false;
+
+	const onSchoolChange = () => {
+		programType = '';
+		$newProgramForm.school_1 = schoolId;
+		onProgramTypeChange();
+	};
+
 	const onProgramTypeChange = () => {
-		$form.round_name = '';
+		$newApplicationForm.program_id = 0;
+		$newApplicationForm.round_name = '';
 		if (programType === 'UG Freshman') {
-			roundNames = ['ED1', 'ED2', 'EA', 'REA', 'RD'];
+			roundNames = ['ED1', 'ED2', 'EA1', 'EA2', 'REA', 'RD', 'Priority'];
 		} else if (programType === 'UG Transfer') {
 			roundNames = ['ED', 'RD'];
 		} else {
@@ -37,7 +69,7 @@
 </script>
 
 <div class="w-[36rem] px-8 py-6">
-	<form method="post" action="?/createApplication" use:enhance>
+	<form method="post" action="?/createApplication" use:newApplicationEnhance>
 		<input type="number" name="student" class="hidden" value={data.student.id} />
 
 		<div class="w-[30rem] px-6">
@@ -54,7 +86,7 @@
 			</div>
 
 			<Label for="school" class="form-label">School</Label>
-			<Select id="school" name="school" bind:value={schoolId} required>
+			<Select id="school" name="school" bind:value={schoolId} on:change={onSchoolChange} required>
 				{#each schools as school}
 					<option value={school.id}>{school.name}</option>
 				{/each}
@@ -75,13 +107,15 @@
 			</Select>
 
 			<Label for="program" class="form-label">Program</Label>
-			<Select id="program" name="program_id" bind:value={$form.program_id}>
+			<Select id="program" name="program_id" bind:value={$newApplicationForm.program_id}>
 				{#each programs as program}
 					<option value={program.id}>{program.display_name}</option>
 				{/each}
 			</Select>
 			<Helper class="mt-2">
-				If you do not find your desired program listed, <A href="">click here</A>.
+				If your desired program is not listed here, you may have to <A
+					on:click={() => (createProgramModal = true)}>create it</A
+				>.
 			</Helper>
 		</div>
 
@@ -89,7 +123,7 @@
 
 		<div class="w-[30rem] px-6">
 			<Label for="year" class="form-label">Year</Label>
-			<Select id="year" name="year" bind:value={$form.year}>
+			<Select id="year" name="year" bind:value={$newApplicationForm.year}>
 				{#each activeYears as year}
 					<option value={year}>{year}</option>
 				{/each}
@@ -97,15 +131,28 @@
 
 			<Label class="form-label">Term</Label>
 			<div class="grid grid-cols-1 mb-4 gap-2">
-				<Radio name="term" value="Fall" class="font-normal" bind:group={$form.term}>Fall</Radio>
-				<Radio name="term" value="Spring" class="font-normal" bind:group={$form.term}>Spring</Radio>
-				<Radio name="term" value="Summer" class="font-normal" bind:group={$form.term} required
-					>Summer</Radio
+				<Radio name="term" value="Fall" class="font-normal" bind:group={$newApplicationForm.term}
+					>Fall</Radio
+				>
+				<Radio name="term" value="Spring" class="font-normal" bind:group={$newApplicationForm.term}
+					>Spring</Radio
+				>
+				<Radio
+					name="term"
+					value="Summer"
+					class="font-normal"
+					bind:group={$newApplicationForm.term}
+					required>Summer</Radio
 				>
 			</div>
 
 			<Label for="round-name" class="form-label">Round</Label>
-			<Select id="round-name" name="round_name" bind:value={$form.round_name} required>
+			<Select
+				id="round-name"
+				name="round_name"
+				bind:value={$newApplicationForm.round_name}
+				required
+			>
 				{#each roundNames.length ? [...roundNames, 'Rolling'] : [] as roundName}
 					<option value={roundName}>{roundName}</option>
 				{/each}
@@ -119,3 +166,42 @@
 		</div>
 	</form>
 </div>
+
+<Modal title="Create a program" bind:open={createProgramModal} outsideclose>
+	<form class="modal" method="post" action="?/createProgram" use:newProgramEnhance>
+		<Label for="school-1" class="form-label">School</Label>
+		<Select id="school-1" name="school_1" bind:value={$newProgramForm.school_1} required>
+			{#each schools as school}
+				<option value={school.id}>{school.name}</option>
+			{/each}
+		</Select>
+
+		<Label for="new-program-type" class="form-label">Program type</Label>
+		<Select id="new-program-type" name="type" bind:value={$newProgramForm.type} required>
+			{#each programTypes as programTypeOption}
+				<option value={programTypeOption}>{programTypeOption}</option>
+			{/each}
+		</Select>
+
+		{#if !['UG Freshman', 'UG Transfer'].includes($newProgramForm.type)}
+			<NameFields form={newProgramForm} required />
+		{/if}
+
+		<Checkbox class="form-checkbox" bind:checked={newProgramIsJoint}>
+			Is this a joint program?
+		</Checkbox>
+
+		{#if newProgramIsJoint}
+			<Label for="school-2" class="form-label">The other school</Label>
+			<Select id="school-2" name="school_2" bind:value={$newProgramForm.school_2} required>
+				{#each schools as school}
+					<option value={school.id}>{school.name}</option>
+				{/each}
+			</Select>
+		{/if}
+
+		<Hr />
+
+		<Button type="submit">Submit</Button>
+	</form>
+</Modal>
