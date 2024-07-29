@@ -140,6 +140,10 @@ class Application(models.Model):
         return f"{self.student} > {self.round}"
 
     @property
+    def latest_log(self):
+        return self.logs.order_by("-date", "-updated").first()
+
+    @property
     def schools(self):
         return self.round.program_iteration.program.schools
 
@@ -168,3 +172,18 @@ class Application(models.Model):
     @property
     def round_name(self):
         return self.round.name
+
+
+class ApplicationLog(models.Model):
+    application = models.ForeignKey(
+        Application,
+        related_name="logs",
+        on_delete=models.CASCADE,
+    )
+    date = models.DateField()
+    status = models.CharField(max_length=50)
+    comments = models.TextField(max_length=1000, blank=True)
+    updated = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"{self.status} ({self.date}) | {self.application}"

@@ -1,19 +1,22 @@
 from rest_framework import serializers
-from core.models import Student, Contract, Application
+from core.models import Student, Contract, Application, ApplicationLog
 from target.models import School, Program, ProgramIteration, ApplicationRound
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    class ContractSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Contract
-            exclude = ["student"]
 
     class Meta:
         model = Student
         fields = "__all__"
 
     fullname = serializers.CharField()
+
+    class ContractSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Contract
+            exclude = ["student"]
+
+    # TODO fetch only the latest for the list
     contracts_sorted = ContractSerializer(many=True)
 
 
@@ -45,21 +48,21 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     class StudentSerializer(serializers.ModelSerializer):
         class Meta:
             model = Student
-            fields = ["id", "fullname", "gender", "citizenship"]
+            fields = ["fullname", "gender", "citizenship"]
 
     student = StudentSerializer()
 
     class SchoolSerializer(serializers.ModelSerializer):
         class Meta:
             model = School
-            fields = ["id", "name", "alt_name", "country"]
+            fields = ["name", "country"]
 
     schools = SchoolSerializer(many=True)
 
     class ProgramSerializer(serializers.ModelSerializer):
         class Meta:
             model = Program
-            fields = ["id", "display_name"]
+            fields = ["display_name"]
 
         display_name = serializers.CharField()
 
@@ -68,16 +71,23 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     class ProgramIterationSerializer(serializers.ModelSerializer):
         class Meta:
             model = ProgramIteration
-            exclude = ["program"]
+            fields = ["year", "term"]
 
     program_iteration = ProgramIterationSerializer()
 
     class ApplicationRoundSerializer(serializers.ModelSerializer):
         class Meta:
             model = ApplicationRound
-            exclude = ["program_iteration"]
+            fields = ["name", "due_date"]
 
     round = ApplicationRoundSerializer()
+
+    class ApplicationLogSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = ApplicationLog
+            fields = ["status", "date"]
+
+    latest_log = ApplicationLogSerializer()
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):

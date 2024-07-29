@@ -19,7 +19,7 @@ from core.serializers import (
 
 
 class StudentListView(ListAPIView):
-    queryset = Student.objects.all()
+    queryset = Student.objects.all().prefetch_related("contracts")
     serializer_class = StudentSerializer
 
 
@@ -54,7 +54,16 @@ class ContractRUDView(RetrieveUpdateDestroyAPIView):
 
 
 class ApplicationListView(ListAPIView):
-    queryset = Application.objects.all()
+    queryset = (
+        Application.objects.all()
+        .select_related(
+            "student",
+            "round",
+            "round__program_iteration",
+            "round__program_iteration__program",
+        )
+        .prefetch_related("round__program_iteration__program__schools", "logs")
+    )
     serializer_class = ApplicationListSerializer
 
 

@@ -1,10 +1,16 @@
 import { get, post } from '$lib/api/api';
+import type { ApplicationStatus } from '$lib/api/applicationLog';
 
 type School = {
 	id: number;
 	name: string;
 	alt_name: string;
 	country: string;
+};
+
+type Log = {
+	status: ApplicationStatus;
+	date: string;
 };
 
 export type ApplicationListItem = {
@@ -33,6 +39,7 @@ export type ApplicationListItem = {
 		timezone: string;
 		decision_date: string | null;
 	};
+	latest_log: Log | null;
 };
 
 export type ApplicationDetail = ApplicationListItem;

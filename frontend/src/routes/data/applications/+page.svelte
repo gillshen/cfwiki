@@ -37,7 +37,9 @@
 		{ headerName: 'Year', field: 'program_iteration.year', filter: NumberFilter },
 		{ headerName: 'Term', field: 'program_iteration.term', filter: true },
 		{ headerName: 'Round', field: 'round.name', filter: true },
-		{ headerName: 'Due', field: 'round.due_date', filter: true }
+		{ headerName: 'Due', field: 'round.due_date', filter: true },
+		{ headerName: 'Status', field: 'latest_log.status', filter: true },
+		{ headerName: 'Last update', field: 'latest_log.date', filter: true }
 	];
 
 	const gridOptions: GridOptions = {

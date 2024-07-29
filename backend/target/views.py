@@ -36,7 +36,7 @@ class SchoolRUDView(RetrieveUpdateDestroyAPIView):
 
 
 class ProgramListView(ListAPIView):
-    queryset = Program.objects.all()
+    queryset = Program.objects.all().prefetch_related("schools")
     serializer_class = ProgramSerializer
 
 
