@@ -93,15 +93,15 @@ class ApplicationListSerializer(serializers.ModelSerializer):
 class ApplicationCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        fields = ["id", "student", "program_id", "year", "term", "round_name"]
+        fields = ["id", "student", "program", "year", "term", "round_name"]
 
-    program_id = serializers.IntegerField()
-    year = serializers.IntegerField()
-    term = serializers.CharField()
-    round_name = serializers.CharField()
+    program = serializers.IntegerField(write_only=True)
+    year = serializers.IntegerField(write_only=True)
+    term = serializers.CharField(write_only=True)
+    round_name = serializers.CharField(write_only=True)
 
     def create(self, validated_data):
-        program = Program.objects.get(id=validated_data["program_id"])
+        program = Program.objects.get(id=validated_data["program"])
         program_iteration, _ = ProgramIteration.objects.get_or_create(
             program=program,
             year=validated_data["year"],

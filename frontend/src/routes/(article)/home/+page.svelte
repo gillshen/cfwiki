@@ -3,7 +3,7 @@
 	import { Tabs, TabItem, A } from 'flowbite-svelte';
 </script>
 
-<div class="p-24 w-[60rem]">
+<div class="p-12 w-full">
 	<Tabs tabStyle="underline">
 		<TabItem title="Students" open>
 			<Button class="mb-4" href="/student/new/">Create a student file</Button>
@@ -13,7 +13,6 @@
 		</TabItem>
 
 		<TabItem title="Applications">
-			<Button class="mb-4" href="">Create an application</Button>
 			<div>
 				<A href="/data/applications/">List of applications</A>
 			</div>

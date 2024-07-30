@@ -54,7 +54,7 @@ export async function fetchApplication(id: number): Promise<ApplicationListItem>
 
 export async function createApplication(data: {
 	student: number;
-	program_id: number;
+	program: number;
 	year: number;
 	term: string;
 	round_name: string;

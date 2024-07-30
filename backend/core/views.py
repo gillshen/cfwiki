@@ -54,17 +54,18 @@ class ContractRUDView(RetrieveUpdateDestroyAPIView):
 
 
 class ApplicationListView(ListAPIView):
-    queryset = (
-        Application.objects.all()
-        .select_related(
-            "student",
-            "round",
-            "round__program_iteration",
-            "round__program_iteration__program",
-        )
-        .prefetch_related("round__program_iteration__program__schools", "logs")
-    )
     serializer_class = ApplicationListSerializer
+
+    def get_queryset(self):
+        query_params = self.request.query_params
+
+        return Application.filter(
+            student=query_params.get("student"),
+            school=query_params.get("school"),
+            program=query_params.get("program"),
+            program_iteration=query_params.get("program_iteration"),
+            application_round=query_params.get("application_round"),
+        )
 
 
 class ApplicationDetailView(RetrieveAPIView):

@@ -4,3 +4,5 @@ db.sqlite3
 
 __*.py
 __test*.csv
+
+.env

@@ -10,7 +10,7 @@ export type ApplicationSchema = typeof applicationSchema;
 
 export const newApplicationSchema = z.object({
 	student: z.number(),
-	program_id: z.number(),
+	program: z.number(),
 	year: z.number(),
 	term: z.string(),
 	round_name: z.string()

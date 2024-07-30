@@ -139,6 +139,39 @@ class Application(models.Model):
     def __str__(self) -> str:
         return f"{self.student} > {self.round}"
 
+    @classmethod
+    def filter(
+        cls,
+        student: int = None,
+        school: int = None,
+        program: int = None,
+        program_iteration: int = None,
+        application_round: int = None,
+    ):
+        q = (
+            cls.objects.all()
+            .select_related(
+                "student",
+                "round",
+                "round__program_iteration",
+                "round__program_iteration__program",
+            )
+            .prefetch_related("round__program_iteration__program__schools", "logs")
+        )
+
+        if student is not None:
+            q = q.filter(student=student)
+        if school is not None:
+            q = q.filter(round__program_iteration__program__schools=school)
+        if program is not None:
+            q = q.filter(round__program_iteration__program=program)
+        if program_iteration is not None:
+            q = q.filter(round__program_iteration=program_iteration)
+        if application_round is not None:
+            q = q.filter(round=application_round)
+
+        return q
+
     @property
     def latest_log(self):
         return self.logs.order_by("-date", "-updated").first()
