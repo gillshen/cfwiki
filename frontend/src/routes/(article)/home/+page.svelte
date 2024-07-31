@@ -3,7 +3,7 @@
 	import { Tabs, TabItem, A } from 'flowbite-svelte';
 </script>
 
-<div class="p-12 w-full">
+<div>
 	<Tabs tabStyle="underline">
 		<TabItem title="Students" open>
 			<Button class="mb-4" href="/student/new/">Create a student file</Button>

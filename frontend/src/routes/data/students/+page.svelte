@@ -163,17 +163,6 @@
 	});
 </script>
 
-<main>
-	<Heading tag="h1" class="text-3xl font-bold py-6">Students</Heading>
+<Heading tag="h1" class="text-3xl font-bold py-6">Students</Heading>
 
-	<div id="grid" class="data-grid ag-theme-alpine" />
-</main>
-
-<style>
-	main {
-		padding: 0.5rem 1rem;
-	}
-	#grid {
-		height: calc(100vh - 8rem);
-	}
-</style>
+<div id="grid" class="data-grid ag-theme-alpine full-page" />

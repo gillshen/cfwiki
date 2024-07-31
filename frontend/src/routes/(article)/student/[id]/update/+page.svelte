@@ -9,11 +9,11 @@
 	const { form, enhance } = superForm(data.studentForm);
 </script>
 
-<div class="px-24 py-16 w-min">
-	<Heading tag="h2" class="pt-12 px-8">Update student file</Heading>
+<Heading tag="h3">Update student information</Heading>
 
-	<Hr />
+<Hr />
 
+<div class="form-width">
 	<form method="post" action="?/updateStudent" use:enhance>
 		<input class="hidden" type="number" name="id" bind:value={$form.id} />
 		<StudentForm {form} submitButtonText="Update" />

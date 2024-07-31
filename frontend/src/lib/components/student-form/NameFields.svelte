@@ -4,15 +4,11 @@
 	export let form: any;
 </script>
 
-<div>
-	<Label for="surname" class="form-label">Surname</Label>
-	<Input type="text" id="surname" name="surname" bind:value={$form.surname} required />
-</div>
+<Label for="surname" class="form-label">Surname</Label>
+<Input type="text" id="surname" name="surname" bind:value={$form.surname} required />
 
-<div>
-	<Label for="given-name" class="form-label">Given name</Label>
-	<Input type="text" id="given-name" name="given_name" bind:value={$form.given_name} required />
-</div>
+<Label for="given-name" class="form-label">Given name</Label>
+<Input type="text" id="given-name" name="given_name" bind:value={$form.given_name} required />
 
 <Checkbox class="form-checkbox" name="surname_first" bind:checked={$form.surname_first}>
 	Place the surname before the given name

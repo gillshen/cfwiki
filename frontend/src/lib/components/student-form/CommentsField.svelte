@@ -4,9 +4,7 @@
 	export let form: any;
 </script>
 
-<P size="sm">Anything special you want to note about the student?</P>
+<P size="sm" class="font-medium">Anything special you want to note about the student?</P>
 
-<div>
-	<Label for="comments" class="form-label optional">Comments</Label>
-	<Textarea id="comments" name="comments" bind:value={$form.comments} rows="6" />
-</div>
+<Label for="comments" class="form-label optional">Comments</Label>
+<Textarea id="comments" name="comments" bind:value={$form.comments} rows="6" />

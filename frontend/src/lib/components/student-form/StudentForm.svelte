@@ -10,22 +10,12 @@
 	export let submitButtonText = 'Submit';
 </script>
 
-<div class="w-[30rem] px-8">
-	<NameFields {form} />
-</div>
+<NameFields {form} />
 <Hr />
-<div class="w-[30rem] px-8">
-	<BirthFields {form} />
-</div>
+<BirthFields {form} />
 <Hr />
-<div class="w-[30rem] px-8">
-	<LocationFields {form} />
-</div>
+<LocationFields {form} />
 <Hr />
-<div class="w-[40rem] px-8">
-	<CommentsField {form} />
-</div>
+<CommentsField {form} />
 <Hr />
-<div class="w-[30rem] px-8">
-	<Button type="submit">{submitButtonText}</Button>
-</div>
+<Button type="submit">{submitButtonText}</Button>

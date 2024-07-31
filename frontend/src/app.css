@@ -15,6 +15,9 @@
 	font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial, sans-serif;
 }
 
+.form-width {
+	@apply w-[30rem];
+}
 .form-label {
 	@apply mt-6 mb-2;
 }
@@ -29,7 +32,7 @@
 	@apply mt-8 mb-6 space-x-1 font-normal;
 }
 form.modal {
-	@apply px-16 pb-12;
+	@apply px-12 pb-12;
 }
 
 .ag-theme-alpine {
@@ -38,4 +41,7 @@ form.modal {
 }
 .data-grid a {
 	@apply text-primary-800 hover:text-primary-600;
+}
+.data-grid.full-page {
+	height: calc(100vh - 8rem);
 }

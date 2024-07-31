@@ -9,12 +9,12 @@
 	const { form, enhance } = superForm(data.newStudentForm);
 </script>
 
-<div class="px-24 py-16 w-min">
-	<Heading tag="h2" class="pt-12 px-8">Create a student file</Heading>
+<Heading tag="h3">Create a student file</Heading>
 
-	<Hr />
+<Hr />
 
-	<form method="post" action="?/createStudent" use:enhance class="w-auto">
+<div class="form-width">
+	<form method="post" action="?/createStudent" use:enhance>
 		<StudentForm {form} />
 	</form>
 </div>

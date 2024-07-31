@@ -9,12 +9,14 @@
 	const { form, enhance } = superForm(data.newSchoolForm);
 </script>
 
-<div class="px-24 py-16 w-min">
-	<Heading tag="h2" class="pt-12 px-8">Create a school file</Heading>
+<div>
+	<Heading tag="h3">Create a school file</Heading>
 
 	<Hr />
 
-	<form method="post" action="?/createSchool" use:enhance class="w-auto">
-		<SchoolForm {form} />
-	</form>
+	<div class="form-width">
+		<form method="post" action="?/createSchool" use:enhance>
+			<SchoolForm {form} />
+		</form>
+	</div>
 </div>

@@ -5,11 +5,11 @@
 		TableBodyCell,
 		TableBodyRow,
 		Label,
-		Input,
 		Select,
 		Radio,
 		Hr,
-		Button
+		Button,
+		Heading
 	} from 'flowbite-svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import { activeYears } from '$lib/constants/dates';
@@ -26,23 +26,27 @@
 				: ['Priority', 'Regular', 'Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5'];
 </script>
 
-<div class="w-[36rem] px-8 py-6">
+<Heading tag="h3">Create an application</Heading>
+
+<Hr />
+
+<div class="w-[30rem]">
 	<Table noborder>
 		<TableBody>
 			<TableBodyRow>
-				<TableBodyCell tdClass="w-32 font-medium px-6 py-4">Student</TableBodyCell>
+				<TableBodyCell tdClass="w-32 font-medium py-4">Student</TableBodyCell>
 				<TableBodyCell tdClass="font-normal">{data.student.fullname}</TableBodyCell>
 			</TableBodyRow>
 
 			{#each data.program.schools as school}
 				<TableBodyRow>
-					<TableBodyCell tdClass="w-32 font-medium px-6 py-4">School</TableBodyCell>
+					<TableBodyCell tdClass="w-32 font-medium py-4">School</TableBodyCell>
 					<TableBodyCell tdClass="font-normal">{school.name}</TableBodyCell>
 				</TableBodyRow>
 			{/each}
 
 			<TableBodyRow>
-				<TableBodyCell tdClass="w-32 font-medium px-6 py-4">Program</TableBodyCell>
+				<TableBodyCell tdClass="w-32 font-medium py-4">Program</TableBodyCell>
 				<TableBodyCell tdClass="font-normal">{data.program.display_name}</TableBodyCell>
 			</TableBodyRow>
 		</TableBody>
@@ -54,9 +58,9 @@
 		<input type="number" name="student" class="hidden" value={data.student.id} />
 		<input type="number" name="program" class="hidden" value={data.program.id} />
 
-		<div class="w-[30rem] px-6">
+		<div class="form-width">
 			<Label for="year" class="form-label">Year</Label>
-			<Select id="year" name="year" bind:value={$form.year}>
+			<Select id="year" name="year" bind:value={$form.year} required>
 				{#each activeYears as year}
 					<option value={year}>{year}</option>
 				{/each}
@@ -77,10 +81,8 @@
 					<option value={roundName}>{roundName}</option>
 				{/each}
 			</Select>
-		</div>
 
-		<div class="w-[30rem] px-6 pt-8">
-			<Button type="submit">Submit</Button>
+			<Button type="submit" class="mt-8">Submit</Button>
 		</div>
 	</form>
 </div>

@@ -7,33 +7,31 @@
 	export let submitButtonText = 'Submit';
 </script>
 
-<div class="w-[30rem] px-8">
-	<Label for="contract-type" class="form-label">Contract type</Label>
-	<Select id="contract-type" name="type" bind:value={$form.type} required>
-		{#each contractTypes as contractType}
-			<option value={contractType}>{contractType}</option>
-		{/each}
-	</Select>
+<Label for="contract-type" class="form-label">Contract type</Label>
+<Select id="contract-type" name="type" bind:value={$form.type} required>
+	{#each contractTypes as contractType}
+		<option value={contractType}>{contractType}</option>
+	{/each}
+</Select>
 
-	<Label for="target-year" class="form-label">Target year</Label>
-	<Select id="target-year" name="target_year" bind:value={$form.target_year} required>
-		{#each activeYears as year}
-			<option value={year}>{year}</option>
-		{/each}
-	</Select>
+<Label for="target-year" class="form-label">Target year</Label>
+<Select id="target-year" name="target_year" bind:value={$form.target_year} required>
+	{#each activeYears as year}
+		<option value={year}>{year}</option>
+	{/each}
+</Select>
 
-	<Label class="form-label">Contract status</Label>
-	<div class="grid grid-cols-1 mb-4 gap-2">
-		{#each contractStatuses as contractStatus}
-			<Radio
-				name="status"
-				value={contractStatus}
-				class="font-normal"
-				bind:group={$form.status}
-				required>{contractStatus}</Radio
-			>
-		{/each}
-	</div>
+<Label class="form-label">Contract status</Label>
+<div class="grid grid-cols-1 mb-4 gap-2">
+	{#each contractStatuses as contractStatus}
+		<Radio
+			name="status"
+			value={contractStatus}
+			class="font-normal"
+			bind:group={$form.status}
+			required>{contractStatus}</Radio
+		>
+	{/each}
 
 	<Label for="contract-date" class="form-label optional">Date signed</Label>
 	<Input id="contract-date" type="date" name="date" bind:value={$form.date} />
@@ -49,6 +47,5 @@
 	/>
 </div>
 <Hr />
-<div class="w-[30rem] px-8">
-	<Button type="submit">{submitButtonText}</Button>
-</div>
+
+<Button type="submit">{submitButtonText}</Button>
