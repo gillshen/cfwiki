@@ -55,7 +55,7 @@ class ProgramIteration(models.Model):
 
     program = models.ForeignKey(
         Program,
-        related_name="targets",
+        related_name="iterations",
         on_delete=models.CASCADE,
     )
     year = models.IntegerField()
