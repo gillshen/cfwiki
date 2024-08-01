@@ -50,6 +50,6 @@
 	});
 </script>
 
-<Heading tag="h1" class="text-3xl font-bold py-6">Schools</Heading>
+<Heading tag="h1" class="grid-title">Schools</Heading>
 
 <div id="grid" class="data-grid ag-theme-alpine full-page" />

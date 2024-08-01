@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Label, Select, Input, Radio, Button, Hr } from 'flowbite-svelte';
-	import { activeYears } from '$lib/constants/dates';
+	import { activeYears } from '$lib/utils/dateUtils';
 	import { contractStatuses, contractTypes } from '$lib/api/contract';
 
 	export let form: any;
@@ -16,7 +16,7 @@
 
 <Label for="target-year" class="form-label">Target year</Label>
 <Select id="target-year" name="target_year" bind:value={$form.target_year} required>
-	{#each activeYears as year}
+	{#each activeYears() as year}
 		<option value={year}>{year}</option>
 	{/each}
 </Select>

@@ -28,9 +28,11 @@
 	});
 </script>
 
-<Heading tag="h1" class="font-normal">{data.school.name}</Heading>
+<Heading tag="h1" class="alt-page-title">{data.school.name}</Heading>
 
-<div class="w-[36rem] py-8">
+<Hr />
+
+<div class="w-[36rem] pb-8">
 	<Table>
 		<TableBody>
 			<TableBodyRow>

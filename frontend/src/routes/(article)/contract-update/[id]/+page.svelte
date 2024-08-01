@@ -8,7 +8,7 @@
 	const { form, enhance } = superForm(data.contractForm);
 </script>
 
-<Heading tag="h3">Update contract</Heading>
+<Heading tag="h3" class="page-title">Update contract</Heading>
 
 <Hr />
 

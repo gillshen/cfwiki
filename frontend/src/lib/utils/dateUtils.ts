@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { number } from 'zod';
 
 export function makeDate(dateString: string | null | undefined): Date | null {
 	if (!dateString) {
@@ -29,4 +30,21 @@ export function toShortDate(dateString: string | null | undefined): string {
 
 export function toISODate(dateString: string | null | undefined): string {
 	return toFormattedDate(dateString, 'y-LL-dd');
+}
+
+export function activeYears(lookAhead = 5): number[] {
+	const startYear = 2020;
+	const currentYear = new Date().getFullYear();
+	const endYear = currentYear + lookAhead;
+	return Array.from({ length: endYear - startYear }, (_, k) => k + startYear);
+}
+
+export function quickAccessYears(): number[] {
+	const today = new Date();
+	const currentYear = today.getFullYear();
+	if (today.getMonth() > 4) {
+		return [currentYear + 1, currentYear, currentYear - 1];
+	} else {
+		return [currentYear, currentYear - 1, currentYear - 2];
+	}
 }

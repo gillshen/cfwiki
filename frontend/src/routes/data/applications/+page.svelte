@@ -30,7 +30,7 @@
 	}
 
 	const columnDefs = [
-		{ headerName: 'ID', field: 'id', filter: NumberFilter, cellRenderer: IDRenderer },
+		{ headerName: 'Link', field: 'id', filter: NumberFilter, cellRenderer: IDRenderer },
 		{ headerName: 'Student', field: 'student.fullname', filter: true },
 		{ headerName: 'School', filter: true, valueGetter: schoolValueGetter },
 		{ headerName: 'Program', field: 'program.display_name', filter: true },
@@ -55,6 +55,6 @@
 	});
 </script>
 
-<Heading tag="h1" class="text-3xl font-bold py-6">Applications</Heading>
+<Heading tag="h1" class="grid-title">Applications</Heading>
 
 <div id="grid" class="data-grid ag-theme-alpine full-page" />

@@ -65,7 +65,7 @@
 	};
 </script>
 
-<Heading tag="h3">Create an application</Heading>
+<Heading tag="h3" class="page-title">Create an application</Heading>
 
 <Hr />
 

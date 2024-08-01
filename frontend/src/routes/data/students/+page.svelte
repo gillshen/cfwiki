@@ -163,6 +163,6 @@
 	});
 </script>
 
-<Heading tag="h1" class="text-3xl font-bold py-6">Students</Heading>
+<Heading tag="h1" class="grid-title">Students</Heading>
 
 <div id="grid" class="data-grid ag-theme-alpine full-page" />

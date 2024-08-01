@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
-	import { Button, Modal } from 'flowbite-svelte';
+	import { Button, Heading, Hr, Modal } from 'flowbite-svelte';
 	import NameFields from '$lib/components/program-form/NameFields.svelte';
 
 	export let data;
@@ -16,6 +16,10 @@
 		}
 	});
 </script>
+
+<Heading tag="h1" class="alt-page-title">{data.program.display_name}</Heading>
+
+<Hr />
 
 <pre class="text-sm bg-gray-50">{JSON.stringify(data.program, null, 2)}</pre>
 

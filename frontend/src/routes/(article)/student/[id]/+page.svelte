@@ -7,7 +7,8 @@
 		TableBodyCell,
 		TableBodyRow,
 		Button,
-		Heading
+		Heading,
+		Hr
 	} from 'flowbite-svelte';
 
 	import countryFlags from '$lib/constants/countryFlags';
@@ -31,9 +32,11 @@
 	};
 </script>
 
-<Heading tag="h1" class="font-normal">{data.student.fullname}</Heading>
+<Heading tag="h1" class="alt-page-title">{data.student.fullname}</Heading>
 
-<div class="w-[36rem] py-8">
+<Hr />
+
+<div class="w-[36rem] pb-8">
 	<Table>
 		<TableBody>
 			<TableBodyRow>

@@ -12,7 +12,7 @@
 		Heading
 	} from 'flowbite-svelte';
 	import { superForm } from 'sveltekit-superforms';
-	import { activeYears } from '$lib/constants/dates';
+	import { activeYears } from '$lib/utils/dateUtils';
 
 	export let data;
 
@@ -61,7 +61,7 @@
 		<div class="form-width">
 			<Label for="year" class="form-label">Year</Label>
 			<Select id="year" name="year" bind:value={$form.year} required>
-				{#each activeYears as year}
+				{#each activeYears() as year}
 					<option value={year}>{year}</option>
 				{/each}
 			</Select>

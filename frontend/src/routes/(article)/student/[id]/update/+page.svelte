@@ -9,7 +9,7 @@
 	const { form, enhance } = superForm(data.studentForm);
 </script>
 
-<Heading tag="h3">Update student information</Heading>
+<Heading tag="h3" class="page-title">Update student information</Heading>
 
 <Hr />
 

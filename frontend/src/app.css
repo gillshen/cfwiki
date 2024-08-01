@@ -35,6 +35,16 @@ form.modal {
 	@apply px-12 pb-12;
 }
 
+.page-title {
+	@apply text-3xl font-bold pt-4;
+}
+.alt-page-title {
+	@apply text-4xl font-normal pt-4 -mb-1;
+}
+
+.grid-title {
+	@apply text-3xl font-bold pt-4 pb-6;
+}
 .ag-theme-alpine {
 	--ag-font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial, sans-serif;
 	font-variant-numeric: tabular-nums;
@@ -43,5 +53,9 @@ form.modal {
 	@apply text-primary-800 hover:text-primary-600;
 }
 .data-grid.full-page {
-	height: calc(100vh - 8rem);
+	height: calc(100vh - 12rem);
+}
+
+.dropdown-icon {
+	@apply w-6 h-6 me-1 text-primary-800 inline-block;
 }
