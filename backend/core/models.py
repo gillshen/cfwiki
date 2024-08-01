@@ -18,6 +18,17 @@ class CFUser(AbstractUser):
     def __str__(self):
         return self.username
 
+    def save(self, *args, **kwargs):
+        if not self.email:
+            raise ValueError(_("Email address required"))
+
+        self.email = self.__class__.objects.normalize_email(self.email)
+
+        if not self.email.endswith("@choicefree.com.cn"):
+            raise ValueError(_("Email address not permitted"))
+
+        super().save(*args, **kwargs)
+
 
 class Student(models.Model):
     surname = models.CharField(max_length=100)

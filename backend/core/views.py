@@ -5,9 +5,10 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
-from core.models import Student, Contract, Application
+from core.models import CFUser, Student, Contract, Application
 
 from core.serializers import (
+    CFUserSerializer,
     StudentSerializer,
     StudentCRUDSerializer,
     ContractSerializer,
@@ -16,6 +17,11 @@ from core.serializers import (
     ApplicationCreateSerializer,
     ApplicationRUDSerializer,
 )
+
+
+class CFUserListView(ListAPIView):
+    queryset = CFUser.objects.all()
+    serializer_class = CFUserSerializer
 
 
 class StudentListView(ListAPIView):

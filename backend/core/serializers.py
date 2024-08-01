@@ -1,6 +1,20 @@
 from rest_framework import serializers
-from core.models import Student, Contract, Application, ApplicationLog
+from core.models import CFUser, Student, Contract, Application, ApplicationLog
 from target.models import School, Program, ProgramIteration, ApplicationRound
+
+
+class CFUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CFUser
+        fields = [
+            "id",
+            "username",
+            "email",
+            "is_active",
+            "department",
+            "public_banner",
+            "private_banner",
+        ]
 
 
 class StudentSerializer(serializers.ModelSerializer):
