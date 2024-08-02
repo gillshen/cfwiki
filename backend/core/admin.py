@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from core.models import CFUser, Student, Contract, Application, ApplicationLog
+from core.models import CFUser, Student, Contract, Service, Application, ApplicationLog
 from core.forms import CFUserCreationForm, CFUserChangeForm
 
 
@@ -38,6 +38,11 @@ class StudentAdmin(admin.ModelAdmin):
 @admin.register(Contract)
 class ContractAdmin(admin.ModelAdmin):
     list_display = "id", "student", "type", "target_year", "status"
+
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = "id", "contract", "cfer", "role", "start_date", "end_date"
 
 
 @admin.register(Application)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import CFUser, Student, Contract, Application, ApplicationLog
+from core.models import CFUser, Student, Contract, Service, Application, ApplicationLog
 from target.models import School, Program, ProgramIteration, ApplicationRound
 
 
@@ -30,6 +30,15 @@ class StudentSerializer(serializers.ModelSerializer):
             model = Contract
             exclude = ["student"]
 
+        class ServiceSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Service
+                exclude = ["contract"]
+
+            cf_username = serializers.CharField()
+
+        services = ServiceSerializer(many=True)
+
     # TODO fetch only the latest for the list
     contracts_sorted = ContractSerializer(many=True)
 
@@ -37,6 +46,12 @@ class StudentSerializer(serializers.ModelSerializer):
 class StudentCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
+        fields = "__all__"
+
+
+class ServiceCRUDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
         fields = "__all__"
 
 

@@ -2,6 +2,15 @@ import { get, patch, post } from '$lib/api/api';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
 
+export type Service = {
+	id: number;
+	cfer: number;
+	cf_username: string;
+	role: string;
+	start_date: string | null;
+	end_date: string | null;
+};
+
 export type Contract = {
 	id: number;
 	type: string;
@@ -9,6 +18,7 @@ export type Contract = {
 	date: string | null;
 	status: 'In effect' | 'Fulfilled' | 'Terminated';
 	student_progression_when_signed: string;
+	services: Service[];
 };
 
 export type StudentListItem = {

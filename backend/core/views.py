@@ -5,7 +5,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
-from core.models import CFUser, Student, Contract, Application
+from core.models import CFUser, Student, Service, Contract, Application
 
 from core.serializers import (
     CFUserSerializer,
@@ -13,6 +13,7 @@ from core.serializers import (
     StudentCRUDSerializer,
     ContractSerializer,
     ContractCRUDSerializer,
+    ServiceCRUDSerializer,
     ApplicationListSerializer,
     ApplicationCreateSerializer,
     ApplicationRUDSerializer,
@@ -57,6 +58,16 @@ class ContractCreateView(CreateAPIView):
 class ContractRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Contract.objects.all()
     serializer_class = ContractCRUDSerializer
+
+
+class ServiceCreateView(CreateAPIView):
+    queryset = Service.objects.all()
+    serializer_class = ServiceCRUDSerializer
+
+
+class ServiceRUDView(RetrieveUpdateDestroyAPIView):
+    queryset = Service.objects.all()
+    serializer_class = ServiceCRUDSerializer
 
 
 class ApplicationListView(ListAPIView):

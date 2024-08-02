@@ -125,6 +125,40 @@ class Contract(models.Model):
         return self.student.fullname
 
 
+class Service(models.Model):
+
+    contract = models.ForeignKey(
+        Contract,
+        related_name="services",
+        on_delete=models.CASCADE,
+    )
+    cfer = models.ForeignKey(
+        CFUser,
+        related_name="services",
+        on_delete=models.CASCADE,
+    )
+    role = models.CharField(max_length=50)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                "contract",
+                "cfer",
+                "role",
+                name="service_unique_contract_cfer_role",
+            )
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.contract} | {self.role} {self.cfer}"
+
+    @property
+    def cf_username(self) -> str:
+        return self.cfer.username
+
+
 class Application(models.Model):
 
     student = models.ForeignKey(

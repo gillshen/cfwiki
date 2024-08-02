@@ -9,6 +9,8 @@ from core.views import (
     ContractDetailView,
     ContractCreateView,
     ContractRUDView,
+    ServiceCreateView,
+    ServiceRUDView,
     ApplicationListView,
     ApplicationDetailView,
     ApplicationCreateView,
@@ -38,6 +40,9 @@ urlpatterns = [
     path("contracts/<int:pk>/", ContractDetailView.as_view()),
     path("contracts/new/", ContractCreateView.as_view()),
     path("contracts/<int:pk>/update/", ContractRUDView.as_view()),
+    # service
+    path("services/new/", ServiceCreateView.as_view()),
+    path("services/<int:pk>/update/", ServiceRUDView.as_view()),
     # school
     path("schools/", SchoolListView.as_view()),
     path("schools/<int:pk>/", SchoolDetailView.as_view()),

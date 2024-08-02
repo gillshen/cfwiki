@@ -104,6 +104,30 @@
 		return latestContract?.status ?? '';
 	}
 
+	function _getLatestServices(student: StudentListItem, role: string): string {
+		if (!student.contracts_sorted.length) {
+			return '';
+		}
+		const services = student.contracts_sorted[0].services;
+		return services
+			.filter((s) => s.role === role)
+			.map((s) => s.cf_username)
+			.sort()
+			.join(', ');
+	}
+
+	function stratPeopleValueGetter(params: ValueGetterParams): string {
+		return _getLatestServices(params.data, '战略顾问');
+	}
+
+	function salesPeopleValueGetter(params: ValueGetterParams): string {
+		return _getLatestServices(params.data, '顾问');
+	}
+
+	function servicePeopleValueGetter(params: ValueGetterParams): string {
+		return _getLatestServices(params.data, '文案');
+	}
+
 	const localeCmp = (a: string, b: string, nodeA: any, nodeB: any, isDescending: boolean) => {
 		return a.localeCompare(b, 'zh-CN');
 	};
@@ -147,6 +171,9 @@
 			filter: 'agNumberColumnFilter',
 			valueGetter: lastestTargetYearValueGetter
 		},
+		{ headerName: '顾问', filter: true, valueGetter: salesPeopleValueGetter },
+		{ headerName: '文案', filter: true, valueGetter: servicePeopleValueGetter },
+		{ headerName: '战略顾问', filter: true, valueGetter: stratPeopleValueGetter },
 		{ headerName: 'Contract status', filter: true, valueGetter: contractStatusValueGetter }
 	];
 
