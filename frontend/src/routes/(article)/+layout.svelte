@@ -7,7 +7,8 @@
 		NavHamburger,
 		Dropdown,
 		DropdownItem,
-		DropdownDivider
+		DropdownDivider,
+		Button
 	} from 'flowbite-svelte';
 	import { ChevronDownOutline } from 'flowbite-svelte-icons';
 
@@ -37,7 +38,10 @@
 			<span class="self-center whitespace-nowrap text-lg font-semibold">ChoiceFreezer</span>
 		</NavBrand>
 
-		<NavHamburger />
+		<div class="flex md:order-2">
+			<Button outline size="sm" href="/logout">Log out</Button>
+			<NavHamburger />
+		</div>
 
 		<NavUl>
 			<NavLi href="/home" class="mr-4">Home</NavLi>

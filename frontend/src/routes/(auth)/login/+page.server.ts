@@ -4,17 +4,10 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { jwtDecode } from 'jwt-decode';
 
 import { authSchema } from '$lib/schemas/auth';
-import { authenticate } from '$lib/api/auth.js';
+import { authenticate } from '$lib/api/auth';
 
-export async function load(event) {
-	const username = event.cookies.get('username');
-
-	if (username) {
-		throw redirect(302, '/home');
-	}
-
-	const authForm = await superValidate(zod(authSchema));
-	return { authForm };
+export async function load(_) {
+	return { authForm: await superValidate(zod(authSchema)) };
 }
 
 export const actions = {
@@ -41,22 +34,24 @@ export const actions = {
 			username: string;
 		};
 
-		event.cookies.set('access', access, {
+		const opts: { httpOnly: boolean; sameSite: 'strict'; path: string } = {
 			httpOnly: true,
 			sameSite: 'strict',
-			maxAge: 60 * 60 * 24, // 1 day
-			path: ''
+			path: '/'
+		};
+
+		event.cookies.set('access', access, {
+			...opts,
+			maxAge: 60 * 60 * 24 // 1 day
 		});
 
 		event.cookies.set('refresh', refresh, {
-			httpOnly: true,
-			sameSite: 'strict',
-			maxAge: 60 * 60 * 24 * 15, // 15 days
-			path: ''
+			...opts,
+			maxAge: 60 * 60 * 24 * 15 // 15 days
 		});
 
-		event.cookies.set('user_id', user_id, { httpOnly: true, sameSite: 'strict', path: '' });
-		event.cookies.set('username', username, { httpOnly: true, sameSite: 'strict', path: '' });
+		event.cookies.set('user_id', user_id, opts);
+		event.cookies.set('username', username, opts);
 
 		throw redirect(302, '/home');
 	}

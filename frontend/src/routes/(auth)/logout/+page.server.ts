@@ -1,6 +1,7 @@
 export function load({ cookies }) {
-	cookies.delete('user_id', { path: '/login' });
-	cookies.delete('username', { path: '/login' });
-	cookies.delete('access', { path: '/login' });
-	cookies.delete('refresh', { path: '/login' });
+	const opts = { path: '/' };
+	cookies.delete('user_id', opts);
+	cookies.delete('username', opts);
+	cookies.delete('access', opts);
+	cookies.delete('refresh', opts);
 }
