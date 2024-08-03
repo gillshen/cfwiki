@@ -47,7 +47,7 @@ class ServiceAdmin(admin.ModelAdmin):
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = "id", "student", "program", "year", "term", "round_name"
+    list_display = "id", "contract", "program", "year", "term", "round_name"
 
 
 @admin.register(ApplicationLog)

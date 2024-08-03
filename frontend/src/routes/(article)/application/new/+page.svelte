@@ -35,7 +35,14 @@
 		<TableBody>
 			<TableBodyRow>
 				<TableBodyCell tdClass="w-32 font-medium py-4">Student</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">{data.student.fullname}</TableBodyCell>
+				<TableBodyCell tdClass="font-normal">{data.contract.student_name}</TableBodyCell>
+			</TableBodyRow>
+
+			<TableBodyRow>
+				<TableBodyCell tdClass="w-32 font-medium py-4">Contract</TableBodyCell>
+				<TableBodyCell tdClass="font-normal"
+					>{data.contract.type} {data.contract.target_year}</TableBodyCell
+				>
 			</TableBodyRow>
 
 			{#each data.program.schools as school}
@@ -55,7 +62,7 @@
 	<Hr />
 
 	<form method="post" action="?/createApplication" use:enhance>
-		<input type="number" name="student" class="hidden" value={data.student.id} />
+		<input type="number" name="contract" class="hidden" value={data.contract.id} />
 		<input type="number" name="program" class="hidden" value={data.program.id} />
 
 		<div class="form-width">

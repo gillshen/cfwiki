@@ -161,8 +161,8 @@ class Service(models.Model):
 
 class Application(models.Model):
 
-    student = models.ForeignKey(
-        Student,
+    contract = models.ForeignKey(
+        Contract,
         related_name="applications",
         on_delete=models.CASCADE,
     )
@@ -175,14 +175,14 @@ class Application(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                "student",
+                "contract",
                 "round",
-                name="application_unique_student_round",
+                name="application_unique_contract_round",
             )
         ]
 
     def __str__(self) -> str:
-        return f"{self.student} > {self.round}"
+        return f"{self.contract} > {self.round}"
 
     @classmethod
     def filter(
@@ -196,16 +196,20 @@ class Application(models.Model):
         q = (
             cls.objects.all()
             .select_related(
-                "student",
+                "contract",
+                "contract__student",
                 "round",
                 "round__program_iteration",
                 "round__program_iteration__program",
             )
-            .prefetch_related("round__program_iteration__program__schools", "logs")
+            .prefetch_related(
+                "round__program_iteration__program__schools",
+                "logs",
+            )
         )
 
         if student is not None:
-            q = q.filter(student=student)
+            q = q.filter(contract__student=student)
         if school is not None:
             q = q.filter(round__program_iteration__program__schools=school)
         if program is not None:
@@ -216,6 +220,14 @@ class Application(models.Model):
             q = q.filter(round=application_round)
 
         return q
+
+    @property
+    def student(self) -> Student:
+        return self.contract.student
+
+    @property
+    def services(self) -> list[Service]:
+        return self.contract.services
 
     @property
     def latest_log(self):

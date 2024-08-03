@@ -1,6 +1,11 @@
 import { get, post } from '$lib/api/api';
 import type { ApplicationStatus } from '$lib/api/applicationLog';
 
+type Service = {
+	cf_username: string;
+	role: string;
+};
+
 type School = {
 	id: number;
 	name: string;
@@ -16,11 +21,11 @@ type Log = {
 export type ApplicationListItem = {
 	id: number;
 	student: {
-		id: number;
 		fullname: string;
 		gender: 'female' | 'male' | 'other';
 		citizenship: string;
 	};
+	services: Service[];
 	schools: School[];
 	program: {
 		id: number;
@@ -53,7 +58,7 @@ export async function fetchApplication(id: number): Promise<ApplicationListItem>
 }
 
 export async function createApplication(data: {
-	student: number;
+	contract: number;
 	program: number;
 	year: number;
 	term: string;

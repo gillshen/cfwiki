@@ -113,9 +113,13 @@
 	{/each}
 </div>
 
-<div class="form-width py-6">
+<div class="form-width pt-8">
 	<form method="post" action="?/createContract" use:enhance>
 		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
 		<ContractForm {form} />
 	</form>
 </div>
+
+<Hr />
+
+<Button href={`/student/${data.student.id}/new-application`}>New application</Button>

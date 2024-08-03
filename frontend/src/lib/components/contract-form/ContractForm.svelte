@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Label, Select, Input, Radio, Button, Hr } from 'flowbite-svelte';
+	import { Label, Select, Input, Radio, Button } from 'flowbite-svelte';
 	import { activeYears } from '$lib/utils/dateUtils';
 	import { contractStatuses, contractTypes } from '$lib/api/contract';
 
@@ -22,7 +22,7 @@
 </Select>
 
 <Label class="form-label">Contract status</Label>
-<div class="grid grid-cols-1 mb-4 gap-2">
+<div class="grid grid-cols-1 gap-2">
 	{#each contractStatuses as contractStatus}
 		<Radio
 			name="status"
@@ -46,6 +46,5 @@
 		bind:value={$form.student_progression_when_signed}
 	/>
 </div>
-<Hr />
 
-<Button type="submit">{submitButtonText}</Button>
+<Button type="submit" class="mt-8">{submitButtonText}</Button>

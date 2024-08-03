@@ -81,6 +81,15 @@ class ApplicationListSerializer(serializers.ModelSerializer):
 
     student = StudentSerializer()
 
+    class ServiceSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Service
+            fields = ["cf_username", "role"]
+
+        cf_username = serializers.CharField()
+
+    services = ServiceSerializer(many=True)
+
     class SchoolSerializer(serializers.ModelSerializer):
         class Meta:
             model = School
@@ -122,7 +131,7 @@ class ApplicationListSerializer(serializers.ModelSerializer):
 class ApplicationCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        fields = ["id", "student", "program", "year", "term", "round_name"]
+        fields = ["id", "contract", "program", "year", "term", "round_name"]
 
     program = serializers.IntegerField(write_only=True)
     year = serializers.IntegerField(write_only=True)
@@ -141,7 +150,7 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
             name=validated_data["round_name"],
         )
         application = Application.objects.create(
-            student=validated_data["student"],
+            contract=validated_data["contract"],
             round=application_round,
         )
         return application

@@ -5,7 +5,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '$env/static/private';
-import { fetchStudent, type StudentListItem } from '$lib/api/student';
+import { fetchContract, type Contract } from '$lib/api/contract';
 import { fetchProgram, type ProgramListItem } from '$lib/api/program';
 import { newApplicationSchema } from '$lib/schemas/application';
 import { createApplication } from '$lib/api/application';
@@ -17,17 +17,17 @@ export const load: PageServerLoad = async ({ url }) => {
 	}
 
 	try {
-		const { student: studentIdString, program: programIdString } = jwt.verify(
+		const { contract: contractIdString, program: programIdString } = jwt.verify(
 			token,
 			JWT_SECRET_KEY
-		) as { student: string; program: string };
+		) as { contract: string; program: string };
 
-		const studentId = parseInt(studentIdString, 10);
+		const contractId = parseInt(contractIdString, 10);
 		const programId = parseInt(programIdString, 10);
 
-		const student: StudentListItem = await fetchStudent(studentId);
-		if (student?.id === undefined) {
-			throw error(404, 'Student not found');
+		const contract: Contract = await fetchContract(contractId);
+		if (contract?.id === undefined) {
+			throw error(404, 'Contract not found');
 		}
 
 		const program: ProgramListItem = await fetchProgram(programId);
@@ -37,7 +37,7 @@ export const load: PageServerLoad = async ({ url }) => {
 
 		const newApplicationForm = await superValidate(zod(newApplicationSchema));
 
-		return { student, program, newApplicationForm };
+		return { contract, program, newApplicationForm };
 	} catch (err) {
 		throw error(400, 'Invalid token');
 	}

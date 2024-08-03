@@ -76,6 +76,13 @@
 		<Label for="student-name" class="form-label">Student</Label>
 		<Input id="student-name" type="text" value={data.student.fullname} readonly />
 
+		<Label for="contract" class="form-label">Contract</Label>
+		<Select id="contract" name="contract" required>
+			{#each data.student.contracts_sorted as contract}
+				<option value={contract.id}>{contract.type} {contract.target_year}</option>
+			{/each}
+		</Select>
+
 		<Label class="form-label">School type</Label>
 		<div class="form-radio-group">
 			<Radio

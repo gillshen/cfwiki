@@ -33,7 +33,11 @@ export async function load(event: PageServerLoadEvent) {
 export const actions = {
 	gotoCreateApplication: async ({ request }) => {
 		const data = await request.formData();
-		const payload = { student: data.get('student'), program: data.get('program') };
+		const payload = {
+			student: data.get('student'),
+			contract: data.get('contract'),
+			program: data.get('program')
+		};
 		const token = jwt.sign(payload, JWT_SECRET_KEY);
 		throw redirect(302, `/application/new?token=${token}`);
 	},

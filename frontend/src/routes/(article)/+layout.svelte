@@ -106,6 +106,6 @@
 	</Navbar>
 </div>
 
-<div class="px-12">
+<div class="px-12 pb-8">
 	<slot />
 </div>
