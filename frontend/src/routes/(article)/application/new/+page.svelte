@@ -13,17 +13,11 @@
 	} from 'flowbite-svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import { activeYears } from '$lib/utils/dateUtils';
+	import { getRoundNames } from '$lib/constants/applicationRounds.js';
 
 	export let data;
 
 	const { form, enhance } = superForm(data.newApplicationForm);
-
-	const roundNames: string[] =
-		data.program.type === 'UG Freshman'
-			? ['ED1', 'ED2', 'EA1', 'EA2', 'REA', 'RD', 'Priority']
-			: data.program.type === 'UG Transfer'
-				? ['ED', 'RD']
-				: ['Priority', 'Regular', 'Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5'];
 </script>
 
 <Heading tag="h3">Create an application</Heading>
@@ -84,7 +78,7 @@
 
 			<Label for="round-name" class="form-label">Round</Label>
 			<Select id="round-name" name="round_name" bind:value={$form.round_name} required>
-				{#each roundNames.length ? [...roundNames, 'Rolling'] : [] as roundName}
+				{#each getRoundNames(data.program.type) as roundName}
 					<option value={roundName}>{roundName}</option>
 				{/each}
 			</Select>

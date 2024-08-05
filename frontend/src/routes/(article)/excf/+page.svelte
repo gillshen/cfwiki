@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LinkWithIcon from '$lib/components/links/LinkWithIcon.svelte';
 	import { Heading, Hr, A, P } from 'flowbite-svelte';
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
@@ -12,13 +13,10 @@
 <Hr />
 
 <div class="mt-2">
-	<ul class="flex flex-col gap-2">
+	<ul class="w-[36rem] grid grid-cols-3 gap-x-8 gap-y-4">
 		{#each exUsers as exUser}
 			<li class="w-fit">
-				<A href={`/cf/${exUser.username}`} class="flex gap-1">
-					<P>{exUser.username}</P>
-					<ArrowUpRightFromSquareOutline class="w-4 h-4" />
-				</A>
+				<LinkWithIcon href={`/cf/${exUser.username}`} text={exUser.username} size="base" />
 			</li>
 		{/each}
 	</ul>

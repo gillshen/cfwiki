@@ -6,18 +6,6 @@ type Service = {
 	role: string;
 };
 
-type School = {
-	id: number;
-	name: string;
-	alt_name: string;
-	country: string;
-};
-
-type Log = {
-	status: ApplicationStatus;
-	date: string;
-};
-
 export type ApplicationListItem = {
 	id: number;
 	student: {
@@ -26,16 +14,28 @@ export type ApplicationListItem = {
 		citizenship: string;
 	};
 	services: Service[];
-	schools: School[];
-	program: {
-		id: number;
-		display_name: string;
-	};
-	program_iteration: {
-		id: number;
-		year: number;
-		term: string;
-	};
+	schools: { name: string; country: string }[];
+	program: { display_name: string };
+	program_iteration: { year: number; term: string };
+	round: { name: string; due_date: string | null };
+	latest_log: { status: ApplicationStatus; date: string } | null;
+};
+
+type Log = {
+	id: number;
+	date: string;
+	status: ApplicationStatus;
+	comments: string;
+	updated: string;
+};
+
+export type ApplicationDetail = {
+	id: number;
+	student: { id: number; fullname: string };
+	services: Service[];
+	schools: { id: number; name: string; country: string }[];
+	program: { id: number; type: string; display_name: string };
+	program_iteration: { id: number; year: number; term: string };
 	round: {
 		id: number;
 		name: string;
@@ -44,16 +44,14 @@ export type ApplicationListItem = {
 		timezone: string;
 		decision_date: string | null;
 	};
-	latest_log: Log | null;
+	logs: Log[];
 };
-
-export type ApplicationDetail = ApplicationListItem;
 
 export async function fetchApplications(): Promise<ApplicationListItem[]> {
 	return await get('applications/');
 }
 
-export async function fetchApplication(id: number): Promise<ApplicationListItem> {
+export async function fetchApplication(id: number): Promise<ApplicationDetail> {
 	return await get(`applications/${id}/`);
 }
 

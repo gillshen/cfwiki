@@ -73,14 +73,13 @@
 
 			<TableBodyRow>
 				<TableBodyCell tdClass="w-48 font-medium py-4">Date of birth</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">{toLongDate(data.student.date_of_birth)}</TableBodyCell
-				>
+				<TableBodyCell tdClass="font-normal">
+					{toLongDate(data.student.date_of_birth)}
+				</TableBodyCell>
 			</TableBodyRow>
 
 			<TableBodyRow>
-				<TableBodyCell tdClass="align-top w-48 font-medium py-4">
-					<div>Comments</div>
-				</TableBodyCell>
+				<TableBodyCell tdClass="align-top w-48 font-medium py-4">Comments</TableBodyCell>
 				<TableBodyCell tdClass="font-normal flex flex-col gap-2 pr-6 py-4">
 					{#if data.student.comments}
 						{#each data.student.comments.split(/\n/g).filter(Boolean) as para}

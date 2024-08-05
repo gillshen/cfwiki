@@ -1,0 +1,22 @@
+export const timeZones = {
+	'Pacific/Auckland': 'New Zealand (+12:00/+13:00)',
+	'Australia/Sydney': 'Sydney, Australia (+10:00/+11:00)',
+	'Australia/Brisbane': 'Brisbane, Australia (+10:00)',
+	'Australia/Adelaide': 'Adelaide, Australia (+09:30/+10:30)',
+	'Asia/Tokyo': 'Tokyo, Japan (+09:00)',
+	'Asia/Hong_Kong': 'Hong Kong (+08:00)',
+	'Asia/Shanghai': 'Beijing, China (+08:00)',
+	'Asia/Singapore': 'Singapore (+08:00)',
+	'Australia/Perth': 'Perth, Australia (+08:00)',
+	'Europe/Berlin': 'Berlin, Germany (+01:00/+02:00)',
+	'Europe/Paris': 'Paris, France (+01:00/+02:00)',
+	'Europe/London': 'London, United Kingdom (+00:00/+01:00)',
+	'America/New_York': 'US Eastern Time (-05:00/-04:00)',
+	'America/Toronto': 'Toronto, Canada (-05:00/-04:00)',
+	'America/Chicago': 'US Central Time (-06:00/-05:00)',
+	'America/Winnipeg': 'Winnipeg, Canada (-06:00/-05:00)',
+	'America/Denver': 'US Mountain Time (-07:00/-06:00)',
+	'America/Edmonton': 'Edmonton, Canada (-07:00/-06:00)',
+	'America/Los_Angeles': 'US Pacific Time (-08:00/-07:00)',
+	'America/Vancouver': 'Vancouver, Canada (-08:00/-07:00)'
+};

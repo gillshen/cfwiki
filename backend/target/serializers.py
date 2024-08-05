@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from target.models import School, Program
+from target.models import School, Program, ApplicationRound
 
 
 class SchoolSerializer(serializers.ModelSerializer):
@@ -49,4 +49,10 @@ class ProgramCreateSerializer(serializers.ModelSerializer):
 class ProgramCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
+        fields = "__all__"
+
+
+class ApplicationRoundCRUDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationRound
         fields = "__all__"

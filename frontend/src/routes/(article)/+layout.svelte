@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import {
 		Navbar,
 		NavBrand,
@@ -8,7 +9,7 @@
 		Dropdown,
 		DropdownItem,
 		DropdownDivider,
-		Button
+		Avatar
 	} from 'flowbite-svelte';
 	import { ChevronDownOutline } from 'flowbite-svelte-icons';
 
@@ -38,8 +39,12 @@
 			<span class="self-center whitespace-nowrap text-lg font-semibold">ChoiceFreezer</span>
 		</NavBrand>
 
-		<div class="flex md:order-2">
-			<Button outline size="sm" href="/logout">Log out</Button>
+		<div class="flex align-baseline md:order-2">
+			<Avatar bordered size="sm" />
+			<Dropdown class="w-[6rem] z-20">
+				<DropdownItem>Account</DropdownItem>
+				<DropdownItem on:click={() => goto('/logout')}>Log out</DropdownItem>
+			</Dropdown>
 			<NavHamburger />
 		</div>
 
@@ -60,9 +65,9 @@
 				<DropdownDivider />
 				<div class="grid grid-cols-4 gap-x-4 px-1">
 					{#each cfSalesPeople as cfUser}
-						<DropdownItem class="rounded-md" href={`/cf/${cfUser.username}`}
-							>{cfUser.username}</DropdownItem
-						>
+						<DropdownItem class="rounded-md" href={`/cf/${cfUser.username}`}>
+							{cfUser.username}
+						</DropdownItem>
 					{/each}
 				</div>
 				{#if exUsers.length}
@@ -98,7 +103,7 @@
 			<NavLi class="cursor-pointer">
 				More<ChevronDownOutline class="dropdown-icon" />
 			</NavLi>
-			<Dropdown placement="bottom-start" class="w-32 z-20">
+			<Dropdown placement="bottom" class="w-32 z-20">
 				<DropdownItem href="/data/schools">Schools</DropdownItem>
 				<DropdownItem href="/data/programs">Programs</DropdownItem>
 			</Dropdown>

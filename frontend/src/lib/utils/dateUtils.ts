@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { number } from 'zod';
+import { format as formatWithTimeZone, toZonedTime, fromZonedTime } from 'date-fns-tz';
 
 export function makeDate(dateString: string | null | undefined): Date | null {
 	if (!dateString) {
@@ -47,4 +47,33 @@ export function quickAccessYears(): number[] {
 	} else {
 		return [currentYear, currentYear - 1, currentYear - 2];
 	}
+}
+
+export function formatDueDateTime(
+	dateString: string | null,
+	timeString: string | null,
+	timeZone: string
+): string {
+	if (!dateString) {
+		return '';
+	}
+
+	if (!timeString) {
+		return toLongDate(dateString);
+	}
+
+	const date = new Date(`${dateString}T${timeString}`);
+
+	if (!timeZone) {
+		return format(date, "MMMM d, y 'at' hh:mm a");
+	}
+
+	if (timeZone.toLowerCase() === 'applicant') {
+		return format(date, "MMMM d, y 'at' hh:mm a '(applicant''s local time)'");
+	}
+
+	// Format the date in the specified time zone
+	const utcDate = fromZonedTime(date, timeZone);
+	const zonedDate = toZonedTime(utcDate, timeZone);
+	return formatWithTimeZone(zonedDate, "MMMM d, y 'at' hh:mm aa z", { timeZone });
 }

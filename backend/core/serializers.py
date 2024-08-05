@@ -86,8 +86,6 @@ class ApplicationListSerializer(serializers.ModelSerializer):
             model = Service
             fields = ["cf_username", "role"]
 
-        cf_username = serializers.CharField()
-
     services = ServiceSerializer(many=True)
 
     class SchoolSerializer(serializers.ModelSerializer):
@@ -101,8 +99,6 @@ class ApplicationListSerializer(serializers.ModelSerializer):
         class Meta:
             model = Program
             fields = ["display_name"]
-
-        display_name = serializers.CharField()
 
     program = ProgramSerializer()
 
@@ -126,6 +122,61 @@ class ApplicationListSerializer(serializers.ModelSerializer):
             fields = ["status", "date"]
 
     latest_log = ApplicationLogSerializer()
+
+
+class ApplicationDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = "__all__"
+
+    class StudentSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Student
+            fields = ["id", "fullname"]
+
+    student = StudentSerializer()
+
+    class ServiceSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Service
+            fields = ["cf_username", "role"]
+
+    services = ServiceSerializer(many=True)
+
+    class SchoolSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = School
+            fields = ["id", "name", "country"]
+
+    schools = SchoolSerializer(many=True)
+
+    class ProgramSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Program
+            fields = ["id", "type", "display_name"]
+
+    program = ProgramSerializer()
+
+    class ProgramIterationSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = ProgramIteration
+            fields = ["id", "year", "term"]
+
+    program_iteration = ProgramIterationSerializer()
+
+    class ApplicationRoundSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = ApplicationRound
+            exclude = ["program_iteration"]
+
+    round = ApplicationRoundSerializer()
+
+    class ApplicationLogSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = ApplicationLog
+            exclude = ["application"]
+
+    logs = ApplicationLogSerializer(many=True)
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):

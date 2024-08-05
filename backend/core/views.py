@@ -15,6 +15,7 @@ from core.serializers import (
     ContractCRUDSerializer,
     ServiceCRUDSerializer,
     ApplicationListSerializer,
+    ApplicationDetailSerializer,
     ApplicationCreateSerializer,
     ApplicationRUDSerializer,
 )
@@ -87,7 +88,7 @@ class ApplicationListView(ListAPIView):
 
 class ApplicationDetailView(RetrieveAPIView):
     queryset = Application.objects.all()
-    serializer_class = ApplicationListSerializer
+    serializer_class = ApplicationDetailSerializer
 
 
 class ApplicationCreateView(CreateAPIView):
