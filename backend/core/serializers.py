@@ -211,3 +211,9 @@ class ApplicationRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = "__all__"
+
+
+class ApplicationLogCRUDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationLog
+        fields = "__all__"

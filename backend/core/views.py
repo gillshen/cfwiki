@@ -5,7 +5,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
-from core.models import CFUser, Student, Service, Contract, Application
+from core.models import CFUser, Student, Service, Contract, Application, ApplicationLog
 
 from core.serializers import (
     CFUserSerializer,
@@ -18,6 +18,7 @@ from core.serializers import (
     ApplicationDetailSerializer,
     ApplicationCreateSerializer,
     ApplicationRUDSerializer,
+    ApplicationLogCRUDSerializer,
 )
 
 
@@ -87,7 +88,20 @@ class ApplicationListView(ListAPIView):
 
 
 class ApplicationDetailView(RetrieveAPIView):
-    queryset = Application.objects.all()
+    queryset = (
+        Application.objects.all()
+        .select_related(
+            "round",
+            "round__program_iteration",
+            "round__program_iteration__program",
+        )
+        .prefetch_related(
+            "contract__student",
+            "contract__services",
+            "round__program_iteration__program",
+            "logs",
+        )
+    )
     serializer_class = ApplicationDetailSerializer
 
 
@@ -99,3 +113,13 @@ class ApplicationCreateView(CreateAPIView):
 class ApplicationRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationRUDSerializer
+
+
+class ApplicationLogCreateView(CreateAPIView):
+    queryset = ApplicationLog.objects.all()
+    serializer_class = ApplicationLogCRUDSerializer
+
+
+class ApplicationLogRUDView(RetrieveUpdateDestroyAPIView):
+    queryset = ApplicationLog.objects.all()
+    serializer_class = ApplicationLogCRUDSerializer

@@ -1,5 +1,5 @@
 import { get, post } from '$lib/api/api';
-import type { ApplicationStatus } from '$lib/api/applicationLog';
+import type { ApplicationStatus, ApplicationLog } from '$lib/api/applicationLog';
 
 type Service = {
 	cf_username: string;
@@ -21,14 +21,6 @@ export type ApplicationListItem = {
 	latest_log: { status: ApplicationStatus; date: string } | null;
 };
 
-type Log = {
-	id: number;
-	date: string;
-	status: ApplicationStatus;
-	comments: string;
-	updated: string;
-};
-
 export type ApplicationDetail = {
 	id: number;
 	student: { id: number; fullname: string };
@@ -44,7 +36,7 @@ export type ApplicationDetail = {
 		timezone: string;
 		decision_date: string | null;
 	};
-	logs: Log[];
+	logs: ApplicationLog[];
 };
 
 export async function fetchApplications(): Promise<ApplicationListItem[]> {

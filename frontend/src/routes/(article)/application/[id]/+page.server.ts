@@ -6,6 +6,8 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { fetchApplication, type ApplicationDetail } from '$lib/api/application';
 import { roundNameSchema, roundDatesSchema } from '$lib/schemas/applicationRound';
 import { updateRoundDates } from '$lib/api/applicationRound';
+import { applicationLogSchema, newApplicationLogSchema } from '$lib/schemas/applicationLog';
+import { createOrUpdateApplicationLog } from '$lib/api/applicationLog';
 
 export async function load(event: PageServerLoadEvent) {
 	const id = parseInt(event.params.id, 10);
@@ -20,10 +22,12 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Application not found');
 	}
 
-	const renameRoundForm = await superValidate(application.round, zod(roundNameSchema));
-	const datesUpdateForm = await superValidate(application.round, zod(roundDatesSchema));
-
-	return { application, renameRoundForm, datesUpdateForm };
+	return {
+		application,
+		renameRoundForm: await superValidate(application.round, zod(roundNameSchema)),
+		datesUpdateForm: await superValidate(application.round, zod(roundDatesSchema)),
+		logForm: await superValidate(zod(applicationLogSchema))
+	};
 }
 
 export const actions = {
@@ -51,6 +55,21 @@ export const actions = {
 		}
 		// Update the name
 		const response = await updateRoundDates(form.data);
+		if (!response.ok) {
+			return message(form, 'Sorry, an error occurred', { status: 400 });
+		}
+		return message(form, 'success');
+	},
+
+	createOrUpdateApplicationLog: async ({ request }) => {
+		const form = await superValidate(request, zod(newApplicationLogSchema));
+		console.log(form);
+
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+		// Create/update the log
+		const response = await createOrUpdateApplicationLog(form.data);
 		if (!response.ok) {
 			return message(form, 'Sorry, an error occurred', { status: 400 });
 		}

@@ -82,7 +82,7 @@
 				<TableBodyCell tdClass="align-top w-48 font-medium py-4">Comments</TableBodyCell>
 				<TableBodyCell tdClass="font-normal flex flex-col gap-2 pr-6 py-4">
 					{#if data.student.comments}
-						{#each data.student.comments.split(/\n/g).filter(Boolean) as para}
+						{#each data.student.comments.split(/\r?\n/g).filter(Boolean) as para}
 							<p>{para}</p>
 						{/each}
 					{/if}

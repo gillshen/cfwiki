@@ -69,7 +69,7 @@ export function formatDueDateTime(
 	}
 
 	if (timeZone.toLowerCase() === 'applicant') {
-		return format(date, "MMMM d, y 'at' hh:mm a '(applicant''s local time)'");
+		return format(date, "MMMM d, y 'at' hh:mm a '(applicant''s time)'");
 	}
 
 	// Format the date in the specified time zone
