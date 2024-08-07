@@ -22,7 +22,7 @@ class ProgramSerializer(serializers.ModelSerializer):
     class SchoolSerializer(serializers.ModelSerializer):
         class Meta:
             model = School
-            fields = ["id", "name"]
+            fields = ["id", "name", "alt_name"]
 
     schools = SchoolSerializer(many=True)
     display_name = serializers.CharField()

@@ -24,7 +24,7 @@ export async function load(event: PageServerLoadEvent) {
 
 	return {
 		application,
-		renameRoundForm: await superValidate(application.round, zod(roundNameSchema)),
+		roundRenameForm: await superValidate(application.round, zod(roundNameSchema)),
 		datesUpdateForm: await superValidate(application.round, zod(roundDatesSchema)),
 		logForm: await superValidate(zod(applicationLogSchema))
 	};

@@ -1,101 +1,35 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { superForm } from 'sveltekit-superforms';
-	import {
-		Card,
-		Table,
-		TableBody,
-		TableBodyCell,
-		TableBodyRow,
-		Button,
-		Heading,
-		Hr
-	} from 'flowbite-svelte';
+	import { Card, Button, Heading, Hr, Dropdown } from 'flowbite-svelte';
+	import { ChevronRightOutline } from 'flowbite-svelte-icons';
 
-	import countryFlags from '$lib/constants/countryFlags';
-	import { formatLocation } from '$lib/api/student';
-	import { toLongDate } from '$lib/utils/dateUtils';
+	import StudentInfobox from '$lib/components/infobox/StudentInfobox.svelte';
+	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
 	import ContractForm from '$lib/components/contract-form/ContractForm.svelte';
-
 	export let data;
 
 	const { form, enhance } = superForm(data.newContractForm);
 
-	const formatGender = (gender: string): string => {
-		switch (gender) {
-			case 'female':
-				return 'Female';
-			case 'male':
-				return 'Male';
-			default:
-				return gender;
-		}
-	};
+	$: canEdit = true;
 </script>
 
 <Heading tag="h1" class="alt-page-title">{data.student.fullname}</Heading>
 
 <Hr />
 
-<div class="w-[36rem] pb-8">
-	<Table>
-		<TableBody>
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-48 font-medium py-4">Preferred name</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">{data.student.preferred_name}</TableBodyCell>
-			</TableBodyRow>
+<div class="w-[36rem] min-w-[32rem] pb-8">
+	<StudentInfobox student={data.student} />
 
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-48 font-medium py-4">Gender</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">{formatGender(data.student.gender)}</TableBodyCell>
-			</TableBodyRow>
-
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-48 font-medium py-4">Citizenship</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">
-					<div class="flex gap-2">
-						<div>{countryFlags[data.student.citizenship]}</div>
-						<div>{data.student.citizenship}</div>
-					</div>
-				</TableBodyCell>
-			</TableBodyRow>
-
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-48 font-medium py-4">Home</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">
-					{#if data.student.base_country}
-						<div class="flex gap-2">
-							<div>{countryFlags[data.student.base_country]}</div>
-							<div>{formatLocation(data.student)}</div>
-						</div>
-					{/if}
-				</TableBodyCell>
-			</TableBodyRow>
-
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-48 font-medium py-4">Date of birth</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">
-					{toLongDate(data.student.date_of_birth)}
-				</TableBodyCell>
-			</TableBodyRow>
-
-			<TableBodyRow>
-				<TableBodyCell tdClass="align-top w-48 font-medium py-4">Comments</TableBodyCell>
-				<TableBodyCell tdClass="font-normal flex flex-col gap-2 pr-6 py-4">
-					{#if data.student.comments}
-						{#each data.student.comments.split(/\r?\n/g).filter(Boolean) as para}
-							<p>{para}</p>
-						{/each}
-					{/if}
-				</TableBodyCell>
-			</TableBodyRow>
-
-			<TableBodyRow>
-				<TableBodyCell tdClass="px-0 py-6">
-					<Button outline href={`${data.student.id}/update/`}>Update</Button>
-				</TableBodyCell>
-			</TableBodyRow>
-		</TableBody>
-	</Table>
+	{#if canEdit}
+		<div class="flex gap-x-8 mt-8">
+			<Button outline>Actions<ChevronRightOutline class="w-6 h-6 ms-1" /></Button>
+			<Dropdown class="w-40 z-20" placement="right-start">
+				<DropdownActionItem text="Update" onClick={() => goto(`${data.student.id}/update`)} />
+				<DropdownActionItem text="Delete" onClick={() => alert('delete student file')} dark />
+			</Dropdown>
+		</div>
+	{/if}
 </div>
 
 <div class="flex gap-8">

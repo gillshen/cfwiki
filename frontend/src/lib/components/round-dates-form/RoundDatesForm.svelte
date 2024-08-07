@@ -5,7 +5,7 @@
 	export let form: any;
 </script>
 
-<div class="grid grid-cols-2 gap-x-4">
+<div class="grid grid-cols-2 gap-x-8">
 	<div>
 		<Label for="due-date" class="form-label optional">Due date</Label>
 		<Input id="due-date" type="date" name="due_date" bind:value={$form.due_date} />

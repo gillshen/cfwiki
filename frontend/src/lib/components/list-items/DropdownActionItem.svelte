@@ -5,9 +5,11 @@
 	export let onClick: () => void;
 	export let dark: boolean = false;
 
-	let wrapperClass = 'font-normal hover:text-primary-700';
+	let wrapperClass: string;
 	if (dark) {
-		wrapperClass = `${wrapperClass} font-medium`;
+		wrapperClass = 'font-medium hover:text-red-700';
+	} else {
+		wrapperClass = 'font-normal hover:text-primary-700';
 	}
 </script>
 

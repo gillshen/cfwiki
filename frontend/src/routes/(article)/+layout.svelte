@@ -32,7 +32,7 @@
 		.sort((a, b) => a.username.localeCompare(b.username));
 </script>
 
-<div class="px-8">
+<div class="px-12">
 	<Navbar fluid>
 		<NavBrand href="/home">
 			<img src="/favicon.png" class="me-3 h-6" alt="CF Logo" />
@@ -111,6 +111,6 @@
 	</Navbar>
 </div>
 
-<div class="px-12 pb-8">
+<div class="px-16 pb-8">
 	<slot />
 </div>

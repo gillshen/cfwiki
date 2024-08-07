@@ -38,6 +38,8 @@ export type StudentListItem = {
 	contracts_sorted: Contract[];
 };
 
+export type StudentDetail = StudentListItem;
+
 export async function fetchStudents(): Promise<StudentListItem[]> {
 	return await get('students/');
 }

@@ -1,18 +1,11 @@
 <script lang="ts">
-	import {
-		Table,
-		TableBody,
-		TableBodyCell,
-		TableBodyRow,
-		Button,
-		Heading,
-		Hr,
-		Modal
-	} from 'flowbite-svelte';
+	import { Button, Heading, Hr, Dropdown, Modal } from 'flowbite-svelte';
+	import { ChevronRightOutline } from 'flowbite-svelte-icons';
 	import { superForm } from 'sveltekit-superforms';
 
+	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
 	import SchoolForm from '$lib/components/school-form/SchoolForm.svelte';
-	import countryFlags from '$lib/constants/countryFlags';
+	import SchoolInfobox from '$lib/components/infobox/SchoolInfobox.svelte';
 
 	export let data;
 
@@ -32,42 +25,21 @@
 
 <Hr />
 
-<div class="w-[36rem] pb-8">
-	<Table>
-		<TableBody>
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-48 font-medium py-4">Type</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">{data.school.type}</TableBodyCell>
-			</TableBodyRow>
+<section class="flex gap-24">
+	<div class="w-[36rem] min-w-[32rem] pb-8">
+		<SchoolInfobox school={data.school} />
 
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-48 font-medium py-4">Full name</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">{data.school.name}</TableBodyCell>
-			</TableBodyRow>
+		<div class="flex gap-x-8 mt-8">
+			<Button outline>Actions<ChevronRightOutline class="w-6 h-6 ms-1" /></Button>
+			<Dropdown class="w-40 z-20" placement="right-start">
+				<DropdownActionItem text="Update" onClick={() => (updateSchoolModal = true)} />
+				<DropdownActionItem text="Delete" onClick={() => alert('delete school file')} dark />
+			</Dropdown>
+		</div>
+	</div>
 
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-48 font-medium py-4">Alt. name</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">{data.school.alt_name}</TableBodyCell>
-			</TableBodyRow>
-
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-48 font-medium py-4">Country</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">
-					<div class="flex gap-2">
-						<div>{countryFlags[data.school.country]}</div>
-						<div>{data.school.country}</div>
-					</div>
-				</TableBodyCell>
-			</TableBodyRow>
-
-			<TableBodyRow>
-				<TableBodyCell tdClass="px-0 py-6">
-					<Button outline on:click={() => (updateSchoolModal = true)}>Update</Button>
-				</TableBodyCell>
-			</TableBodyRow>
-		</TableBody>
-	</Table>
-</div>
+	<div class="bg-slate-50 rounded-xl w-full min-w-[32rem] p-8 text-gray-400">(applications)</div>
+</section>
 
 <Modal title="Update school information" bind:open={updateSchoolModal} outsideclose>
 	<form class="modal" method="post" action="?/updateSchool" use:enhance>
