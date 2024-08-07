@@ -11,7 +11,7 @@ from core.serializers import (
     CFUserSerializer,
     StudentSerializer,
     StudentCRUDSerializer,
-    ContractSerializer,
+    ContractDetailSerializer,
     ContractCRUDSerializer,
     ServiceCRUDSerializer,
     ApplicationListSerializer,
@@ -49,7 +49,7 @@ class StudentRUDView(RetrieveUpdateDestroyAPIView):
 
 class ContractDetailView(RetrieveAPIView):
     queryset = Contract.objects.all()
-    serializer_class = ContractSerializer
+    serializer_class = ContractDetailSerializer
 
 
 class ContractCreateView(CreateAPIView):

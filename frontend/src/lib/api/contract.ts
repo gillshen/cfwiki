@@ -1,10 +1,11 @@
 import { get, patch, post } from '$lib/api/api';
+import { cfRoles } from '$lib/api/service';
 
 export const contractTypes = ['UG Freshman', 'UG Transfer', "Master's", 'PhD'] as const;
-type ContractType = (typeof contractTypes)[number];
+export type ContractType = (typeof contractTypes)[number];
 
 export const contractStatuses = ['In effect', 'Fulfilled', 'Terminated'] as const;
-type ContractStatus = (typeof contractStatuses)[number];
+export type ContractStatus = (typeof contractStatuses)[number];
 
 export type Contract = {
 	id: number;
@@ -16,6 +17,15 @@ export type Contract = {
 	student_progression_when_signed: string;
 };
 
+export type Service = {
+	id: number;
+	cfer: number;
+	cf_username: string;
+	role: string;
+	start_date: string | null;
+	end_date: string | null;
+};
+
 export type ContractDetail = {
 	id: number;
 	student: number;
@@ -25,6 +35,7 @@ export type ContractDetail = {
 	status: ContractStatus;
 	student_progression_when_signed: string;
 	student_name: string;
+	services: Service[];
 };
 
 export async function fetchContract(id: number): Promise<ContractDetail> {
@@ -41,4 +52,17 @@ export async function createOrUpdateContract(data: any) {
 
 export async function updateContract(data: any) {
 	return await patch(`contracts/${data.id}/update/`, data);
+}
+
+export function sortServicesByRole(a: Service, b: Service) {
+	const roles = Array.from(cfRoles) as string[];
+
+	let indexA = roles.indexOf(a.role) ?? 99;
+	let indexB = roles.indexOf(b.role) ?? 99;
+
+	if (indexA === indexB) {
+		return a.role.localeCompare(b.role);
+	} else {
+		return indexA - indexB;
+	}
 }

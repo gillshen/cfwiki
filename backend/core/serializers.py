@@ -55,12 +55,21 @@ class ServiceCRUDSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ContractSerializer(serializers.ModelSerializer):
+class ContractDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
         fields = "__all__"
 
     student_name = serializers.CharField()
+
+    class ServiceSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Service
+            exclude = ["contract"]
+
+        cf_username = serializers.CharField()
+
+    services = ServiceSerializer(many=True)
 
 
 class ContractCRUDSerializer(serializers.ModelSerializer):

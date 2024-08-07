@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { superForm } from 'sveltekit-superforms';
-	import { Button, Heading, Hr, Dropdown, Modal } from 'flowbite-svelte';
+	import { Button, Heading, Hr, Dropdown, A, Modal } from 'flowbite-svelte';
 	import { ChevronRightOutline } from 'flowbite-svelte-icons';
 
 	import StudentInfobox from '$lib/components/infobox/StudentInfobox.svelte';
@@ -49,15 +49,22 @@
 		{#if data.student.contracts_sorted.length}
 			<div class="flex gap-8 mb-12">
 				{#each data.student.contracts_sorted as contract}
-					<ContractItem
-						{contract}
-						actions={canEdit}
-						updateAction={() => {
-							activeContract = { ...contract, student: data.student.id };
-							contractModal = true;
-						}}
-						deleteAction={() => {}}
-					/>
+					<ContractItem {contract}>
+						{#if canEdit || !contract.services.length}
+							<div class="mt-8 flex gap-6">
+								<A
+									class="text-sm"
+									on:click={() => {
+										activeContract = { ...contract, student: data.student.id };
+										contractModal = true;
+									}}
+								>
+									Update
+								</A>
+								<A class="text-sm" on:click={() => alert('delete contract')}>Delete</A>
+							</div>
+						{/if}
+					</ContractItem>
 				{/each}
 			</div>
 		{/if}
@@ -73,15 +80,23 @@
 	</article>
 </section>
 
-<Modal title="Create a contract" bind:open={contractModal} outsideclose>
+<Modal
+	title={`${activeContract ? 'Update' : 'Create a'} contract`}
+	bind:open={contractModal}
+	outsideclose
+>
 	<form class="modal" method="post" action="?/createOrUpdateContract" use:contractEnhance>
 		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
 		<div class="form-width mx-auto">
-			<ContractForm form={contractForm} contract={activeContract} />
+			<ContractForm
+				form={contractForm}
+				contract={activeContract}
+				submitButtonText={activeContract ? 'Update' : 'Submit'}
+			/>
 		</div>
 	</form>
 </Modal>
 
 <Hr />
 
-<Button href={`/student/${data.student.id}/new-application`}>New application</Button>
+<Button outline href={`/student/${data.student.id}/new-application`}>Create an application</Button>

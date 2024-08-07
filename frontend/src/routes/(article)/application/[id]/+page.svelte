@@ -1,5 +1,14 @@
 <script lang="ts">
-	import { Heading, Hr, Button, Dropdown, Modal, Timeline, DropdownDivider } from 'flowbite-svelte';
+	import {
+		Heading,
+		A,
+		Hr,
+		Button,
+		Dropdown,
+		Modal,
+		Timeline,
+		DropdownDivider
+	} from 'flowbite-svelte';
 	import { ChevronRightOutline } from 'flowbite-svelte-icons';
 	import { superForm } from 'sveltekit-superforms';
 
@@ -65,7 +74,10 @@
 	};
 </script>
 
-<Heading tag="h1" class="alt-page-title">Application {data.application.id}</Heading>
+<Heading tag="h1" class="alt-page-title">
+	<A href={`/student/${data.application.student.id}`}>{data.application.student.fullname}</A>
+	| Application {data.application.id}
+</Heading>
 
 <Hr />
 

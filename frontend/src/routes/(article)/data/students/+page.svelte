@@ -124,8 +124,16 @@
 		return _getLatestServices(params.data, '顾问');
 	}
 
-	function servicePeopleValueGetter(params: ValueGetterParams): string {
+	function workPeopleValueGetter(params: ValueGetterParams): string {
 		return _getLatestServices(params.data, '文案');
+	}
+
+	function salesAssistantsValueGetter(params: ValueGetterParams): string {
+		return _getLatestServices(params.data, '服务顾问');
+	}
+
+	function workAssistantsValueGetter(params: ValueGetterParams): string {
+		return _getLatestServices(params.data, '流程顾问');
 	}
 
 	const localeCmp = (a: string, b: string, nodeA: any, nodeB: any, isDescending: boolean) => {
@@ -172,8 +180,15 @@
 			valueGetter: lastestTargetYearValueGetter
 		},
 		{ headerName: '顾问', filter: true, valueGetter: salesPeopleValueGetter },
-		{ headerName: '文案', filter: true, valueGetter: servicePeopleValueGetter },
+		{ headerName: '文案', filter: true, valueGetter: workPeopleValueGetter },
 		{ headerName: '战略顾问', filter: true, valueGetter: stratPeopleValueGetter },
+		{
+			headerName: '服务顾问',
+			filter: true,
+			ValueGetter: salesAssistantsValueGetter,
+			hide: true
+		},
+		{ headerName: '流程顾问', filter: true, valueGetter: workAssistantsValueGetter },
 		{ headerName: 'Contract status', filter: true, valueGetter: contractStatusValueGetter }
 	];
 

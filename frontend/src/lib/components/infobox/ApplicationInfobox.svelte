@@ -19,16 +19,6 @@
 <Table>
 	<TableBody>
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Student</TableBodyCell>
-			<TableBodyCell tdClass="font-normal py-4">
-				<LinkWithIcon
-					href={`/student/${application.student.id}`}
-					text={application.student.fullname}
-				/>
-			</TableBodyCell>
-		</TableBodyRow>
-
-		<TableBodyRow>
 			<TableBodyCell tdClass="w-48 font-medium py-4">Term</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
 				{application.program_iteration.term}
