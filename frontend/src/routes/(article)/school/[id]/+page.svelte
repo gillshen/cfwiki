@@ -26,7 +26,7 @@
 <Hr />
 
 <section class="flex gap-24">
-	<div class="w-[36rem] min-w-[32rem] pb-8">
+	<article class="w-[36rem] min-w-[32rem] pb-8">
 		<SchoolInfobox school={data.school} />
 
 		<div class="flex gap-x-8 mt-8">
@@ -36,9 +36,11 @@
 				<DropdownActionItem text="Delete" onClick={() => alert('delete school file')} dark />
 			</Dropdown>
 		</div>
-	</div>
+	</article>
 
-	<div class="bg-slate-50 rounded-xl w-full min-w-[32rem] p-8 text-gray-400">(applications)</div>
+	<article class="bg-slate-50 rounded-xl w-full min-w-[32rem] p-8 text-gray-400">
+		(applications)
+	</article>
 </section>
 
 <Modal title="Update school information" bind:open={updateSchoolModal} outsideclose>

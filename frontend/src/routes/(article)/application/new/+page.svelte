@@ -28,26 +28,28 @@
 	<Table noborder>
 		<TableBody>
 			<TableBodyRow>
-				<TableBodyCell tdClass="w-32 font-medium py-4">Student</TableBodyCell>
+				<TableBodyCell tdClass="w-32 font-medium py-3">Student</TableBodyCell>
 				<TableBodyCell tdClass="font-normal">{data.contract.student_name}</TableBodyCell>
 			</TableBodyRow>
 
 			<TableBodyRow>
-				<TableBodyCell tdClass="w-32 font-medium py-4">Contract</TableBodyCell>
+				<TableBodyCell tdClass="w-32 font-medium py-3">Contract</TableBodyCell>
 				<TableBodyCell tdClass="font-normal"
 					>{data.contract.type} {data.contract.target_year}</TableBodyCell
 				>
 			</TableBodyRow>
 
-			{#each data.program.schools as school}
+			{#each data.program.schools.sort((a, b) => a.name.localeCompare(b.name)) as school, index}
 				<TableBodyRow>
-					<TableBodyCell tdClass="w-32 font-medium py-4">School</TableBodyCell>
+					<TableBodyCell tdClass="w-32 font-medium py-3">
+						School{data.program.schools.length > 1 ? ` ${index + 1}` : ''}
+					</TableBodyCell>
 					<TableBodyCell tdClass="font-normal">{school.name}</TableBodyCell>
 				</TableBodyRow>
 			{/each}
 
 			<TableBodyRow>
-				<TableBodyCell tdClass="w-32 font-medium py-4">Program</TableBodyCell>
+				<TableBodyCell tdClass="w-32 font-medium py-3">Program</TableBodyCell>
 				<TableBodyCell tdClass="font-normal">{data.program.display_name}</TableBodyCell>
 			</TableBodyRow>
 		</TableBody>

@@ -1,11 +1,21 @@
 <script lang="ts">
 	import { Label, Select, Input, Radio, Button } from 'flowbite-svelte';
 	import { activeYears } from '$lib/utils/dateUtils';
-	import { contractStatuses, contractTypes } from '$lib/api/contract';
+	import { contractStatuses, contractTypes, type Contract } from '$lib/api/contract';
 
 	export let form: any;
+	export let contract: Contract | null = null;
 	export let submitButtonText = 'Submit';
+
+	$form.id = contract?.id;
+	$form.type = contract?.type;
+	$form.target_year = contract?.target_year;
+	$form.status = contract?.status;
+	$form.date = contract?.date;
+	$form.student_progression_when_signed = contract?.student_progression_when_signed;
 </script>
+
+<input type="number" name="id" class="hidden" bind:value={$form.id} />
 
 <Label for="contract-type" class="form-label">Contract type</Label>
 <Select id="contract-type" name="type" bind:value={$form.type} required>

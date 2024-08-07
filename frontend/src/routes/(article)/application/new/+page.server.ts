@@ -5,7 +5,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '$env/static/private';
-import { fetchContract, type Contract } from '$lib/api/contract';
+import { fetchContract, type ContractDetail } from '$lib/api/contract';
 import { fetchProgram, type ProgramListItem } from '$lib/api/program';
 import { newApplicationSchema } from '$lib/schemas/application';
 import { createApplication } from '$lib/api/application';
@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ url }) => {
 		const contractId = parseInt(contractIdString, 10);
 		const programId = parseInt(programIdString, 10);
 
-		const contract: Contract = await fetchContract(contractId);
+		const contract: ContractDetail = await fetchContract(contractId);
 		if (contract?.id === undefined) {
 			throw error(404, 'Contract not found');
 		}

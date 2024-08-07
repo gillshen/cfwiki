@@ -5,12 +5,10 @@
 	export let form: any;
 	export let log: ApplicationLog | null = null;
 
-	$: if (log) {
-		$form.id = log.id;
-		$form.status = log.status;
-		$form.date = log.date;
-		$form.comments = log.comments;
-	}
+	$form.id = log?.id;
+	$form.status = log?.status;
+	$form.date = log?.date;
+	$form.comments = log?.comments;
 </script>
 
 <input type="number" name="id" class="hidden" bind:value={$form.id} />

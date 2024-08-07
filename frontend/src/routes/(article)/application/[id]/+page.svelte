@@ -70,7 +70,7 @@
 <Hr />
 
 <section class="flex gap-24">
-	<div class="w-[36rem] min-w-[32rem] pb-8">
+	<article class="w-[36rem] min-w-[32rem] pb-8">
 		<ApplicationInfobox application={data.application} />
 
 		{#if canEdit}
@@ -86,9 +86,9 @@
 				</Dropdown>
 			</div>
 		{/if}
-	</div>
+	</article>
 
-	<div class="w-[36rem] min-w-[20rem]">
+	<article class="w-[36rem] min-w-[20rem]">
 		<div class="mb-8">
 			{#if canEdit || logs.length}
 				<div class="bg-slate-50 rounded-xl px-4 py-4">
@@ -107,12 +107,21 @@
 						</Timeline>
 					{/if}
 					{#if canEdit}
-						<Button outline class="ml-2" on:click={() => (logModal = true)}>Add a status</Button>
+						<Button
+							outline
+							class="ml-2"
+							on:click={() => {
+								activeLog = null;
+								logModal = true;
+							}}
+						>
+							Add a status
+						</Button>
 					{/if}
 				</div>
 			{/if}
 		</div>
-	</div>
+	</article>
 </section>
 
 <Modal title="Change application round" bind:open={changeRoundModal} outsideclose>
