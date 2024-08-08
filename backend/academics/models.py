@@ -196,10 +196,10 @@ class ACTScore(models.Model):
     )
     date = models.DateField(blank=True, null=True)
 
-    english = models.PositiveSmallIntegerField(blank=True, null=True)
     math = models.PositiveSmallIntegerField(blank=True, null=True)
-    reading = models.PositiveSmallIntegerField(blank=True, null=True)
     science = models.PositiveSmallIntegerField(blank=True, null=True)
+    english = models.PositiveSmallIntegerField(blank=True, null=True)
+    reading = models.PositiveSmallIntegerField(blank=True, null=True)
     writing = models.PositiveSmallIntegerField(blank=True, null=True)
 
     class Meta:

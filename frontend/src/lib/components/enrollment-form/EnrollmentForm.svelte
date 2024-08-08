@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { Label, Select, Radio, Button, Input } from 'flowbite-svelte';
+	import { Label, Select, Radio, Button, Input, Helper, A } from 'flowbite-svelte';
 	import type { Enrollment } from '$lib/api/student';
 	import type { School } from '$lib/api/school';
 
 	export let form: any;
 	export let schools: School[];
 	export let enrollment: Enrollment | null = null;
-	export let submitButtonText: string = 'Submit';
 
 	$form.id = enrollment?.id;
 	$form.school = enrollment?.school.id;
@@ -73,6 +72,9 @@
 		<option value={school.id}>{school.name}</option>
 	{/each}
 </Select>
+<Helper class="mt-2">
+	If your desired school is not listed, <A href="/school/new">go to this page</A> and create it.
+</Helper>
 
 <Label for="program-type" class="form-label">Program type</Label>
 <Select
@@ -127,4 +129,4 @@
 	<Input id="curriculum" type="text" name="curriculum" bind:value={$form.curriculum} />
 {/if}
 
-<Button type="submit" class="mt-8">{submitButtonText}</Button>
+<Button type="submit" class="mt-8">{enrollment ? 'Update' : 'Submit'}</Button>

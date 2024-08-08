@@ -1,3 +1,5 @@
+import { createOrUpdate } from '$lib/api/api';
+
 type BaseScore = {
 	id: number;
 	student: number;
@@ -70,3 +72,47 @@ export type GmatScore = BaseScore & {
 export type LsatScore = BaseScore & {
 	score: number | null;
 };
+
+export async function createOrUpdateToeflScore(data: any) {
+	return await createOrUpdate(data, 'toefl');
+}
+
+export async function createOrUpdateIeltsScore(data: any) {
+	return await createOrUpdate(data, 'ielts');
+}
+
+export async function createOrUpdateDuolingoScore(data: any) {
+	return await createOrUpdate(data, 'duolingo');
+}
+
+export async function createOrUpdateSatScore(data: any) {
+	return await createOrUpdate(data, 'sat-scores');
+}
+
+export async function createOrUpdateActScore(data: any) {
+	return await createOrUpdate(data, 'act-scores');
+}
+
+export async function createOrUpdateApScore(data: any) {
+	return await createOrUpdate(data, 'ap-scores');
+}
+
+export async function createOrUpdateIbGrade(data: any) {
+	return await createOrUpdate(data, 'ib-grades');
+}
+
+export async function createOrUpdateAlevelGrade(data: any) {
+	return await createOrUpdate(data, 'alevel-grades');
+}
+
+export async function createOrUpdateGreScore(data: any) {
+	return await createOrUpdate(data, 'gre-scores');
+}
+
+export async function createOrUpdateGmatScore(data: any) {
+	return await createOrUpdate(data, 'mat-scores');
+}
+
+export async function createOrUpdateLsatScore(data: any) {
+	return await createOrUpdate(data, 'lsat-scores');
+}

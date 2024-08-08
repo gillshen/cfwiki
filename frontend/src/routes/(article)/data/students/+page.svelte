@@ -175,7 +175,7 @@
 		{
 			headerName: '服务顾问',
 			filter: true,
-			ValueGetter: salesAssistantsValueGetter,
+			valueGetter: salesAssistantsValueGetter,
 			hide: true
 		},
 		{ headerName: '流程顾问', filter: true, valueGetter: workAssistantsValueGetter },

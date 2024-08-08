@@ -8,14 +8,22 @@
 		ArrowUpRightFromSquareOutline
 	} from 'flowbite-svelte-icons';
 
-	import type { Contract } from '$lib/api/contract';
 	import StudentInfobox from '$lib/components/infobox/StudentInfobox.svelte';
 	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
+
+	import type { Contract } from '$lib/api/contract';
 	import ContractForm from '$lib/components/contract-form/ContractForm.svelte';
 	import ContractItem from '$lib/components/list-items/ContractItem.svelte';
-	import EnrollmentItem from '$lib/components/list-items/EnrollmentItem.svelte';
+
 	import type { Enrollment } from '$lib/api/student.js';
 	import EnrollmentForm from '$lib/components/enrollment-form/EnrollmentForm.svelte';
+	import EnrollmentItem from '$lib/components/list-items/EnrollmentItem.svelte';
+
+	import type { ActScore, IeltsScore, SatScore, ToeflScore } from '$lib/api/scores';
+	import ToeflScoreForm from '$lib/components/toefl-score-form/ToeflScoreForm.svelte';
+	import IeltsScoreForm from '$lib/components/ielts-score-form/IeltsScoreForm.svelte';
+	import SatScoreForm from '$lib/components/sat-score-form/SatScoreForm.svelte';
+	import ActScoreForm from '$lib/components/act-score-form/ActScoreForm.svelte';
 
 	export let data;
 
@@ -35,6 +43,40 @@
 		}
 	});
 
+	const { form: toeflForm, enhance: toeflEnhance } = superForm(data.toeflForm, {
+		id: 'toefl',
+		onUpdated({ form }) {
+			if (form.valid) {
+				toeflModal = false;
+			}
+		}
+	});
+
+	const { form: ieltsForm, enhance: ieltsEnhance } = superForm(data.ieltsForm, {
+		id: 'ielts',
+		onUpdated({ form }) {
+			if (form.valid) {
+				ieltsModal = false;
+			}
+		}
+	});
+
+	const { form: satScoreForm, enhance: satScoreEnhance } = superForm(data.satScoreForm, {
+		onUpdated({ form }) {
+			if (form.valid) {
+				satScoreModal = false;
+			}
+		}
+	});
+
+	const { form: actScoreForm, enhance: actScoreEnhance } = superForm(data.actScoreForm, {
+		onUpdated({ form }) {
+			if (form.valid) {
+				actScoreModal = false;
+			}
+		}
+	});
+
 	$: canEdit = true;
 
 	let contractModal = false;
@@ -42,6 +84,18 @@
 
 	let enrollmentModal = false;
 	let activeEnrollment: Enrollment | null = null;
+
+	let toeflModal = false;
+	let activeToefl: ToeflScore | null = null;
+
+	let ieltsModal = false;
+	let activeIelts: IeltsScore | null = null;
+
+	let satScoreModal = false;
+	let activeSatScore: SatScore | null = null;
+
+	let actScoreModal = false;
+	let activeActScore: ActScore | null = null;
 
 	const contractModalOpener = (contract?: Contract): (() => void) => {
 		return () => {
@@ -54,6 +108,34 @@
 		return () => {
 			activeEnrollment = enrollment ?? null;
 			enrollmentModal = true;
+		};
+	};
+
+	const toeflModalOpener = (score?: ToeflScore): (() => void) => {
+		return () => {
+			activeToefl = score ?? null;
+			toeflModal = true;
+		};
+	};
+
+	const ieltsModalOpener = (score?: IeltsScore): (() => void) => {
+		return () => {
+			activeIelts = score ?? null;
+			ieltsModal = true;
+		};
+	};
+
+	const satScoreModalOpener = (score?: SatScore): (() => void) => {
+		return () => {
+			activeSatScore = score ?? null;
+			satScoreModal = true;
+		};
+	};
+
+	const actScoreModalOpener = (score?: ActScore): (() => void) => {
+		return () => {
+			activeActScore = score ?? null;
+			actScoreModal = true;
 		};
 	};
 </script>
@@ -82,7 +164,7 @@
 		</article>
 
 		<article class="mt-16">
-			<Heading tag="h2" class="text-2xl font-bold">Educational experience</Heading>
+			<Heading tag="h2" class="text-xl font-bold">Educational experience</Heading>
 
 			{#if data.student.enrollments.length}
 				<Timeline class="mt-8 flex flex-col gap-4">
@@ -102,6 +184,50 @@
 			{#if canEdit}
 				<A class="mt-8 text-sm font-medium" on:click={enrollmentModalOpener()}>Add experience</A>
 			{/if}
+		</article>
+
+		<article class="mt-16">
+			<Heading tag="h2" class="text-xl font-bold">Test scores</Heading>
+
+			<div>
+				{#each data.student.toefl as toefl}
+					<div class="flex my-4 gap-4">
+						<A on:click={toeflModalOpener(toefl)}>Update TOEFL</A>
+						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(toefl, null, 2)}</pre>
+					</div>
+				{/each}
+				<A class="text-sm font-medium" on:click={toeflModalOpener()}>Add a TOEFL score</A>
+			</div>
+
+			<div>
+				{#each data.student.ielts as ielts}
+					<div class="flex my-4 gap-4">
+						<A on:click={ieltsModalOpener(ielts)}>Update IELTS</A>
+						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(ielts, null, 2)}</pre>
+					</div>
+				{/each}
+				<A class="text-sm font-medium" on:click={ieltsModalOpener()}>Add an IELTS score</A>
+			</div>
+
+			<div>
+				{#each data.student.sat as sat}
+					<div class="flex my-4 gap-4">
+						<A on:click={satScoreModalOpener(sat)}>Update SAT</A>
+						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(sat, null, 2)}</pre>
+					</div>
+				{/each}
+				<A class="text-sm font-medium" on:click={satScoreModalOpener()}>Add a SAT score</A>
+			</div>
+
+			<div>
+				{#each data.student.act as act}
+					<div class="flex my-4 gap-4">
+						<A on:click={actScoreModalOpener(act)}>Update ACT</A>
+						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(act, null, 2)}</pre>
+					</div>
+				{/each}
+				<A class="text-sm font-medium" on:click={actScoreModalOpener()}>Add an ACT score</A>
+			</div>
 		</article>
 	</section>
 
@@ -151,12 +277,59 @@
 	<form class="modal" method="post" action="?/createOrUpdateEnrollment" use:enrollmentEnhance>
 		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
 		<div class="form-width mx-auto">
-			<EnrollmentForm
-				form={enrollmentForm}
-				schools={data.schools}
-				enrollment={activeEnrollment}
-				submitButtonText={activeEnrollment ? 'Update' : 'Submit'}
-			/>
+			<EnrollmentForm form={enrollmentForm} schools={data.schools} enrollment={activeEnrollment} />
+		</div>
+	</form>
+</Modal>
+
+<Modal
+	title={`${activeToefl ? 'Update' : 'Add a'} TOEFL score`}
+	bind:open={toeflModal}
+	outsideclose
+>
+	<form class="modal" method="post" action="?/createOrUpdateToeflScore" use:toeflEnhance>
+		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
+		<div class="form-width mx-auto">
+			<ToeflScoreForm form={toeflForm} score={activeToefl} />
+		</div>
+	</form>
+</Modal>
+
+<Modal
+	title={`${activeIelts ? 'Update' : 'Add an'} IELTS score`}
+	bind:open={ieltsModal}
+	outsideclose
+>
+	<form class="modal" method="post" action="?/createOrUpdateIeltsScore" use:ieltsEnhance>
+		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
+		<div class="form-width mx-auto">
+			<IeltsScoreForm form={ieltsForm} score={activeIelts} />
+		</div>
+	</form>
+</Modal>
+
+<Modal
+	title={`${activeSatScore ? 'Update' : 'Add a'} SAT score`}
+	bind:open={satScoreModal}
+	outsideclose
+>
+	<form class="modal" method="post" action="?/createOrUpdateSatScore" use:satScoreEnhance>
+		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
+		<div class="form-width mx-auto">
+			<SatScoreForm form={satScoreForm} score={activeSatScore} />
+		</div>
+	</form>
+</Modal>
+
+<Modal
+	title={`${activeActScore ? 'Update' : 'Add an'} ACT score`}
+	bind:open={actScoreModal}
+	outsideclose
+>
+	<form class="modal" method="post" action="?/createOrUpdateActScore" use:actScoreEnhance>
+		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
+		<div class="form-width mx-auto">
+			<ActScoreForm form={actScoreForm} score={activeActScore} />
 		</div>
 	</form>
 </Modal>

@@ -20,3 +20,11 @@ export async function patch(url: string, data: any) {
 		body: JSON.stringify(data)
 	});
 }
+
+export async function createOrUpdate(data: any, url: string) {
+	if (data.id) {
+		return await patch(`${url}/${data.id}/update/`, data);
+	} else {
+		return await post(`${url}/new/`, data);
+	}
+}
