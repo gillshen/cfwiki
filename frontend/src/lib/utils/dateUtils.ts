@@ -28,6 +28,10 @@ export function toShortDate(dateString: string | null | undefined): string {
 	return toFormattedDate(dateString, 'MMM d, y');
 }
 
+export function toShortYearMonth(dateString: string | null | undefined): string {
+	return toFormattedDate(dateString, 'MMM y');
+}
+
 export function toISODate(dateString: string | null | undefined): string {
 	return toFormattedDate(dateString, 'y-LL-dd');
 }

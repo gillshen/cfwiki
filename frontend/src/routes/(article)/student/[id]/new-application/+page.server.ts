@@ -6,7 +6,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '$env/static/private';
 import { newProgramSchema } from '$lib/schemas/program';
-import { fetchStudent, type StudentListItem } from '$lib/api/student';
+import { fetchStudent, type StudentDetail } from '$lib/api/student';
 import { fetchSchools } from '$lib/api/school';
 import { createProgram, fetchPrograms } from '$lib/api/program';
 
@@ -17,7 +17,7 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Invalid id');
 	}
 
-	const student: StudentListItem = await fetchStudent(id);
+	const student: StudentDetail = await fetchStudent(id);
 
 	if (student?.id === undefined) {
 		throw error(404, 'Student not found');
