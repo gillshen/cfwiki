@@ -55,7 +55,7 @@
 								<A
 									class="text-sm"
 									on:click={() => {
-										activeContract = { ...contract, student: data.student.id };
+										activeContract = contract;
 										contractModal = true;
 									}}
 								>

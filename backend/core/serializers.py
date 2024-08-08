@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from core.models import CFUser, Student, Contract, Service, Application, ApplicationLog
 from target.models import School, Program, ProgramIteration, ApplicationRound
+import academics.serializers
 
 
 class CFUserSerializer(serializers.ModelSerializer):
@@ -17,30 +18,53 @@ class CFUserSerializer(serializers.ModelSerializer):
         ]
 
 
-class StudentSerializer(serializers.ModelSerializer):
+# for nesting within student list and detail serializers
+class ContractByStudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contract
+        fields = "__all__"
+
+    class ServiceSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Service
+            exclude = ["contract"]
+
+        cf_username = serializers.CharField()
+
+    services = ServiceSerializer(many=True)
+
+
+class StudentListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
         fields = "__all__"
 
     fullname = serializers.CharField()
+    latest_contract = ContractByStudentSerializer()
 
-    class ContractSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Contract
-            exclude = ["student"]
 
-        class ServiceSerializer(serializers.ModelSerializer):
-            class Meta:
-                model = Service
-                exclude = ["contract"]
+class StudentDetailSerializer(serializers.ModelSerializer):
 
-            cf_username = serializers.CharField()
+    class Meta:
+        model = Student
+        fields = "__all__"
 
-        services = ServiceSerializer(many=True)
+    fullname = serializers.CharField()
+    contracts_sorted = ContractByStudentSerializer(many=True)
 
-    # TODO fetch only the latest for the list
-    contracts_sorted = ContractSerializer(many=True)
+    enrollments = academics.serializers.EnrollmentByStudentSerializer(many=True)
+    toefl = academics.serializers.TOEFLScoreCRUDSerializer(many=True)
+    ielts = academics.serializers.IELTSScoreCRUDSerializer(many=True)
+    duolingo = academics.serializers.DuolingoScoreCRUDSerializer(many=True)
+    sat = academics.serializers.SATScoreCRUDSerializer(many=True)
+    act = academics.serializers.ACTScoreCRUDSerializer(many=True)
+    ap = academics.serializers.APScoreCRUDSerializer(many=True)
+    ib = academics.serializers.IBGradeCRUDSerializer(many=True)
+    alevel = academics.serializers.ALevelGradeCRUDSerializer(many=True)
+    gre = academics.serializers.GREScoreCRUDSerializer(many=True)
+    gmat = academics.serializers.GMATScoreCRUDSerializer(many=True)
+    lsat = academics.serializers.LSATScoreCRUDSerializer(many=True)
 
 
 class StudentCRUDSerializer(serializers.ModelSerializer):

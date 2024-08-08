@@ -16,15 +16,23 @@
 
 	export let contract: Contract;
 
-	let indicatorColor: IndicatorColorType;
-
-	$: indicatorColor = contract.status === 'In effect' ? 'green' : 'Terminated' ? 'red' : 'gray';
-	$: statusColor = `text-${indicatorColor}-400`;
-
 	$: dateString =
 		contract.date && contract.student_progression_when_signed
 			? `${toShortDate(contract.date)} (${contract.student_progression_when_signed})`
 			: toShortDate(contract.date) || contract.student_progression_when_signed;
+
+	const setColor = (contractStatus: string): IndicatorColorType => {
+		switch (contractStatus) {
+			case 'In effect':
+				return 'green';
+			case 'Terminated':
+				return 'red';
+			case 'Fulfilled':
+				return 'gray';
+			default:
+				return 'none';
+		}
+	};
 
 	const clipRole = (role: string): string => {
 		switch (role) {
@@ -46,8 +54,8 @@
 >
 	<div>
 		<div class="flex gap-2 items-center">
-			<Indicator color={indicatorColor} />
-			<P size="sm" color={statusColor}>{contract.status}</P>
+			<Indicator color={setColor(contract.status)} />
+			<P size="sm" color="text-gray-400" class="font-medium">{contract.status}</P>
 		</div>
 
 		<Heading tag="h3" class="font-bold text-xl mt-3 mb-1">

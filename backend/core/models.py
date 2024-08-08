@@ -88,6 +88,10 @@ class Student(models.Model):
             "-date",
         )
 
+    @property
+    def latest_contract(self):
+        return self.contracts_sorted.first()
+
 
 class Contract(models.Model):
 

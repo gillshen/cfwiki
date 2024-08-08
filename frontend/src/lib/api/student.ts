@@ -2,26 +2,21 @@ import { get, patch, post } from '$lib/api/api';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
 
-export type Service = {
-	id: number;
-	cfer: number;
-	cf_username: string;
-	role: string;
-	start_date: string | null;
-	end_date: string | null;
-};
+import type {
+	ToeflScore,
+	IeltsScore,
+	DuolingoScore,
+	SatScore,
+	ActScore,
+	ApScore,
+	IbGrade,
+	ALevelGrade,
+	GreScore,
+	GmatScore,
+	LsatScore
+} from '$lib/api/scores';
 
-export type Contract = {
-	id: number;
-	type: string;
-	target_year: number;
-	date: string | null;
-	status: 'In effect' | 'Fulfilled' | 'Terminated';
-	student_progression_when_signed: string;
-	services: Service[];
-};
-
-export type StudentListItem = {
+type BaseStudent = {
 	id: number;
 	surname: string;
 	given_name: string;
@@ -35,16 +30,75 @@ export type StudentListItem = {
 	base_city: string;
 	comments: string;
 	fullname: string;
-	contracts_sorted: Contract[];
 };
 
-export type StudentDetail = StudentListItem;
+export type Service = {
+	id: number;
+	cfer: number;
+	cf_username: string;
+	role: string;
+	start_date: string | null;
+	end_date: string | null;
+};
+
+export type Contract = {
+	id: number;
+	student: number;
+	type: string;
+	target_year: number;
+	date: string | null;
+	status: 'In effect' | 'Fulfilled' | 'Terminated';
+	student_progression_when_signed: string;
+	services: Service[];
+};
+
+export type StudentListItem = BaseStudent & { latest_contract: Contract };
+
+export type Grade = {
+	id: number;
+	enrollment: number;
+	progression: string;
+	term: string;
+	value: number;
+	scale: number;
+	is_cumulative: boolean;
+	comments: string;
+};
+
+export type Enrollment = {
+	id: number;
+	student: number;
+	school: { id: number; type: string; name: string; alt_name: string; country: string };
+	program_type: string;
+	start_date: string;
+	start_progression: string;
+	end_date: string | null;
+	end_progression: string;
+	curriculum: string;
+	grades: Grade[];
+};
+
+export type StudentDetail = BaseStudent & {
+	contracts_sorted: Contract[];
+	enrollments: Enrollment[];
+	toefl: ToeflScore[];
+	ielts: IeltsScore[];
+	duolingo: DuolingoScore[];
+	sat: SatScore[];
+	act: ActScore[];
+	ap: ApScore[];
+	ib: IbGrade[];
+	alevel: ALevelGrade[];
+	gre: GreScore[];
+	gmat: GmatScore[];
+	lsat: LsatScore[];
+};
 
 export async function fetchStudents(): Promise<StudentListItem[]> {
 	return await get('students/');
 }
 
-export async function fetchStudent(id: number): Promise<StudentListItem> {
+export async function fetchStudent(id: number): Promise<StudentDetail> {
 	return await get(`students/${id}/`);
 }
 
@@ -56,7 +110,7 @@ export async function updateStudent(data: any) {
 	return await patch(`students/${data.id}/update/`, data);
 }
 
-export function formatLocation(student: StudentListItem): string {
+export function formatLocation(student: BaseStudent): string {
 	const { base_country, base_subnational, base_city } = student;
 	if (!base_country) {
 		return '';

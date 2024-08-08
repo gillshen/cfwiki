@@ -3,7 +3,7 @@ import { error } from '@sveltejs/kit';
 import { fail, message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-import { fetchStudent, type StudentListItem } from '$lib/api/student';
+import { fetchStudent, type StudentDetail } from '$lib/api/student';
 import { newContractSchema } from '$lib/schemas/contract';
 import { createOrUpdateContract } from '$lib/api/contract';
 
@@ -14,7 +14,7 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Invalid id');
 	}
 
-	const student: StudentListItem = await fetchStudent(id);
+	const student: StudentDetail = await fetchStudent(id);
 
 	if (student?.id === undefined) {
 		throw error(404, 'Student not found');

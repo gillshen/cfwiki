@@ -9,7 +9,8 @@ from core.models import CFUser, Student, Service, Contract, Application, Applica
 
 from core.serializers import (
     CFUserSerializer,
-    StudentSerializer,
+    StudentListSerializer,
+    StudentDetailSerializer,
     StudentCRUDSerializer,
     ContractDetailSerializer,
     ContractCRUDSerializer,
@@ -29,12 +30,28 @@ class CFUserListView(ListAPIView):
 
 class StudentListView(ListAPIView):
     queryset = Student.objects.all().prefetch_related("contracts")
-    serializer_class = StudentSerializer
+    serializer_class = StudentListSerializer
 
 
 class StudentDetailView(RetrieveAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+    queryset = Student.objects.all().prefetch_related(
+        "contracts",
+        "enrollments",
+        "toefl",
+        "ielts",
+        "duolingo",
+        "sat",
+        "act",
+        "ap",
+        "ib",
+        "alevel",
+        "gre",
+        "gmat",
+        "lsat",
+        "enrollments__school",
+        "enrollments__grades",
+    )
+    serializer_class = StudentDetailSerializer
 
 
 class StudentCreateView(CreateAPIView):

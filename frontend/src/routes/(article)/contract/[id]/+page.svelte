@@ -56,8 +56,10 @@
 	on:click={() => {
 		activeService = null;
 		serviceModal = true;
-	}}>Add staff</Button
+	}}
 >
+	Add staff
+</Button>
 
 <Modal
 	title={activeService ? 'Update staff information' : 'Add staff'}

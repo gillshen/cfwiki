@@ -82,33 +82,23 @@
 		return `${flag}\xa0\xa0${home}`;
 	}
 
-	function _getLatestContract(student: StudentListItem): Contract | null {
-		if (!student.contracts_sorted.length) {
-			return null;
-		}
-		return student.contracts_sorted[0];
-	}
-
 	function latestContractTypeValueGetter(params: ValueGetterParams): string {
-		const latestContract = _getLatestContract(params.data);
-		return latestContract?.type ?? '';
+		return params.data.latest_contract?.type ?? '';
 	}
 
 	function lastestTargetYearValueGetter(params: ValueGetterParams): number | null {
-		const latestContract = _getLatestContract(params.data);
-		return latestContract?.target_year ?? null;
+		return params.data.latest_contract?.target_year ?? null;
 	}
 
 	function contractStatusValueGetter(params: ValueGetterParams): string {
-		const latestContract = _getLatestContract(params.data);
-		return latestContract?.status ?? '';
+		return params.data.latest_contract?.status ?? '';
 	}
 
 	function _getLatestServices(student: StudentListItem, role: string): string {
-		if (!student.contracts_sorted.length) {
+		if (!student.latest_contract) {
 			return '';
 		}
-		const services = student.contracts_sorted[0].services;
+		const services = student.latest_contract.services;
 		return services
 			.filter((s) => s.role === role)
 			.map((s) => s.cf_username)
