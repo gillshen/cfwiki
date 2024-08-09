@@ -4,11 +4,19 @@ export const programTypes = [
 	'UG Freshman',
 	'UG Transfer',
 	"Master's",
-	'Doctoral',
+	'Doctorate',
 	'Non-degree'
 ] as const;
 
 export type ProgramType = (typeof programTypes)[number];
+
+export type Program = {
+	// used by the update form
+	id: number;
+	type: string;
+	name: string;
+	degree: string;
+};
 
 type School = {
 	id: number;
@@ -16,12 +24,8 @@ type School = {
 	alt_name: string;
 };
 
-export type ProgramListItem = {
-	id: number;
+export type ProgramListItem = Program & {
 	schools: School[];
-	type: string;
-	name: string;
-	degree: string;
 	display_name: string;
 };
 
@@ -31,7 +35,7 @@ export async function fetchPrograms(): Promise<ProgramListItem[]> {
 	return await get('programs/');
 }
 
-export async function fetchProgram(id: number): Promise<ProgramListItem> {
+export async function fetchProgram(id: number): Promise<ProgramDetail> {
 	return await get(`programs/${id}/`);
 }
 
@@ -50,6 +54,6 @@ export function formatSchoolNamesShort(program: ProgramListItem | ProgramDetail)
 		.join(' + ');
 }
 
-export function isUndergraduate(program: ProgramListItem | ProgramDetail): boolean {
+export function isUndergraduate(program: Program): boolean {
 	return program.type === 'UG Freshman' || program.type === 'UG Transfer';
 }

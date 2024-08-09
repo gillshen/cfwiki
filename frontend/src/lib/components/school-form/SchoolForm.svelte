@@ -1,22 +1,34 @@
 <script lang="ts">
 	import { Button, Input, Label, Select } from 'flowbite-svelte';
+
+	import type { School } from '$lib/api/school';
 	import countryFlags, { sortMostAppliedFirst } from '$lib/constants/countryFlags';
 
 	export let form: any;
-	export let submitButtonText = 'Submit';
-	export let typeField = true;
+	export let message: any;
+	export let errors: any;
+	export let entity: School | null = null;
+
+	$form.id = entity?.id;
+	$form.type = entity?.type;
+	$form.name = entity?.name;
+	$form.alt_name = entity?.alt_name;
+	$form.country = entity?.country;
+
+	// TODO
+	if ($message || $errors) {
+		//
+	}
 
 	const countries = Object.keys(countryFlags).sort(sortMostAppliedFirst);
 </script>
 
-{#if typeField}
-	<Label for="school-type" class="form-label">Type</Label>
-	<Select id="school-type" name="type" bind:value={$form.type} required>
-		{#each ['University', 'Secondary School', 'Other'] as schoolType}
-			<option value={schoolType}>{schoolType}</option>
-		{/each}
-	</Select>
-{/if}
+<Label for="school-type" class="form-label">Type</Label>
+<Select id="school-type" name="type" bind:value={$form.type} required>
+	{#each ['University', 'Secondary School', 'Other'] as schoolType}
+		<option value={schoolType}>{schoolType}</option>
+	{/each}
+</Select>
 
 <Label for="school-name" class="form-label">Full name</Label>
 <Input id="school-name" type="text" name="name" bind:value={$form.name} required />
@@ -31,4 +43,4 @@
 	{/each}
 </Select>
 
-<Button class="mt-8" type="submit">{submitButtonText}</Button>
+<Button class="mt-8" type="submit">{entity ? 'Update' : 'Submit'}</Button>

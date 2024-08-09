@@ -15,87 +15,83 @@
 		//
 	}
 
-	$form.id = entity?.id;
-	$form.school = entity?.school.id;
-	$form.program_type = entity?.program_type;
-	$form.start_date = entity?.start_date;
-	$form.start_progression = entity?.start_progression;
-	$form.end_date = entity?.end_date;
-	$form.end_progression = entity?.end_progression;
-	$form.curriculum = entity?.curriculum;
-
 	const secondarySchoolCurricula = ['', 'A-level', 'AP', 'IB', 'Other'];
 
 	let schools: School[] = [];
 	let schoolType = entity?.school.type;
 
-	const onSchoolTypeChange = () => {
-		$form.school = '';
-	};
+	const onSchoolTypeChange = () => ($form.school = '');
 
 	$: filteredSchools = schools
 		.filter((s) => s.type === schoolType)
-		.sort((a, b) => a.name.localeCompare(b.name));
+		.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'));
 
 	let progressions: string[] = [];
 
-	const onProgramTypeChange = () => {
-		if ($form.program_type === 'Secondary School') {
-			progressions = ['G9', 'G10', 'G11', 'G12'];
-		} else {
-			progressions = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
-		}
-	};
+	const defaultProgressions = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+	const secondarySchoolProgressions = ['G9', 'G10', 'G11', 'G12'];
+
+	$: progressions =
+		$form.program_type === 'Secondary School' ? secondarySchoolProgressions : defaultProgressions;
 
 	onMount(async () => {
-		schools = await fetchSchools();
-		onProgramTypeChange();
+		if (!entity) {
+			schools = await fetchSchools();
+		}
+		if (entity) {
+			$form.id = entity.id;
+			$form.school = entity.school.id;
+			$form.program_type = entity.program_type;
+			$form.start_date = entity.start_date;
+			$form.start_progression = entity.start_progression;
+			$form.end_date = entity.end_date;
+			$form.end_progression = entity.end_progression;
+			$form.curriculum = entity.curriculum;
+		}
 	});
 </script>
 
 <input type="number" name="id" class="hidden" bind:value={$form.id} />
 
-<Label class="form-label">School type</Label>
-<div class="form-radio-group">
-	<Radio
-		value="University"
-		class="font-normal"
-		bind:group={schoolType}
-		on:change={onSchoolTypeChange}>University</Radio
-	>
-	<Radio
-		value="Secondary School"
-		class="font-normal"
-		bind:group={schoolType}
-		on:change={onSchoolTypeChange}>Secondary School</Radio
-	>
-	<Radio
-		value="Other"
-		class="font-normal"
-		bind:group={schoolType}
-		on:change={onSchoolTypeChange}
-		required>Other</Radio
-	>
-</div>
+{#if !entity}
+	<Label class="form-label">School type</Label>
+	<div class="form-radio-group">
+		<Radio
+			value="University"
+			class="font-normal"
+			bind:group={schoolType}
+			on:change={onSchoolTypeChange}>University</Radio
+		>
+		<Radio
+			value="Secondary School"
+			class="font-normal"
+			bind:group={schoolType}
+			on:change={onSchoolTypeChange}>Secondary School</Radio
+		>
+		<Radio
+			value="Other"
+			class="font-normal"
+			bind:group={schoolType}
+			on:change={onSchoolTypeChange}
+			required>Other</Radio
+		>
+	</div>
 
-<Label for="school" class="form-label">School</Label>
-<Select id="school" name="school" bind:value={$form.school} required>
-	{#each filteredSchools as school}
-		<option value={school.id}>{school.name}</option>
-	{/each}
-</Select>
-<Helper class="mt-2">
-	If your desired school is not listed, <A href="/school/new">go to this page</A> and create it.
-</Helper>
+	<Label for="school" class="form-label">School</Label>
+	<Select id="school" name="school" bind:value={$form.school} required>
+		{#each filteredSchools as schoolOption}
+			<option value={schoolOption.id}>{schoolOption.name}</option>
+		{/each}
+	</Select>
+	<Helper class="mt-2">
+		If your desired school is not listed, <A href="/school/new">go to this page</A> and create it.
+	</Helper>
+{:else}
+	<input name="school" type="number" class="hidden" bind:value={entity.school.id} />
+{/if}
 
 <Label for="program-type" class="form-label">Program type</Label>
-<Select
-	id="program-type"
-	name="program_type"
-	bind:value={$form.program_type}
-	on:change={onProgramTypeChange}
-	required
->
+<Select id="program-type" name="program_type" bind:value={$form.program_type} required>
 	{#each ['Secondary School', 'UG Freshman', 'UG Transfer', "Master's"] as programType}
 		<option value={programType}>{programType}</option>
 	{/each}

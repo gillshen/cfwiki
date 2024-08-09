@@ -1,10 +1,11 @@
 import type { PageServerLoadEvent } from './$types';
 import { error } from '@sveltejs/kit';
-import { fail, message, superValidate } from 'sveltekit-superforms';
+import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchSchool, updateSchool, type School } from '$lib/api/school';
 import { schoolSchema } from '$lib/schemas/school';
+import { formAction } from '$lib/abstract/formAction';
 
 export async function load(event: PageServerLoadEvent) {
 	const id = parseInt(event.params.id, 10);
@@ -25,21 +26,5 @@ export async function load(event: PageServerLoadEvent) {
 }
 
 export const actions = {
-	updateSchool: async ({ request }) => {
-		const form = await superValidate(request, zod(schoolSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-
-		// Update the school
-		const response = await updateSchool(form.data);
-		if (!response.ok) {
-			console.log(response);
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-
-		return message(form, 'success');
-	}
+	updateSchool: formAction(schoolSchema, updateSchool)
 };

@@ -1,24 +1,15 @@
 <script lang="ts">
-	import { Button, Heading, Hr, Dropdown, Modal } from 'flowbite-svelte';
+	import { Button, Heading, Hr, Dropdown } from 'flowbite-svelte';
 	import { ChevronRightOutline } from 'flowbite-svelte-icons';
-	import { superForm } from 'sveltekit-superforms';
 
 	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
 	import SchoolForm from '$lib/components/school-form/SchoolForm.svelte';
 	import SchoolInfobox from '$lib/components/infobox/SchoolInfobox.svelte';
+	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 
 	export let data;
 
 	let updateSchoolModal = false;
-
-	const { form, enhance } = superForm(data.schoolForm, {
-		invalidateAll: 'force',
-		onUpdated({ form }) {
-			if (form.valid) {
-				updateSchoolModal = false;
-			}
-		}
-	});
 </script>
 
 <Heading tag="h1" class="alt-page-title">{data.school.name}</Heading>
@@ -43,11 +34,13 @@
 	</article>
 </section>
 
-<Modal title="Update school information" bind:open={updateSchoolModal} outsideclose>
-	<form class="modal" method="post" action="?/updateSchool" use:enhance>
-		<input type="number" name="id" class="hidden" bind:value={data.school.id} />
-		<div class="form-width mx-auto">
-			<SchoolForm {form} submitButtonText="Update" typeField={false} />
-		</div>
-	</form>
-</Modal>
+<FormModal
+	open={updateSchoolModal}
+	superform={data.schoolForm}
+	fields={SchoolForm}
+	action="?/updateSchool"
+	entity={data.school}
+	extra={[{ name: 'id', type: 'number', value: data.school.id }]}
+	title="Update school information"
+	on:close={() => (updateSchoolModal = false)}
+/>

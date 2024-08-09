@@ -1,6 +1,6 @@
 import { patch } from '$lib/api/api';
 
-export async function updateRoundDates(data: {
+export async function updateApplicationRound(data: {
 	id: number;
 	name?: string;
 	due_date?: string | null;

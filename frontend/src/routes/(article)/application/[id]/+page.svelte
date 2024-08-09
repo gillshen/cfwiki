@@ -148,7 +148,7 @@
 </Modal>
 
 <Modal title="Update key dates" bind:open={updateDatesModal} outsideclose>
-	<form class="modal" method="post" action="?/updateDates" use:datesUpdateEnhance>
+	<form class="modal" method="post" action="?/updateRoundDates" use:datesUpdateEnhance>
 		<input type="number" name="id" class="hidden" bind:value={$datesUpdateForm.id} />
 		<div class="form-width mx-auto">
 			<RoundDatesForm form={datesUpdateForm} />

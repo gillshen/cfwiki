@@ -1,25 +1,16 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
-	import { Button, Heading, Hr, Dropdown, Modal } from 'flowbite-svelte';
+	import { Button, Heading, Hr, Dropdown } from 'flowbite-svelte';
 	import { ChevronRightOutline } from 'flowbite-svelte-icons';
 
 	import ProgramInfobox from '$lib/components/infobox/ProgramInfobox.svelte';
 	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
-	import NameFields from '$lib/components/program-form/NameFields.svelte';
 	import { formatSchoolNamesShort, isUndergraduate } from '$lib/api/program';
+	import FormModal from '$lib/components/form-modal/FormModal.svelte';
+	import ProgramForm from '$lib/components/program-form/ProgramForm.svelte';
 
 	export let data;
 
 	let updateProgramModal = false;
-
-	const { form, enhance } = superForm(data.programForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				updateProgramModal = false;
-			}
-		},
-		invalidateAll: 'force'
-	});
 </script>
 
 <Heading tag="h1" class="alt-page-title">
@@ -48,12 +39,13 @@
 	</article>
 </section>
 
-<Modal title="Update program information" bind:open={updateProgramModal} outsideclose>
-	<form class="modal" method="post" action="?/updateProgram" use:enhance>
-		<input type="number" name="id" class="hidden" value={$form.id} />
-		<div class="form-width mx-auto my-8">
-			<NameFields {form} requireDegree={data.program.type === "Master's"} />
-			<Button class="mt-8" type="submit">Submit</Button>
-		</div>
-	</form>
-</Modal>
+<FormModal
+	open={updateProgramModal}
+	superform={data.programForm}
+	fields={ProgramForm}
+	action="?/updateProgram"
+	entity={data.program}
+	extra={[{ name: 'id', type: 'number', value: data.program.id }]}
+	title="Update program information"
+	on:close={() => (updateProgramModal = false)}
+/>

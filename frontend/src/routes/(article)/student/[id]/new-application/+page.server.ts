@@ -1,6 +1,6 @@
 import type { PageServerLoadEvent } from './$types';
-import { error, fail, redirect } from '@sveltejs/kit';
-import { message, superValidate } from 'sveltekit-superforms';
+import { error, redirect } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import jwt from 'jsonwebtoken';
@@ -9,6 +9,7 @@ import { newProgramSchema } from '$lib/schemas/program';
 import { fetchStudent, type StudentDetail } from '$lib/api/student';
 import { fetchSchools } from '$lib/api/school';
 import { createProgram, fetchPrograms } from '$lib/api/program';
+import { formAction } from '$lib/abstract/formAction';
 
 export async function load(event: PageServerLoadEvent) {
 	const id = parseInt(event.params.id, 10);
@@ -42,21 +43,5 @@ export const actions = {
 		throw redirect(302, `/application/new?token=${token}`);
 	},
 
-	createProgram: async ({ request }) => {
-		const form = await superValidate(request, zod(newProgramSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-
-		// Create the program
-		const response = await createProgram(form.data);
-		if (!response.ok) {
-			console.log(response);
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-
-		return message(form, 'success');
-	}
+	createProgram: formAction(newProgramSchema, createProgram)
 };

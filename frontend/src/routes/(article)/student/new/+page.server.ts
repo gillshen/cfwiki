@@ -1,8 +1,9 @@
-import { fail, redirect } from '@sveltejs/kit';
-import { message, superValidate } from 'sveltekit-superforms';
+import { redirect } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { newStudentSchema } from '$lib/schemas/student.js';
 import { createStudent } from '$lib/api/student.js';
+import { formAction } from '$lib/abstract/formAction.js';
 
 export async function load(event) {
 	const newStudentForm = await superValidate(zod(newStudentSchema));
@@ -10,23 +11,7 @@ export async function load(event) {
 }
 
 export const actions = {
-	createStudent: async ({ request }) => {
-		const form = await superValidate(request, zod(newStudentSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-
-		// Create the student
-		const response = await createStudent(form.data);
-		if (!response.ok) {
-			console.log(response);
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-
-		// Redirect to the student page
-		const createdStudent = await response.json();
-		throw redirect(303, `/student/${createdStudent.id}`);
-	}
+	createStudent: formAction(newStudentSchema, createStudent, (newStudent) => {
+		throw redirect(303, `/student/${newStudent.id}`);
+	})
 };

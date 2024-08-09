@@ -1,10 +1,9 @@
 import type { PageServerLoadEvent } from './$types';
 import { error } from '@sveltejs/kit';
-import { fail, message, superValidate } from 'sveltekit-superforms';
+import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchStudent, type StudentDetail } from '$lib/api/student';
-import { fetchSchools, type School } from '$lib/api/school';
 import { newContractSchema } from '$lib/schemas/contract';
 import { newEnrollmentSchema } from '$lib/schemas/enrollment';
 import {
@@ -23,6 +22,7 @@ import {
 	createOrUpdateIeltsScore,
 	createOrUpdateGreScore
 } from '$lib/api/scores';
+import { formAction } from '$lib/abstract/formAction';
 
 export async function load(event: PageServerLoadEvent) {
 	const id = parseInt(event.params.id, 10);
@@ -58,115 +58,11 @@ export async function load(event: PageServerLoadEvent) {
 }
 
 export const actions = {
-	createOrUpdateContract: async ({ request }) => {
-		const form = await superValidate(request, zod(newContractSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-		// Create/update the contract
-		const response = await createOrUpdateContract(form.data);
-		if (!response.ok) {
-			console.log(response);
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-		return message(form, 'Success');
-	},
-
-	createOrUpdateEnrollment: async ({ request }) => {
-		const form = await superValidate(request, zod(newEnrollmentSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-		// Create/update the enrollment
-		const response = await createOrUpdateEnrollment(form.data);
-		if (!response.ok) {
-			console.log(response);
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-		return message(form, 'Success');
-	},
-
-	createOrUpdateToeflScore: async ({ request }) => {
-		const form = await superValidate(request, zod(newToeflSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-		// Create/update TOEFL score
-		const response = await createOrUpdateToeflScore(form.data);
-		if (!response.ok) {
-			console.log(response);
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-		return message(form, 'Success');
-	},
-
-	createOrUpdateIeltsScore: async ({ request }) => {
-		const form = await superValidate(request, zod(newIeltschema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-		// Create/update IELTS score
-		const response = await createOrUpdateIeltsScore(form.data);
-		if (!response.ok) {
-			console.log(response);
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-		return message(form, 'Success');
-	},
-
-	createOrUpdateSatScore: async ({ request }) => {
-		const form = await superValidate(request, zod(newSatSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-		// Create/update SAT score
-		const response = await createOrUpdateSatScore(form.data);
-		if (!response.ok) {
-			console.log(response);
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-		return message(form, 'Success');
-	},
-
-	createOrUpdateActScore: async ({ request }) => {
-		const form = await superValidate(request, zod(newActSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-		// Create/update ACT score
-		const response = await createOrUpdateActScore(form.data);
-		if (!response.ok) {
-			console.log(response);
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-		return message(form, 'Success');
-	},
-
-	createOrUpdateGreScore: async ({ request }) => {
-		const form = await superValidate(request, zod(newGreSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-		// Create/update GRE score
-		const response = await createOrUpdateGreScore(form.data);
-		if (!response.ok) {
-			console.log(response);
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-		return message(form, 'Success');
-	}
+	createOrUpdateContract: formAction(newContractSchema, createOrUpdateContract),
+	createOrUpdateEnrollment: formAction(newEnrollmentSchema, createOrUpdateEnrollment),
+	createOrUpdateToeflScore: formAction(newToeflSchema, createOrUpdateToeflScore),
+	createOrUpdateIeltsScore: formAction(newIeltschema, createOrUpdateIeltsScore),
+	createOrUpdateSatScore: formAction(newSatSchema, createOrUpdateSatScore),
+	createOrUpdateActScore: formAction(newActSchema, createOrUpdateActScore),
+	createOrUpdateGreScore: formAction(newGreSchema, createOrUpdateGreScore)
 };

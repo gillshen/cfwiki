@@ -1,10 +1,11 @@
 import type { PageServerLoadEvent } from './$types';
-import { error, fail } from '@sveltejs/kit';
-import { message, superValidate } from 'sveltekit-superforms';
+import { error } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchProgram, updateProgram, type ProgramListItem } from '$lib/api/program';
 import { programUpdateSchema } from '$lib/schemas/program';
+import { formAction } from '$lib/abstract/formAction';
 
 export async function load(event: PageServerLoadEvent) {
 	const id = parseInt(event.params.id, 10);
@@ -25,20 +26,5 @@ export async function load(event: PageServerLoadEvent) {
 }
 
 export const actions = {
-	updateProgram: async ({ request }) => {
-		const form = await superValidate(request, zod(programUpdateSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-
-		const response = await updateProgram(form.data);
-		if (!response.ok) {
-			console.log(response);
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-
-		return message(form, 'success');
-	}
+	updateProgram: formAction(programUpdateSchema, updateProgram)
 };

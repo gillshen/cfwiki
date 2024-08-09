@@ -1,12 +1,13 @@
 import type { PageServerLoadEvent } from './$types';
 import { error } from '@sveltejs/kit';
-import { fail, message, superValidate } from 'sveltekit-superforms';
+import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchApplication, type ApplicationDetail } from '$lib/api/application';
 import { roundNameSchema, roundDatesSchema } from '$lib/schemas/applicationRound';
-import { updateRoundDates } from '$lib/api/applicationRound';
-import { applicationLogSchema, newApplicationLogSchema } from '$lib/schemas/applicationLog';
+import { newApplicationLogSchema } from '$lib/schemas/applicationLog';
+import { formAction } from '$lib/abstract/formAction';
+import { updateApplicationRound } from '$lib/api/applicationRound';
 import { createOrUpdateApplicationLog } from '$lib/api/applicationLog';
 
 export async function load(event: PageServerLoadEvent) {
@@ -26,53 +27,12 @@ export async function load(event: PageServerLoadEvent) {
 		application,
 		roundRenameForm: await superValidate(application.round, zod(roundNameSchema)),
 		datesUpdateForm: await superValidate(application.round, zod(roundDatesSchema)),
-		logForm: await superValidate(zod(applicationLogSchema))
+		logForm: await superValidate(zod(newApplicationLogSchema))
 	};
 }
 
 export const actions = {
-	updateDates: async ({ request }) => {
-		const form = await superValidate(request, zod(roundDatesSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-		// Update the dates
-		const response = await updateRoundDates(form.data);
-		if (!response.ok) {
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-		return message(form, 'success');
-	},
-
-	updateRoundName: async ({ request }) => {
-		const form = await superValidate(request, zod(roundNameSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-		// Update the name
-		const response = await updateRoundDates(form.data);
-		if (!response.ok) {
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-		return message(form, 'success');
-	},
-
-	createOrUpdateApplicationLog: async ({ request }) => {
-		const form = await superValidate(request, zod(newApplicationLogSchema));
-		console.log(form);
-
-		if (!form.valid) {
-			return fail(400, { form });
-		}
-		// Create/update the log
-		const response = await createOrUpdateApplicationLog(form.data);
-		if (!response.ok) {
-			return message(form, 'Sorry, an error occurred', { status: 400 });
-		}
-		return message(form, 'success');
-	}
+	updateRoundName: formAction(roundNameSchema, updateApplicationRound),
+	updateRoundDates: formAction(roundDatesSchema, updateApplicationRound),
+	createOrUpdateApplicationLog: formAction(newApplicationLogSchema, createOrUpdateApplicationLog)
 };

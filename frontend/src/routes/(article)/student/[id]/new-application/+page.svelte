@@ -15,11 +15,11 @@
 	} from 'flowbite-svelte';
 
 	import { programTypes } from '$lib/api/program';
-	import NameFields from '$lib/components/program-form/NameFields.svelte';
+	import ProgramForm from '$lib/components/program-form/ProgramForm.svelte';
 
 	export let data;
 
-	const { form: newProgramForm, enhance: newProgramEnhance } = superForm(data.newProgramForm, {
+	const { form, message, errors, enhance } = superForm(data.newProgramForm, {
 		onUpdated({ form }) {
 			if (form.valid) {
 				createProgramModal = false;
@@ -31,11 +31,13 @@
 	let programId: number | string = '';
 
 	let schoolType = 'University';
+
 	$: schools = data.schools
 		.filter((a) => a.type === schoolType)
 		.sort((a, b) => a.name.localeCompare(b.name));
 
 	let programType = '';
+
 	$: programs = data.programs.filter((p) => {
 		const schoolIds = p.schools.map((s) => s.id);
 		return p.type === programType && typeof schoolId === 'number' && schoolIds.includes(schoolId);
@@ -59,8 +61,8 @@
 	};
 
 	const onOpenNewProgramForm = () => {
-		$newProgramForm.school_1 = typeof schoolId === 'number' ? schoolId : 0;
-		$newProgramForm.type = programType;
+		$form.school_1 = typeof schoolId === 'number' ? schoolId : 0;
+		$form.type = programType;
 		createProgramModal = true;
 	};
 </script>
@@ -143,27 +145,21 @@
 </div>
 
 <Modal title="Create a program" bind:open={createProgramModal} outsideclose>
-	<form class="modal" method="post" action="?/createProgram" use:newProgramEnhance>
+	<form class="modal" method="post" action="?/createProgram" use:enhance>
 		<div class="form-width mx-auto">
 			<Label for="school-1" class="form-label">School</Label>
-			<Select id="school-1" name="school_1" bind:value={$newProgramForm.school_1} required>
+			<Select id="school-1" name="school_1" bind:value={$form.school_1} required>
 				{#each schools as school}
 					<option value={school.id}>{school.name}</option>
 				{/each}
 			</Select>
 
 			<Label for="new-program-type" class="form-label">Program type</Label>
-			<Select id="new-program-type" name="type" bind:value={$newProgramForm.type} required>
+			<Select id="new-program-type" name="type" bind:value={$form.type} required>
 				{#each programTypes as programTypeOption}
 					<option value={programTypeOption}>{programTypeOption}</option>
 				{/each}
 			</Select>
-
-			{#if $newProgramForm.type === "Master's" || $newProgramForm.type === 'PhD'}
-				<NameFields form={newProgramForm} requireDegree />
-			{:else if $newProgramForm.type === 'Other'}
-				<NameFields form={newProgramForm} />
-			{/if}
 
 			<Checkbox class="form-checkbox" bind:checked={newProgramIsJoint}>
 				Is this a joint program?
@@ -171,14 +167,14 @@
 
 			{#if newProgramIsJoint}
 				<Label for="school-2" class="form-label">The other school</Label>
-				<Select id="school-2" name="school_2" bind:value={$newProgramForm.school_2} required>
+				<Select id="school-2" name="school_2" bind:value={$form.school_2} required>
 					{#each schools as school}
 						<option value={school.id}>{school.name}</option>
 					{/each}
 				</Select>
 			{/if}
 
-			<Button type="submit" class="mt-8">Submit</Button>
+			<ProgramForm {form} {message} {errors} />
 		</div>
 	</form>
 </Modal>
