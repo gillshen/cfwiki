@@ -20,7 +20,8 @@ import {
 	createOrUpdateToeflScore,
 	createOrUpdateSatScore,
 	createOrUpdateActScore,
-	createOrUpdateIeltsScore
+	createOrUpdateIeltsScore,
+	createOrUpdateGreScore
 } from '$lib/api/scores';
 
 export async function load(event: PageServerLoadEvent) {
@@ -36,8 +37,6 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Student not found');
 	}
 
-	const schools: School[] = await fetchSchools();
-
 	const contractForm = await superValidate(zod(newContractSchema));
 	const enrollmentForm = await superValidate(zod(newEnrollmentSchema));
 	const toeflForm = await superValidate(zod(newToeflSchema));
@@ -48,7 +47,6 @@ export async function load(event: PageServerLoadEvent) {
 
 	return {
 		student,
-		schools,
 		contractForm,
 		enrollmentForm,
 		toeflForm,
@@ -149,6 +147,22 @@ export const actions = {
 		}
 		// Create/update ACT score
 		const response = await createOrUpdateActScore(form.data);
+		if (!response.ok) {
+			console.log(response);
+			return message(form, 'Sorry, an error occurred', { status: 400 });
+		}
+		return message(form, 'Success');
+	},
+
+	createOrUpdateGreScore: async ({ request }) => {
+		const form = await superValidate(request, zod(newGreSchema));
+		console.log(form);
+
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+		// Create/update GRE score
+		const response = await createOrUpdateGreScore(form.data);
 		if (!response.ok) {
 			console.log(response);
 			return message(form, 'Sorry, an error occurred', { status: 400 });

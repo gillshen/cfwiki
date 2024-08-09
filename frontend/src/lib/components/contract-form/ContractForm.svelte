@@ -4,15 +4,21 @@
 	import { contractStatuses, contractTypes, type Contract } from '$lib/api/contract';
 
 	export let form: any;
-	export let contract: Contract | null = null;
-	export let submitButtonText = 'Submit';
+	export let message: any;
+	export let errors: any;
+	export let entity: Contract | null = null;
 
-	$form.id = contract?.id;
-	$form.type = contract?.type;
-	$form.target_year = contract?.target_year;
-	$form.status = contract?.status;
-	$form.date = contract?.date;
-	$form.student_progression_when_signed = contract?.student_progression_when_signed;
+	// TODO
+	if ($message || $errors) {
+		//
+	}
+
+	$form.id = entity?.id;
+	$form.type = entity?.type;
+	$form.target_year = entity?.target_year;
+	$form.status = entity?.status;
+	$form.date = entity?.date;
+	$form.student_progression_when_signed = entity?.student_progression_when_signed;
 </script>
 
 <input type="number" name="id" class="hidden" bind:value={$form.id} />
@@ -57,4 +63,4 @@
 	/>
 </div>
 
-<Button type="submit" class="mt-8">{submitButtonText}</Button>
+<Button type="submit" class="mt-8">{entity ? 'Update' : 'Submit'}</Button>

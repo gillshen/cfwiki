@@ -3,16 +3,23 @@
 	import type { ActScore } from '$lib/api/scores';
 
 	export let form: any;
-	export let score: ActScore | null = null;
+	export let message: any;
+	export let errors: any;
+	export let entity: ActScore | null = null;
 
-	$form.id = score?.id;
-	$form.student = score?.student;
-	$form.date = score?.date;
-	$form.english = score?.english;
-	$form.math = score?.math;
-	$form.reading = score?.reading;
-	$form.science = score?.science;
-	$form.writing = score?.writing;
+	$form.id = entity?.id;
+	$form.student = entity?.student;
+	$form.date = entity?.date;
+	$form.english = entity?.english;
+	$form.math = entity?.math;
+	$form.reading = entity?.reading;
+	$form.science = entity?.science;
+	$form.writing = entity?.writing;
+
+	// TODO
+	if ($message || $errors) {
+		//
+	}
 </script>
 
 <input type="number" name="id" class="hidden" bind:value={$form.id} />
@@ -48,4 +55,4 @@
 	</div>
 </div>
 
-<Button type="submit" class="mt-8">{score ? 'Update' : 'Submit'}</Button>
+<Button type="submit" class="mt-8">{entity ? 'Update' : 'Submit'}</Button>

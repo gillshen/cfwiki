@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { superForm } from 'sveltekit-superforms';
-	import { Button, Heading, Hr, Dropdown, A, Timeline, Modal } from 'flowbite-svelte';
+	import { Button, Heading, Hr, Dropdown, A, Timeline } from 'flowbite-svelte';
 	import {
 		ChevronRightOutline,
-		PenOutline,
+		PenOutline as ActionIcon,
 		ArrowUpRightFromSquareOutline
 	} from 'flowbite-svelte-icons';
 
+	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import StudentInfobox from '$lib/components/infobox/StudentInfobox.svelte';
 	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
 
@@ -19,63 +19,14 @@
 	import EnrollmentForm from '$lib/components/enrollment-form/EnrollmentForm.svelte';
 	import EnrollmentItem from '$lib/components/list-items/EnrollmentItem.svelte';
 
-	import type { ActScore, IeltsScore, SatScore, ToeflScore } from '$lib/api/scores';
+	import type { ActScore, GreScore, IeltsScore, SatScore, ToeflScore } from '$lib/api/scores';
 	import ToeflScoreForm from '$lib/components/toefl-score-form/ToeflScoreForm.svelte';
 	import IeltsScoreForm from '$lib/components/ielts-score-form/IeltsScoreForm.svelte';
 	import SatScoreForm from '$lib/components/sat-score-form/SatScoreForm.svelte';
 	import ActScoreForm from '$lib/components/act-score-form/ActScoreForm.svelte';
+	import GreScoreForm from '$lib/components/gre-score-form/GreScoreForm.svelte';
 
 	export let data;
-
-	const { form: contractForm, enhance: contractEnhance } = superForm(data.contractForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				contractModal = false;
-			}
-		}
-	});
-
-	const { form: enrollmentForm, enhance: enrollmentEnhance } = superForm(data.enrollmentForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				enrollmentModal = false;
-			}
-		}
-	});
-
-	const { form: toeflForm, enhance: toeflEnhance } = superForm(data.toeflForm, {
-		id: 'toefl',
-		onUpdated({ form }) {
-			if (form.valid) {
-				toeflModal = false;
-			}
-		}
-	});
-
-	const { form: ieltsForm, enhance: ieltsEnhance } = superForm(data.ieltsForm, {
-		id: 'ielts',
-		onUpdated({ form }) {
-			if (form.valid) {
-				ieltsModal = false;
-			}
-		}
-	});
-
-	const { form: satScoreForm, enhance: satScoreEnhance } = superForm(data.satScoreForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				satScoreModal = false;
-			}
-		}
-	});
-
-	const { form: actScoreForm, enhance: actScoreEnhance } = superForm(data.actScoreForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				actScoreModal = false;
-			}
-		}
-	});
 
 	$: canEdit = true;
 
@@ -96,6 +47,9 @@
 
 	let actScoreModal = false;
 	let activeActScore: ActScore | null = null;
+
+	let greScoreModal = false;
+	let activeGreScore: GreScore | null = null;
 
 	const contractModalOpener = (contract?: Contract): (() => void) => {
 		return () => {
@@ -138,6 +92,13 @@
 			actScoreModal = true;
 		};
 	};
+
+	const greScoreModalOpener = (score?: GreScore): (() => void) => {
+		return () => {
+			activeGreScore = score ?? null;
+			greScoreModal = true;
+		};
+	};
 </script>
 
 <Heading tag="h1" class="alt-page-title">{data.student.fullname}</Heading>
@@ -171,8 +132,8 @@
 					{#each data.student.enrollments as enrollment}
 						<EnrollmentItem {enrollment}>
 							{#if canEdit}
-								<div class="text-sm mt-4 flex gap-2">
-									<A on:click={enrollmentModalOpener(enrollment)}><PenOutline /></A>
+								<div class="text-sm mt-4 flex gap-4">
+									<A on:click={enrollmentModalOpener(enrollment)}><ActionIcon /></A>
 									<A href=""><ArrowUpRightFromSquareOutline /></A>
 								</div>
 							{/if}
@@ -228,6 +189,16 @@
 				{/each}
 				<A class="text-sm font-medium" on:click={actScoreModalOpener()}>Add an ACT score</A>
 			</div>
+
+			<div>
+				{#each data.student.gre as gre}
+					<div class="flex my-4 gap-4">
+						<A on:click={greScoreModalOpener(gre)}>Update GRE</A>
+						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(gre, null, 2)}</pre>
+					</div>
+				{/each}
+				<A class="text-sm font-medium" on:click={greScoreModalOpener()}>Add a GRE score</A>
+			</div>
 		</article>
 	</section>
 
@@ -237,8 +208,8 @@
 				{#each data.student.contracts_sorted as contract}
 					<ContractItem {contract}>
 						{#if canEdit || !contract.services.length}
-							<div class="mt-8 flex gap-6">
-								<A class="text-sm" on:click={contractModalOpener(contract)}><PenOutline /></A>
+							<div class="mt-8 flex gap-4">
+								<A class="text-sm" on:click={contractModalOpener(contract)}><ActionIcon /></A>
 								<A class="text-sm" on:click={() => alert('delete contract')}>Delete</A>
 							</div>
 						{/if}
@@ -252,87 +223,82 @@
 	</article>
 </div>
 
-<Modal
+<FormModal
+	open={contractModal}
+	superform={data.contractForm}
+	fields={ContractForm}
+	action="?/createOrUpdateContract"
+	entity={activeContract}
+	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
 	title={`${activeContract ? 'Update' : 'Create a'} contract`}
-	bind:open={contractModal}
-	outsideclose
->
-	<form class="modal" method="post" action="?/createOrUpdateContract" use:contractEnhance>
-		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
-		<div class="form-width mx-auto">
-			<ContractForm
-				form={contractForm}
-				contract={activeContract}
-				submitButtonText={activeContract ? 'Update' : 'Submit'}
-			/>
-		</div>
-	</form>
-</Modal>
+	on:close={() => (contractModal = false)}
+/>
 
-<Modal
+<FormModal
+	open={enrollmentModal}
+	superform={data.enrollmentForm}
+	fields={EnrollmentForm}
+	action="?/createOrUpdateEnrollment"
+	entity={activeEnrollment}
+	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
 	title={`${activeEnrollment ? 'Update' : 'Add'} education experience`}
-	bind:open={enrollmentModal}
-	outsideclose
->
-	<form class="modal" method="post" action="?/createOrUpdateEnrollment" use:enrollmentEnhance>
-		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
-		<div class="form-width mx-auto">
-			<EnrollmentForm form={enrollmentForm} schools={data.schools} enrollment={activeEnrollment} />
-		</div>
-	</form>
-</Modal>
+	on:close={() => (enrollmentModal = false)}
+/>
 
-<Modal
+<FormModal
+	open={toeflModal}
+	superform={data.toeflForm}
+	fields={ToeflScoreForm}
+	action="?/createOrUpdateToeflScore"
+	entity={activeToefl}
+	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
 	title={`${activeToefl ? 'Update' : 'Add a'} TOEFL score`}
-	bind:open={toeflModal}
-	outsideclose
->
-	<form class="modal" method="post" action="?/createOrUpdateToeflScore" use:toeflEnhance>
-		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
-		<div class="form-width mx-auto">
-			<ToeflScoreForm form={toeflForm} score={activeToefl} />
-		</div>
-	</form>
-</Modal>
+	on:close={() => (toeflModal = false)}
+/>
 
-<Modal
+<FormModal
+	open={ieltsModal}
+	superform={data.ieltsForm}
+	fields={IeltsScoreForm}
+	action="?/createOrUpdateIeltsScore"
+	entity={activeIelts}
+	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
 	title={`${activeIelts ? 'Update' : 'Add an'} IELTS score`}
-	bind:open={ieltsModal}
-	outsideclose
->
-	<form class="modal" method="post" action="?/createOrUpdateIeltsScore" use:ieltsEnhance>
-		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
-		<div class="form-width mx-auto">
-			<IeltsScoreForm form={ieltsForm} score={activeIelts} />
-		</div>
-	</form>
-</Modal>
+	on:close={() => (ieltsModal = false)}
+/>
 
-<Modal
-	title={`${activeSatScore ? 'Update' : 'Add a'} SAT score`}
-	bind:open={satScoreModal}
-	outsideclose
->
-	<form class="modal" method="post" action="?/createOrUpdateSatScore" use:satScoreEnhance>
-		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
-		<div class="form-width mx-auto">
-			<SatScoreForm form={satScoreForm} score={activeSatScore} />
-		</div>
-	</form>
-</Modal>
+<FormModal
+	open={satScoreModal}
+	superform={data.satScoreForm}
+	fields={SatScoreForm}
+	action="?/createOrUpdateSatScore"
+	entity={activeSatScore}
+	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
+	title={`${activeSatScore ? 'Update' : 'Add an'} SAT score`}
+	on:close={() => (satScoreModal = false)}
+/>
 
-<Modal
+<FormModal
+	open={actScoreModal}
+	superform={data.actScoreForm}
+	fields={ActScoreForm}
+	action="?/createOrUpdateActScore"
+	entity={activeActScore}
+	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
 	title={`${activeActScore ? 'Update' : 'Add an'} ACT score`}
-	bind:open={actScoreModal}
-	outsideclose
->
-	<form class="modal" method="post" action="?/createOrUpdateActScore" use:actScoreEnhance>
-		<input class="hidden" type="number" name="student" bind:value={data.student.id} />
-		<div class="form-width mx-auto">
-			<ActScoreForm form={actScoreForm} score={activeActScore} />
-		</div>
-	</form>
-</Modal>
+	on:close={() => (actScoreModal = false)}
+/>
+
+<FormModal
+	open={greScoreModal}
+	superform={data.greScoreForm}
+	fields={GreScoreForm}
+	action="?/createOrUpdateGreScore"
+	entity={activeGreScore}
+	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
+	title={`${activeGreScore ? 'Update' : 'Add a'} GRE score`}
+	on:close={() => (greScoreModal = false)}
+/>
 
 <Hr />
 

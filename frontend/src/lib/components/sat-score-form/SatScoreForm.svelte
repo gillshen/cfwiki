@@ -3,14 +3,21 @@
 	import type { SatScore } from '$lib/api/scores';
 
 	export let form: any;
-	export let score: SatScore | null = null;
+	export let message: any;
+	export let errors: any;
+	export let entity: SatScore | null = null;
 
-	$form.id = score?.id;
-	$form.student = score?.student;
-	$form.date = score?.date;
-	$form.ebrw = score?.ebrw;
-	$form.math = score?.math;
-	$form.essay = score?.essay;
+	$form.id = entity?.id;
+	$form.student = entity?.student;
+	$form.date = entity?.date;
+	$form.ebrw = entity?.ebrw;
+	$form.math = entity?.math;
+	$form.essay = entity?.essay;
+
+	// TODO
+	if ($message || $errors) {
+		//
+	}
 </script>
 
 <input type="number" name="id" class="hidden" bind:value={$form.id} />
@@ -53,4 +60,4 @@
 	</div>
 </div>
 
-<Button type="submit" class="mt-8">{score ? 'Update' : 'Submit'}</Button>
+<Button type="submit" class="mt-8">{entity ? 'Update' : 'Submit'}</Button>

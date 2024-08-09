@@ -13,6 +13,7 @@
 	import { superForm } from 'sveltekit-superforms';
 
 	import type { ApplicationLog } from '$lib/api/applicationLog';
+	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ApplicationInfobox from '$lib/components/infobox/ApplicationInfobox.svelte';
 	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
 	import ApplicationLogItem from '$lib/components/list-items/ApplicationLogItem.svelte';
@@ -43,14 +44,6 @@
 		invalidateAll: 'force'
 	});
 
-	const { form: logForm, enhance: logEnhance } = superForm(data.logForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				logModal = false;
-			}
-		}
-	});
-
 	$: logs = data.application.logs.sort((a: ApplicationLog, b: ApplicationLog) => {
 		if (a.date !== b.date) {
 			return a.date.localeCompare(b.date);
@@ -64,13 +57,20 @@
 	let changeRoundModal = false;
 	let renameRoundModal = false;
 	let updateDatesModal = false;
-	let logModal = false;
 
+	let logModal = false;
 	let activeLog: ApplicationLog | null = null;
 
 	const changeRoundIdNotName = () => {
 		renameRoundModal = false;
 		changeRoundModal = true;
+	};
+
+	const logModalOpener = (log?: ApplicationLog): (() => void) => {
+		return () => {
+			activeLog = log ?? null;
+			logModal = true;
+		};
 	};
 </script>
 
@@ -109,26 +109,14 @@
 							{#each logs as log}
 								<ApplicationLogItem
 									{log}
-									updateAction={() => {
-										activeLog = log;
-										logModal = true;
-									}}
+									updateAction={logModalOpener(log)}
 									deleteAction={() => alert('delete')}
 								/>
 							{/each}
 						</Timeline>
 					{/if}
 					{#if canEdit}
-						<Button
-							outline
-							class="ml-2"
-							on:click={() => {
-								activeLog = null;
-								logModal = true;
-							}}
-						>
-							Add a status
-						</Button>
+						<Button outline class="ml-2" on:click={logModalOpener()}>Add a status</Button>
 					{/if}
 				</div>
 			{/if}
@@ -168,11 +156,13 @@
 	</form>
 </Modal>
 
-<Modal title="Add an application status" bind:open={logModal} outsideclose>
-	<form class="modal" method="post" action="?/createOrUpdateApplicationLog" use:logEnhance>
-		<input type="number" name="application" class="hidden" bind:value={data.application.id} />
-		<div class="form-width mx-auto">
-			<ApplicationLogForm form={logForm} log={activeLog} />
-		</div>
-	</form>
-</Modal>
+<FormModal
+	open={logModal}
+	superform={data.logForm}
+	fields={ApplicationLogForm}
+	action="?/createOrUpdateApplicationLog"
+	entity={activeLog}
+	extra={[{ name: 'application', type: 'number', value: data.application.id }]}
+	title={`${activeLog ? 'Update' : 'Add an'} application status`}
+	on:close={() => (logModal = false)}
+/>

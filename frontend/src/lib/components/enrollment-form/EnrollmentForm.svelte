@@ -1,24 +1,33 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { Label, Select, Radio, Button, Input, Helper, A } from 'flowbite-svelte';
+
 	import type { Enrollment } from '$lib/api/student';
-	import type { School } from '$lib/api/school';
+	import { fetchSchools, type School } from '$lib/api/school';
 
 	export let form: any;
-	export let schools: School[];
-	export let enrollment: Enrollment | null = null;
+	export let message: any;
+	export let errors: any;
+	export let entity: Enrollment | null = null;
 
-	$form.id = enrollment?.id;
-	$form.school = enrollment?.school.id;
-	$form.program_type = enrollment?.program_type;
-	$form.start_date = enrollment?.start_date;
-	$form.start_progression = enrollment?.start_progression;
-	$form.end_date = enrollment?.end_date;
-	$form.end_progression = enrollment?.end_progression;
-	$form.curriculum = enrollment?.curriculum;
+	// TODO
+	if ($message || $errors) {
+		//
+	}
+
+	$form.id = entity?.id;
+	$form.school = entity?.school.id;
+	$form.program_type = entity?.program_type;
+	$form.start_date = entity?.start_date;
+	$form.start_progression = entity?.start_progression;
+	$form.end_date = entity?.end_date;
+	$form.end_progression = entity?.end_progression;
+	$form.curriculum = entity?.curriculum;
 
 	const secondarySchoolCurricula = ['', 'A-level', 'AP', 'IB', 'Other'];
 
-	let schoolType = enrollment?.school.type;
+	let schools: School[] = [];
+	let schoolType = entity?.school.type;
 
 	const onSchoolTypeChange = () => {
 		$form.school = '';
@@ -38,7 +47,10 @@
 		}
 	};
 
-	onProgramTypeChange();
+	onMount(async () => {
+		schools = await fetchSchools();
+		onProgramTypeChange();
+	});
 </script>
 
 <input type="number" name="id" class="hidden" bind:value={$form.id} />
@@ -129,4 +141,4 @@
 	<Input id="curriculum" type="text" name="curriculum" bind:value={$form.curriculum} />
 {/if}
 
-<Button type="submit" class="mt-8">{enrollment ? 'Update' : 'Submit'}</Button>
+<Button type="submit" class="mt-8">{entity ? 'Update' : 'Submit'}</Button>
