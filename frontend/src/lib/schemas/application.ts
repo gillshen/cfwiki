@@ -1,13 +1,5 @@
 import { z } from 'zod';
 
-export const applicationSchema = z.object({
-	id: z.number(),
-	contract: z.number(),
-	round: z.number()
-});
-
-export type ApplicationSchema = typeof applicationSchema;
-
 export const newApplicationSchema = z.object({
 	contract: z.number(),
 	program: z.number(),
@@ -17,3 +9,11 @@ export const newApplicationSchema = z.object({
 });
 
 export type NewApplicationSchema = typeof newApplicationSchema;
+
+export const applicationUpdateSchema = z.object({
+	id: z.number(),
+	contract: z.number(),
+	round: z.number()
+});
+
+export type ApplicationUpdateSchema = typeof applicationUpdateSchema;

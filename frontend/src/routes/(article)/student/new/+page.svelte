@@ -6,7 +6,7 @@
 
 	export let data;
 
-	const { form, enhance } = superForm(data.newStudentForm);
+	const { form, enhance } = superForm(data.studentForm);
 </script>
 
 <Heading tag="h3" class="page-title">Create a student file</Heading>

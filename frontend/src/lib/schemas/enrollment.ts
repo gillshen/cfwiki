@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const enrollmentSchema = z.object({
-	id: z.number(),
+	id: z.number().optional(),
 	student: z.number(),
 	school: z.number(),
 	program_type: z.string(),
@@ -13,9 +13,3 @@ export const enrollmentSchema = z.object({
 });
 
 export type EnrollmentSchema = typeof enrollmentSchema;
-
-export const newEnrollmentSchema = enrollmentSchema.extend({
-	id: enrollmentSchema.shape.id.optional()
-});
-
-export type NewEnrollmentSchema = typeof newEnrollmentSchema;

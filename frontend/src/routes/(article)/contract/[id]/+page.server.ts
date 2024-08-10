@@ -4,7 +4,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchContract, type ContractDetail } from '$lib/api/contract';
-import { newServiceSchema } from '$lib/schemas/service';
+import { serviceSchema } from '$lib/schemas/service';
 import { formAction } from '$lib/abstract/formAction';
 import { createOrUpdateService } from '$lib/api/service';
 
@@ -17,11 +17,15 @@ export async function load(event: PageServerLoadEvent) {
 
 	const contract: ContractDetail = await fetchContract(id);
 
-	const serviceForm = await superValidate(zod(newServiceSchema));
+	if (!contract?.id) {
+		throw error(404, 'Contract not found');
+	}
+
+	const serviceForm = await superValidate(zod(serviceSchema));
 
 	return { contract, serviceForm };
 }
 
 export const actions = {
-	createOrUpdateService: formAction(newServiceSchema, createOrUpdateService)
+	createOrUpdateService: formAction(serviceSchema, createOrUpdateService)
 };

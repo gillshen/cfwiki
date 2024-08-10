@@ -4,22 +4,30 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchStudent, type StudentDetail } from '$lib/api/student';
-import { newContractSchema } from '$lib/schemas/contract';
-import { newEnrollmentSchema } from '$lib/schemas/enrollment';
+import { contractSchema } from '$lib/schemas/contract';
+import { enrollmentSchema } from '$lib/schemas/enrollment';
 import {
-	newToeflSchema,
-	newIeltschema,
-	newSatSchema,
-	newActSchema,
-	newGreSchema
+	toeflSchema,
+	ieltschema,
+	duolingoSchema,
+	satScoreSchema,
+	actScoreSchema,
+	apScoreSchema,
+	ibGradeSchema,
+	alevelGradeSchema,
+	greScoreSchema
 } from '$lib/schemas/scores';
 import { createOrUpdateContract } from '$lib/api/contract';
 import { createOrUpdateEnrollment } from '$lib/api/enrollment';
 import {
 	createOrUpdateToeflScore,
+	createOrUpdateIeltsScore,
+	createOrUpdateDuolingoScore,
 	createOrUpdateSatScore,
 	createOrUpdateActScore,
-	createOrUpdateIeltsScore,
+	createOrUpdateApScore,
+	createOrUpdateIbGrade,
+	createOrUpdateAlevelGrade,
 	createOrUpdateGreScore
 } from '$lib/api/scores';
 import { formAction } from '$lib/abstract/formAction';
@@ -37,13 +45,17 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Student not found');
 	}
 
-	const contractForm = await superValidate(zod(newContractSchema));
-	const enrollmentForm = await superValidate(zod(newEnrollmentSchema));
-	const toeflForm = await superValidate(zod(newToeflSchema));
-	const ieltsForm = await superValidate(zod(newIeltschema));
-	const satScoreForm = await superValidate(zod(newSatSchema));
-	const actScoreForm = await superValidate(zod(newActSchema));
-	const greScoreForm = await superValidate(zod(newGreSchema));
+	const contractForm = await superValidate(zod(contractSchema));
+	const enrollmentForm = await superValidate(zod(enrollmentSchema));
+	const toeflForm = await superValidate(zod(toeflSchema));
+	const ieltsForm = await superValidate(zod(ieltschema));
+	const duolingoForm = await superValidate(zod(duolingoSchema));
+	const satScoreForm = await superValidate(zod(satScoreSchema));
+	const actScoreForm = await superValidate(zod(actScoreSchema));
+	const apScoreForm = await superValidate(zod(apScoreSchema));
+	const ibGradeForm = await superValidate(zod(ibGradeSchema));
+	const alevelGradeForm = await superValidate(zod(alevelGradeSchema));
+	const greScoreForm = await superValidate(zod(greScoreSchema));
 
 	return {
 		student,
@@ -51,18 +63,26 @@ export async function load(event: PageServerLoadEvent) {
 		enrollmentForm,
 		toeflForm,
 		ieltsForm,
+		duolingoForm,
 		satScoreForm,
 		actScoreForm,
+		apScoreForm,
+		ibGradeForm,
+		alevelGradeForm,
 		greScoreForm
 	};
 }
 
 export const actions = {
-	createOrUpdateContract: formAction(newContractSchema, createOrUpdateContract),
-	createOrUpdateEnrollment: formAction(newEnrollmentSchema, createOrUpdateEnrollment),
-	createOrUpdateToeflScore: formAction(newToeflSchema, createOrUpdateToeflScore),
-	createOrUpdateIeltsScore: formAction(newIeltschema, createOrUpdateIeltsScore),
-	createOrUpdateSatScore: formAction(newSatSchema, createOrUpdateSatScore),
-	createOrUpdateActScore: formAction(newActSchema, createOrUpdateActScore),
-	createOrUpdateGreScore: formAction(newGreSchema, createOrUpdateGreScore)
+	createOrUpdateContract: formAction(contractSchema, createOrUpdateContract),
+	createOrUpdateEnrollment: formAction(enrollmentSchema, createOrUpdateEnrollment),
+	createOrUpdateToeflScore: formAction(toeflSchema, createOrUpdateToeflScore),
+	createOrUpdateIeltsScore: formAction(ieltschema, createOrUpdateIeltsScore),
+	createOrUpdateDuolingoScore: formAction(duolingoSchema, createOrUpdateDuolingoScore),
+	createOrUpdateSatScore: formAction(satScoreSchema, createOrUpdateSatScore),
+	createOrUpdateActScore: formAction(actScoreSchema, createOrUpdateActScore),
+	createOrUpdateApScore: formAction(apScoreSchema, createOrUpdateApScore),
+	createOrUpdateIbGrade: formAction(ibGradeSchema, createOrUpdateIbGrade),
+	createOrUpdateAlevelGrade: formAction(alevelGradeSchema, createOrUpdateAlevelGrade),
+	createOrUpdateGreScore: formAction(greScoreSchema, createOrUpdateGreScore)
 };

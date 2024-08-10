@@ -10,7 +10,7 @@ import type {
 	ActScore,
 	ApScore,
 	IbGrade,
-	ALevelGrade,
+	AlevelGrade,
 	GreScore,
 	GmatScore,
 	LsatScore
@@ -88,7 +88,7 @@ export type StudentDetail = BaseStudent & {
 	act: ActScore[];
 	ap: ApScore[];
 	ib: IbGrade[];
-	alevel: ALevelGrade[];
+	alevel: AlevelGrade[];
 	gre: GreScore[];
 	gmat: GmatScore[];
 	lsat: LsatScore[];

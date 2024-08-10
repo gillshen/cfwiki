@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const common = {
-	id: z.number(),
+	id: z.number().optional(),
 	student: z.number(),
 	date: z.string().nullable().default(null)
 };
@@ -16,42 +16,38 @@ export const toeflSchema = z.object({
 	writing: z.number().nullable().default(null)
 });
 
-export type ToeflSchema = typeof toeflSchema;
+export const ieltschema = toeflSchema;
 
-export const newToeflSchema = toeflSchema.extend({
-	id: toeflSchema.shape.id.optional()
+export type ToeflSchema = typeof toeflSchema;
+export type IeltsSchema = typeof ieltschema;
+
+// Duolingo
+
+export const duolingoSchema = z.object({
+	...common,
+	overall: z.number().nullable().default(null),
+	literacy: z.number().nullable().default(null),
+	comprehension: z.number().nullable().default(null),
+	conversation: z.number().nullable().default(null),
+	production: z.number().nullable().default(null)
 });
 
-export type NewToeflSchema = typeof newToeflSchema;
-
-export const ieltsSchema = toeflSchema;
-
-export type IeltsSchema = typeof ieltsSchema;
-
-export const newIeltschema = newToeflSchema;
-
-export type NewIeltsSchema = typeof newIeltschema;
+export type DuolingoSchema = typeof duolingoSchema;
 
 // SAT
 
-export const satSchema = z.object({
+export const satScoreSchema = z.object({
 	...common,
 	ebrw: z.number().nullable().default(null),
 	math: z.number().nullable().default(null),
 	essay: z.number().nullable().default(null)
 });
 
-export type SatSchema = typeof satSchema;
-
-export const newSatSchema = satSchema.extend({
-	id: satSchema.shape.id.optional()
-});
-
-export type NewSatSchema = typeof newSatSchema;
+export type SatScoreSchema = typeof satScoreSchema;
 
 // ACT
 
-export const actSchema = z.object({
+export const actScoreSchema = z.object({
 	...common,
 	english: z.number().nullable().default(null),
 	math: z.number().nullable().default(null),
@@ -60,27 +56,48 @@ export const actSchema = z.object({
 	writing: z.number().nullable().default(null)
 });
 
-export type ActSchema = typeof actSchema;
+export type ActScoreSchema = typeof actScoreSchema;
 
-export const newActSchema = actSchema.extend({
-	id: actSchema.shape.id.optional()
+// AP
+
+export const apScoreSchema = z.object({
+	...common,
+	subject: z.string(),
+	score: z.number().nullable().default(null)
 });
 
-export type NewActSchema = typeof newActSchema;
+export type ApScoreSchema = typeof apScoreSchema;
+
+// IB
+
+export const ibGradeSchema = z.object({
+	...common,
+	type: z.string(),
+	subject: z.string(),
+	grade: z.number().nullable().default(null)
+});
+
+export type IbGradeSchema = typeof ibGradeSchema;
+
+// A-level
+
+export const alevelGradeSchema = z.object({
+	...common,
+	type: z.string(),
+	subject: z.string(),
+	grade: z.string(),
+	percentage: z.number().nullable().default(null)
+});
+
+export type AlevelGradeSchema = typeof alevelGradeSchema;
 
 // GRE
 
-export const greSchema = z.object({
+export const greScoreSchema = z.object({
 	...common,
 	verbal: z.number().nullable().default(null),
 	quant: z.number().nullable().default(null),
 	writing: z.number().nullable().default(null)
 });
 
-export type GreSchema = typeof greSchema;
-
-export const newGreSchema = greSchema.extend({
-	id: greSchema.shape.id.optional()
-});
-
-export type NewGreSchema = typeof newGreSchema;
+export type GreScoreSchema = typeof greScoreSchema;

@@ -6,7 +6,7 @@
 
 	export let data;
 
-	const { form, enhance } = superForm(data.newSchoolForm);
+	const { form, message, errors, enhance } = superForm(data.schoolForm);
 </script>
 
 <Heading tag="h3" class="page-title">Create a school file</Heading>
@@ -15,6 +15,6 @@
 
 <div class="form-width">
 	<form method="post" action="?/createSchool" use:enhance>
-		<SchoolForm {form} />
+		<SchoolForm {form} {message} {errors} />
 	</form>
 </div>

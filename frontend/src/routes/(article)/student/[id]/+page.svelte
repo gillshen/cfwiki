@@ -19,11 +19,26 @@
 	import EnrollmentForm from '$lib/components/enrollment-form/EnrollmentForm.svelte';
 	import EnrollmentItem from '$lib/components/list-items/EnrollmentItem.svelte';
 
-	import type { ActScore, GreScore, IeltsScore, SatScore, ToeflScore } from '$lib/api/scores';
+	import type {
+		ToeflScore,
+		IeltsScore,
+		DuolingoScore,
+		SatScore,
+		ActScore,
+		ApScore,
+		IbGrade,
+		AlevelGrade,
+		GreScore
+	} from '$lib/api/scores';
+
 	import ToeflScoreForm from '$lib/components/toefl-score-form/ToeflScoreForm.svelte';
 	import IeltsScoreForm from '$lib/components/ielts-score-form/IeltsScoreForm.svelte';
+	import DuolingoScoreForm from '$lib/components/duolingo-score-form/DuolingoScoreForm.svelte';
 	import SatScoreForm from '$lib/components/sat-score-form/SatScoreForm.svelte';
 	import ActScoreForm from '$lib/components/act-score-form/ActScoreForm.svelte';
+	import ApScoreForm from '$lib/components/ap-score-form/ApScoreForm.svelte';
+	import IbGradeForm from '$lib/components/ib-grade-form/IbGradeForm.svelte';
+	import AlevelGradeForm from '$lib/components/alevel-grade-form/AlevelGradeForm.svelte';
 	import GreScoreForm from '$lib/components/gre-score-form/GreScoreForm.svelte';
 
 	export let data;
@@ -42,11 +57,23 @@
 	let ieltsModal = false;
 	let activeIelts: IeltsScore | null = null;
 
+	let duolingoModal = false;
+	let activeDuolingo: DuolingoScore | null = null;
+
 	let satScoreModal = false;
 	let activeSatScore: SatScore | null = null;
 
 	let actScoreModal = false;
 	let activeActScore: ActScore | null = null;
+
+	let apScoreModal = false;
+	let activeApScore: ApScore | null = null;
+
+	let ibGradeModal = false;
+	let activeIbGrade: IbGrade | null = null;
+
+	let alevelGradeModal = false;
+	let activeAlevelGrade: AlevelGrade | null = null;
 
 	let greScoreModal = false;
 	let activeGreScore: GreScore | null = null;
@@ -79,6 +106,13 @@
 		};
 	};
 
+	const duolingoModalOpener = (score?: DuolingoScore): (() => void) => {
+		return () => {
+			activeDuolingo = score ?? null;
+			duolingoModal = true;
+		};
+	};
+
 	const satScoreModalOpener = (score?: SatScore): (() => void) => {
 		return () => {
 			activeSatScore = score ?? null;
@@ -90,6 +124,27 @@
 		return () => {
 			activeActScore = score ?? null;
 			actScoreModal = true;
+		};
+	};
+
+	const apScoreModalOpener = (score?: ApScore): (() => void) => {
+		return () => {
+			activeApScore = score ?? null;
+			apScoreModal = true;
+		};
+	};
+
+	const ibGradeModalOpener = (grade?: IbGrade): (() => void) => {
+		return () => {
+			activeIbGrade = grade ?? null;
+			ibGradeModal = true;
+		};
+	};
+
+	const alevelGradeModalOpener = (grade?: AlevelGrade): (() => void) => {
+		return () => {
+			activeAlevelGrade = grade ?? null;
+			alevelGradeModal = true;
 		};
 	};
 
@@ -153,8 +208,8 @@
 			<div>
 				{#each data.student.toefl as toefl}
 					<div class="flex my-4 gap-4">
-						<A on:click={toeflModalOpener(toefl)}>Update TOEFL</A>
 						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(toefl, null, 2)}</pre>
+						<A on:click={toeflModalOpener(toefl)}>Update TOEFL</A>
 					</div>
 				{/each}
 				<A class="text-sm font-medium" on:click={toeflModalOpener()}>Add a TOEFL score</A>
@@ -163,18 +218,28 @@
 			<div>
 				{#each data.student.ielts as ielts}
 					<div class="flex my-4 gap-4">
-						<A on:click={ieltsModalOpener(ielts)}>Update IELTS</A>
 						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(ielts, null, 2)}</pre>
+						<A on:click={ieltsModalOpener(ielts)}>Update IELTS</A>
 					</div>
 				{/each}
 				<A class="text-sm font-medium" on:click={ieltsModalOpener()}>Add an IELTS score</A>
 			</div>
 
 			<div>
+				{#each data.student.duolingo as det}
+					<div class="flex my-4 gap-4">
+						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(det, null, 2)}</pre>
+						<A on:click={duolingoModalOpener(det)}>Update Duolingo</A>
+					</div>
+				{/each}
+				<A class="text-sm font-medium" on:click={duolingoModalOpener()}>Add a Duolingo score</A>
+			</div>
+
+			<div>
 				{#each data.student.sat as sat}
 					<div class="flex my-4 gap-4">
-						<A on:click={satScoreModalOpener(sat)}>Update SAT</A>
 						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(sat, null, 2)}</pre>
+						<A on:click={satScoreModalOpener(sat)}>Update SAT</A>
 					</div>
 				{/each}
 				<A class="text-sm font-medium" on:click={satScoreModalOpener()}>Add a SAT score</A>
@@ -183,18 +248,48 @@
 			<div>
 				{#each data.student.act as act}
 					<div class="flex my-4 gap-4">
-						<A on:click={actScoreModalOpener(act)}>Update ACT</A>
 						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(act, null, 2)}</pre>
+						<A on:click={actScoreModalOpener(act)}>Update ACT</A>
 					</div>
 				{/each}
 				<A class="text-sm font-medium" on:click={actScoreModalOpener()}>Add an ACT score</A>
 			</div>
 
 			<div>
+				{#each data.student.ap as ap}
+					<div class="flex my-4 gap-4">
+						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(ap, null, 2)}</pre>
+						<A on:click={apScoreModalOpener(ap)}>Update AP</A>
+					</div>
+				{/each}
+				<A class="text-sm font-medium" on:click={apScoreModalOpener()}>Add an AP score</A>
+			</div>
+
+			<div>
+				{#each data.student.ib as ib}
+					<div class="flex my-4 gap-4">
+						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(ib, null, 2)}</pre>
+						<A on:click={ibGradeModalOpener(ib)}>Update IB</A>
+					</div>
+				{/each}
+				<A class="text-sm font-medium" on:click={ibGradeModalOpener()}>Add an IB grade</A>
+			</div>
+
+			<div>
+				{#each data.student.alevel as alevel}
+					<div class="flex my-4 gap-4">
+						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(alevel, null, 2)}</pre>
+						<A on:click={alevelGradeModalOpener(alevel)}>Update A-level</A>
+					</div>
+				{/each}
+				<A class="text-sm font-medium" on:click={alevelGradeModalOpener()}>Add an A-level grade</A>
+			</div>
+
+			<div>
 				{#each data.student.gre as gre}
 					<div class="flex my-4 gap-4">
-						<A on:click={greScoreModalOpener(gre)}>Update GRE</A>
 						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(gre, null, 2)}</pre>
+						<A on:click={greScoreModalOpener(gre)}>Update GRE</A>
 					</div>
 				{/each}
 				<A class="text-sm font-medium" on:click={greScoreModalOpener()}>Add a GRE score</A>
@@ -268,6 +363,17 @@
 />
 
 <FormModal
+	open={duolingoModal}
+	superform={data.duolingoForm}
+	fields={DuolingoScoreForm}
+	action="?/createOrUpdateDuolingoScore"
+	entity={activeDuolingo}
+	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
+	title={`${activeIelts ? 'Update' : 'Add a'} Duolingo score`}
+	on:close={() => (duolingoModal = false)}
+/>
+
+<FormModal
 	open={satScoreModal}
 	superform={data.satScoreForm}
 	fields={SatScoreForm}
@@ -287,6 +393,39 @@
 	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
 	title={`${activeActScore ? 'Update' : 'Add an'} ACT score`}
 	on:close={() => (actScoreModal = false)}
+/>
+
+<FormModal
+	open={apScoreModal}
+	superform={data.apScoreForm}
+	fields={ApScoreForm}
+	action="?/createOrUpdateApScore"
+	entity={activeApScore}
+	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
+	title={`${activeActScore ? 'Update' : 'Add an'} AP score`}
+	on:close={() => (apScoreModal = false)}
+/>
+
+<FormModal
+	open={ibGradeModal}
+	superform={data.ibGradeForm}
+	fields={IbGradeForm}
+	action="?/createOrUpdateIbGrade"
+	entity={activeIbGrade}
+	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
+	title={`${activeIbGrade ? 'Update' : 'Add an'} IB grade`}
+	on:close={() => (ibGradeModal = false)}
+/>
+
+<FormModal
+	open={alevelGradeModal}
+	superform={data.alevelGradeForm}
+	fields={AlevelGradeForm}
+	action="?/createOrUpdateAlevelGrade"
+	entity={activeAlevelGrade}
+	extra={[{ name: 'student', type: 'number', value: data.student.id }]}
+	title={`${activeAlevelGrade ? 'Update' : 'Add an'} A-level grade`}
+	on:close={() => (alevelGradeModal = false)}
 />
 
 <FormModal

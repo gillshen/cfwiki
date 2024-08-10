@@ -48,7 +48,7 @@ export type IbGrade = BaseScore & {
 	grade: number | null;
 };
 
-export type ALevelGrade = BaseScore & {
+export type AlevelGrade = BaseScore & {
 	type: 'predicted' | 'final';
 	subject: string;
 	percentage: number | null;

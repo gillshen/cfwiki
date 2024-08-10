@@ -5,7 +5,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchApplication, type ApplicationDetail } from '$lib/api/application';
 import { roundNameSchema, roundDatesSchema } from '$lib/schemas/applicationRound';
-import { newApplicationLogSchema } from '$lib/schemas/applicationLog';
+import { applicationLogSchema } from '$lib/schemas/applicationLog';
 import { formAction } from '$lib/abstract/formAction';
 import { updateApplicationRound } from '$lib/api/applicationRound';
 import { createOrUpdateApplicationLog } from '$lib/api/applicationLog';
@@ -27,12 +27,12 @@ export async function load(event: PageServerLoadEvent) {
 		application,
 		roundRenameForm: await superValidate(application.round, zod(roundNameSchema)),
 		datesUpdateForm: await superValidate(application.round, zod(roundDatesSchema)),
-		logForm: await superValidate(zod(newApplicationLogSchema))
+		logForm: await superValidate(zod(applicationLogSchema))
 	};
 }
 
 export const actions = {
 	updateRoundName: formAction(roundNameSchema, updateApplicationRound),
 	updateRoundDates: formAction(roundDatesSchema, updateApplicationRound),
-	createOrUpdateApplicationLog: formAction(newApplicationLogSchema, createOrUpdateApplicationLog)
+	createOrUpdateApplicationLog: formAction(applicationLogSchema, createOrUpdateApplicationLog)
 };

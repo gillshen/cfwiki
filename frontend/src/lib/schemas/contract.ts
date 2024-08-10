@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const contractSchema = z.object({
-	id: z.number(),
+	id: z.number().optional(),
 	student: z.number(),
 	type: z.string().min(1).max(100),
 	target_year: z.number(),
@@ -11,9 +11,3 @@ export const contractSchema = z.object({
 });
 
 export type ContractSchema = typeof contractSchema;
-
-export const newContractSchema = contractSchema.extend({
-	id: contractSchema.shape.id.optional()
-});
-
-export type NewContractSchema = typeof newContractSchema;

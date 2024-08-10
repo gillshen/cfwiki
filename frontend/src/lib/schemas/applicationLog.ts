@@ -9,9 +9,3 @@ export const applicationLogSchema = z.object({
 });
 
 export type ApplicationLogSchema = typeof applicationLogSchema;
-
-export const newApplicationLogSchema = applicationLogSchema.extend({
-	id: applicationLogSchema.shape.id.optional()
-});
-
-export type NewApplicationLogSchema = typeof newApplicationLogSchema;
