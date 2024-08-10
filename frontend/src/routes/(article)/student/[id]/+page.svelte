@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { Button, Heading, Hr, Dropdown, A, Timeline } from 'flowbite-svelte';
+	import { Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
 	import {
 		ChevronRightOutline,
 		PenOutline as ActionIcon,
@@ -40,6 +41,15 @@
 	import IbGradeForm from '$lib/components/ib-grade-form/IbGradeForm.svelte';
 	import AlevelGradeForm from '$lib/components/alevel-grade-form/AlevelGradeForm.svelte';
 	import GreScoreForm from '$lib/components/gre-score-form/GreScoreForm.svelte';
+
+	import ToeflScoreItem from '$lib/components/list-items/ToeflScoreItem.svelte';
+	import IeltsScoreItem from '$lib/components/list-items/IeltsScoreItem.svelte';
+	import DuolingoScoreItem from '$lib/components/list-items/DuolingoScoreItem.svelte';
+	import SatScoreItem from '$lib/components/list-items/SatScoreItem.svelte';
+	import ActScoreItem from '$lib/components/list-items/ActScoreItem.svelte';
+	import ApScoreItem from '$lib/components/list-items/ApScoreItem.svelte';
+	import IbAlevelGradeItem from '$lib/components/list-items/IbAlevelGradeItem.svelte';
+	import GreScoreItem from '$lib/components/list-items/GreScoreItem.svelte';
 
 	export let data;
 
@@ -205,117 +215,125 @@
 		<article class="mt-16">
 			<Heading tag="h2" class="text-xl font-bold">Test scores</Heading>
 
-			<div>
-				{#each data.student.toefl as toefl}
-					<div class="flex my-4 gap-4">
-						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(toefl, null, 2)}</pre>
-						<A on:click={toeflModalOpener(toefl)}>Update TOEFL</A>
-					</div>
+			<div class="my-4 divide divide-y-[1px] divide-solid">
+				{#each data.student.toefl as score}
+					<ToeflScoreItem {score} onClick={toeflModalOpener(score)} />
 				{/each}
-				<A class="text-sm font-medium" on:click={toeflModalOpener()}>Add a TOEFL score</A>
 			</div>
+			<A class="text-sm font-medium" on:click={toeflModalOpener()}>Add a TOEFL score</A>
 
-			<div>
-				{#each data.student.ielts as ielts}
-					<div class="flex my-4 gap-4">
-						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(ielts, null, 2)}</pre>
-						<A on:click={ieltsModalOpener(ielts)}>Update IELTS</A>
-					</div>
+			<div class="my-4 divide divide-y-[1px] divide-solid">
+				{#each data.student.ielts as score}
+					<IeltsScoreItem {score} onClick={ieltsModalOpener(score)} />
 				{/each}
-				<A class="text-sm font-medium" on:click={ieltsModalOpener()}>Add an IELTS score</A>
 			</div>
+			<A class="text-sm font-medium" on:click={ieltsModalOpener()}>Add an IELTS score</A>
 
-			<div>
-				{#each data.student.duolingo as det}
-					<div class="flex my-4 gap-4">
-						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(det, null, 2)}</pre>
-						<A on:click={duolingoModalOpener(det)}>Update Duolingo</A>
-					</div>
+			<div class="my-4 divide divide-y-[1px] divide-solid">
+				{#each data.student.duolingo as score}
+					<DuolingoScoreItem {score} onClick={duolingoModalOpener(score)} />
 				{/each}
-				<A class="text-sm font-medium" on:click={duolingoModalOpener()}>Add a Duolingo score</A>
 			</div>
+			<A class="text-sm font-medium" on:click={duolingoModalOpener()}>Add a Duolingo score</A>
 
-			<div>
-				{#each data.student.sat as sat}
-					<div class="flex my-4 gap-4">
-						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(sat, null, 2)}</pre>
-						<A on:click={satScoreModalOpener(sat)}>Update SAT</A>
-					</div>
+			<div class="my-4 divide divide-y-[1px] divide-solid">
+				{#each data.student.sat as score}
+					<SatScoreItem {score} onClick={satScoreModalOpener(score)} />
 				{/each}
-				<A class="text-sm font-medium" on:click={satScoreModalOpener()}>Add a SAT score</A>
 			</div>
+			<A class="text-sm font-medium" on:click={satScoreModalOpener()}>Add a SAT score</A>
 
-			<div>
-				{#each data.student.act as act}
-					<div class="flex my-4 gap-4">
-						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(act, null, 2)}</pre>
-						<A on:click={actScoreModalOpener(act)}>Update ACT</A>
-					</div>
+			<div class="my-4 divide divide-y-[1px] divide-solid">
+				{#each data.student.act as score}
+					<ActScoreItem {score} onClick={actScoreModalOpener(score)} />
 				{/each}
-				<A class="text-sm font-medium" on:click={actScoreModalOpener()}>Add an ACT score</A>
 			</div>
+			<A class="text-sm font-medium" on:click={actScoreModalOpener()}>Add an ACT score</A>
 
-			<div>
-				{#each data.student.ap as ap}
-					<div class="flex my-4 gap-4">
-						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(ap, null, 2)}</pre>
-						<A on:click={apScoreModalOpener(ap)}>Update AP</A>
-					</div>
+			<div class="my-4 grid grid-cols-2 gap-4 auto-rows-auto">
+				{#each data.student.ap as score}
+					<ApScoreItem {score} onClick={apScoreModalOpener(score)} />
 				{/each}
-				<A class="text-sm font-medium" on:click={apScoreModalOpener()}>Add an AP score</A>
 			</div>
+			<A class="text-sm font-medium" on:click={apScoreModalOpener()}>Add an AP score</A>
 
-			<div>
+			<div class="my-4">
 				{#each data.student.ib as ib}
-					<div class="flex my-4 gap-4">
-						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(ib, null, 2)}</pre>
-						<A on:click={ibGradeModalOpener(ib)}>Update IB</A>
-					</div>
+					<IbAlevelGradeItem grade={ib} onClick={ibGradeModalOpener(ib)} />
 				{/each}
-				<A class="text-sm font-medium" on:click={ibGradeModalOpener()}>Add an IB grade</A>
 			</div>
+			<A class="text-sm font-medium" on:click={ibGradeModalOpener()}>Add an IB grade</A>
 
-			<div>
+			<div class="my-4 grid grid-cols-2 gap-2">
 				{#each data.student.alevel as alevel}
-					<div class="flex my-4 gap-4">
-						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(alevel, null, 2)}</pre>
-						<A on:click={alevelGradeModalOpener(alevel)}>Update A-level</A>
-					</div>
+					<IbAlevelGradeItem grade={alevel} onClick={alevelGradeModalOpener(alevel)} />
 				{/each}
-				<A class="text-sm font-medium" on:click={alevelGradeModalOpener()}>Add an A-level grade</A>
 			</div>
+			<A class="text-sm font-medium" on:click={alevelGradeModalOpener()}>Add an A-level grade</A>
 
-			<div>
+			<div class="my-4 divide divide-y-[1px] divide-solid">
 				{#each data.student.gre as gre}
-					<div class="flex my-4 gap-4">
-						<pre class="text-sm text-gray-500 bg-slate-100">{JSON.stringify(gre, null, 2)}</pre>
-						<A on:click={greScoreModalOpener(gre)}>Update GRE</A>
-					</div>
+					<GreScoreItem score={gre} onClick={greScoreModalOpener(gre)} />
 				{/each}
-				<A class="text-sm font-medium" on:click={greScoreModalOpener()}>Add a GRE score</A>
 			</div>
+			<A class="text-sm font-medium" on:click={greScoreModalOpener()}>Add a GRE score</A>
 		</article>
 	</section>
 
-	<article class="bg-slate-50 rounded-xl w-full min-w-[32rem] h-fit p-8 text-gray-400">
-		{#if data.student.contracts_sorted.length}
-			<div class="flex gap-8 mb-8">
-				{#each data.student.contracts_sorted as contract}
-					<ContractItem {contract}>
-						{#if canEdit || !contract.services.length}
-							<div class="mt-8 flex gap-4">
-								<A class="text-sm" on:click={contractModalOpener(contract)}><ActionIcon /></A>
-								<A class="text-sm" on:click={() => alert('delete contract')}>Delete</A>
-							</div>
-						{/if}
-					</ContractItem>
-				{/each}
-			</div>
-			<A class="text-sm font-medium ml-1" on:click={contractModalOpener()}>Add a contract</A>
-		{:else}
-			<Button on:click={contractModalOpener()}>Add a contract</Button>
-		{/if}
-	</article>
+	<section class="flex flex-col">
+		<article class="bg-slate-50 rounded-xl w-full min-w-[32rem] h-fit p-8 text-gray-400">
+			{#if data.student.contracts_sorted.length}
+				<div class="flex gap-8 mb-8">
+					{#each data.student.contracts_sorted as contract}
+						<ContractItem {contract}>
+							{#if canEdit || !contract.services.length}
+								<div class="mt-8 flex gap-4">
+									<A class="text-sm" on:click={contractModalOpener(contract)}><ActionIcon /></A>
+									<A class="text-sm" on:click={() => alert('delete contract')}>Delete</A>
+								</div>
+							{/if}
+						</ContractItem>
+					{/each}
+				</div>
+				<A class="text-sm font-medium ml-1" on:click={contractModalOpener()}>Add a contract</A>
+			{:else}
+				<Button on:click={contractModalOpener()}>Add a contract</Button>
+			{/if}
+		</article>
+
+		<article class="mt-16">
+			<Heading tag="h2" class="text-xl font-bold">
+				Applications ({data.applications.length})
+			</Heading>
+
+			{#if data.applications.length}
+				<Table class="mt-8">
+					<TableBody>
+						{#each data.applications as appl}
+							<TableBodyRow>
+								<TableBodyCell class="font-normal pl-0">
+									<A href={`/application/${appl.id}`}>Link</A>
+								</TableBodyCell>
+								<TableBodyCell class="w-fit max-w-48 truncate">
+									{appl.schools.map((s) => s.name).join(' + ')}
+								</TableBodyCell>
+								<TableBodyCell class="font-normal max-w-44 truncate">
+									{appl.program.display_name}
+								</TableBodyCell>
+								<TableBodyCell class="font-normal">{appl.program_iteration.year}</TableBodyCell>
+								<TableBodyCell class="font-normal">{appl.round.name}</TableBodyCell>
+								<TableBodyCell class="">{appl.latest_log?.status ?? ''}</TableBodyCell>
+							</TableBodyRow>
+						{/each}
+					</TableBody>
+				</Table>
+			{/if}
+
+			<Button outline href={`/student/${data.student.id}/new-application`} class="mt-8">
+				Create an application
+			</Button>
+		</article>
+	</section>
 </div>
 
 <FormModal
@@ -440,5 +458,3 @@
 />
 
 <Hr />
-
-<Button outline href={`/student/${data.student.id}/new-application`}>Create an application</Button>

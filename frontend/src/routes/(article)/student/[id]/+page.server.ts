@@ -4,6 +4,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchStudent, type StudentDetail } from '$lib/api/student';
+import { fetchApplications } from '$lib/api/application';
 import { contractSchema } from '$lib/schemas/contract';
 import { enrollmentSchema } from '$lib/schemas/enrollment';
 import {
@@ -45,6 +46,7 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Student not found');
 	}
 
+	const applications = await fetchApplications({ student: student.id });
 	const contractForm = await superValidate(zod(contractSchema));
 	const enrollmentForm = await superValidate(zod(enrollmentSchema));
 	const toeflForm = await superValidate(zod(toeflSchema));
@@ -59,6 +61,7 @@ export async function load(event: PageServerLoadEvent) {
 
 	return {
 		student,
+		applications,
 		contractForm,
 		enrollmentForm,
 		toeflForm,

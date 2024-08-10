@@ -39,8 +39,20 @@ export type ApplicationDetail = {
 	logs: ApplicationLog[];
 };
 
-export async function fetchApplications(): Promise<ApplicationListItem[]> {
-	return await get('applications/');
+export async function fetchApplications(
+	params?: Record<string, any>
+): Promise<ApplicationListItem[]> {
+	let queryString = '';
+
+	if (params) {
+		queryString =
+			'?' +
+			Object.entries(params)
+				.map(([key, value]) => `${key}=${value}`)
+				.join('&');
+	}
+
+	return await get(`applications/${queryString}`);
 }
 
 export async function fetchApplication(id: number): Promise<ApplicationDetail> {
