@@ -1,4 +1,4 @@
-import { post, patch } from '$lib/api/api';
+import { createOrUpdate } from '$lib/api/api';
 
 export const applicationStatuses = [
 	'Started',
@@ -11,7 +11,8 @@ export const applicationStatuses = [
 	'Cancelled',
 	'Withdrawn',
 	'Enrolled',
-	'Offer Rescinded'
+	'Offer Rescinded',
+	'Not Tracked'
 ] as const;
 
 export type ApplicationStatus = (typeof applicationStatuses)[number];
@@ -25,9 +26,5 @@ export type ApplicationLog = {
 };
 
 export async function createOrUpdateApplicationLog(data: any) {
-	if (data.id) {
-		return await patch(`application-logs/${data.id}/update/`, data);
-	} else {
-		return await post('application-logs/new/', data);
-	}
+	return await createOrUpdate(data, 'application-logs');
 }

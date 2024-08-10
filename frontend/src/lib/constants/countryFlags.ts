@@ -227,6 +227,7 @@ export function sortChinaUnitedStatesFirst(a: string, b: string) {
 }
 
 enum MostApplied {
+	'China',
 	'United States',
 	'United Kingdom',
 	'Australia',

@@ -29,8 +29,8 @@
 	classLi="bg-slate-50 px-8 pt-4 pb-6 my-0 rounded-xl"
 >
 	{#if enrollment.curriculum}
-		<P size="sm" class="py-2">
-			{enrollment.program_type === 'Secondary School' ? 'Curriculum' : 'Major'}: {enrollment.curriculum}
+		<P size="sm" class="py-3">
+			{enrollment.program_type === 'Secondary School' ? 'Curriculum: ' : ''}{enrollment.curriculum}
 		</P>
 	{/if}
 

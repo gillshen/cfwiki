@@ -14,7 +14,7 @@
 	$form.date = entity?.date;
 	$form.type = entity?.type;
 	$form.subject = entity?.subject;
-	$form.score = entity?.grade;
+	$form.grade = entity?.grade;
 
 	// TODO
 	if ($message || $errors) {

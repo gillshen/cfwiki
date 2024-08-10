@@ -56,7 +56,7 @@
 	<div>
 		<Label for="grade" class="form-label optional">Grade</Label>
 		<Select id="grade" name="grade" bind:value={$form.grade}>
-			{#each ['A*', 'A', 'B', 'C', 'D', 'E'] as grade}
+			{#each ['A*', 'A', 'B', 'C', 'D', 'E', 'F'] as grade}
 				<option value={grade}>{grade}</option>
 			{/each}
 		</Select>

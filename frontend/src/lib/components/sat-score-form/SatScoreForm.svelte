@@ -30,7 +30,7 @@
 	<div></div>
 
 	<div>
-		<Label for="ebrw" class="form-label optional">EBRW</Label>
+		<Label for="ebrw" class="form-label optional">Reading and writing</Label>
 		<Input
 			id="ebrw"
 			type="number"
