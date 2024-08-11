@@ -2,6 +2,7 @@
 	import {
 		Card,
 		P,
+		A,
 		Heading,
 		Indicator,
 		Table,
@@ -10,6 +11,8 @@
 		TableBodyRow,
 		type IndicatorColorType
 	} from 'flowbite-svelte';
+
+	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
 	import type { Contract } from '$lib/api/student';
 	import { toShortDate } from '$lib/utils/dateUtils';
@@ -48,10 +51,7 @@
 	};
 </script>
 
-<Card
-	class="w-[16rem] hover:bg-white flex flex-col justify-between"
-	href={`/contract/${contract.id}`}
->
+<Card class="w-[16rem] min-h-[300px] hover:bg-white flex flex-col justify-between">
 	<div>
 		<div class="flex gap-2 items-center">
 			<Indicator color={setColor(contract.status)} />
@@ -83,5 +83,10 @@
 		{/if}
 	</div>
 
-	<slot />
+	<div class="mt-8 flex gap-4">
+		<slot />
+		<A href={`/contract/${contract.id}`}>
+			<ArrowUpRightFromSquareOutline />
+		</A>
+	</div>
 </Card>

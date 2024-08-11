@@ -9,7 +9,7 @@
 <div>
 	<P size="sm" class="font-medium">{label}</P>
 	<div class="flex gap-4 items-center">
-		<Progressbar progress={percentage} />
+		<Progressbar progress={percentage} class="w-[250px]" />
 		{#if value !== null}
 			<P class="font-medium flex-none w-8">{value}</P>
 		{:else}

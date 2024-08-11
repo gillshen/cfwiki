@@ -19,6 +19,7 @@
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import GradeForm from '$lib/components/grade-form/GradeForm.svelte';
 	import GradeValueItem from '$lib/components/list-items/GradeValueItem.svelte';
+	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
 
 	export let data;
 
@@ -53,7 +54,7 @@
 				<TableHeadCell>Grade</TableHeadCell>
 				<TableHeadCell>Cumulative</TableHeadCell>
 				<TableHeadCell>Comments</TableHeadCell>
-				<TableHeadCell>Action</TableHeadCell>
+				<TableHeadCell></TableHeadCell>
 			</TableHead>
 			<TableBody>
 				{#each Object.values(groupedGrades) as grades}
@@ -84,7 +85,14 @@
 							</TableBodyCell>
 
 							<TableBodyCell class="w-8 align-top">
-								<A on:click={modalOpener(grade)}><PenOutline /></A>
+								<MultiActionButton
+									actions={[
+										{ text: 'Update', action: modalOpener(grade) },
+										{ text: 'Delete', action: () => alert('delete'), dark: true }
+									]}
+								>
+									<PenOutline slot="icon" />
+								</MultiActionButton>
 							</TableBodyCell>
 						</TableBodyRow>
 					{/each}

@@ -1,5 +1,15 @@
 <script lang="ts">
-	import { Table, TableBody, TableBodyCell, TableBodyRow, TimelineItem, P } from 'flowbite-svelte';
+	import {
+		Table,
+		TableBody,
+		TableBodyCell,
+		TableBodyRow,
+		TimelineItem,
+		P,
+		A
+	} from 'flowbite-svelte';
+
+	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
 	import type { Enrollment } from '$lib/api/enrollment';
 	import { groupGradesByProgressionTerm } from '$lib/api/grade';
@@ -64,5 +74,8 @@
 		</Table>
 	{/if}
 
-	<slot />
+	<div class="mt-8 flex gap-4">
+		<slot />
+		<A href={`/grades/${enrollment.id}`}><ArrowUpRightFromSquareOutline /></A>
+	</div>
 </TimelineItem>

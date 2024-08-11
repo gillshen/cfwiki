@@ -1,16 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Button, Heading, Hr, Dropdown, A, Timeline } from 'flowbite-svelte';
+	import { Button, Heading, Hr, A, Timeline, Badge } from 'flowbite-svelte';
 	import { Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
-	import {
-		ChevronRightOutline,
-		PenOutline as ActionIcon,
-		ArrowUpRightFromSquareOutline
-	} from 'flowbite-svelte-icons';
+	import { PlusOutline, PenOutline } from 'flowbite-svelte-icons';
 
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import StudentInfobox from '$lib/components/infobox/StudentInfobox.svelte';
-	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
 
 	import type { Contract } from '$lib/api/contract';
 	import ContractForm from '$lib/components/contract-form/ContractForm.svelte';
@@ -50,6 +45,8 @@
 	import ApScoreItem from '$lib/components/list-items/ApScoreItem.svelte';
 	import IbAlevelGradeItem from '$lib/components/list-items/IbAlevelGradeItem.svelte';
 	import GreScoreItem from '$lib/components/list-items/GreScoreItem.svelte';
+	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
+	import LinkButton from '$lib/components/buttons/LinkButton.svelte';
 
 	export let data;
 
@@ -164,6 +161,11 @@
 			greScoreModal = true;
 		};
 	};
+
+	$: studentActions = [
+		{ text: 'Update bio', action: () => goto(`${data.student.id}/update`) },
+		{ text: 'Delete', action: () => alert(`delete ${data.student.id}`), dark: true }
+	];
 </script>
 
 <Heading tag="h1" class="alt-page-title">{data.student.fullname}</Heading>
@@ -176,31 +178,30 @@
 			<StudentInfobox student={data.student} />
 
 			{#if canEdit}
-				<div class="flex gap-x-8 mt-8">
-					<Button outline>Actions<ChevronRightOutline class="w-6 h-6 ms-1" /></Button>
-					<Dropdown class="w-40 z-20" placement="right-start">
-						<DropdownActionItem
-							text="Update bio"
-							onClick={() => goto(`${data.student.id}/update`)}
-						/>
-						<DropdownActionItem text="Delete" onClick={() => alert('delete student file')} dark />
-					</Dropdown>
+				<div class="mt-8">
+					<MultiActionButton text="Actions" actions={studentActions}>
+						<PenOutline slot="icon" />
+					</MultiActionButton>
 				</div>
 			{/if}
 		</article>
 
-		<article class="mt-16">
-			<Heading tag="h2" class="text-xl font-bold">Educational experience</Heading>
+		<article class="mt-24">
+			<Heading tag="h2" class="text-2xl font-bold">Educational Experience</Heading>
 
 			{#if data.student.enrollments.length}
 				<Timeline class="mt-8 flex flex-col gap-4">
 					{#each data.student.enrollments as enrollment}
 						<EnrollmentItem {enrollment}>
 							{#if canEdit}
-								<div class="text-sm mt-4 flex gap-4">
-									<A on:click={enrollmentModalOpener(enrollment)}><ActionIcon /></A>
-									<A href={`/grades/${enrollment.id}`}><ArrowUpRightFromSquareOutline /></A>
-								</div>
+								<MultiActionButton
+									actions={[
+										{ text: 'Update', action: enrollmentModalOpener(enrollment) },
+										{ text: 'Delete', action: () => alert('delete enrollment'), dark: true }
+									]}
+								>
+									<PenOutline slot="icon" />
+								</MultiActionButton>
 							{/if}
 						</EnrollmentItem>
 					{/each}
@@ -208,104 +209,129 @@
 			{/if}
 
 			{#if canEdit}
-				<A class="mt-8 text-sm font-medium" on:click={enrollmentModalOpener()}>
-					Add educational experience
-				</A>
+				<div class="mt-8">
+					<LinkButton text="Add educational experience" action={enrollmentModalOpener()}>
+						<PlusOutline slot="icon" />
+					</LinkButton>
+				</div>
 			{/if}
 		</article>
 
-		<article class="mt-16">
-			<Heading tag="h2" class="text-xl font-bold">Test scores</Heading>
+		<article class="mt-24">
+			<Heading tag="h2" class="text-2xl font-bold">Test Scores</Heading>
 
-			<div class="my-4 divide divide-y-[1px] divide-solid">
+			<div class="flex flex-col gap-6 divide-y-2 divide-dotted mb-8">
 				{#each data.student.toefl as score}
 					<ToeflScoreItem {score} onClick={toeflModalOpener(score)} />
 				{/each}
-			</div>
-			<A class="text-sm font-medium" on:click={toeflModalOpener()}>Add a TOEFL score</A>
-
-			<div class="my-4 divide divide-y-[1px] divide-solid">
 				{#each data.student.ielts as score}
 					<IeltsScoreItem {score} onClick={ieltsModalOpener(score)} />
 				{/each}
-			</div>
-			<A class="text-sm font-medium" on:click={ieltsModalOpener()}>Add an IELTS score</A>
-
-			<div class="my-4 divide divide-y-[1px] divide-solid">
 				{#each data.student.duolingo as score}
 					<DuolingoScoreItem {score} onClick={duolingoModalOpener(score)} />
 				{/each}
-			</div>
-			<A class="text-sm font-medium" on:click={duolingoModalOpener()}>Add a Duolingo score</A>
-
-			<div class="my-4 divide divide-y-[1px] divide-solid">
 				{#each data.student.sat as score}
 					<SatScoreItem {score} onClick={satScoreModalOpener(score)} />
 				{/each}
-			</div>
-			<A class="text-sm font-medium" on:click={satScoreModalOpener()}>Add a SAT score</A>
-
-			<div class="my-4 divide divide-y-[1px] divide-solid">
 				{#each data.student.act as score}
 					<ActScoreItem {score} onClick={actScoreModalOpener(score)} />
 				{/each}
-			</div>
-			<A class="text-sm font-medium" on:click={actScoreModalOpener()}>Add an ACT score</A>
-
-			<div class="my-4 grid grid-cols-2 gap-4">
-				{#each data.student.ap as score}
-					<ApScoreItem {score} onClick={apScoreModalOpener(score)} />
-				{/each}
-			</div>
-			<A class="text-sm font-medium" on:click={apScoreModalOpener()}>Add an AP score</A>
-
-			<div class="my-4">
-				{#each data.student.ib as ib}
-					<IbAlevelGradeItem grade={ib} onClick={ibGradeModalOpener(ib)} />
-				{/each}
-			</div>
-			<A class="text-sm font-medium" on:click={ibGradeModalOpener()}>Add an IB grade</A>
-
-			<div class="my-4 grid grid-cols-2 gap-4">
-				{#each data.student.alevel as alevel}
-					<IbAlevelGradeItem grade={alevel} onClick={alevelGradeModalOpener(alevel)} />
-				{/each}
-			</div>
-			<A class="text-sm font-medium" on:click={alevelGradeModalOpener()}>Add an A-level grade</A>
-
-			<div class="my-4 divide divide-y-[1px] divide-solid">
 				{#each data.student.gre as gre}
 					<GreScoreItem score={gre} onClick={greScoreModalOpener(gre)} />
 				{/each}
 			</div>
-			<A class="text-sm font-medium" on:click={greScoreModalOpener()}>Add a GRE score</A>
+
+			{#if data.student.ap.length}
+				<Heading
+					tag="h3"
+					class="text-lg font-medium px-4 py-0.5 bg-gradient-to-r from-primary-400 to-white"
+				>
+					AP
+				</Heading>
+				<div class="mt-4 mb-8 grid grid-cols-2 gap-x-6 gap-y-4">
+					{#each data.student.ap as score}
+						<ApScoreItem {score} onClick={apScoreModalOpener(score)} />
+					{/each}
+				</div>
+			{/if}
+
+			{#if data.student.ib.length}
+				<Heading
+					tag="h3"
+					class="text-lg font-medium px-4 py-0.5 bg-gradient-to-r from-primary-400 to-white"
+				>
+					IB
+				</Heading>
+				<div class="my-4 mb-8">
+					{#each data.student.ib as ib}
+						<IbAlevelGradeItem grade={ib} onClick={ibGradeModalOpener(ib)} />
+					{/each}
+				</div>
+			{/if}
+
+			{#if data.student.alevel.length}
+				<Heading
+					tag="h3"
+					class="text-lg font-medium px-4 py-0.5 bg-gradient-to-r from-primary-400 to-white"
+				>
+					A-level
+				</Heading>
+				<div class="my-4 mb-8 grid grid-cols-2 gap-x-6 gap-y-4">
+					{#each data.student.alevel as alevel}
+						<IbAlevelGradeItem grade={alevel} onClick={alevelGradeModalOpener(alevel)} />
+					{/each}
+				</div>
+			{/if}
+
+			<MultiActionButton
+				text="Add a score"
+				actions={[
+					{ text: 'TOEFL', action: toeflModalOpener() },
+					{ text: 'IELTS', action: ieltsModalOpener() },
+					{ text: 'Duolingo', action: duolingoModalOpener() },
+					{ text: 'SAT', action: satScoreModalOpener(), divider: true },
+					{ text: 'ACT', action: actScoreModalOpener() },
+					{ text: 'AP', action: apScoreModalOpener() },
+					{ text: 'IB', action: ibGradeModalOpener() },
+					{ text: 'A-level', action: alevelGradeModalOpener() },
+					{ text: 'GRE', action: greScoreModalOpener(), divider: true }
+				]}
+			>
+				<PlusOutline slot="icon" />
+			</MultiActionButton>
 		</article>
 	</section>
 
-	<section class="flex flex-col">
-		<article class="bg-slate-50 rounded-xl w-full min-w-[32rem] h-fit p-8 text-gray-400">
+	<section class="min-w-[32rem] flex flex-col">
+		<article class="bg-slate-50 rounded-xl w-full h-fit p-8 text-gray-400">
 			{#if data.student.contracts_sorted.length}
 				<div class="flex gap-8 mb-8">
 					{#each data.student.contracts_sorted as contract}
 						<ContractItem {contract}>
 							{#if canEdit || !contract.services.length}
-								<div class="mt-8 flex gap-4">
-									<A class="text-sm" on:click={contractModalOpener(contract)}><ActionIcon /></A>
-									<A class="text-sm" on:click={() => alert('delete contract')}>Delete</A>
-								</div>
+								<MultiActionButton
+									actions={[
+										{ text: 'Update', action: contractModalOpener(contract) },
+										{ text: 'Delete', action: () => alert('delete contract'), dark: true }
+									]}
+								>
+									<PenOutline slot="icon" />
+								</MultiActionButton>
 							{/if}
 						</ContractItem>
 					{/each}
 				</div>
-				<A class="text-sm font-medium ml-1" on:click={contractModalOpener()}>Add a contract</A>
+				<LinkButton text="Add a contract" action={contractModalOpener()}>
+					<PlusOutline slot="icon" />
+				</LinkButton>
 			{:else}
 				<Button on:click={contractModalOpener()}>Add a contract</Button>
 			{/if}
 		</article>
 
-		<article class="mt-16">
-			<Heading tag="h2" class="text-xl font-bold">
-				Applications ({data.applications.length})
+		<article class="mt-24">
+			<Heading tag="h2" class="text-2xl font-bold flex items-center gap-2">
+				Applications<Badge>{data.applications.length}</Badge>
 			</Heading>
 
 			{#if data.applications.length}
@@ -313,11 +339,10 @@
 					<TableBody>
 						{#each data.applications as appl}
 							<TableBodyRow>
-								<TableBodyCell class="font-normal pl-0">
-									<A href={`/application/${appl.id}`}>Link</A>
-								</TableBodyCell>
-								<TableBodyCell class="w-fit max-w-48 truncate">
-									{appl.schools.map((s) => s.name).join(' + ')}
+								<TableBodyCell class="pl-0 w-fit max-w-48 truncate">
+									<A href={`/application/${appl.id}`}>
+										{appl.schools.map((s) => s.name).join(' + ')}
+									</A>
 								</TableBodyCell>
 								<TableBodyCell class="font-normal max-w-44 truncate">
 									{appl.program.display_name}
@@ -459,4 +484,4 @@
 	on:close={() => (greScoreModal = false)}
 />
 
-<Hr />
+<Hr hrClass="mt-16" />
