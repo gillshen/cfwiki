@@ -16,6 +16,7 @@ from academics.models import (
     LSATScore,
 )
 
+from core.models import Student
 from target.models import School
 
 
@@ -38,6 +39,17 @@ class EnrollmentByStudentSerializer(serializers.ModelSerializer):
             fields = "__all__"
 
     grades = GradeSerializer(many=True)
+
+
+class EnrollmentDetailSerializer(EnrollmentByStudentSerializer):
+    class StudentSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Student
+            fields = ["id", "fullname"]
+
+        fullname = serializers.CharField()
+
+    student = StudentSerializer()
 
 
 class EnrollmentCRUDSerializer(serializers.ModelSerializer):

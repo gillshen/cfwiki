@@ -14,6 +14,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { activeYears } from '$lib/utils/dateUtils';
 	import { getRoundNames } from '$lib/constants/applicationRounds.js';
+	import { academicTerms } from '$lib/constants/progressions';
 
 	export let data;
 
@@ -71,11 +72,11 @@
 
 			<Label class="form-label">Term</Label>
 			<div class="grid grid-cols-1 mb-4 gap-2">
-				<Radio name="term" value="Fall" class="font-normal" bind:group={$form.term}>Fall</Radio>
-				<Radio name="term" value="Spring" class="font-normal" bind:group={$form.term}>Spring</Radio>
-				<Radio name="term" value="Summer" class="font-normal" bind:group={$form.term} required
-					>Summer</Radio
-				>
+				{#each academicTerms as value}
+					<Radio name="term" {value} class="font-normal" bind:group={$form.term} required>
+						{value}
+					</Radio>
+				{/each}
 			</div>
 
 			<Label for="round-name" class="form-label">Round</Label>

@@ -16,7 +16,7 @@
 	import ContractForm from '$lib/components/contract-form/ContractForm.svelte';
 	import ContractItem from '$lib/components/list-items/ContractItem.svelte';
 
-	import type { Enrollment } from '$lib/api/student.js';
+	import type { Enrollment } from '$lib/api/enrollment';
 	import EnrollmentForm from '$lib/components/enrollment-form/EnrollmentForm.svelte';
 	import EnrollmentItem from '$lib/components/list-items/EnrollmentItem.svelte';
 
@@ -199,7 +199,7 @@
 							{#if canEdit}
 								<div class="text-sm mt-4 flex gap-4">
 									<A on:click={enrollmentModalOpener(enrollment)}><ActionIcon /></A>
-									<A href=""><ArrowUpRightFromSquareOutline /></A>
+									<A href={`/grades/${enrollment.id}`}><ArrowUpRightFromSquareOutline /></A>
 								</div>
 							{/if}
 						</EnrollmentItem>
@@ -208,7 +208,9 @@
 			{/if}
 
 			{#if canEdit}
-				<A class="mt-8 text-sm font-medium" on:click={enrollmentModalOpener()}>Add experience</A>
+				<A class="mt-8 text-sm font-medium" on:click={enrollmentModalOpener()}>
+					Add educational experience
+				</A>
 			{/if}
 		</article>
 
@@ -250,7 +252,7 @@
 			</div>
 			<A class="text-sm font-medium" on:click={actScoreModalOpener()}>Add an ACT score</A>
 
-			<div class="my-4 grid grid-cols-2 gap-4 auto-rows-auto">
+			<div class="my-4 grid grid-cols-2 gap-4">
 				{#each data.student.ap as score}
 					<ApScoreItem {score} onClick={apScoreModalOpener(score)} />
 				{/each}
@@ -264,7 +266,7 @@
 			</div>
 			<A class="text-sm font-medium" on:click={ibGradeModalOpener()}>Add an IB grade</A>
 
-			<div class="my-4 grid grid-cols-2 gap-2">
+			<div class="my-4 grid grid-cols-2 gap-4">
 				{#each data.student.alevel as alevel}
 					<IbAlevelGradeItem grade={alevel} onClick={alevelGradeModalOpener(alevel)} />
 				{/each}

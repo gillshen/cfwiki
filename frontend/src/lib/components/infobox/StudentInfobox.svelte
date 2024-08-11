@@ -18,13 +18,17 @@
 				return gender;
 		}
 	};
+
+	const placeHolder = '-';
 </script>
 
 <Table>
 	<TableBody>
 		<TableBodyRow>
 			<TableBodyCell tdClass="w-48 font-medium py-4">Preferred name</TableBodyCell>
-			<TableBodyCell tdClass="font-normal py-4">{student.preferred_name}</TableBodyCell>
+			<TableBodyCell tdClass="font-normal py-4">
+				{student.preferred_name || placeHolder}
+			</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>
@@ -50,6 +54,8 @@
 						<div>{countryFlags[student.base_country]}</div>
 						<div>{formatLocation(student)}</div>
 					</div>
+				{:else}
+					{placeHolder}
 				{/if}
 			</TableBodyCell>
 		</TableBodyRow>
@@ -57,18 +63,22 @@
 		<TableBodyRow>
 			<TableBodyCell tdClass="w-48 font-medium py-4">Date of birth</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
-				{toLongDate(student.date_of_birth)}
+				{toLongDate(student.date_of_birth) || placeHolder}
 			</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>
 			<TableBodyCell tdClass="w-48 font-medium py-4 align-top">Comments</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
-				<div class="flex flex-col gap-2 pr-6">
-					{#each student.comments.split(/\r?\n/g).filter(Boolean) as para}
-						<p>{para}</p>
-					{/each}
-				</div>
+				{#if student.comments}
+					<div class="flex flex-col gap-2 pr-6 text-wrap">
+						{#each student.comments.split(/\r?\n/g).filter(Boolean) as para}
+							<p>{para}</p>
+						{/each}
+					</div>
+				{:else}
+					{placeHolder}
+				{/if}
 			</TableBodyCell>
 		</TableBodyRow>
 	</TableBody>

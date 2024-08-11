@@ -1,5 +1,4 @@
 from rest_framework.generics import (
-    ListAPIView,
     RetrieveAPIView,
     CreateAPIView,
     RetrieveUpdateDestroyAPIView,
@@ -22,6 +21,7 @@ from academics.models import (
 )
 
 from academics.serializers import (
+    EnrollmentDetailSerializer,
     EnrollmentCRUDSerializer,
     GradeCRUDSerializer,
     TOEFLScoreCRUDSerializer,
@@ -36,6 +36,11 @@ from academics.serializers import (
     GMATScoreCRUDSerializer,
     LSATScoreCRUDSerializer,
 )
+
+
+class EnrollmentDetailView(RetrieveAPIView):
+    queryset = Enrollment.objects.all()
+    serializer_class = EnrollmentDetailSerializer
 
 
 class EnrollmentCreateView(CreateAPIView):

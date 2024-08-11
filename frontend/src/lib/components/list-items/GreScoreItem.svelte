@@ -17,7 +17,7 @@
 <ScoreContainer>
 	<ScoreItem
 		size="lg"
-		subject="SAT"
+		subject="GRE"
 		score={greOverall(score) ?? 'N/A'}
 		date={score.date}
 		{onClick}

@@ -2,6 +2,7 @@
 	import { Label, Select, Input, Radio, Button } from 'flowbite-svelte';
 	import { activeYears } from '$lib/utils/dateUtils';
 	import { contractStatuses, contractTypes, type Contract } from '$lib/api/contract';
+	import { allProgressionsT } from '$lib/constants/progressions';
 
 	export let form: any;
 	export let message: any;
@@ -55,12 +56,16 @@
 	<Label for="student-progression" class="form-label optional"
 		>Student progression when signed</Label
 	>
-	<Input
+	<Select
 		id="student-progression"
-		type="text"
 		name="student_progression_when_signed"
 		bind:value={$form.student_progression_when_signed}
-	/>
+	>
+		<option value=""></option>
+		{#each allProgressionsT as progression}
+			<option value={progression}>{progression}</option>
+		{/each}
+	</Select>
 </div>
 
 <Button type="submit" class="mt-8">{entity ? 'Update' : 'Submit'}</Button>

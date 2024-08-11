@@ -7,6 +7,7 @@ import { fetchStudent, type StudentDetail } from '$lib/api/student';
 import { fetchApplications } from '$lib/api/application';
 import { contractSchema } from '$lib/schemas/contract';
 import { enrollmentSchema } from '$lib/schemas/enrollment';
+
 import {
 	toeflSchema,
 	ieltschema,
@@ -18,8 +19,10 @@ import {
 	alevelGradeSchema,
 	greScoreSchema
 } from '$lib/schemas/scores';
+
 import { createOrUpdateContract } from '$lib/api/contract';
 import { createOrUpdateEnrollment } from '$lib/api/enrollment';
+
 import {
 	createOrUpdateToeflScore,
 	createOrUpdateIeltsScore,
@@ -31,6 +34,7 @@ import {
 	createOrUpdateAlevelGrade,
 	createOrUpdateGreScore
 } from '$lib/api/scores';
+
 import { formAction } from '$lib/abstract/formAction';
 
 export async function load(event: PageServerLoadEvent) {

@@ -1,28 +1,44 @@
-import type { Grade } from '$lib/api/student';
+import { createOrUpdate } from '$lib/api/api';
+import { parseNum } from '$lib/utils/numUtils';
 
-type GroupedGrades = Record<string, Grade[]>;
+export type Grade = {
+	id: number;
+	enrollment: number;
+	progression: string;
+	term: string;
+	value: number;
+	scale: number;
+	is_cumulative: boolean;
+	comments: string;
+};
+
+export type GroupedGrades = Record<string, Grade[]>;
 
 const _joiner = '\u9999';
 
 const _progressionOrder: Record<string, number> = {
-	G9: 0,
-	G10: 1,
-	G11: 2,
-	G12: 3,
-	Freshman: 4,
-	Sophomore: 5,
-	Junior: 6,
-	Senior: 7
+	G7: 0,
+	G8: 1,
+	G9: 2,
+	G10: 3,
+	G11: 4,
+	G12: 5,
+	'Year 1': 6,
+	'Year 2': 7,
+	'Year 3': 8,
+	'Year 4': 9,
+	'Year 5': 10
 } as const;
 
 const _termOrder: Record<string, number> = {
 	Fall: 0,
 	Winter: 1,
 	Spring: 2,
-	Summer: 3
+	Summer: 3,
+	Year: 4
 } as const;
 
-export function groupGradesByProgressonTerm(grades: Grade[]): GroupedGrades {
+export function groupGradesByProgressionTerm(grades: Grade[]): GroupedGrades {
 	const groupedGrades: GroupedGrades = {};
 
 	grades.forEach((grade: Grade) => {
@@ -63,3 +79,21 @@ function _sortCumulativeLast(a: Grade, b: Grade): number {
 		return a.is_cumulative ? 1 : -1;
 	}
 }
+
+export async function createOrUpdateGrade(data: any) {
+	return createOrUpdate(data, 'grades');
+}
+
+export const formatGradeValue = (
+	inputValue: string | number,
+	inputScale?: string | number
+): string => {
+	const value = parseNum(inputValue);
+	const scale = inputScale === undefined ? value : parseNum(inputScale);
+
+	if (scale > 5 && Number.isInteger(value)) {
+		return value.toString();
+	} else {
+		return value.toFixed(3);
+	}
+};

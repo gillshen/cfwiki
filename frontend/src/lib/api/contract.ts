@@ -26,14 +26,7 @@ export type Service = {
 	end_date: string | null;
 };
 
-export type ContractDetail = {
-	id: number;
-	student: number;
-	type: string;
-	target_year: number;
-	date: string | null;
-	status: ContractStatus;
-	student_progression_when_signed: string;
+export type ContractDetail = Contract & {
 	student_name: string;
 	services: Service[];
 };

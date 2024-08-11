@@ -1,4 +1,6 @@
 import { get, patch, post } from '$lib/api/api';
+import type { Service } from '$lib/api/contract';
+import type { Enrollment } from '$lib/api/enrollment';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
 
@@ -32,15 +34,6 @@ type BaseStudent = {
 	fullname: string;
 };
 
-export type Service = {
-	id: number;
-	cfer: number;
-	cf_username: string;
-	role: string;
-	start_date: string | null;
-	end_date: string | null;
-};
-
 export type Contract = {
 	id: number;
 	student: number;
@@ -52,30 +45,8 @@ export type Contract = {
 	services: Service[];
 };
 
-export type StudentListItem = BaseStudent & { latest_contract: Contract };
-
-export type Grade = {
-	id: number;
-	enrollment: number;
-	progression: string;
-	term: string;
-	value: number;
-	scale: number;
-	is_cumulative: boolean;
-	comments: string;
-};
-
-export type Enrollment = {
-	id: number;
-	student: number;
-	school: { id: number; type: string; name: string; alt_name: string; country: string };
-	program_type: string;
-	start_date: string;
-	start_progression: string;
-	end_date: string | null;
-	end_progression: string;
-	curriculum: string;
-	grades: Grade[];
+export type StudentListItem = BaseStudent & {
+	latest_contract: Contract;
 };
 
 export type StudentDetail = BaseStudent & {
