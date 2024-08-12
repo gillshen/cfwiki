@@ -3,7 +3,13 @@ import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-import { fetchApplication, type ApplicationDetail } from '$lib/api/application';
+import {
+	changeApplicationRound,
+	fetchApplication,
+	type ApplicationDetail
+} from '$lib/api/application';
+
+import { roundChangeSchema } from '$lib/schemas/application';
 import { roundNameSchema, roundDatesSchema } from '$lib/schemas/applicationRound';
 import { applicationLogSchema } from '$lib/schemas/applicationLog';
 import { formAction } from '$lib/abstract/formAction';
@@ -25,6 +31,7 @@ export async function load(event: PageServerLoadEvent) {
 
 	return {
 		application,
+		roundChangeForm: await superValidate(zod(roundChangeSchema)),
 		roundRenameForm: await superValidate(application.round, zod(roundNameSchema)),
 		datesUpdateForm: await superValidate(application.round, zod(roundDatesSchema)),
 		logForm: await superValidate(zod(applicationLogSchema))
@@ -32,6 +39,7 @@ export async function load(event: PageServerLoadEvent) {
 }
 
 export const actions = {
+	updateRoundId: formAction(roundChangeSchema, changeApplicationRound),
 	updateRoundName: formAction(roundNameSchema, updateApplicationRound),
 	updateRoundDates: formAction(roundDatesSchema, updateApplicationRound),
 	createOrUpdateApplicationLog: formAction(applicationLogSchema, createOrUpdateApplicationLog)

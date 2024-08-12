@@ -131,7 +131,7 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     class ProgramSerializer(serializers.ModelSerializer):
         class Meta:
             model = Program
-            fields = ["display_name"]
+            fields = ["type", "display_name"]
 
     program = ProgramSerializer()
 
@@ -212,7 +212,7 @@ class ApplicationDetailSerializer(serializers.ModelSerializer):
     logs = ApplicationLogSerializer(many=True)
 
 
-class ApplicationCreateSerializer(serializers.ModelSerializer):
+class ApplicationCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = ["id", "contract", "program", "year", "term", "round_name"]
@@ -238,6 +238,25 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
             round=application_round,
         )
         return application
+
+    def update(self, instance, validated_data):
+        round_name = validated_data["round_name"]
+
+        if instance.round.name != round_name:
+            program = Program.objects.get(id=validated_data["program"])
+            program_iteration = ProgramIteration.objects.get(
+                program=program,
+                year=validated_data["year"],
+                term=validated_data["term"],
+            )
+            application_round, _ = ApplicationRound.objects.get_or_create(
+                program_iteration=program_iteration,
+                name=validated_data["round_name"],
+            )
+            instance.round = application_round
+            instance.save()
+
+        return instance
 
 
 class ApplicationRUDSerializer(serializers.ModelSerializer):

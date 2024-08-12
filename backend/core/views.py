@@ -17,7 +17,7 @@ from core.serializers import (
     ServiceCRUDSerializer,
     ApplicationListSerializer,
     ApplicationDetailSerializer,
-    ApplicationCreateSerializer,
+    ApplicationCreateUpdateSerializer,
     ApplicationRUDSerializer,
     ApplicationLogCRUDSerializer,
 )
@@ -124,10 +124,17 @@ class ApplicationDetailView(RetrieveAPIView):
 
 class ApplicationCreateView(CreateAPIView):
     queryset = Application.objects.all()
-    serializer_class = ApplicationCreateSerializer
+    serializer_class = ApplicationCreateUpdateSerializer
+
+
+class ApplicationUpdateRoundView(RetrieveUpdateDestroyAPIView):
+    # for updating `round` only
+    queryset = Application.objects.all()
+    serializer_class = ApplicationCreateUpdateSerializer
 
 
 class ApplicationRUDView(RetrieveUpdateDestroyAPIView):
+    # for general update and delete
     queryset = Application.objects.all()
     serializer_class = ApplicationRUDSerializer
 

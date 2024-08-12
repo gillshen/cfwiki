@@ -10,10 +10,12 @@ export const newApplicationSchema = z.object({
 
 export type NewApplicationSchema = typeof newApplicationSchema;
 
-export const applicationUpdateSchema = z.object({
+export const roundChangeSchema = z.object({
 	id: z.number(),
-	contract: z.number(),
-	round: z.number()
+	program: z.number(),
+	year: z.number(),
+	term: z.string(),
+	round_name: z.string()
 });
 
-export type ApplicationUpdateSchema = typeof applicationUpdateSchema;
+export type RoundChangeSchema = typeof roundChangeSchema;

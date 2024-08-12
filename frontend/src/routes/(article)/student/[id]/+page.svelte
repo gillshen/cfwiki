@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Button, Heading, Hr, A, Timeline, Badge } from 'flowbite-svelte';
-	import { Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
-	import { PlusOutline, PenOutline } from 'flowbite-svelte-icons';
+	import { Button, Heading, Hr, Timeline, Badge } from 'flowbite-svelte';
+	import { PlusOutline, CircleMinusOutline } from 'flowbite-svelte-icons';
 
+	import type { StudentDetail } from '$lib/api/student';
+	import Section from '$lib/components/containers/Section.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import StudentInfobox from '$lib/components/infobox/StudentInfobox.svelte';
 
@@ -45,7 +46,10 @@
 	import ApScoreItem from '$lib/components/list-items/ApScoreItem.svelte';
 	import IbAlevelGradeItem from '$lib/components/list-items/IbAlevelGradeItem.svelte';
 	import GreScoreItem from '$lib/components/list-items/GreScoreItem.svelte';
+
+	import StudentApplications from '$lib/components/tables/StudentApplications.svelte';
 	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
+	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import LinkButton from '$lib/components/buttons/LinkButton.svelte';
 
 	export let data;
@@ -162,9 +166,30 @@
 		};
 	};
 
-	$: studentActions = [
-		{ text: 'Update bio', action: () => goto(`${data.student.id}/update`) },
-		{ text: 'Delete', action: () => alert(`delete ${data.student.id}`), dark: true }
+	const noScore = (student: StudentDetail) => {
+		return !(
+			student.toefl.length ||
+			student.ielts.length ||
+			student.duolingo.length ||
+			student.sat.length ||
+			student.act.length ||
+			student.ap.length ||
+			student.ib.length ||
+			student.alevel.length ||
+			student.gre.length
+		);
+	};
+
+	const newScoreActions = [
+		{ text: 'SAT', action: satScoreModalOpener() },
+		{ text: 'ACT', action: actScoreModalOpener() },
+		{ text: 'GRE', action: greScoreModalOpener(), divider: true },
+		{ text: 'TOEFL', action: toeflModalOpener(), divider: true },
+		{ text: 'IELTS', action: ieltsModalOpener() },
+		{ text: 'Duolingo', action: duolingoModalOpener() },
+		{ text: 'AP', action: apScoreModalOpener(), divider: true },
+		{ text: 'IB', action: ibGradeModalOpener() },
+		{ text: 'A-level', action: alevelGradeModalOpener() }
 	];
 </script>
 
@@ -172,196 +197,166 @@
 
 <Hr />
 
-<div class="flex gap-24">
-	<section class="w-[36rem] min-w-[32rem] flex flex-col">
-		<article class="">
-			<StudentInfobox student={data.student} />
+<Section>
+	<article>
+		<StudentInfobox student={data.student} />
 
-			{#if canEdit}
-				<div class="mt-8">
-					<MultiActionButton text="Actions" actions={studentActions}>
-						<PenOutline slot="icon" />
-					</MultiActionButton>
-				</div>
-			{/if}
-		</article>
+		{#if canEdit}
+			<div class="mt-8">
+				<UpdateDeleteButton
+					text="Actions"
+					updateAction={() => goto(`${data.student.id}/update`)}
+					deleteAction={() => alert(`delete ${data.student.id}`)}
+				/>
+			</div>
+		{/if}
+	</article>
 
-		<article class="mt-24">
-			<Heading tag="h2" class="text-2xl font-bold">Educational Experience</Heading>
-
-			{#if data.student.enrollments.length}
-				<Timeline class="mt-8 flex flex-col gap-4">
-					{#each data.student.enrollments as enrollment}
-						<EnrollmentItem {enrollment}>
-							{#if canEdit}
-								<MultiActionButton
-									actions={[
-										{ text: 'Update', action: enrollmentModalOpener(enrollment) },
-										{ text: 'Delete', action: () => alert('delete enrollment'), dark: true }
-									]}
-								>
-									<PenOutline slot="icon" />
-								</MultiActionButton>
-							{/if}
-						</EnrollmentItem>
-					{/each}
-				</Timeline>
-			{/if}
-
-			{#if canEdit}
-				<div class="mt-8">
-					<LinkButton text="Add educational experience" action={enrollmentModalOpener()}>
-						<PlusOutline slot="icon" />
-					</LinkButton>
-				</div>
-			{/if}
-		</article>
-
-		<article class="mt-24">
-			<Heading tag="h2" class="text-2xl font-bold">Test Scores</Heading>
-
-			<div class="flex flex-col gap-6 divide-y-2 divide-dotted mb-8">
-				{#each data.student.toefl as score}
-					<ToeflScoreItem {score} onClick={toeflModalOpener(score)} />
-				{/each}
-				{#each data.student.ielts as score}
-					<IeltsScoreItem {score} onClick={ieltsModalOpener(score)} />
-				{/each}
-				{#each data.student.duolingo as score}
-					<DuolingoScoreItem {score} onClick={duolingoModalOpener(score)} />
-				{/each}
-				{#each data.student.sat as score}
-					<SatScoreItem {score} onClick={satScoreModalOpener(score)} />
-				{/each}
-				{#each data.student.act as score}
-					<ActScoreItem {score} onClick={actScoreModalOpener(score)} />
-				{/each}
-				{#each data.student.gre as gre}
-					<GreScoreItem score={gre} onClick={greScoreModalOpener(gre)} />
+	<article class="bg-slate-50 rounded-xl w-full h-fit p-8 text-gray-400">
+		{#if data.student.contracts_sorted.length}
+			<div class="flex gap-8 mb-8">
+				{#each data.student.contracts_sorted as contract}
+					<ContractItem {contract}>
+						{#if canEdit || !contract.services.length}
+							<UpdateDeleteButton
+								updateAction={contractModalOpener(contract)}
+								deleteAction={() => alert('delete contract')}
+							/>
+						{/if}
+					</ContractItem>
 				{/each}
 			</div>
-
-			{#if data.student.ap.length}
-				<Heading
-					tag="h3"
-					class="text-lg font-medium px-4 py-0.5 bg-gradient-to-r from-primary-400 to-white"
-				>
-					AP
-				</Heading>
-				<div class="mt-4 mb-8 grid grid-cols-2 gap-x-6 gap-y-4">
-					{#each data.student.ap as score}
-						<ApScoreItem {score} onClick={apScoreModalOpener(score)} />
-					{/each}
-				</div>
-			{/if}
-
-			{#if data.student.ib.length}
-				<Heading
-					tag="h3"
-					class="text-lg font-medium px-4 py-0.5 bg-gradient-to-r from-primary-400 to-white"
-				>
-					IB
-				</Heading>
-				<div class="my-4 mb-8">
-					{#each data.student.ib as ib}
-						<IbAlevelGradeItem grade={ib} onClick={ibGradeModalOpener(ib)} />
-					{/each}
-				</div>
-			{/if}
-
-			{#if data.student.alevel.length}
-				<Heading
-					tag="h3"
-					class="text-lg font-medium px-4 py-0.5 bg-gradient-to-r from-primary-400 to-white"
-				>
-					A-level
-				</Heading>
-				<div class="my-4 mb-8 grid grid-cols-2 gap-x-6 gap-y-4">
-					{#each data.student.alevel as alevel}
-						<IbAlevelGradeItem grade={alevel} onClick={alevelGradeModalOpener(alevel)} />
-					{/each}
-				</div>
-			{/if}
-
-			<MultiActionButton
-				text="Add a score"
-				actions={[
-					{ text: 'TOEFL', action: toeflModalOpener() },
-					{ text: 'IELTS', action: ieltsModalOpener() },
-					{ text: 'Duolingo', action: duolingoModalOpener() },
-					{ text: 'SAT', action: satScoreModalOpener(), divider: true },
-					{ text: 'ACT', action: actScoreModalOpener() },
-					{ text: 'AP', action: apScoreModalOpener() },
-					{ text: 'IB', action: ibGradeModalOpener() },
-					{ text: 'A-level', action: alevelGradeModalOpener() },
-					{ text: 'GRE', action: greScoreModalOpener(), divider: true }
-				]}
-			>
-				<PlusOutline slot="icon" />
-			</MultiActionButton>
-		</article>
-	</section>
-
-	<section class="min-w-[32rem] flex flex-col">
-		<article class="bg-slate-50 rounded-xl w-full h-fit p-8 text-gray-400">
-			{#if data.student.contracts_sorted.length}
-				<div class="flex gap-8 mb-8">
-					{#each data.student.contracts_sorted as contract}
-						<ContractItem {contract}>
-							{#if canEdit || !contract.services.length}
-								<MultiActionButton
-									actions={[
-										{ text: 'Update', action: contractModalOpener(contract) },
-										{ text: 'Delete', action: () => alert('delete contract'), dark: true }
-									]}
-								>
-									<PenOutline slot="icon" />
-								</MultiActionButton>
-							{/if}
-						</ContractItem>
-					{/each}
-				</div>
+			{#if canEdit}
 				<LinkButton text="Add a contract" action={contractModalOpener()}>
 					<PlusOutline slot="icon" />
 				</LinkButton>
-			{:else}
-				<Button on:click={contractModalOpener()}>Add a contract</Button>
 			{/if}
-		</article>
+		{:else}
+			<Button on:click={contractModalOpener()}>Add a contract</Button>
+		{/if}
+	</article>
 
-		<article class="mt-24">
-			<Heading tag="h2" class="text-2xl font-bold flex items-center gap-2">
-				Applications<Badge>{data.applications.length}</Badge>
+	<article class="mt-24">
+		<Heading tag="h2" class="text-2xl font-bold">Educational Experience</Heading>
+
+		{#if data.student.enrollments.length}
+			<Timeline class="mt-8 flex flex-col gap-4">
+				{#each data.student.enrollments as enrollment}
+					<EnrollmentItem {enrollment}>
+						{#if canEdit}
+							<UpdateDeleteButton
+								updateAction={enrollmentModalOpener(enrollment)}
+								deleteAction={() => alert('delete enrollment')}
+							/>
+						{/if}
+					</EnrollmentItem>
+				{/each}
+			</Timeline>
+		{:else if !canEdit}
+			<div class="mt-4 flex items-center gap-2 text-gray-400">
+				<CircleMinusOutline /><span>No educational experience</span>
+			</div>
+		{/if}
+
+		{#if canEdit}
+			<div class="mt-8">
+				<LinkButton text="Add educational experience" action={enrollmentModalOpener()}>
+					<PlusOutline slot="icon" />
+				</LinkButton>
+			</div>
+		{/if}
+	</article>
+
+	<article class="mt-24">
+		<Heading tag="h2" class="text-2xl font-bold">Test Scores</Heading>
+
+		<div class="flex flex-col gap-6 divide-y-2 divide-dotted">
+			{#each data.student.gre as gre}
+				<GreScoreItem score={gre} onClick={greScoreModalOpener(gre)} />
+			{/each}
+			{#each data.student.sat as score}
+				<SatScoreItem {score} onClick={satScoreModalOpener(score)} />
+			{/each}
+			{#each data.student.act as score}
+				<ActScoreItem {score} onClick={actScoreModalOpener(score)} />
+			{/each}
+			{#each data.student.toefl as score}
+				<ToeflScoreItem {score} onClick={toeflModalOpener(score)} />
+			{/each}
+			{#each data.student.ielts as score}
+				<IeltsScoreItem {score} onClick={ieltsModalOpener(score)} />
+			{/each}
+			{#each data.student.duolingo as score}
+				<DuolingoScoreItem {score} onClick={duolingoModalOpener(score)} />
+			{/each}
+		</div>
+
+		{#if data.student.ap.length}
+			<Heading tag="h3" class="mt-8 text-lg font-medium px-2 pb-0.5 border-b-2 border-primary-700">
+				AP
 			</Heading>
+			<div class="mt-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
+				{#each data.student.ap as score}
+					<ApScoreItem {score} onClick={apScoreModalOpener(score)} />
+				{/each}
+			</div>
+		{/if}
 
-			{#if data.applications.length}
-				<Table class="mt-8">
-					<TableBody>
-						{#each data.applications as appl}
-							<TableBodyRow>
-								<TableBodyCell class="pl-0 w-fit max-w-48 truncate">
-									<A href={`/application/${appl.id}`}>
-										{appl.schools.map((s) => s.name).join(' + ')}
-									</A>
-								</TableBodyCell>
-								<TableBodyCell class="font-normal max-w-44 truncate">
-									{appl.program.display_name}
-								</TableBodyCell>
-								<TableBodyCell class="font-normal">{appl.program_iteration.year}</TableBodyCell>
-								<TableBodyCell class="font-normal">{appl.round.name}</TableBodyCell>
-								<TableBodyCell class="">{appl.latest_log?.status ?? ''}</TableBodyCell>
-							</TableBodyRow>
-						{/each}
-					</TableBody>
-				</Table>
-			{/if}
+		{#if data.student.ib.length}
+			<Heading tag="h3" class="mt-8 text-lg font-medium px-2 pb-0.5 border-b-2 border-primary-700">
+				IB
+			</Heading>
+			<div class="my-4 mb-8">
+				{#each data.student.ib as ib}
+					<IbAlevelGradeItem grade={ib} onClick={ibGradeModalOpener(ib)} />
+				{/each}
+			</div>
+		{/if}
 
+		{#if data.student.alevel.length}
+			<Heading tag="h3" class="mt-8 text-lg font-medium px-2 pb-0.5 border-b-2 border-primary-700">
+				A-level
+			</Heading>
+			<div class="my-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
+				{#each data.student.alevel as alevel}
+					<IbAlevelGradeItem grade={alevel} onClick={alevelGradeModalOpener(alevel)} />
+				{/each}
+			</div>
+		{/if}
+
+		{#if canEdit}
+			<div class="mt-8">
+				<MultiActionButton text="Add a score" actions={newScoreActions} placement="right-end">
+					<PlusOutline slot="icon" />
+				</MultiActionButton>
+			</div>
+		{:else if noScore(data.student)}
+			<div class="mt-4 flex items-center gap-2 text-gray-400">
+				<CircleMinusOutline /><span>No test scores</span>
+			</div>
+		{/if}
+	</article>
+
+	<article class="mt-24 col-span-2">
+		<Heading tag="h2" class="text-2xl font-bold flex items-center gap-2">
+			Applications<Badge>{data.applications.length}</Badge>
+		</Heading>
+
+		{#if data.applications.length}
+			<StudentApplications applications={data.applications} />
+		{:else if !canEdit}
+			<div class="mt-4 flex items-center gap-2 text-gray-400">
+				<CircleMinusOutline /><span>No applications</span>
+			</div>
+		{/if}
+
+		{#if canEdit}
 			<Button outline href={`/student/${data.student.id}/new-application`} class="mt-8">
 				Create an application
 			</Button>
-		</article>
-	</section>
-</div>
+		{/if}
+	</article>
+</Section>
 
 <FormModal
 	open={contractModal}

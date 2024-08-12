@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { Button, Heading, Hr, Dropdown } from 'flowbite-svelte';
-	import { ChevronRightOutline } from 'flowbite-svelte-icons';
+	import { Heading, Hr } from 'flowbite-svelte';
 
-	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
+	import Section from '$lib/components/containers/Section.svelte';
 	import SchoolForm from '$lib/components/school-form/SchoolForm.svelte';
 	import SchoolInfobox from '$lib/components/infobox/SchoolInfobox.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
+	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 
 	export let data;
 
@@ -16,23 +16,21 @@
 
 <Hr />
 
-<section class="flex gap-24">
-	<article class="w-[36rem] min-w-[32rem] pb-8">
+<Section>
+	<article>
 		<SchoolInfobox school={data.school} />
 
-		<div class="flex gap-x-8 mt-8">
-			<Button outline>Actions<ChevronRightOutline class="w-6 h-6 ms-1" /></Button>
-			<Dropdown class="w-40 z-20" placement="right-start">
-				<DropdownActionItem text="Update" onClick={() => (updateSchoolModal = true)} />
-				<DropdownActionItem text="Delete" onClick={() => alert('delete school file')} dark />
-			</Dropdown>
+		<div class="mt-8">
+			<UpdateDeleteButton
+				text="Actions"
+				updateAction={() => (updateSchoolModal = true)}
+				deleteAction={() => alert('delete')}
+			/>
 		</div>
 	</article>
 
-	<article class="bg-slate-50 rounded-xl w-full min-w-[32rem] p-8 text-gray-400">
-		(applications)
-	</article>
-</section>
+	<article class="bg-slate-50 rounded-xl w-full p-8 text-gray-400">(applications)</article>
+</Section>
 
 <FormModal
 	open={updateSchoolModal}

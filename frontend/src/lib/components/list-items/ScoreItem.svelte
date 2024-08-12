@@ -14,10 +14,7 @@
 	<Avatar {size} class="bg-primary-700 text-white">{score ?? '?'}</Avatar>
 
 	<div class="flex flex-col gap-0.5 text-sm">
-		<A
-			on:click={onClick}
-			class="font-medium text-gray-900 hover:text-primary-700 hover:no-underline"
-		>
+		<A on:click={onClick} class="font-medium text-gray-900 hover:text-primary-700 truncate">
 			{subject}
 		</A>
 		<div class="text-sm flex gap-1 text-gray-400">

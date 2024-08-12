@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
 	import { A, Button, Heading, Hr, Modal } from 'flowbite-svelte';
+
 	import { type Service, sortServicesByRole } from '$lib/api/contract';
 	import ServiceItem from '$lib/components/list-items/ServiceItem.svelte';
 	import ServiceForm from '$lib/components/service-form/ServiceForm.svelte';
+	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 
 	export let data;
 
@@ -19,6 +21,13 @@
 
 	let serviceModal = false;
 	let activeService: Service | null = null;
+
+	const modalOpener = (service?: Service) => {
+		return () => {
+			activeService = service ?? null;
+			serviceModal = true;
+		};
+	};
 </script>
 
 <Heading tag="h1" class="alt-page-title">
@@ -34,17 +43,11 @@
 		{#each data.contract.services.sort(sortServicesByRole) as service}
 			<ServiceItem {service}>
 				{#if canEdit}
-					<div class="mt-8 flex gap-6">
-						<A
-							class="text-sm"
-							on:click={() => {
-								activeService = service;
-								serviceModal = true;
-							}}
-						>
-							Update
-						</A>
-						<A class="text-sm">Delete</A>
+					<div class="mt-8">
+						<UpdateDeleteButton
+							updateAction={modalOpener(service)}
+							deleteAction={() => alert('delete')}
+						/>
 					</div>
 				{/if}
 			</ServiceItem>
@@ -52,14 +55,7 @@
 	</section>
 {/if}
 
-<Button
-	on:click={() => {
-		activeService = null;
-		serviceModal = true;
-	}}
->
-	Add staff
-</Button>
+<Button outline on:click={modalOpener()}>Add staff</Button>
 
 <Modal
 	title={activeService ? 'Update staff information' : 'Add staff'}

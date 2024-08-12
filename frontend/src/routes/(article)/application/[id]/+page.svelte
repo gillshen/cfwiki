@@ -1,28 +1,32 @@
 <script lang="ts">
-	import {
-		Heading,
-		A,
-		Hr,
-		Button,
-		Dropdown,
-		Modal,
-		Timeline,
-		DropdownDivider
-	} from 'flowbite-svelte';
-	import { ChevronRightOutline } from 'flowbite-svelte-icons';
+	import { Heading, A, P, Hr, Button, Modal, Timeline } from 'flowbite-svelte';
+	import { PenOutline } from 'flowbite-svelte-icons';
 	import { superForm } from 'sveltekit-superforms';
 
 	import type { ApplicationLog } from '$lib/api/applicationLog';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ApplicationInfobox from '$lib/components/infobox/ApplicationInfobox.svelte';
-	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
 	import ApplicationLogItem from '$lib/components/list-items/ApplicationLogItem.svelte';
 
-	import RoundNameForm from '$lib/components/round-name-form/RoundNameForm.svelte';
+	import Section from '$lib/components/containers/Section.svelte';
+	import RoundRenameForm from '$lib/components/round-name-form/RoundRenameForm.svelte';
 	import RoundDatesForm from '$lib/components/round-dates-form/RoundDatesForm.svelte';
 	import ApplicationLogForm from '$lib/components/application-log-form/ApplicationLogForm.svelte';
+	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
+	import RoundChangeForm from '$lib/components/round-name-form/RoundChangeForm.svelte';
+	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 
 	export let data;
+
+	const { form: roundChangeForm, enhance: roundChangeEnhance } = superForm(data.roundChangeForm, {
+		onUpdated({ form }) {
+			if (form.valid) {
+				changeRoundModal = false;
+			}
+		},
+		// force update the form values
+		invalidateAll: 'force'
+	});
 
 	const { form: roundRenameForm, enhance: roundRenamEnhance } = superForm(data.roundRenameForm, {
 		onUpdated({ form }) {
@@ -72,6 +76,14 @@
 			logModal = true;
 		};
 	};
+
+	$: applicationActions = [
+		{ text: 'Change round', action: () => (changeRoundModal = true) },
+		{ text: 'Rename round', action: () => (renameRoundModal = true) },
+		{ text: 'Update dates', action: () => (updateDatesModal = true) },
+		{ text: 'Update majors', action: () => alert('update majors') },
+		{ text: 'Delete', action: () => alert('delete application'), divider: true, dark: true }
+	];
 </script>
 
 <Heading tag="h1" class="alt-page-title">
@@ -81,64 +93,61 @@
 
 <Hr />
 
-<section class="flex gap-24">
-	<article class="w-[36rem] min-w-[32rem] pb-8">
+<Section>
+	<article>
 		<ApplicationInfobox application={data.application} />
 
 		{#if canEdit}
-			<div class="flex gap-x-8 mt-8">
-				<Button outline>Actions<ChevronRightOutline class="w-6 h-6 ms-1" /></Button>
-				<Dropdown class="w-40 z-20" placement="right-start">
-					<DropdownActionItem text="Change round" onClick={() => (changeRoundModal = true)} />
-					<DropdownActionItem text="Rename round" onClick={() => (renameRoundModal = true)} />
-					<DropdownActionItem text="Update dates" onClick={() => (updateDatesModal = true)} />
-					<DropdownActionItem text="Update majors" onClick={() => alert('update majors')} />
-					<DropdownDivider />
-					<DropdownActionItem text="Delete" onClick={() => alert('delete')} dark />
-				</Dropdown>
+			<div class="mt-8">
+				<MultiActionButton text="Actions" actions={applicationActions}>
+					<PenOutline slot="icon" />
+				</MultiActionButton>
 			</div>
 		{/if}
 	</article>
 
-	<article class="w-[36rem] min-w-[20rem]">
-		<div class="mb-8">
-			{#if canEdit || logs.length}
-				<div class="bg-slate-50 rounded-xl px-4 py-4">
-					{#if logs.length}
-						<Timeline class="ml-2 mt-4">
-							{#each logs as log}
-								<ApplicationLogItem
-									{log}
-									updateAction={logModalOpener(log)}
-									deleteAction={() => alert('delete')}
-								/>
-							{/each}
-						</Timeline>
-					{/if}
-					{#if canEdit}
-						<Button outline class="ml-2" on:click={logModalOpener()}>Add a status</Button>
-					{/if}
-				</div>
+	<article class="w-full h-fit bg-slate-50 rounded-xl px-8 py-4">
+		{#if canEdit || logs.length}
+			{#if logs.length}
+				<Timeline class="ml-2 mt-4">
+					{#each logs as log}
+						<ApplicationLogItem {log}>
+							{#if canEdit}
+								<div class="mt-2">
+									<UpdateDeleteButton
+										updateAction={logModalOpener(log)}
+										deleteAction={() => alert('delete')}
+									/>
+								</div>
+							{/if}
+						</ApplicationLogItem>
+					{/each}
+				</Timeline>
+			{:else if !canEdit}
+				<P class="ml-2 my-2">No application status reported</P>
 			{/if}
-		</div>
+			{#if canEdit}
+				<Button outline class="ml-2 my-2" on:click={logModalOpener()}>Add a status</Button>
+			{/if}
+		{/if}
 	</article>
-</section>
+</Section>
 
-<Modal title="Change application round" bind:open={changeRoundModal} outsideclose>
-	<form class="modal" method="post">
-		<input type="number" name="id" class="hidden" bind:value={$roundRenameForm.id} />
-		<div class="form-width mx-auto">
-			<!-- TODO -->
-		</div>
-	</form>
-</Modal>
+<FormModal
+	open={changeRoundModal}
+	superform={data.roundChangeForm}
+	fields={RoundChangeForm}
+	action="?/updateRoundId"
+	entity={data.application}
+	title="Change application round"
+	on:close={() => (changeRoundModal = false)}
+/>
 
 <Modal title="Rename application round" bind:open={renameRoundModal} outsideclose>
 	<form class="modal" method="post" action="?/updateRoundName" use:roundRenamEnhance>
 		<input type="number" name="id" class="hidden" bind:value={$roundRenameForm.id} />
-
 		<div class="form-width mx-auto">
-			<RoundNameForm
+			<RoundRenameForm
 				form={roundRenameForm}
 				programType={data.application.program.type}
 				redirectToRoundIdForm={changeRoundIdNotName}

@@ -1,16 +1,30 @@
 <script lang="ts">
-	import { Button, Heading, Hr, Dropdown } from 'flowbite-svelte';
-	import { ChevronRightOutline } from 'flowbite-svelte-icons';
+	import { Heading, Hr } from 'flowbite-svelte';
+	import { PenOutline } from 'flowbite-svelte-icons';
 
+	import Section from '$lib/components/containers/Section.svelte';
 	import ProgramInfobox from '$lib/components/infobox/ProgramInfobox.svelte';
-	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
 	import { formatSchoolNamesShort, isUndergraduate } from '$lib/api/program';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ProgramForm from '$lib/components/program-form/ProgramForm.svelte';
+	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
 
 	export let data;
 
 	let updateProgramModal = false;
+
+	const updateAction = {
+		text: 'Update',
+		action: () => (updateProgramModal = true),
+		disabled: isUndergraduate(data.program)
+	};
+
+	const deleteAction = {
+		text: 'Delete',
+		action: () => alert('delete program'),
+		dark: true,
+		disabled: false // TODO if applied to, set to true
+	};
 </script>
 
 <Heading tag="h1" class="alt-page-title">
@@ -19,25 +33,19 @@
 
 <Hr />
 
-<section class="flex gap-24">
-	<article class="w-[36rem] min-w-[32rem] pb-8">
+<Section>
+	<article>
 		<ProgramInfobox program={data.program} />
 
-		<div class="flex gap-x-8 mt-8">
-			<Button outline>Actions<ChevronRightOutline class="w-6 h-6 ms-1" /></Button>
-			<Dropdown class="w-40 z-20" placement="right-start">
-				{#if !isUndergraduate(data.program)}
-					<DropdownActionItem text="Update" onClick={() => (updateProgramModal = true)} />
-				{/if}
-				<DropdownActionItem text="Delete" onClick={() => alert('delete school file')} dark />
-			</Dropdown>
+		<div class="mt-8">
+			<MultiActionButton text="Actions" actions={[updateAction, deleteAction]}>
+				<PenOutline slot="icon" />
+			</MultiActionButton>
 		</div>
 	</article>
 
-	<article class="bg-slate-50 rounded-xl w-full min-w-[32rem] p-8 text-gray-400">
-		(applications)
-	</article>
-</section>
+	<article class="bg-slate-50 rounded-xl w-full text-gray-400 p-8">(applications)</article>
+</Section>
 
 <FormModal
 	open={updateProgramModal}

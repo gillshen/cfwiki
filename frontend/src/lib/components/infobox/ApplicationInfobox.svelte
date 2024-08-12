@@ -53,7 +53,7 @@
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Due</TableBodyCell>
+			<TableBodyCell tdClass="w-48 font-medium py-4">Due date</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{dueDateTime}</TableBodyCell>
 		</TableBodyRow>
 

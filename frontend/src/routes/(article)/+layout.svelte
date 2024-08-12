@@ -32,7 +32,7 @@
 		.sort((a, b) => a.username.localeCompare(b.username));
 </script>
 
-<div class="px-12">
+<div class="container xl mx-auto px-12">
 	<Navbar fluid>
 		<NavBrand href="/home">
 			<img src="/favicon.png" class="me-3 h-6" alt="CF Logo" />
@@ -41,7 +41,7 @@
 
 		<div class="flex align-baseline md:order-2">
 			<Avatar bordered size="sm" />
-			<Dropdown class="w-[6rem] z-20">
+			<Dropdown class="w-[8rem] z-20" placement="bottom-end">
 				<DropdownItem>Account</DropdownItem>
 				<DropdownItem on:click={() => goto('/logout')}>Log out</DropdownItem>
 			</Dropdown>
@@ -111,6 +111,6 @@
 	</Navbar>
 </div>
 
-<div class="px-16 pb-8">
+<div class="container xl mx-auto px-16 pb-8">
 	<slot />
 </div>

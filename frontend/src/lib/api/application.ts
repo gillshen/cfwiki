@@ -1,4 +1,4 @@
-import { get, post } from '$lib/api/api';
+import { get, post, patch } from '$lib/api/api';
 import type { ApplicationStatus, ApplicationLog } from '$lib/api/applicationLog';
 
 type Service = {
@@ -15,7 +15,7 @@ export type ApplicationListItem = {
 	};
 	services: Service[];
 	schools: { name: string; country: string }[];
-	program: { display_name: string };
+	program: { type: string; display_name: string };
 	program_iteration: { year: number; term: string };
 	round: { name: string; due_date: string | null };
 	latest_log: { status: ApplicationStatus; date: string } | null;
@@ -67,4 +67,14 @@ export async function createApplication(data: {
 	round_name: string;
 }) {
 	return await post('applications/new/', data);
+}
+
+export async function changeApplicationRound(data: {
+	id: number;
+	program: number;
+	year: number;
+	term: string;
+	round_name: string;
+}) {
+	return await patch(`applications/${data.id}/update-round/`, data);
 }

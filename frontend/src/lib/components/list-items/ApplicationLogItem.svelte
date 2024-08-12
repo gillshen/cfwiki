@@ -1,12 +1,10 @@
 <script lang="ts">
-	import { A, TimelineItem } from 'flowbite-svelte';
+	import { TimelineItem } from 'flowbite-svelte';
 
-	import { toLongDate } from '$lib/utils/dateUtils';
 	import type { ApplicationLog } from '$lib/api/applicationLog';
+	import { toLongDate } from '$lib/utils/dateUtils';
 
 	export let log: ApplicationLog;
-	export let updateAction: () => void;
-	export let deleteAction: () => void;
 </script>
 
 <TimelineItem title={log.status} date={toLongDate(log.date)}>
@@ -20,8 +18,5 @@
 		</div>
 	{/if}
 
-	<div class="mt-2 flex gap-x-4">
-		<A class="text-sm" on:click={updateAction}>Update</A>
-		<A class="text-sm" on:click={deleteAction}>Delete</A>
-	</div>
+	<slot />
 </TimelineItem>

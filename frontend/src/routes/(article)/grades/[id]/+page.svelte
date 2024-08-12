@@ -12,14 +12,12 @@
 		TableHeadCell
 	} from 'flowbite-svelte';
 
-	import { PenOutline } from 'flowbite-svelte-icons';
-
 	import type { Grade } from '$lib/api/grade';
 	import { groupGradesByProgressionTerm } from '$lib/api/grade.js';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import GradeForm from '$lib/components/grade-form/GradeForm.svelte';
 	import GradeValueItem from '$lib/components/list-items/GradeValueItem.svelte';
-	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
+	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 
 	export let data;
 
@@ -85,14 +83,10 @@
 							</TableBodyCell>
 
 							<TableBodyCell class="w-8 align-top">
-								<MultiActionButton
-									actions={[
-										{ text: 'Update', action: modalOpener(grade) },
-										{ text: 'Delete', action: () => alert('delete'), dark: true }
-									]}
-								>
-									<PenOutline slot="icon" />
-								</MultiActionButton>
+								<UpdateDeleteButton
+									updateAction={modalOpener(grade)}
+									deleteAction={() => alert('delete')}
+								/>
 							</TableBodyCell>
 						</TableBodyRow>
 					{/each}
