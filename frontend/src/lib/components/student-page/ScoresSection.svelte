@@ -1,0 +1,336 @@
+<script lang="ts">
+	import type { SuperValidated } from 'sveltekit-superforms';
+	import { Heading } from 'flowbite-svelte';
+	import { CircleMinusOutline, PlusOutline } from 'flowbite-svelte-icons';
+
+	import type { StudentDetail } from '$lib/api/student';
+	import type {
+		GreScore,
+		SatScore,
+		ActScore,
+		ToeflScore,
+		IeltsScore,
+		DuolingoScore,
+		ApScore,
+		IbGrade,
+		AlevelGrade
+	} from '$lib/api/scores';
+
+	import GreScoreItem from '$lib/components/list-items/GreScoreItem.svelte';
+	import SatScoreItem from '$lib/components/list-items/SatScoreItem.svelte';
+	import ActScoreItem from '$lib/components/list-items/ActScoreItem.svelte';
+	import ToeflScoreItem from '$lib/components/list-items/ToeflScoreItem.svelte';
+	import IeltsScoreItem from '$lib/components/list-items/IeltsScoreItem.svelte';
+	import DuolingoScoreItem from '$lib/components/list-items/DuolingoScoreItem.svelte';
+	import ApScoreItem from '$lib/components/list-items/ApScoreItem.svelte';
+	import IbAlevelGradeItem from '$lib/components/list-items/IbAlevelGradeItem.svelte';
+	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
+
+	import FormModal from '$lib/components/form-modal/FormModal.svelte';
+	import GreScoreForm from '$lib/components/gre-score-form/GreScoreForm.svelte';
+	import SatScoreForm from '$lib/components/sat-score-form/SatScoreForm.svelte';
+	import ActScoreForm from '$lib/components/act-score-form/ActScoreForm.svelte';
+	import ToeflScoreForm from '$lib/components/toefl-score-form/ToeflScoreForm.svelte';
+	import IeltsScoreForm from '$lib/components/ielts-score-form/IeltsScoreForm.svelte';
+	import DuolingoScoreForm from '$lib/components/duolingo-score-form/DuolingoScoreForm.svelte';
+	import ApScoreForm from '$lib/components/ap-score-form/ApScoreForm.svelte';
+	import IbGradeForm from '$lib/components/ib-grade-form/IbGradeForm.svelte';
+	import AlevelGradeForm from '$lib/components/alevel-grade-form/AlevelGradeForm.svelte';
+
+	export let student: StudentDetail;
+	export let canEdit: boolean = false;
+	export let greScoreForm: SuperValidated<any>;
+	export let satScoreForm: SuperValidated<any>;
+	export let actScoreForm: SuperValidated<any>;
+	export let toeflForm: SuperValidated<any>;
+	export let ieltsForm: SuperValidated<any>;
+	export let duolingoForm: SuperValidated<any>;
+	export let apScoreForm: SuperValidated<any>;
+	export let ibGradeForm: SuperValidated<any>;
+	export let alevelGradeForm: SuperValidated<any>;
+
+	let toeflModal = false;
+	let activeToefl: ToeflScore | null = null;
+
+	let ieltsModal = false;
+	let activeIelts: IeltsScore | null = null;
+
+	let duolingoModal = false;
+	let activeDuolingo: DuolingoScore | null = null;
+
+	let satScoreModal = false;
+	let activeSatScore: SatScore | null = null;
+
+	let actScoreModal = false;
+	let activeActScore: ActScore | null = null;
+
+	let apScoreModal = false;
+	let activeApScore: ApScore | null = null;
+
+	let ibGradeModal = false;
+	let activeIbGrade: IbGrade | null = null;
+
+	let alevelGradeModal = false;
+	let activeAlevelGrade: AlevelGrade | null = null;
+
+	let greScoreModal = false;
+	let activeGreScore: GreScore | null = null;
+
+	const toeflModalOpener = (score?: ToeflScore): (() => void) => {
+		return () => {
+			activeToefl = score ?? null;
+			toeflModal = true;
+		};
+	};
+
+	const ieltsModalOpener = (score?: IeltsScore): (() => void) => {
+		return () => {
+			activeIelts = score ?? null;
+			ieltsModal = true;
+		};
+	};
+
+	const duolingoModalOpener = (score?: DuolingoScore): (() => void) => {
+		return () => {
+			activeDuolingo = score ?? null;
+			duolingoModal = true;
+		};
+	};
+
+	const satScoreModalOpener = (score?: SatScore): (() => void) => {
+		return () => {
+			activeSatScore = score ?? null;
+			satScoreModal = true;
+		};
+	};
+
+	const actScoreModalOpener = (score?: ActScore): (() => void) => {
+		return () => {
+			activeActScore = score ?? null;
+			actScoreModal = true;
+		};
+	};
+
+	const apScoreModalOpener = (score?: ApScore): (() => void) => {
+		return () => {
+			activeApScore = score ?? null;
+			apScoreModal = true;
+		};
+	};
+
+	const ibGradeModalOpener = (grade?: IbGrade): (() => void) => {
+		return () => {
+			activeIbGrade = grade ?? null;
+			ibGradeModal = true;
+		};
+	};
+
+	const alevelGradeModalOpener = (grade?: AlevelGrade): (() => void) => {
+		return () => {
+			activeAlevelGrade = grade ?? null;
+			alevelGradeModal = true;
+		};
+	};
+
+	const greScoreModalOpener = (score?: GreScore): (() => void) => {
+		return () => {
+			activeGreScore = score ?? null;
+			greScoreModal = true;
+		};
+	};
+
+	const noScore = (student: StudentDetail) => {
+		return (
+			!student.toefl.length &&
+			!student.ielts.length &&
+			!student.duolingo.length &&
+			!student.sat.length &&
+			!student.act.length &&
+			!student.ap.length &&
+			!student.ib.length &&
+			!student.alevel.length &&
+			!student.gre.length
+		);
+	};
+
+	const newScoreActions = [
+		{ text: 'SAT', action: satScoreModalOpener() },
+		{ text: 'ACT', action: actScoreModalOpener() },
+		{ text: 'GRE', action: greScoreModalOpener(), divider: true },
+		{ text: 'TOEFL', action: toeflModalOpener(), divider: true },
+		{ text: 'IELTS', action: ieltsModalOpener() },
+		{ text: 'Duolingo', action: duolingoModalOpener() },
+		{ text: 'AP', action: apScoreModalOpener(), divider: true },
+		{ text: 'IB', action: ibGradeModalOpener() },
+		{ text: 'A-level', action: alevelGradeModalOpener() }
+	];
+</script>
+
+<article class="mt-24">
+	<Heading tag="h2" class="text-2xl font-bold">Test Scores</Heading>
+
+	<div class="flex flex-col gap-6 divide-y-2 divide-dotted">
+		{#each student.gre as gre}
+			<GreScoreItem score={gre} onClick={greScoreModalOpener(gre)} />
+		{/each}
+		{#each student.sat as score}
+			<SatScoreItem {score} onClick={satScoreModalOpener(score)} />
+		{/each}
+		{#each student.act as score}
+			<ActScoreItem {score} onClick={actScoreModalOpener(score)} />
+		{/each}
+		{#each student.toefl as score}
+			<ToeflScoreItem {score} onClick={toeflModalOpener(score)} />
+		{/each}
+		{#each student.ielts as score}
+			<IeltsScoreItem {score} onClick={ieltsModalOpener(score)} />
+		{/each}
+		{#each student.duolingo as score}
+			<DuolingoScoreItem {score} onClick={duolingoModalOpener(score)} />
+		{/each}
+	</div>
+
+	{#if student.ap.length}
+		<Heading tag="h3" class="mt-8 text-lg font-medium px-2 pb-0.5 border-b-2 border-primary-700">
+			AP
+		</Heading>
+		<div class="mt-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
+			{#each student.ap as score}
+				<ApScoreItem {score} onClick={apScoreModalOpener(score)} />
+			{/each}
+		</div>
+	{/if}
+
+	{#if student.ib.length}
+		<Heading tag="h3" class="mt-8 text-lg font-medium px-2 pb-0.5 border-b-2 border-primary-700">
+			IB
+		</Heading>
+		<div class="my-4 mb-8">
+			{#each student.ib as ib}
+				<IbAlevelGradeItem grade={ib} onClick={ibGradeModalOpener(ib)} />
+			{/each}
+		</div>
+	{/if}
+
+	{#if student.alevel.length}
+		<Heading tag="h3" class="mt-8 text-lg font-medium px-2 pb-0.5 border-b-2 border-primary-700">
+			A-level
+		</Heading>
+		<div class="my-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
+			{#each student.alevel as alevel}
+				<IbAlevelGradeItem grade={alevel} onClick={alevelGradeModalOpener(alevel)} />
+			{/each}
+		</div>
+	{/if}
+
+	{#if canEdit}
+		<div class="mt-8">
+			<MultiActionButton text="Add a score" actions={newScoreActions} placement="right-end">
+				<PlusOutline slot="icon" />
+			</MultiActionButton>
+		</div>
+	{:else if noScore(student)}
+		<div class="mt-4 flex items-center gap-2 text-gray-400">
+			<CircleMinusOutline /><span>No test scores</span>
+		</div>
+	{/if}
+</article>
+
+<FormModal
+	open={toeflModal}
+	superform={toeflForm}
+	fields={ToeflScoreForm}
+	action={`/student/${student.id}?/createOrUpdateToeflScore`}
+	entity={activeToefl}
+	extra={[{ name: 'student', type: 'number', value: student.id }]}
+	title={`${activeToefl ? 'Update' : 'Add a'} TOEFL score`}
+	on:close={() => (toeflModal = false)}
+/>
+
+<FormModal
+	open={ieltsModal}
+	superform={ieltsForm}
+	fields={IeltsScoreForm}
+	action={`/student/${student.id}?/createOrUpdateIeltsScore`}
+	entity={activeIelts}
+	extra={[{ name: 'student', type: 'number', value: student.id }]}
+	title={`${activeIelts ? 'Update' : 'Add an'} IELTS score`}
+	on:close={() => (ieltsModal = false)}
+/>
+
+<FormModal
+	open={duolingoModal}
+	superform={duolingoForm}
+	fields={DuolingoScoreForm}
+	action={`/student/${student.id}?/createOrUpdateDuolingoScore`}
+	entity={activeDuolingo}
+	extra={[{ name: 'student', type: 'number', value: student.id }]}
+	title={`${activeIelts ? 'Update' : 'Add a'} Duolingo score`}
+	on:close={() => (duolingoModal = false)}
+/>
+
+<FormModal
+	open={satScoreModal}
+	superform={satScoreForm}
+	fields={SatScoreForm}
+	action={`/student/${student.id}?/createOrUpdateSatScore`}
+	entity={activeSatScore}
+	extra={[{ name: 'student', type: 'number', value: student.id }]}
+	title={`${activeSatScore ? 'Update' : 'Add an'} SAT score`}
+	on:close={() => (satScoreModal = false)}
+/>
+
+<FormModal
+	open={actScoreModal}
+	superform={actScoreForm}
+	fields={ActScoreForm}
+	action={`/student/${student.id}?/createOrUpdateActScore`}
+	entity={activeActScore}
+	extra={[{ name: 'student', type: 'number', value: student.id }]}
+	title={`${activeActScore ? 'Update' : 'Add an'} ACT score`}
+	on:close={() => (actScoreModal = false)}
+/>
+
+<FormModal
+	open={apScoreModal}
+	superform={apScoreForm}
+	fields={ApScoreForm}
+	action={`/student/${student.id}?/createOrUpdateApScore`}
+	entity={activeApScore}
+	extra={[{ name: 'student', type: 'number', value: student.id }]}
+	title={`${activeActScore ? 'Update' : 'Add an'} AP score`}
+	on:close={() => (apScoreModal = false)}
+/>
+
+<FormModal
+	open={ibGradeModal}
+	superform={ibGradeForm}
+	fields={IbGradeForm}
+	action={`/student/${student.id}?/createOrUpdateIbGrade`}
+	entity={activeIbGrade}
+	extra={[{ name: 'student', type: 'number', value: student.id }]}
+	title={`${activeIbGrade ? 'Update' : 'Add an'} IB grade`}
+	on:close={() => (ibGradeModal = false)}
+/>
+
+<FormModal
+	open={alevelGradeModal}
+	superform={alevelGradeForm}
+	fields={AlevelGradeForm}
+	action={`/student/${student.id}?/createOrUpdateAlevelGrade`}
+	entity={activeAlevelGrade}
+	extra={[{ name: 'student', type: 'number', value: student.id }]}
+	title={`${activeAlevelGrade ? 'Update' : 'Add an'} A-level grade`}
+	on:close={() => (alevelGradeModal = false)}
+/>
+
+<FormModal
+	open={greScoreModal}
+	superform={greScoreForm}
+	fields={GreScoreForm}
+	action={`/student/${student.id}?/createOrUpdateGreScore`}
+	entity={activeGreScore}
+	extra={[{ name: 'student', type: 'number', value: student.id }]}
+	title={`${activeGreScore ? 'Update' : 'Add a'} GRE score`}
+	on:close={() => (greScoreModal = false)}
+/>

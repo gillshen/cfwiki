@@ -2,7 +2,7 @@
 	import { Heading, Hr } from 'flowbite-svelte';
 	import { PenOutline } from 'flowbite-svelte-icons';
 
-	import Section from '$lib/components/containers/Section.svelte';
+	import Main from '$lib/components/containers/Main.svelte';
 	import ProgramInfobox from '$lib/components/infobox/ProgramInfobox.svelte';
 	import { formatSchoolNamesShort, isUndergraduate } from '$lib/api/program';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
@@ -33,7 +33,7 @@
 
 <Hr />
 
-<Section>
+<Main>
 	<article>
 		<ProgramInfobox program={data.program} />
 
@@ -45,7 +45,7 @@
 	</article>
 
 	<article class="bg-slate-50 rounded-xl w-full text-gray-400 p-8">(applications)</article>
-</Section>
+</Main>
 
 <FormModal
 	open={updateProgramModal}

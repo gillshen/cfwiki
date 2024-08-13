@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Heading, Hr } from 'flowbite-svelte';
 
-	import Section from '$lib/components/containers/Section.svelte';
+	import Main from '$lib/components/containers/Main.svelte';
 	import SchoolForm from '$lib/components/school-form/SchoolForm.svelte';
 	import SchoolInfobox from '$lib/components/infobox/SchoolInfobox.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
@@ -16,7 +16,7 @@
 
 <Hr />
 
-<Section>
+<Main>
 	<article>
 		<SchoolInfobox school={data.school} />
 
@@ -30,7 +30,7 @@
 	</article>
 
 	<article class="bg-slate-50 rounded-xl w-full p-8 text-gray-400">(applications)</article>
-</Section>
+</Main>
 
 <FormModal
 	open={updateSchoolModal}

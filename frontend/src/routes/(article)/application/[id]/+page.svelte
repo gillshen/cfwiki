@@ -8,7 +8,7 @@
 	import ApplicationInfobox from '$lib/components/infobox/ApplicationInfobox.svelte';
 	import ApplicationLogItem from '$lib/components/list-items/ApplicationLogItem.svelte';
 
-	import Section from '$lib/components/containers/Section.svelte';
+	import Main from '$lib/components/containers/Main.svelte';
 	import RoundRenameForm from '$lib/components/round-name-form/RoundRenameForm.svelte';
 	import RoundDatesForm from '$lib/components/round-dates-form/RoundDatesForm.svelte';
 	import ApplicationLogForm from '$lib/components/application-log-form/ApplicationLogForm.svelte';
@@ -17,16 +17,6 @@
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 
 	export let data;
-
-	const { form: roundChangeForm, enhance: roundChangeEnhance } = superForm(data.roundChangeForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				changeRoundModal = false;
-			}
-		},
-		// force update the form values
-		invalidateAll: 'force'
-	});
 
 	const { form: roundRenameForm, enhance: roundRenamEnhance } = superForm(data.roundRenameForm, {
 		onUpdated({ form }) {
@@ -93,7 +83,7 @@
 
 <Hr />
 
-<Section>
+<Main>
 	<article>
 		<ApplicationInfobox application={data.application} />
 
@@ -131,7 +121,7 @@
 			{/if}
 		{/if}
 	</article>
-</Section>
+</Main>
 
 <FormModal
 	open={changeRoundModal}

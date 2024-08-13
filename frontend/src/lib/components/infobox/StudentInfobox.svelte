@@ -5,6 +5,7 @@
 	import countryFlags from '$lib/constants/countryFlags';
 	import { formatLocation } from '$lib/api/student';
 	import { toLongDate } from '$lib/utils/dateUtils';
+	import Comments from '$lib/components/typography/Comments.svelte';
 
 	export let student: StudentDetail;
 
@@ -71,11 +72,7 @@
 			<TableBodyCell tdClass="w-48 font-medium py-4 align-top">Comments</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
 				{#if student.comments}
-					<div class="flex flex-col gap-2 pr-6 text-wrap">
-						{#each student.comments.split(/\r?\n/g).filter(Boolean) as para}
-							<p>{para}</p>
-						{/each}
-					</div>
+					<Comments text={student.comments} divClass="pr-4" />
 				{:else}
 					{placeHolder}
 				{/if}

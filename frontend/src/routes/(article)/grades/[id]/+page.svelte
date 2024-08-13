@@ -18,6 +18,7 @@
 	import GradeForm from '$lib/components/grade-form/GradeForm.svelte';
 	import GradeValueItem from '$lib/components/list-items/GradeValueItem.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
+	import Comments from '$lib/components/typography/Comments.svelte';
 
 	export let data;
 
@@ -72,11 +73,7 @@
 
 							<TableBodyCell class="font-normal w-full">
 								{#if grade.comments}
-									<div class="flex flex-col gap-2 pr-6 text-wrap">
-										{#each grade.comments.split(/\r?\n/g).filter(Boolean) as para}
-											<p>{para}</p>
-										{/each}
-									</div>
+									<Comments text={grade.comments} divClass="pr-4" />
 								{:else}
 									{placeHolder}
 								{/if}
