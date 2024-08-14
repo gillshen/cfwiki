@@ -1,4 +1,4 @@
-import { get, post, patch } from '$lib/api/api';
+import { get, post, patch, buildQuery } from '$lib/api/api';
 import type { ApplicationStatus, ApplicationLog } from '$lib/api/applicationLog';
 
 type Service = {
@@ -42,16 +42,7 @@ export type ApplicationDetail = {
 export async function fetchApplications(
 	params?: Record<string, any>
 ): Promise<ApplicationListItem[]> {
-	let queryString = '';
-
-	if (params) {
-		queryString =
-			'?' +
-			Object.entries(params)
-				.map(([key, value]) => `${key}=${value}`)
-				.join('&');
-	}
-
+	const queryString = buildQuery(params);
 	return await get(`applications/${queryString}`);
 }
 

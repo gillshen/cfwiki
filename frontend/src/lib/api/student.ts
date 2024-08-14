@@ -1,6 +1,6 @@
 import { get, patch, post } from '$lib/api/api';
 import type { Service } from '$lib/api/contract';
-import type { Enrollment } from '$lib/api/enrollment';
+import type { EnrollmentByStudent } from '$lib/api/enrollment';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
 
@@ -51,7 +51,7 @@ export type StudentListItem = BaseStudent & {
 
 export type StudentDetail = BaseStudent & {
 	contracts_sorted: Contract[];
-	enrollments: Enrollment[];
+	enrollments: EnrollmentByStudent[];
 	toefl: ToeflScore[];
 	ielts: IeltsScore[];
 	duolingo: DuolingoScore[];

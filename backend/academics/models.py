@@ -46,6 +46,17 @@ class Enrollment(models.Model):
     def __str__(self) -> str:
         return f"{self.student} @ {self.school}"
 
+    @classmethod
+    def filter(cls, school: int = None):
+        q = (
+            cls.objects.all()
+            .select_related("school", "student")
+            .prefetch_related("student__contracts")
+        )
+        if school is not None:
+            q = q.filter(school=school)
+        return q
+
 
 class Grade(models.Model):
 

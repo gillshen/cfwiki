@@ -28,3 +28,15 @@ export async function createOrUpdate(data: any, url: string) {
 		return await post(`${url}/new/`, data);
 	}
 }
+
+export function buildQuery(params?: Record<string, any>): string {
+	if (!params) {
+		return '';
+	}
+
+	const queryString = Object.entries(params)
+		.map(([key, value]) => `${key}=${value}`)
+		.join('&');
+
+	return `?${queryString}`;
+}

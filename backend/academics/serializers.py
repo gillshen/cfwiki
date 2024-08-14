@@ -16,8 +16,37 @@ from academics.models import (
     LSATScore,
 )
 
-from core.models import Student
+from core.models import Student, Contract
 from target.models import School
+
+
+class EnrollmentListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Enrollment
+        fields = "__all__"
+
+    class StudentSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Student
+            fields = ["id", "fullname", "gender", "citizenship", "latest_contract"]
+
+        fullname = serializers.CharField()
+
+        class ContractByStudentSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Contract
+                fields = ["status"]
+
+        latest_contract = ContractByStudentSerializer()
+
+    student = StudentSerializer()
+
+    class SchoolSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = School
+            fields = "__all__"
+
+    school = SchoolSerializer()
 
 
 # for nesting within the student detail serializer

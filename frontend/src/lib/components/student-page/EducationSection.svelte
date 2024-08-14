@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import { Heading, Timeline } from 'flowbite-svelte';
-	import { PlusOutline, CircleMinusOutline } from 'flowbite-svelte-icons';
+	import { PlusOutline } from 'flowbite-svelte-icons';
 
 	import type { StudentDetail } from '$lib/api/student';
-	import type { Enrollment } from '$lib/api/enrollment';
+	import type { EnrollmentByStudent } from '$lib/api/enrollment';
 	import EnrollmentItem from '$lib/components/list-items/EnrollmentItem.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import LinkButton from '$lib/components/buttons/LinkButton.svelte';
@@ -17,9 +17,9 @@
 	export let form: SuperValidated<any>;
 
 	let enrollmentModal = false;
-	let activeEnrollment: Enrollment | null = null;
+	let activeEnrollment: EnrollmentByStudent | null = null;
 
-	const enrollmentModalOpener = (enrollment?: Enrollment): (() => void) => {
+	const enrollmentModalOpener = (enrollment?: EnrollmentByStudent): (() => void) => {
 		return () => {
 			activeEnrollment = enrollment ?? null;
 			enrollmentModal = true;

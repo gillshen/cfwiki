@@ -33,6 +33,7 @@ from target.views import (
 )
 
 from academics.views import (
+    EnrollmentListView,
     EnrollmentDetailView,
     EnrollmentCreateView,
     EnrollmentRUDView,
@@ -99,6 +100,7 @@ urlpatterns = [
     path("application-logs/new/", ApplicationLogCreateView.as_view()),
     path("application-logs/<int:pk>/update/", ApplicationLogRUDView.as_view()),
     # enrollment
+    path("enrollments/", EnrollmentListView.as_view()),
     path("enrollments/new/", EnrollmentCreateView.as_view()),
     path("enrollments/<int:pk>/", EnrollmentDetailView.as_view()),
     path("enrollments/<int:pk>/update/", EnrollmentRUDView.as_view()),

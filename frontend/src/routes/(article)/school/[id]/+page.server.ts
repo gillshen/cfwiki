@@ -4,8 +4,10 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchSchool, updateSchool, type School } from '$lib/api/school';
+import { fetchApplications } from '$lib/api/application';
 import { schoolSchema } from '$lib/schemas/school';
 import { formAction } from '$lib/abstract/formAction';
+import { fetchEnrollments } from '$lib/api/enrollment';
 
 export async function load(event: PageServerLoadEvent) {
 	const id = parseInt(event.params.id, 10);
@@ -20,9 +22,12 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'School not found');
 	}
 
-	const schoolForm = await superValidate(school, zod(schoolSchema));
-
-	return { school, schoolForm };
+	return {
+		school,
+		schoolForm: await superValidate(school, zod(schoolSchema)),
+		applications: fetchApplications({ school: school.id }),
+		enrollments: fetchEnrollments({ school: school.id })
+	};
 }
 
 export const actions = {

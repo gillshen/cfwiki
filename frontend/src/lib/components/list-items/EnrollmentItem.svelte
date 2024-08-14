@@ -11,13 +11,13 @@
 
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
-	import type { Enrollment } from '$lib/api/enrollment';
+	import type { EnrollmentByStudent } from '$lib/api/enrollment';
 	import { groupGradesByProgressionTerm } from '$lib/api/grade';
 	import { toShortYearMonth } from '$lib/utils/dateUtils';
 	import GradeValueItem from './GradeValueItem.svelte';
 	import { parseNum } from '$lib/utils/numUtils';
 
-	export let enrollment: Enrollment;
+	export let enrollment: EnrollmentByStudent;
 
 	const formatDateWithProgression = (date: string | null, progression: string): string => {
 		const formattedDate = toShortYearMonth(date);
@@ -28,7 +28,7 @@
 		}
 	};
 
-	const formatDateRange = (e: Enrollment): string => {
+	const formatDateRange = (e: EnrollmentByStudent): string => {
 		const startDate = formatDateWithProgression(e.start_date, e.start_progression);
 		const endDate = formatDateWithProgression(e.end_date, e.end_progression);
 		return `${startDate} \u2013 ${endDate}`.trim();
