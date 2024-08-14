@@ -13,8 +13,8 @@
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
 	import type { StudentDetail } from '$lib/api/student';
-	import { type ApplicationListItem } from '$lib/api/application';
-	import ApplicationsLoader from '../misc/ApplicationsLoader.svelte';
+	import type { ApplicationListItem } from '$lib/api/application';
+	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import { toShortDate } from '$lib/utils/dateUtils';
 
 	export let student: StudentDetail;

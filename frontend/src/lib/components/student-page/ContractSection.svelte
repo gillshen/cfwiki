@@ -10,15 +10,19 @@
 	import LinkButton from '$lib/components/buttons/LinkButton.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ContractForm from '$lib/components/contract-form/ContractForm.svelte';
+	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
+	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 
 	export let student: StudentDetail;
 	export let canEdit: boolean = false;
 	export let form: SuperValidated<any>;
+	export let deleteForm: SuperValidated<any>;
 
 	let contractModal = false;
+	let contractDeleteModal = false;
 	let activeContract: Contract | null = null;
 
-	const modalOpener = (contract?: Contract): (() => void) => {
+	const contractModalOpener = (contract?: Contract): (() => void) => {
 		return () => {
 			activeContract = contract ?? null;
 			contractModal = true;
@@ -33,20 +37,23 @@
 				<ContractItem {contract}>
 					{#if canEdit || !contract.services.length}
 						<UpdateDeleteButton
-							updateAction={modalOpener(contract)}
-							deleteAction={() => alert('delete contract')}
+							updateAction={contractModalOpener(contract)}
+							deleteAction={() => {
+								activeContract = contract;
+								contractDeleteModal = true;
+							}}
 						/>
 					{/if}
 				</ContractItem>
 			{/each}
 		</div>
 		{#if canEdit}
-			<LinkButton text="Add a contract" action={modalOpener()}>
+			<LinkButton text="Add a contract" action={contractModalOpener()}>
 				<PlusOutline slot="icon" />
 			</LinkButton>
 		{/if}
 	{:else}
-		<Button on:click={modalOpener()}>Add a contract</Button>
+		<Button on:click={contractModalOpener()}>Add a contract</Button>
 	{/if}
 </article>
 
@@ -60,3 +67,18 @@
 	title={`${activeContract ? 'Update' : 'Create a'} contract`}
 	on:close={() => (contractModal = false)}
 />
+
+<FormModal
+	open={contractDeleteModal}
+	superform={deleteForm}
+	fields={DeleteForm}
+	action={`/student/${student.id}?/deleteContract`}
+	entity={activeContract}
+	title="Delete contract"
+	on:close={() => (contractDeleteModal = false)}
+>
+	<DeleteMessage
+		slot="preface"
+		name={`this contract (${student.fullname}, ${activeContract?.type} ${activeContract?.target_year})`}
+	/>
+</FormModal>

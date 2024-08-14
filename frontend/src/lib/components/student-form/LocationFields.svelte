@@ -35,12 +35,13 @@
 
 <P size="sm" class="font-medium">Where is the student from?</P>
 
-<Label for="country" class="form-label optional">Country</Label>
+<Label for="country" class="form-label">Country</Label>
 <Select
 	id="country"
 	name="base_country"
 	bind:value={$form.base_country}
 	on:change={onCountryChange}
+	required
 >
 	{#each countries as country}
 		<option value={country}>{countryFlags[country]}&nbsp;&nbsp;{country}</option>

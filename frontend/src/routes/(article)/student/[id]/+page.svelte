@@ -20,7 +20,12 @@
 <Main>
 	<BioSection student={data.student} {canEdit} />
 
-	<ContractSection student={data.student} {canEdit} form={data.contractForm} />
+	<ContractSection
+		student={data.student}
+		{canEdit}
+		form={data.contractForm}
+		deleteForm={data.contractDeleteForm}
+	/>
 
 	<EducationSection student={data.student} {canEdit} form={data.enrollmentForm} />
 

@@ -29,6 +29,7 @@
 			<input {name} {type} {value} class="hidden" />
 		{/each}
 		<div class="form-width mx-auto">
+			<slot name="preface" />
 			<svelte:component this={fields} {form} {message} {errors} {entity} />
 			<slot />
 		</div>

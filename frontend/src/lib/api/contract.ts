@@ -1,4 +1,4 @@
-import { get, patch, post } from '$lib/api/api';
+import { destroy, get, patch, post } from '$lib/api/api';
 import { cfRoles } from '$lib/api/service';
 
 export const contractTypes = ['UG Freshman', 'UG Transfer', "Master's", 'PhD'] as const;
@@ -45,6 +45,10 @@ export async function createOrUpdateContract(data: any) {
 
 export async function updateContract(data: any) {
 	return await patch(`contracts/${data.id}/update/`, data);
+}
+
+export async function deleteContract(data: any) {
+	return await destroy(`contracts/${data.id}/update/`);
 }
 
 export function sortServicesByRole(a: Service, b: Service) {

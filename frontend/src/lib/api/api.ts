@@ -29,6 +29,10 @@ export async function createOrUpdate(data: any, url: string) {
 	}
 }
 
+export async function destroy(url: string) {
+	return await fetch(`${BASE}${url}`, { method: 'DELETE' });
+}
+
 export function buildQuery(params?: Record<string, any>): string {
 	if (!params) {
 		return '';

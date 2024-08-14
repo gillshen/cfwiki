@@ -20,7 +20,9 @@ import {
 	greScoreSchema
 } from '$lib/schemas/scores';
 
-import { createOrUpdateContract } from '$lib/api/contract';
+import { deleteSchema } from '$lib/schemas/delete';
+
+import { createOrUpdateContract, deleteContract } from '$lib/api/contract';
 import { createOrUpdateEnrollment } from '$lib/api/enrollment';
 
 import {
@@ -50,37 +52,27 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Student not found');
 	}
 
-	const contractForm = await superValidate(zod(contractSchema));
-	const enrollmentForm = await superValidate(zod(enrollmentSchema));
-	const toeflForm = await superValidate(zod(toeflSchema));
-	const ieltsForm = await superValidate(zod(ieltschema));
-	const duolingoForm = await superValidate(zod(duolingoSchema));
-	const satScoreForm = await superValidate(zod(satScoreSchema));
-	const actScoreForm = await superValidate(zod(actScoreSchema));
-	const apScoreForm = await superValidate(zod(apScoreSchema));
-	const ibGradeForm = await superValidate(zod(ibGradeSchema));
-	const alevelGradeForm = await superValidate(zod(alevelGradeSchema));
-	const greScoreForm = await superValidate(zod(greScoreSchema));
-
 	return {
 		student,
 		applications: fetchApplications({ student: student.id }),
-		contractForm,
-		enrollmentForm,
-		toeflForm,
-		ieltsForm,
-		duolingoForm,
-		satScoreForm,
-		actScoreForm,
-		apScoreForm,
-		ibGradeForm,
-		alevelGradeForm,
-		greScoreForm
+		contractForm: await superValidate(zod(contractSchema)),
+		contractDeleteForm: await superValidate(zod(deleteSchema)),
+		enrollmentForm: await superValidate(zod(enrollmentSchema)),
+		toeflForm: await superValidate(zod(toeflSchema)),
+		ieltsForm: await superValidate(zod(ieltschema)),
+		duolingoForm: await superValidate(zod(duolingoSchema)),
+		satScoreForm: await superValidate(zod(satScoreSchema)),
+		actScoreForm: await superValidate(zod(actScoreSchema)),
+		apScoreForm: await superValidate(zod(apScoreSchema)),
+		ibGradeForm: await superValidate(zod(ibGradeSchema)),
+		alevelGradeForm: await superValidate(zod(alevelGradeSchema)),
+		greScoreForm: await superValidate(zod(greScoreSchema))
 	};
 }
 
 export const actions = {
 	createOrUpdateContract: formAction(contractSchema, createOrUpdateContract),
+	deleteContract: formAction(deleteSchema, deleteContract),
 	createOrUpdateEnrollment: formAction(enrollmentSchema, createOrUpdateEnrollment),
 	createOrUpdateToeflScore: formAction(toeflSchema, createOrUpdateToeflScore),
 	createOrUpdateIeltsScore: formAction(ieltschema, createOrUpdateIeltsScore),

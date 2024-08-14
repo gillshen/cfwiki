@@ -6,6 +6,9 @@
 	import ServiceItem from '$lib/components/list-items/ServiceItem.svelte';
 	import ServiceForm from '$lib/components/service-form/ServiceForm.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
+	import FormModal from '$lib/components/form-modal/FormModal.svelte';
+	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
+	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 
 	export let data;
 
@@ -20,6 +23,7 @@
 	$: canEdit = true;
 
 	let serviceModal = false;
+	let serviceDeleteModal = false;
 	let activeService: Service | null = null;
 
 	const modalOpener = (service?: Service) => {
@@ -46,7 +50,10 @@
 					<div class="mt-8">
 						<UpdateDeleteButton
 							updateAction={modalOpener(service)}
-							deleteAction={() => alert('delete')}
+							deleteAction={() => {
+								activeService = service;
+								serviceDeleteModal = true;
+							}}
 						/>
 					</div>
 				{/if}
@@ -74,3 +81,18 @@
 		</div>
 	</form>
 </Modal>
+
+<FormModal
+	open={serviceDeleteModal}
+	superform={data.serviceDeleteForm}
+	fields={DeleteForm}
+	action="?/deleteService"
+	entity={activeService}
+	title="Delete staff"
+	on:close={() => (serviceDeleteModal = false)}
+>
+	<DeleteMessage
+		slot="preface"
+		name={`this record (${activeService?.cf_username} advising ${data.contract.student_name})`}
+	/>
+</FormModal>

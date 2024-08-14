@@ -116,8 +116,10 @@
 		</NavUl>
 	</Navbar>
 
-	<div class="px-4">
-		<slot />
+	<div class="px-4 flex flex-col justify-between min-h-[calc(100vh-108px)]">
+		<div>
+			<slot />
+		</div>
 		<Hr hrClass="mt-16" />
 	</div>
 </div>
