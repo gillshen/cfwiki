@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+
 	import {
 		Navbar,
 		NavBrand,
@@ -12,6 +14,7 @@
 		Avatar,
 		Hr
 	} from 'flowbite-svelte';
+
 	import { ChevronDownOutline } from 'flowbite-svelte-icons';
 
 	import { Departments } from '$lib/api/user';
@@ -31,9 +34,11 @@
 	const cfServicePeople = activeUsers
 		.filter((user) => user.department === Departments.SERVICE)
 		.sort((a, b) => a.username.localeCompare(b.username));
+
+	$: pageWidth = $page.url.pathname.startsWith('/data') ? 'max-w-full' : 'max-w-[1280px]';
 </script>
 
-<div class="container xl mx-auto px-12">
+<div class={`container ${pageWidth} mx-auto px-12 pb-8`}>
 	<Navbar fluid>
 		<NavBrand href="/home">
 			<img src="/favicon.png" class="me-3 h-6" alt="CF Logo" />
@@ -110,9 +115,9 @@
 			</Dropdown>
 		</NavUl>
 	</Navbar>
-</div>
 
-<div class="container xl mx-auto px-16 pb-8">
-	<slot />
-	<Hr hrClass="mt-16" />
+	<div class="px-4">
+		<slot />
+		<Hr hrClass="mt-16" />
+	</div>
 </div>

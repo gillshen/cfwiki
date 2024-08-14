@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+
 	import {
 		createGrid,
 		NumberFilter,
@@ -7,9 +8,12 @@
 		type ICellRendererParams,
 		type ValueGetterParams
 	} from 'ag-grid-community';
+
 	import { Heading } from 'flowbite-svelte';
-	import type { ApplicationListItem } from '$lib/api/application.js';
-	import AgCellRenderer from '$lib/abstract/agCellRenderer.js';
+
+	import type { ApplicationListItem } from '$lib/api/application';
+	import AgCellRenderer from '$lib/abstract/agCellRenderer';
+	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 
 	export let data;
 
@@ -42,13 +46,13 @@
 		{ headerName: 'Last update', field: 'latest_log.date', filter: true }
 	];
 
-	const gridOptions: GridOptions = {
-		columnDefs,
-		rowData: data.applications,
-		suppressDragLeaveHidesColumns: true
-	};
-
-	onMount(() => {
+	onMount(async () => {
+		const applications = await data.applications;
+		const gridOptions: GridOptions = {
+			columnDefs,
+			rowData: applications,
+			suppressDragLeaveHidesColumns: true
+		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		const gridApi = createGrid(gridElement, gridOptions);
 		gridApi.sizeColumnsToFit();
@@ -57,4 +61,8 @@
 
 <Heading tag="h1" class="grid-title">Applications</Heading>
 
-<div id="grid" class="data-grid ag-theme-alpine full-page" />
+{#await data.applications}
+	<FetchingDataSign />
+{:then _}
+	<div id="grid" class="data-grid ag-theme-alpine full-page" />
+{/await}

@@ -1,5 +1,5 @@
-import { fetchCfUsers } from '$lib/api/user.js';
+import { fetchCfUsers } from '$lib/api/user';
 
-export async function load(event) {
+export async function load(_) {
 	return { cfUsers: await fetchCfUsers() };
 }

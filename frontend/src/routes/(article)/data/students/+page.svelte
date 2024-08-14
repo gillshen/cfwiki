@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+
 	import {
 		createGrid,
 		type GridOptions,
@@ -7,12 +8,14 @@
 		type ValueGetterParams,
 		type ICellRendererParams
 	} from 'ag-grid-community';
+
 	import { Heading } from 'flowbite-svelte';
 
-	import { type StudentListItem, type Contract, formatLocation } from '$lib/api/student';
+	import { type StudentListItem, formatLocation } from '$lib/api/student';
 	import AgCellRenderer from '$lib/abstract/agCellRenderer';
 	import countryFlags from '$lib/constants/countryFlags';
 	import { makeDate, toISODate } from '$lib/utils/dateUtils';
+	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 
 	export let data;
 
@@ -171,7 +174,7 @@
 		},
 		{ headerName: '顾问', filter: true, valueGetter: salesPeopleValueGetter },
 		{ headerName: '文案', filter: true, valueGetter: workPeopleValueGetter },
-		{ headerName: '战略顾问', filter: true, valueGetter: stratPeopleValueGetter },
+		{ headerName: '战略顾问', filter: true, valueGetter: stratPeopleValueGetter, hide: true },
 		{
 			headerName: '服务顾问',
 			filter: true,
@@ -182,13 +185,13 @@
 		{ headerName: 'Contract status', filter: true, valueGetter: contractStatusValueGetter }
 	];
 
-	const gridOptions: GridOptions = {
-		columnDefs,
-		rowData: data.students.sort((a, b) => a.fullname.localeCompare(b.fullname, 'zh-CN')),
-		suppressDragLeaveHidesColumns: true
-	};
-
-	onMount(() => {
+	onMount(async () => {
+		const students = await data.students;
+		const gridOptions: GridOptions = {
+			columnDefs,
+			rowData: students.sort((a, b) => a.fullname.localeCompare(b.fullname, 'zh-CN')),
+			suppressDragLeaveHidesColumns: true
+		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		const gridApi = createGrid(gridElement, gridOptions);
 		gridApi.sizeColumnsToFit();
@@ -197,4 +200,8 @@
 
 <Heading tag="h1" class="grid-title">Students</Heading>
 
-<div id="grid" class="data-grid ag-theme-alpine full-page" />
+{#await data.students}
+	<FetchingDataSign />
+{:then _}
+	<div id="grid" class="data-grid ag-theme-alpine full-page" />
+{/await}

@@ -1,16 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+
 	import {
 		createGrid,
 		type GridOptions,
 		type ICellRendererParams,
 		type ValueFormatterParams
 	} from 'ag-grid-community';
+
 	import { Heading } from 'flowbite-svelte';
 
+	import type { School } from '$lib/api/school';
 	import countryFlags from '$lib/constants/countryFlags';
-	import AgCellRenderer from '$lib/abstract/agCellRenderer.js';
-	import type { School } from '$lib/api/school.js';
+	import AgCellRenderer from '$lib/abstract/agCellRenderer';
+	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 
 	export let data;
 
@@ -37,13 +40,13 @@
 		{ headerName: 'Country', field: 'country', filter: true, valueFormatter: countryValueFormatter }
 	];
 
-	const gridOptions: GridOptions = {
-		columnDefs,
-		rowData: data.schools.sort((a, b) => a.name.localeCompare(b.name)),
-		suppressDragLeaveHidesColumns: true
-	};
-
-	onMount(() => {
+	onMount(async () => {
+		const schools = await data.schools;
+		const gridOptions: GridOptions = {
+			columnDefs,
+			rowData: schools.sort((a, b) => a.name.localeCompare(b.name)),
+			suppressDragLeaveHidesColumns: true
+		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		const gridApi = createGrid(gridElement, gridOptions);
 		gridApi.sizeColumnsToFit();
@@ -52,4 +55,8 @@
 
 <Heading tag="h1" class="grid-title">Schools</Heading>
 
-<div id="grid" class="data-grid ag-theme-alpine full-page" />
+{#await data.schools}
+	<FetchingDataSign />
+{:then _}
+	<div id="grid" class="data-grid ag-theme-alpine full-page" />
+{/await}
