@@ -195,6 +195,8 @@ class Application(models.Model):
         school: int = None,
         program: int = None,
         program_iteration: int = None,
+        year: int = None,
+        term: str = None,
         application_round: int = None,
     ):
         q = (
@@ -220,6 +222,10 @@ class Application(models.Model):
             q = q.filter(round__program_iteration__program=program)
         if program_iteration is not None:
             q = q.filter(round__program_iteration=program_iteration)
+        if year is not None:
+            q = q.filter(round__program_iteration__year=year)
+        if term is not None:
+            q = q.filter(round__program_iteration__term=term)
         if application_round is not None:
             q = q.filter(round=application_round)
 

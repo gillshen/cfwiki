@@ -9,7 +9,8 @@
 		Dropdown,
 		DropdownItem,
 		DropdownDivider,
-		Avatar
+		Avatar,
+		Hr
 	} from 'flowbite-svelte';
 	import { ChevronDownOutline } from 'flowbite-svelte-icons';
 
@@ -113,4 +114,5 @@
 
 <div class="container xl mx-auto px-16 pb-8">
 	<slot />
+	<Hr hrClass="mt-16" />
 </div>

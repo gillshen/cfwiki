@@ -6,6 +6,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import {
 	changeApplicationRound,
 	fetchApplication,
+	fetchCoApplications,
 	type ApplicationDetail
 } from '$lib/api/application';
 
@@ -31,6 +32,7 @@ export async function load(event: PageServerLoadEvent) {
 
 	return {
 		application,
+		coApplications: fetchCoApplications(application),
 		roundChangeForm: await superValidate(zod(roundChangeSchema)),
 		roundRenameForm: await superValidate(application.round, zod(roundNameSchema)),
 		datesUpdateForm: await superValidate(application.round, zod(roundDatesSchema)),

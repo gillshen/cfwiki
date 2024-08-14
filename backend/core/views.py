@@ -100,6 +100,8 @@ class ApplicationListView(ListAPIView):
             school=query_params.get("school"),
             program=query_params.get("program"),
             program_iteration=query_params.get("program_iteration"),
+            year=query_params.get("year"),
+            term=query_params.get("term"),
             application_round=query_params.get("application_round"),
         )
 

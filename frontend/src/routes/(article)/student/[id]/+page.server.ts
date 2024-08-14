@@ -50,7 +50,6 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Student not found');
 	}
 
-	const applications = await fetchApplications({ student: student.id });
 	const contractForm = await superValidate(zod(contractSchema));
 	const enrollmentForm = await superValidate(zod(enrollmentSchema));
 	const toeflForm = await superValidate(zod(toeflSchema));
@@ -65,7 +64,7 @@ export async function load(event: PageServerLoadEvent) {
 
 	return {
 		student,
-		applications,
+		applications: fetchApplications({ student: student.id }),
 		contractForm,
 		enrollmentForm,
 		toeflForm,

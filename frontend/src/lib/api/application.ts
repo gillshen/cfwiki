@@ -59,6 +59,15 @@ export async function fetchApplication(id: number): Promise<ApplicationDetail> {
 	return await get(`applications/${id}/`);
 }
 
+export async function fetchCoApplications(
+	application: ApplicationDetail
+): Promise<ApplicationListItem[]> {
+	const coApplications = await fetchApplications({
+		program_iteration: application.program_iteration.id
+	});
+	return coApplications.filter((appl) => appl.id !== application.id);
+}
+
 export async function createApplication(data: {
 	contract: number;
 	program: number;

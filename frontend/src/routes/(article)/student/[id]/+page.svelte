@@ -2,11 +2,11 @@
 	import { Heading, Hr } from 'flowbite-svelte';
 
 	import Main from '$lib/components/containers/Main.svelte';
+	import BioSection from '$lib/components/student-page/BioSection.svelte';
 	import ContractSection from '$lib/components/student-page/ContractSection.svelte';
 	import EducationSection from '$lib/components/student-page/EducationSection.svelte';
-	import ApplicationsSection from '$lib/components/student-page/ApplicationsSection.svelte';
-	import BioSection from '$lib/components/student-page/BioSection.svelte';
 	import ScoresSection from '$lib/components/student-page/ScoresSection.svelte';
+	import ApplicationsSection from '$lib/components/student-page/ApplicationsSection.svelte';
 
 	export let data;
 
@@ -40,5 +40,3 @@
 
 	<ApplicationsSection student={data.student} applications={data.applications} {canEdit} />
 </Main>
-
-<Hr hrClass="mt-16" />

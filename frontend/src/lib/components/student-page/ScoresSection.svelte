@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import { Heading } from 'flowbite-svelte';
-	import { CircleMinusOutline, PlusOutline } from 'flowbite-svelte-icons';
+	import { PlusOutline } from 'flowbite-svelte-icons';
 
 	import type { StudentDetail } from '$lib/api/student';
 	import type {
@@ -36,6 +36,7 @@
 	import ApScoreForm from '$lib/components/ap-score-form/ApScoreForm.svelte';
 	import IbGradeForm from '$lib/components/ib-grade-form/IbGradeForm.svelte';
 	import AlevelGradeForm from '$lib/components/alevel-grade-form/AlevelGradeForm.svelte';
+	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 
 	export let student: StudentDetail;
 	export let canEdit: boolean = false;
@@ -223,15 +224,15 @@
 		</div>
 	{/if}
 
+	{#if noScore(student) && !canEdit}
+		<NoDataSign text="No test scores" divClass="mt-6" />
+	{/if}
+
 	{#if canEdit}
 		<div class="mt-8">
 			<MultiActionButton text="Add a score" actions={newScoreActions} placement="right-end">
 				<PlusOutline slot="icon" />
 			</MultiActionButton>
-		</div>
-	{:else if noScore(student)}
-		<div class="mt-4 flex items-center gap-2 text-gray-400">
-			<CircleMinusOutline /><span>No test scores</span>
 		</div>
 	{/if}
 </article>

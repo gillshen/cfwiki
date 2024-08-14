@@ -10,6 +10,7 @@
 	import LinkButton from '$lib/components/buttons/LinkButton.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import EnrollmentForm from '$lib/components/enrollment-form/EnrollmentForm.svelte';
+	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 
 	export let student: StudentDetail;
 	export let canEdit: boolean = false;
@@ -43,9 +44,7 @@
 			{/each}
 		</Timeline>
 	{:else if !canEdit}
-		<div class="mt-4 flex items-center gap-2 text-gray-400">
-			<CircleMinusOutline /><span>No educational experience</span>
-		</div>
+		<NoDataSign text="No educational experience" divClass="mt-6" />
 	{/if}
 
 	{#if canEdit}

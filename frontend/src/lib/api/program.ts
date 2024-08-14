@@ -54,6 +54,6 @@ export function formatSchoolNamesShort(program: ProgramListItem | ProgramDetail)
 		.join(' + ');
 }
 
-export function isUndergraduate(program: Program): boolean {
+export function isUndergraduate(program: { type: string }): boolean {
 	return program.type === 'UG Freshman' || program.type === 'UG Transfer';
 }
