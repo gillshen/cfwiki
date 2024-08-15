@@ -53,7 +53,7 @@
 			</LinkButton>
 		{/if}
 	{:else}
-		<Button on:click={contractModalOpener()}>Add a contract</Button>
+		<Button on:click={contractModalOpener()} outline>Add a contract</Button>
 	{/if}
 </article>
 

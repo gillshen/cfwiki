@@ -23,7 +23,7 @@ import {
 import { deleteSchema } from '$lib/schemas/delete';
 
 import { createOrUpdateContract, deleteContract } from '$lib/api/contract';
-import { createOrUpdateEnrollment } from '$lib/api/enrollment';
+import { createOrUpdateEnrollment, deleteEnrollment } from '$lib/api/enrollment';
 
 import {
 	createOrUpdateToeflScore,
@@ -93,6 +93,7 @@ export const actions = {
 	createOrUpdateGreScore: formAction(greScoreSchema, createOrUpdateGreScore),
 
 	deleteContract: formAction(deleteSchema, deleteContract),
+	deleteEnrollment: formAction(deleteSchema, deleteEnrollment),
 	deleteToeflScore: formAction(deleteSchema, deleteToeflScore),
 	deleteIeltsScore: formAction(deleteSchema, deleteIeltsScore),
 	deleteDuolingoScore: formAction(deleteSchema, deleteDuolingoScore),

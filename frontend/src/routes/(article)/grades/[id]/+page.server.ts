@@ -5,7 +5,8 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchEnrollment } from '$lib/api/enrollment';
 import { gradeSchema } from '$lib/schemas/grade';
-import { createOrUpdateGrade } from '$lib/api/grade';
+import { deleteSchema } from '$lib/schemas/delete';
+import { createOrUpdateGrade, deleteGrade } from '$lib/api/grade';
 import { formAction } from '$lib/abstract/formAction';
 
 export async function load(event: PageServerLoadEvent) {
@@ -21,11 +22,14 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Educational experience not found');
 	}
 
-	const gradeForm = await superValidate(zod(gradeSchema));
-
-	return { enrollment, gradeForm };
+	return {
+		enrollment,
+		gradeForm: await superValidate(zod(gradeSchema)),
+		deleteForm: await superValidate(zod(deleteSchema))
+	};
 }
 
 export const actions = {
-	createOrUpdateGrade: formAction(gradeSchema, createOrUpdateGrade)
+	createOrUpdateGrade: formAction(gradeSchema, createOrUpdateGrade),
+	deleteGrade: formAction(deleteSchema, deleteGrade)
 };

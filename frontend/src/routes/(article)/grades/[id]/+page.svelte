@@ -19,12 +19,17 @@
 	import GradeValueItem from '$lib/components/list-items/GradeValueItem.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import Comments from '$lib/components/typography/Comments.svelte';
+	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
+	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
+	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 
 	export let data;
 
+	$: canEdit = true;
 	$: groupedGrades = groupGradesByProgressionTerm(data.enrollment.grades);
 
 	let gradeModal = false;
+	let gradeDeleteModal = false;
 	let activeGrade: Grade | null = null;
 
 	const modalOpener = (grade?: Grade): (() => void) => {
@@ -46,7 +51,7 @@
 
 {#if data.enrollment.grades.length}
 	<section class="w-[48rem] min-w-[32rem] flex flex-col">
-		<Table>
+		<Table hoverable={data.enrollment.grades.length > 1}>
 			<TableHead>
 				<TableHeadCell class="pl-2">Year</TableHeadCell>
 				<TableHeadCell>Period</TableHeadCell>
@@ -80,10 +85,15 @@
 							</TableBodyCell>
 
 							<TableBodyCell class="w-8 align-top">
-								<UpdateDeleteButton
-									updateAction={modalOpener(grade)}
-									deleteAction={() => alert('delete')}
-								/>
+								{#if canEdit}
+									<UpdateDeleteButton
+										updateAction={modalOpener(grade)}
+										deleteAction={() => {
+											activeGrade = grade;
+											gradeDeleteModal = true;
+										}}
+									/>
+								{/if}
 							</TableBodyCell>
 						</TableBodyRow>
 					{/each}
@@ -91,9 +101,13 @@
 			</TableBody>
 		</Table>
 	</section>
+{:else}
+	<NoDataSign text="No grades" />
 {/if}
 
-<Button class="mt-8" on:click={modalOpener()}>Add a grade</Button>
+{#if canEdit}
+	<Button class="mt-8" on:click={modalOpener()} outline>Add a grade</Button>
+{/if}
 
 <FormModal
 	open={gradeModal}
@@ -105,3 +119,20 @@
 	title={`${activeGrade ? 'Update' : 'Add a'} grade`}
 	on:close={() => (gradeModal = false)}
 />
+
+<FormModal
+	open={gradeDeleteModal}
+	superform={data.deleteForm}
+	fields={DeleteForm}
+	entity={activeGrade}
+	action="?/deleteGrade"
+	title="Delete grade"
+	on:close={() => {
+		gradeDeleteModal = false;
+	}}
+>
+	<DeleteMessage
+		slot="preface"
+		name={`this grade (${activeGrade?.progression} ${activeGrade?.term})`}
+	/>
+</FormModal>

@@ -1,4 +1,4 @@
-import { get, createOrUpdate, buildQuery } from '$lib/api/api';
+import { get, createOrUpdate, destroy, buildQuery } from '$lib/api/api';
 import type { Grade } from '$lib/api/grade';
 import type { ContractStatus } from './contract';
 
@@ -45,4 +45,8 @@ export async function fetchEnrollment(id: number): Promise<EnrollmentDetail> {
 
 export async function createOrUpdateEnrollment(data: any) {
 	return await createOrUpdate(data, 'enrollments');
+}
+
+export async function deleteEnrollment(data: any) {
+	return await destroy(`enrollments/${data.id}/update/`);
 }

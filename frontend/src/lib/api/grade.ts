@@ -1,4 +1,4 @@
-import { createOrUpdate } from '$lib/api/api';
+import { createOrUpdate, destroy } from '$lib/api/api';
 import { parseNum } from '$lib/utils/numUtils';
 
 export type Grade = {
@@ -82,6 +82,10 @@ function _sortCumulativeLast(a: Grade, b: Grade): number {
 
 export async function createOrUpdateGrade(data: any) {
 	return createOrUpdate(data, 'grades');
+}
+
+export async function deleteGrade(data: any) {
+	return destroy(`grades/${data.id}/update/`);
 }
 
 export const formatGradeValue = (

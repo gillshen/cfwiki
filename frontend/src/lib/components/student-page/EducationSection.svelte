@@ -11,12 +11,16 @@
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import EnrollmentForm from '$lib/components/enrollment-form/EnrollmentForm.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
+	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
+	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 
 	export let student: StudentDetail;
 	export let canEdit: boolean = false;
 	export let form: SuperValidated<any>;
+	export let deleteForm: SuperValidated<any>;
 
 	let enrollmentModal = false;
+	let enrollmentDeleteModal = false;
 	let activeEnrollment: EnrollmentByStudent | null = null;
 
 	const enrollmentModalOpener = (enrollment?: EnrollmentByStudent): (() => void) => {
@@ -37,7 +41,10 @@
 					{#if canEdit}
 						<UpdateDeleteButton
 							updateAction={enrollmentModalOpener(enrollment)}
-							deleteAction={() => alert('delete enrollment')}
+							deleteAction={() => {
+								activeEnrollment = enrollment;
+								enrollmentDeleteModal = true;
+							}}
 						/>
 					{/if}
 				</EnrollmentItem>
@@ -66,3 +73,18 @@
 	title={`${activeEnrollment ? 'Update' : 'Add'} education experience`}
 	on:close={() => (enrollmentModal = false)}
 />
+
+<FormModal
+	open={enrollmentDeleteModal}
+	superform={deleteForm}
+	fields={DeleteForm}
+	action={`/student/${student.id}?/deleteEnrollment`}
+	entity={activeEnrollment}
+	title="Delete education experience"
+	on:close={() => (enrollmentDeleteModal = false)}
+>
+	<DeleteMessage
+		slot="preface"
+		name={`this education experience (${activeEnrollment?.school.name})`}
+	/>
+</FormModal>

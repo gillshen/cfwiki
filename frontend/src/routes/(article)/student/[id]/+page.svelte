@@ -27,7 +27,12 @@
 		deleteForm={data.deleteForm}
 	/>
 
-	<EducationSection student={data.student} {canEdit} form={data.enrollmentForm} />
+	<EducationSection
+		student={data.student}
+		{canEdit}
+		form={data.enrollmentForm}
+		deleteForm={data.deleteForm}
+	/>
 
 	<ScoresSection
 		student={data.student}
