@@ -7,7 +7,8 @@
 		TableBodyRow,
 		TableBodyCell,
 		TableHead,
-		TableHeadCell
+		TableHeadCell,
+		Tooltip
 	} from 'flowbite-svelte';
 
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
@@ -64,9 +65,15 @@
 		</svelte:fragment>
 	</ApplicationsLoader>
 
-	{#if canEdit}
+	{#if canEdit && student.contracts_sorted.length}
 		<Button outline href={`/student/${student.id}/new-application`} class="mt-8">
 			Create an application
 		</Button>
+	{:else if canEdit}
+		<Button outline disabled class="mt-8">Create an application</Button>
+		<Tooltip class="w-96 font-normal">
+			Applications must be attached to an existing contract. Create a contract first to enable this
+			option.
+		</Tooltip>
 	{/if}
 </article>

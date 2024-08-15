@@ -5,7 +5,7 @@ import { schoolSchema } from '$lib/schemas/school';
 import { createSchool } from '$lib/api/school';
 import { formAction } from '$lib/abstract/formAction.js';
 
-export async function load(event) {
+export async function load(_) {
 	const schoolForm = await superValidate(zod(schoolSchema));
 	return { schoolForm };
 }

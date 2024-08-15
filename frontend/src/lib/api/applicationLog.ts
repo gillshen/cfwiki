@@ -1,4 +1,4 @@
-import { createOrUpdate } from '$lib/api/api';
+import { createOrUpdate, destroy } from '$lib/api/api';
 
 export const applicationStatuses = [
 	'Started',
@@ -27,4 +27,8 @@ export type ApplicationLog = {
 
 export async function createOrUpdateApplicationLog(data: any) {
 	return await createOrUpdate(data, 'application-logs');
+}
+
+export async function deleteApplicationLog(data: any) {
+	return await destroy(`application-logs/${data.id}/update/`);
 }

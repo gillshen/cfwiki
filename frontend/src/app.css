@@ -15,6 +15,10 @@
 	font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial, sans-serif;
 }
 
+h2 {
+	font-family: 'Merriweather', serif;
+}
+
 .form-width {
 	@apply w-[30rem];
 }

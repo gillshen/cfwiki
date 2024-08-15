@@ -1,4 +1,4 @@
-import { get, post, patch, buildQuery } from '$lib/api/api';
+import { get, post, patch, buildQuery, destroy } from '$lib/api/api';
 import type { ApplicationStatus, ApplicationLog } from '$lib/api/applicationLog';
 
 type Service = {
@@ -77,4 +77,8 @@ export async function changeApplicationRound(data: {
 	round_name: string;
 }) {
 	return await patch(`applications/${data.id}/update-round/`, data);
+}
+
+export async function deleteApplication(data: any) {
+	return await destroy(`applications/${data.id}/update/`);
 }

@@ -4,6 +4,8 @@ from rest_framework.generics import (
     CreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
+from rest_framework.response import Response
+from rest_framework import status
 
 from core.models import CFUser, Student, Service, Contract, Application, ApplicationLog
 
@@ -139,6 +141,14 @@ class ApplicationRUDView(RetrieveUpdateDestroyAPIView):
     # for general update and delete
     queryset = Application.objects.all()
     serializer_class = ApplicationRUDSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        """Return the student after deletion"""
+        instance = self.get_object()
+        student = instance.student
+        instance.delete()
+        student_serializer = StudentCRUDSerializer(student)
+        return Response(student_serializer.data, status=status.HTTP_200_OK)
 
 
 class ApplicationLogCreateView(CreateAPIView):
