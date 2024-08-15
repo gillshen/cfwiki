@@ -32,7 +32,7 @@
 </script>
 
 <article class="mt-24">
-	<Heading tag="h2" class="text-2xl font-bold">Educational Experience</Heading>
+	<Heading tag="h2" class="text-2xl font-bold">Educational Experiences</Heading>
 
 	{#if student.enrollments.length}
 		<Timeline class="mt-8 flex flex-col gap-4">
@@ -56,7 +56,7 @@
 
 	{#if canEdit}
 		<div class="mt-8">
-			<LinkButton text="Add educational experience" action={enrollmentModalOpener()}>
+			<LinkButton text="Add an educational experience" action={enrollmentModalOpener()}>
 				<PlusOutline slot="icon" />
 			</LinkButton>
 		</div>
@@ -70,7 +70,7 @@
 	action={`/student/${student.id}?/createOrUpdateEnrollment`}
 	entity={activeEnrollment}
 	extra={[{ name: 'student', type: 'number', value: student.id }]}
-	title={`${activeEnrollment ? 'Update' : 'Add'} education experience`}
+	title={`${activeEnrollment ? 'Update' : 'Add an'} educational experience`}
 	on:close={() => (enrollmentModal = false)}
 />
 
@@ -80,11 +80,11 @@
 	fields={DeleteForm}
 	action={`/student/${student.id}?/deleteEnrollment`}
 	entity={activeEnrollment}
-	title="Delete education experience"
+	title="Delete educational experience"
 	on:close={() => (enrollmentDeleteModal = false)}
 >
 	<DeleteMessage
 		slot="preface"
-		name={`this education experience (${activeEnrollment?.school.name})`}
+		name={`this educational experience (at ${activeEnrollment?.school.name})`}
 	/>
 </FormModal>

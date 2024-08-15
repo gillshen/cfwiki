@@ -1,9 +1,9 @@
 import type { PageServerLoadEvent } from './$types';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-import { fetchStudent, type StudentDetail } from '$lib/api/student';
+import { deleteStudent, fetchStudent, type StudentDetail } from '$lib/api/student';
 import { fetchApplications } from '$lib/api/application';
 import { contractSchema } from '$lib/schemas/contract';
 import { enrollmentSchema } from '$lib/schemas/enrollment';
@@ -91,6 +91,10 @@ export const actions = {
 	createOrUpdateIbGrade: formAction(ibGradeSchema, createOrUpdateIbGrade),
 	createOrUpdateAlevelGrade: formAction(alevelGradeSchema, createOrUpdateAlevelGrade),
 	createOrUpdateGreScore: formAction(greScoreSchema, createOrUpdateGreScore),
+
+	deleteStudent: formAction(deleteSchema, deleteStudent, () => {
+		throw redirect(303, '/home');
+	}),
 
 	deleteContract: formAction(deleteSchema, deleteContract),
 	deleteEnrollment: formAction(deleteSchema, deleteEnrollment),

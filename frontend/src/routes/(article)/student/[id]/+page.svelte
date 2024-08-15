@@ -18,7 +18,7 @@
 <Hr />
 
 <Main>
-	<BioSection student={data.student} {canEdit} />
+	<BioSection student={data.student} {canEdit} deleteForm={data.deleteForm} />
 
 	<ContractSection
 		student={data.student}

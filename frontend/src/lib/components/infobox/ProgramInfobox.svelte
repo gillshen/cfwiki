@@ -12,12 +12,12 @@
 <Table>
 	<TableBody>
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Type</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Type</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{program.type}</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4 align-top">
+			<TableBodyCell tdClass="w-40 font-medium py-4 align-top">
 				School{program.schools.length > 1 ? 's' : ''}
 			</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
@@ -30,12 +30,12 @@
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Name</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Name</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{program.name || '-'}</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Degree</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Degree</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{programDegree}</TableBodyCell>
 		</TableBodyRow>
 	</TableBody>

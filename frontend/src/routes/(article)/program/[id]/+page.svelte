@@ -18,7 +18,9 @@
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ProgramForm from '$lib/components/program-form/ProgramForm.svelte';
+	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
+	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { formatSchoolNamesShort, isUndergraduate } from '$lib/api/program';
 	import { fetchApplications, type ApplicationListItem } from '$lib/api/application';
 	import { toShortDate } from '$lib/utils/dateUtils';
@@ -29,7 +31,8 @@
 		program: data.program.id
 	});
 
-	let updateProgramModal = false;
+	let programUpdateModal = false;
+	let programDeleteModal = false;
 </script>
 
 <Heading tag="h1" class="alt-page-title">
@@ -45,8 +48,8 @@
 		<div class="mt-8">
 			{#await applications then applications}
 				<UpdateDeleteButton
-					updateAction={() => (updateProgramModal = true)}
-					deleteAction={() => alert('delete program')}
+					updateAction={() => (programUpdateModal = true)}
+					deleteAction={() => (programDeleteModal = true)}
 					updateDisabled={isUndergraduate(data.program)}
 					deleteDisabled={!!applications.length}
 				/>
@@ -100,12 +103,24 @@
 </Main>
 
 <FormModal
-	open={updateProgramModal}
+	open={programUpdateModal}
 	superform={data.programForm}
 	fields={ProgramForm}
 	action="?/updateProgram"
 	entity={data.program}
 	extra={[{ name: 'id', type: 'number', value: data.program.id }]}
 	title="Update program information"
-	on:close={() => (updateProgramModal = false)}
+	on:close={() => (programUpdateModal = false)}
 />
+
+<FormModal
+	open={programDeleteModal}
+	superform={data.deleteForm}
+	fields={DeleteForm}
+	action="?/deleteProgram"
+	entity={data.program}
+	title="Delete program"
+	on:close={() => (programDeleteModal = false)}
+>
+	<DeleteMessage slot="preface" name="this program" />
+</FormModal>

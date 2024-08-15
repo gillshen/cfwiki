@@ -1,4 +1,4 @@
-import { get, patch, post } from '$lib/api/api';
+import { get, patch, post, destroy } from '$lib/api/api';
 import type { Service } from '$lib/api/contract';
 import type { EnrollmentByStudent } from '$lib/api/enrollment';
 import americanStates from '$lib/constants/americanStates';
@@ -79,6 +79,10 @@ export async function createStudent(data: any) {
 
 export async function updateStudent(data: any) {
 	return await patch(`students/${data.id}/update/`, data);
+}
+
+export async function deleteStudent(data: any) {
+	return await destroy(`students/${data.id}/update/`);
 }
 
 export function formatLocation(student: BaseStudent): string {

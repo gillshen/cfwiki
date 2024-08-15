@@ -1,4 +1,4 @@
-import { get, patch, post } from '$lib/api/api';
+import { get, patch, post, destroy } from '$lib/api/api';
 
 export type School = {
 	id: number;
@@ -22,4 +22,8 @@ export async function createSchool(data: any) {
 
 export async function updateSchool(data: any) {
 	return await patch(`schools/${data.id}/update/`, data);
+}
+
+export async function deleteSchool(data: any) {
+	return await destroy(`schools/${data.id}/update/`);
 }

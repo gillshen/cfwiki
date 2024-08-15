@@ -15,17 +15,20 @@
 
 	import Main from '$lib/components/containers/Main.svelte';
 	import SchoolForm from '$lib/components/school-form/SchoolForm.svelte';
+	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import SchoolInfobox from '$lib/components/infobox/SchoolInfobox.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
+	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { toShortDate, toShortYearMonth } from '$lib/utils/dateUtils.js';
 
 	export let data;
 
-	let updateSchoolModal = false;
+	let schoolUpdateModal = false;
+	let schoolDeleteModal = false;
 </script>
 
 <Heading tag="h1" class="alt-page-title">{data.school.name}</Heading>
@@ -40,8 +43,8 @@
 			{#await Promise.all([data.applications, data.enrollments]) then [applications, enrollments]}
 				<UpdateDeleteButton
 					text="Actions"
-					updateAction={() => (updateSchoolModal = true)}
-					deleteAction={() => alert('delete')}
+					updateAction={() => (schoolUpdateModal = true)}
+					deleteAction={() => (schoolDeleteModal = true)}
 					deleteDisabled={!!applications.length || !!enrollments.length}
 				/>
 			{/await}
@@ -147,12 +150,24 @@
 </Main>
 
 <FormModal
-	open={updateSchoolModal}
+	open={schoolUpdateModal}
 	superform={data.schoolForm}
 	fields={SchoolForm}
 	action="?/updateSchool"
 	entity={data.school}
 	extra={[{ name: 'id', type: 'number', value: data.school.id }]}
 	title="Update school information"
-	on:close={() => (updateSchoolModal = false)}
+	on:close={() => (schoolUpdateModal = false)}
 />
+
+<FormModal
+	open={schoolDeleteModal}
+	superform={data.deleteForm}
+	fields={DeleteForm}
+	action="?/deleteSchool"
+	entity={data.school}
+	title="Delete school"
+	on:close={() => (schoolDeleteModal = false)}
+>
+	<DeleteMessage slot="preface" name={`this school (${data.school.name})`} />
+</FormModal>

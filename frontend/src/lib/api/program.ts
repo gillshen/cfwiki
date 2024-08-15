@@ -1,4 +1,4 @@
-import { get, patch, post } from '$lib/api/api';
+import { get, patch, post, destroy } from '$lib/api/api';
 
 export const programTypes = [
 	'UG Freshman',
@@ -45,6 +45,10 @@ export async function createProgram(data: any) {
 
 export async function updateProgram(data: any) {
 	return await patch(`programs/${data.id}/update/`, data);
+}
+
+export async function deleteProgram(data: any) {
+	return await destroy(`programs/${data.id}/update/`);
 }
 
 export function formatSchoolNamesShort(program: ProgramListItem | ProgramDetail): string {

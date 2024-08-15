@@ -37,8 +37,8 @@
 	import IbGradeForm from '$lib/components/ib-grade-form/IbGradeForm.svelte';
 	import AlevelGradeForm from '$lib/components/alevel-grade-form/AlevelGradeForm.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
-	import DeleteForm from '../delete-form/DeleteForm.svelte';
-	import DeleteMessage from '../delete-form/DeleteMessage.svelte';
+	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
+	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 
 	export let student: StudentDetail;
 	export let canEdit: boolean = false;

@@ -10,22 +10,22 @@
 <Table>
 	<TableBody>
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Type</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Type</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{school.type}</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Full name</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4 align-top">Full name</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{school.name}</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Alt. name</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Alt. name</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{school.alt_name}</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Country</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Country</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
 				<div class="flex gap-2">
 					<div>{countryFlags[school.country]}</div>

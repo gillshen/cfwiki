@@ -1,11 +1,12 @@
 import type { PageServerLoadEvent } from './$types';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-import { fetchSchool, updateSchool, type School } from '$lib/api/school';
+import { deleteSchool, fetchSchool, updateSchool, type School } from '$lib/api/school';
 import { fetchApplications } from '$lib/api/application';
 import { schoolSchema } from '$lib/schemas/school';
+import { deleteSchema } from '$lib/schemas/delete';
 import { formAction } from '$lib/abstract/formAction';
 import { fetchEnrollments } from '$lib/api/enrollment';
 
@@ -25,11 +26,16 @@ export async function load(event: PageServerLoadEvent) {
 	return {
 		school,
 		schoolForm: await superValidate(school, zod(schoolSchema)),
+		deleteForm: await superValidate(zod(deleteSchema)),
 		applications: fetchApplications({ school: school.id }),
 		enrollments: fetchEnrollments({ school: school.id })
 	};
 }
 
 export const actions = {
-	updateSchool: formAction(schoolSchema, updateSchool)
+	updateSchool: formAction(schoolSchema, updateSchool),
+
+	deleteSchool: formAction(deleteSchema, deleteSchool, () => {
+		throw redirect(303, '/home');
+	})
 };

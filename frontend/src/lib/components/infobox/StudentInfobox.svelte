@@ -26,19 +26,19 @@
 <Table>
 	<TableBody>
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Preferred name</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Preferred name</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
 				{student.preferred_name || placeHolder}
 			</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Gender</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Gender</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{formatGender(student.gender)}</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Citizenship</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Citizenship</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
 				<div class="flex gap-2">
 					<div>{countryFlags[student.citizenship]}</div>
@@ -48,7 +48,7 @@
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Home</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Home</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
 				{#if student.base_country}
 					<div class="flex gap-2">
@@ -62,14 +62,14 @@
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4">Date of birth</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Date of birth</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
 				{toLongDate(student.date_of_birth) || placeHolder}
 			</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-48 font-medium py-4 align-top">Comments</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4 align-top">Comments</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
 				{#if student.comments}
 					<Comments text={student.comments} divClass="pr-4" />

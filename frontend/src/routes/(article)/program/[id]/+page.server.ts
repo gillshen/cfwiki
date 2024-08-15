@@ -1,10 +1,11 @@
 import type { PageServerLoadEvent } from './$types';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-import { fetchProgram, updateProgram, type ProgramListItem } from '$lib/api/program';
+import { deleteProgram, fetchProgram, updateProgram, type ProgramListItem } from '$lib/api/program';
 import { programUpdateSchema } from '$lib/schemas/program';
+import { deleteSchema } from '$lib/schemas/delete';
 import { formAction } from '$lib/abstract/formAction';
 
 export async function load(event: PageServerLoadEvent) {
@@ -20,11 +21,17 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Program not found');
 	}
 
-	const programForm = await superValidate(program, zod(programUpdateSchema));
-
-	return { program, programForm };
+	return {
+		program,
+		programForm: await superValidate(program, zod(programUpdateSchema)),
+		deleteForm: await superValidate(zod(deleteSchema))
+	};
 }
 
 export const actions = {
-	updateProgram: formAction(programUpdateSchema, updateProgram)
+	updateProgram: formAction(programUpdateSchema, updateProgram),
+
+	deleteProgram: formAction(deleteSchema, deleteProgram, () => {
+		throw redirect(303, '/home');
+	})
 };
