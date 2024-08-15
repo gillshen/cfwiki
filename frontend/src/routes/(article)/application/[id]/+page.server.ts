@@ -38,9 +38,8 @@ export async function load(event: PageServerLoadEvent) {
 		roundChangeForm: await superValidate(zod(roundChangeSchema)),
 		roundRenameForm: await superValidate(application.round, zod(roundNameSchema)),
 		datesUpdateForm: await superValidate(application.round, zod(roundDatesSchema)),
-		deleteForm: await superValidate(zod(deleteSchema)),
 		logForm: await superValidate(zod(applicationLogSchema)),
-		logDeleteForm: await superValidate(zod(deleteSchema))
+		deleteForm: await superValidate(zod(deleteSchema))
 	};
 }
 

@@ -11,16 +11,20 @@
 	import ScoreBar from '$lib/components/list-items/ScoreBar.svelte';
 
 	export let score: GreScore;
-	export let onClick: () => any = () => {};
+	export let canEdit: boolean = false;
+	export let updateAction: () => any = () => {};
+	export let deleteAction: () => any = () => {};
 </script>
 
 <ScoreContainer>
 	<ScoreItem
 		size="lg"
 		subject="GRE"
-		score={greOverall(score) ?? 'N/A'}
+		score={greOverall(score)}
 		date={score.date}
-		{onClick}
+		{canEdit}
+		{updateAction}
+		{deleteAction}
 		slot="header"
 	/>
 

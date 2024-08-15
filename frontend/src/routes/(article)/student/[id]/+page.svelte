@@ -24,7 +24,7 @@
 		student={data.student}
 		{canEdit}
 		form={data.contractForm}
-		deleteForm={data.contractDeleteForm}
+		deleteForm={data.deleteForm}
 	/>
 
 	<EducationSection student={data.student} {canEdit} form={data.enrollmentForm} />
@@ -41,6 +41,7 @@
 		apScoreForm={data.apScoreForm}
 		ibGradeForm={data.ibGradeForm}
 		alevelGradeForm={data.alevelGradeForm}
+		deleteForm={data.deleteForm}
 	/>
 
 	<ApplicationsSection student={data.student} applications={data.applications} {canEdit} />

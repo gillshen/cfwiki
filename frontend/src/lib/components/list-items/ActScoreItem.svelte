@@ -11,16 +11,20 @@
 	import ScoreBar from '$lib/components/list-items/ScoreBar.svelte';
 
 	export let score: ActScore;
-	export let onClick: () => any = () => {};
+	export let canEdit: boolean = false;
+	export let updateAction: () => any = () => {};
+	export let deleteAction: () => any = () => {};
 </script>
 
 <ScoreContainer>
 	<ScoreItem
 		size="lg"
 		subject="ACT"
-		score={actOverall(score) ?? 'N/A'}
+		score={actOverall(score)}
 		date={score.date}
-		{onClick}
+		{canEdit}
+		{updateAction}
+		{deleteAction}
 		slot="header"
 	/>
 

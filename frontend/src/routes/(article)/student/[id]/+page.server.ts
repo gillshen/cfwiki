@@ -34,7 +34,16 @@ import {
 	createOrUpdateApScore,
 	createOrUpdateIbGrade,
 	createOrUpdateAlevelGrade,
-	createOrUpdateGreScore
+	createOrUpdateGreScore,
+	deleteToeflScore,
+	deleteIeltsScore,
+	deleteDuolingoScore,
+	deleteSatScore,
+	deleteActScore,
+	deleteApScore,
+	deleteIbGrade,
+	deleteAlevelGrade,
+	deleteGreScore
 } from '$lib/api/scores';
 
 import { formAction } from '$lib/abstract/formAction';
@@ -56,7 +65,6 @@ export async function load(event: PageServerLoadEvent) {
 		student,
 		applications: fetchApplications({ student: student.id }),
 		contractForm: await superValidate(zod(contractSchema)),
-		contractDeleteForm: await superValidate(zod(deleteSchema)),
 		enrollmentForm: await superValidate(zod(enrollmentSchema)),
 		toeflForm: await superValidate(zod(toeflSchema)),
 		ieltsForm: await superValidate(zod(ieltschema)),
@@ -66,13 +74,13 @@ export async function load(event: PageServerLoadEvent) {
 		apScoreForm: await superValidate(zod(apScoreSchema)),
 		ibGradeForm: await superValidate(zod(ibGradeSchema)),
 		alevelGradeForm: await superValidate(zod(alevelGradeSchema)),
-		greScoreForm: await superValidate(zod(greScoreSchema))
+		greScoreForm: await superValidate(zod(greScoreSchema)),
+		deleteForm: await superValidate(zod(deleteSchema))
 	};
 }
 
 export const actions = {
 	createOrUpdateContract: formAction(contractSchema, createOrUpdateContract),
-	deleteContract: formAction(deleteSchema, deleteContract),
 	createOrUpdateEnrollment: formAction(enrollmentSchema, createOrUpdateEnrollment),
 	createOrUpdateToeflScore: formAction(toeflSchema, createOrUpdateToeflScore),
 	createOrUpdateIeltsScore: formAction(ieltschema, createOrUpdateIeltsScore),
@@ -82,5 +90,16 @@ export const actions = {
 	createOrUpdateApScore: formAction(apScoreSchema, createOrUpdateApScore),
 	createOrUpdateIbGrade: formAction(ibGradeSchema, createOrUpdateIbGrade),
 	createOrUpdateAlevelGrade: formAction(alevelGradeSchema, createOrUpdateAlevelGrade),
-	createOrUpdateGreScore: formAction(greScoreSchema, createOrUpdateGreScore)
+	createOrUpdateGreScore: formAction(greScoreSchema, createOrUpdateGreScore),
+
+	deleteContract: formAction(deleteSchema, deleteContract),
+	deleteToeflScore: formAction(deleteSchema, deleteToeflScore),
+	deleteIeltsScore: formAction(deleteSchema, deleteIeltsScore),
+	deleteDuolingoScore: formAction(deleteSchema, deleteDuolingoScore),
+	deleteSatScore: formAction(deleteSchema, deleteSatScore),
+	deleteActScore: formAction(deleteSchema, deleteActScore),
+	deleteApScore: formAction(deleteSchema, deleteApScore),
+	deleteIbGrade: formAction(deleteSchema, deleteIbGrade),
+	deleteAlevelGrade: formAction(deleteSchema, deleteAlevelGrade),
+	deleteGreScore: formAction(deleteSchema, deleteGreScore)
 };

@@ -5,16 +5,20 @@
 	import ScoreBar from '$lib/components/list-items/ScoreBar.svelte';
 
 	export let score: ToeflScore;
-	export let onClick: () => any = () => {};
+	export let canEdit: boolean = false;
+	export let updateAction: () => any = () => {};
+	export let deleteAction: () => any = () => {};
 </script>
 
 <ScoreContainer>
 	<ScoreItem
 		size="lg"
 		subject="TOEFL"
-		score={toeflOverall(score) ?? 'N/A'}
+		score={toeflOverall(score)}
 		date={score.date}
-		{onClick}
+		{canEdit}
+		{updateAction}
+		{deleteAction}
 		slot="header"
 	/>
 

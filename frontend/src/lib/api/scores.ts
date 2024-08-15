@@ -1,4 +1,4 @@
-import { createOrUpdate } from '$lib/api/api';
+import { createOrUpdate, destroy } from '$lib/api/api';
 
 type BaseScore = {
 	id: number;
@@ -77,44 +77,88 @@ export async function createOrUpdateToeflScore(data: any) {
 	return await createOrUpdate(data, 'toefl');
 }
 
+export async function deleteToeflScore(data: any) {
+	return await destroy(`toefl/${data.id}/update`);
+}
+
 export async function createOrUpdateIeltsScore(data: any) {
 	return await createOrUpdate(data, 'ielts');
+}
+
+export async function deleteIeltsScore(data: any) {
+	return await destroy(`ielts/${data.id}/update`);
 }
 
 export async function createOrUpdateDuolingoScore(data: any) {
 	return await createOrUpdate(data, 'duolingo');
 }
 
+export async function deleteDuolingoScore(data: any) {
+	return await destroy(`duolingo/${data.id}/update`);
+}
+
 export async function createOrUpdateSatScore(data: any) {
 	return await createOrUpdate(data, 'sat-scores');
+}
+
+export async function deleteSatScore(data: any) {
+	return await destroy(`sat-scores/${data.id}/update`);
 }
 
 export async function createOrUpdateActScore(data: any) {
 	return await createOrUpdate(data, 'act-scores');
 }
 
+export async function deleteActScore(data: any) {
+	return await destroy(`act-scores/${data.id}/update`);
+}
+
 export async function createOrUpdateApScore(data: any) {
 	return await createOrUpdate(data, 'ap-scores');
+}
+
+export async function deleteApScore(data: any) {
+	return await destroy(`ap-scores/${data.id}/update`);
 }
 
 export async function createOrUpdateIbGrade(data: any) {
 	return await createOrUpdate(data, 'ib-grades');
 }
 
+export async function deleteIbGrade(data: any) {
+	return await destroy(`ib-grades/${data.id}/update`);
+}
+
 export async function createOrUpdateAlevelGrade(data: any) {
 	return await createOrUpdate(data, 'alevel-grades');
+}
+
+export async function deleteAlevelGrade(data: any) {
+	return await destroy(`alevel-grades/${data.id}/update`);
 }
 
 export async function createOrUpdateGreScore(data: any) {
 	return await createOrUpdate(data, 'gre-scores');
 }
 
+export async function deleteGreScore(data: any) {
+	return await destroy(`gre-scores/${data.id}/update`);
+}
+
 export async function createOrUpdateGmatScore(data: any) {
 	return await createOrUpdate(data, 'gmat-scores');
 }
 
+export async function deleteGmatScore(data: any) {
+	return await destroy(`gmat-scores/${data.id}/update`);
+}
+
 export async function createOrUpdateLsatScore(data: any) {
 	return await createOrUpdate(data, 'lsat-scores');
+}
+
+export async function deleteLsatScore(data: any) {
+	return await destroy(`lsat-scores/${data.id}/update`);
 }
 
 export function toeflOverall(score: ToeflScore): number | null {

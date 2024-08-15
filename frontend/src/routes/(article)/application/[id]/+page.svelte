@@ -82,7 +82,7 @@
 	<LogsSection
 		application={data.application}
 		form={data.logForm}
-		deleteForm={data.logDeleteForm}
+		deleteForm={data.deleteForm}
 		{canEdit}
 	/>
 
