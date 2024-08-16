@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Dropdown, Avatar, A, type SizeType } from 'flowbite-svelte';
+	import { Dropdown, Avatar, type SizeType } from 'flowbite-svelte';
 
 	import { toShortYearMonth } from '$lib/utils/dateUtils';
 	import DropdownActionItem from './DropdownActionItem.svelte';
@@ -14,9 +14,9 @@
 </script>
 
 <div class="flex gap-2 mb-4 items-center h-fit">
-	<Avatar {size} class="bg-primary-700 text-white">{score ?? '?'}</Avatar>
+	<Avatar {size} class="bg-primary-700 text-white flex-shrink-0">{score ?? '?'}</Avatar>
 
-	<div class="flex flex-col gap-0.5 text-sm">
+	<div class="flex flex-col gap-0.5 text-sm truncate">
 		{#if canEdit}
 			<div
 				class="font-medium cursor-pointer text-gray-900 hover:text-primary-700 hover:underline truncate"
@@ -28,7 +28,7 @@
 				<DropdownActionItem text="Delete" onClick={deleteAction} dark />
 			</Dropdown>
 		{:else}
-			<div class="font-medium text-gray-900">{subject}</div>
+			<div class="font-medium text-gray-900 truncate">{subject}</div>
 		{/if}
 		<div class="text-sm flex gap-1 text-gray-400">
 			<span>{toShortYearMonth(date) || 'Undated'}</span>

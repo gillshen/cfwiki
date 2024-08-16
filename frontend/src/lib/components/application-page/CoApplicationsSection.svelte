@@ -11,7 +11,14 @@
 
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
-	import type { ApplicationListItem, ApplicationDetail } from '$lib/api/application';
+	import {
+		type ApplicationListItem,
+		type ApplicationDetail,
+		orderByStudentName,
+		orderByStatus,
+		orderByRoundName
+	} from '$lib/api/application';
+
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import { isUndergraduate } from '$lib/api/program';
 	import { formatCfNames } from '$lib/api/service';
@@ -41,7 +48,10 @@
 				</TableHead>
 
 				<TableBody>
-					{#each applications as appl}
+					{#each applications
+						.sort(orderByStudentName)
+						.sort(orderByStatus)
+						.sort(orderByRoundName) as appl}
 						<TableBodyRow>
 							<TableBodyCell class="w-4 pl-2">
 								<A href={`/application/${appl.id}`}><ArrowUpRightFromSquareOutline /></A>

@@ -1,5 +1,4 @@
 import { createOrUpdate, destroy } from '$lib/api/api';
-import type { Service } from '$lib/api/contract';
 
 export const cfRoles = ['战略顾问', '顾问', '服务顾问', '文案', '流程顾问'] as const;
 

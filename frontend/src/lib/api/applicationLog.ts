@@ -1,19 +1,7 @@
 import { createOrUpdate, destroy } from '$lib/api/api';
+import { applicationStatusOrder } from '$lib/api/application';
 
-export const applicationStatuses = [
-	'Started',
-	'Submitted',
-	'Under Review',
-	'Accepted',
-	'Rejected',
-	'On Waitlist',
-	'Deferred',
-	'Cancelled',
-	'Withdrawn',
-	'Enrolled',
-	'Offer Rescinded',
-	'Not Tracked'
-] as const;
+export const applicationStatuses: string[] = Object.keys(applicationStatusOrder);
 
 export type ApplicationStatus = (typeof applicationStatuses)[number];
 

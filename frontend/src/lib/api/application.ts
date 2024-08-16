@@ -1,5 +1,6 @@
 import { get, post, patch, buildQuery, destroy } from '$lib/api/api';
 import type { ApplicationStatus, ApplicationLog } from '$lib/api/applicationLog';
+import { sortedSchoolNames } from '$lib/api/school';
 
 type Service = {
 	cf_username: string;
@@ -81,4 +82,84 @@ export async function changeApplicationRound(data: {
 
 export async function deleteApplication(data: any) {
 	return await destroy(`applications/${data.id}/update/`);
+}
+
+export const applicationStatusOrder: Record<string, number> = {
+	Started: 0,
+	Submitted: 1,
+	'Under Review': 2,
+	Deferred: 3,
+	'On Waitlist': 4,
+	Accepted: 5,
+	Enrolled: 6,
+	Rejected: 7,
+	'Offer Rescinded': 8,
+	Cancelled: 9,
+	Withdrawn: 10,
+	'Not Tracked': 11
+};
+
+const _roundOrder: Record<string, number> = {
+	ED1: 0,
+	REA: 1,
+	EA1: 2,
+	ED2: 3,
+	EA2: 4,
+	Priority: 5,
+	RD: 6,
+	Regular: 6,
+	'Round 1': 7,
+	'Round 2': 8,
+	'Round 3': 9,
+	'Round 4': 10,
+	'Round 5': 11,
+	Rolling: 99
+};
+
+export function orderByStatus(a: ApplicationListItem, b: ApplicationListItem) {
+	const aStatusOrder: number = applicationStatusOrder[a.latest_log?.status ?? ''] ?? -1;
+	const bStatusOrder: number = applicationStatusOrder[b.latest_log?.status ?? ''] ?? -1;
+	return aStatusOrder - bStatusOrder;
+}
+
+export function orderByYearDesc(a: ApplicationListItem, b: ApplicationListItem) {
+	return b.program_iteration.year - a.program_iteration.year;
+}
+
+export function orderByRoundName(a: ApplicationListItem, b: ApplicationListItem) {
+	return (_roundOrder[a.round.name] ?? -1) - (_roundOrder[b.round.name] ?? -1);
+}
+
+export function orderByDueDate(a: ApplicationListItem, b: ApplicationListItem) {
+	if (a.round.due_date === b.round.due_date) {
+		return 0;
+	}
+	return a.round.due_date === null
+		? -1
+		: b.round.due_date === null
+			? 1
+			: a.round.due_date.localeCompare(b.round.due_date);
+}
+
+export function orderBySchoolName(a: ApplicationListItem, b: ApplicationListItem) {
+	const aNames = sortedSchoolNames(a.schools);
+	const bNames = sortedSchoolNames(b.schools);
+
+	// It's known that each application is associated with at most two schools
+	if (aNames[0] !== bNames[0]) {
+		return aNames[0].localeCompare(bNames[0]);
+	}
+
+	if (aNames[1] === bNames[1]) {
+		return 0;
+	}
+	return aNames[1] === undefined
+		? -1
+		: bNames[1] === undefined
+			? 1
+			: aNames[1].localeCompare(bNames[1]);
+}
+
+export function orderByStudentName(a: ApplicationListItem, b: ApplicationListItem) {
+	return a.student.fullname.localeCompare(b.student.fullname);
 }

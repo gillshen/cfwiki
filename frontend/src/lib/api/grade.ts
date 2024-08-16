@@ -50,18 +50,18 @@ export function groupGradesByProgressionTerm(grades: Grade[]): GroupedGrades {
 	});
 
 	const sortedGrades: GroupedGrades = {};
-	const sortedGroupKeys = Object.keys(groupedGrades).sort(_sortGroupKeys);
+	const sortedGroupKeys = Object.keys(groupedGrades).sort(_orderByGroupKeys);
 
 	sortedGroupKeys.forEach((key) => {
 		const group = groupedGrades[key];
-		group.sort(_sortCumulativeLast);
+		group.sort(_orderByCumulativeLast);
 		sortedGrades[key.replace(_joiner, ' ')] = group;
 	});
 
 	return sortedGrades;
 }
 
-function _sortGroupKeys(a: string, b: string): number {
+function _orderByGroupKeys(a: string, b: string): number {
 	const [progA, termA] = a.split(_joiner);
 	const [progB, termB] = b.split(_joiner);
 
@@ -72,7 +72,7 @@ function _sortGroupKeys(a: string, b: string): number {
 	}
 }
 
-function _sortCumulativeLast(a: Grade, b: Grade): number {
+function _orderByCumulativeLast(a: Grade, b: Grade): number {
 	if (a.is_cumulative == b.is_cumulative) {
 		return 0;
 	} else {

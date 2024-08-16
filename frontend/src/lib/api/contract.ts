@@ -52,6 +52,14 @@ export async function deleteContract(data: any) {
 }
 
 export function sortServicesByRole(a: Service, b: Service) {
+	if (a.end_date !== b.end_date) {
+		return a.end_date === null
+			? -1
+			: b.end_date === null
+				? 1
+				: a.end_date.localeCompare(b.end_date);
+	}
+
 	const roles = Array.from(cfRoles) as string[];
 
 	let indexA = roles.indexOf(a.role) ?? 99;

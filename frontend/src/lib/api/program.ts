@@ -1,4 +1,5 @@
 import { get, patch, post, destroy } from '$lib/api/api';
+import { orderByName } from '$lib/api/school';
 
 export const programTypes = [
 	'UG Freshman',
@@ -52,8 +53,7 @@ export async function deleteProgram(data: any) {
 }
 
 export function formatSchoolNamesShort(program: ProgramListItem | ProgramDetail): string {
-	return program.schools
-		.sort((a, b) => a.name.localeCompare(b.name))
+	return orderByName(program.schools)
 		.map((s) => s.alt_name || s.name)
 		.join(' + ');
 }

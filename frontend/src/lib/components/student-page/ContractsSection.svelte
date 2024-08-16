@@ -32,7 +32,7 @@
 
 <article class="bg-slate-50 rounded-xl w-full h-fit p-8">
 	{#if student.contracts_sorted.length}
-		<div class="flex gap-8 mb-8">
+		<div class="grid grid-cols-2 gap-8 mb-8">
 			{#each student.contracts_sorted as contract}
 				<ContractItem {contract}>
 					{#if canEdit || !contract.services.length}

@@ -23,7 +23,14 @@
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
-	import { toShortDate, toShortYearMonth } from '$lib/utils/dateUtils.js';
+	import { toShortDate, toShortYearMonth } from '$lib/utils/dateUtils';
+
+	import {
+		orderByRoundName,
+		orderByStatus,
+		orderByStudentName,
+		orderByYearDesc
+	} from '$lib/api/application';
 
 	export let data;
 
@@ -70,12 +77,14 @@
 						</TableHead>
 
 						<TableBody>
-							{#each applications as appl}
+							{#each applications
+								.sort(orderByStudentName)
+								.sort(orderByStatus)
+								.sort(orderByRoundName)
+								.sort(orderByYearDesc) as appl}
 								<TableBodyRow>
 									<TableBodyCell class="w-4 pl-2">
-										<A href={`/application/${appl.id}`}>
-											<ArrowUpRightFromSquareOutline />
-										</A>
+										<A href={`/application/${appl.id}`}><ArrowUpRightFromSquareOutline /></A>
 									</TableBodyCell>
 									<TableBodyCell class="font-normal">{appl.program_iteration.year}</TableBodyCell>
 									<TableBodyCell class="font-normal">{appl.program.type}</TableBodyCell>

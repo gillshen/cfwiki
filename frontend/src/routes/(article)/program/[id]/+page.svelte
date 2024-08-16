@@ -22,14 +22,16 @@
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { formatSchoolNamesShort, isUndergraduate } from '$lib/api/program';
-	import { fetchApplications, type ApplicationListItem } from '$lib/api/application';
 	import { toShortDate } from '$lib/utils/dateUtils';
 
-	export let data;
+	import {
+		orderByRoundName,
+		orderByStatus,
+		orderByStudentName,
+		orderByYearDesc
+	} from '$lib/api/application';
 
-	let applications: Promise<ApplicationListItem[]> = fetchApplications({
-		program: data.program.id
-	});
+	export let data;
 
 	let programUpdateModal = false;
 	let programDeleteModal = false;
@@ -46,7 +48,7 @@
 		<ProgramInfobox program={data.program} />
 
 		<div class="mt-8">
-			{#await applications then applications}
+			{#await data.applications then applications}
 				<UpdateDeleteButton
 					updateAction={() => (programUpdateModal = true)}
 					deleteAction={() => (programDeleteModal = true)}
@@ -60,7 +62,7 @@
 	<article class="bg-slate-50 rounded-xl w-full p-8">(Stats)</article>
 
 	<article class="col-span-2 mt-24">
-		<ApplicationsLoader {applications}>
+		<ApplicationsLoader applications={data.applications}>
 			<svelte:fragment let:applications>
 				<Table class="mt-8" hoverable={applications.length > 1}>
 					<TableHead>
@@ -76,7 +78,11 @@
 					</TableHead>
 
 					<TableBody>
-						{#each applications as appl}
+						{#each applications
+							.sort(orderByStudentName)
+							.sort(orderByStatus)
+							.sort(orderByRoundName)
+							.sort(orderByYearDesc) as appl}
 							<TableBodyRow>
 								<TableBodyCell class="w-4 pl-2">
 									<A href={`/application/${appl.id}`}><ArrowUpRightFromSquareOutline /></A>

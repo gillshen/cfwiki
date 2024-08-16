@@ -22,7 +22,7 @@
 
 <Label for="new-log-status" class="form-label">Status</Label>
 <Select id="new-log-status" name="status" bind:value={$form.status} required>
-	{#each Array.from(applicationStatuses) as applicationStatus}
+	{#each applicationStatuses as applicationStatus}
 		<option value={applicationStatus}>{applicationStatus}</option>
 	{/each}
 </Select>

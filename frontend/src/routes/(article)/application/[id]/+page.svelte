@@ -132,6 +132,6 @@
 >
 	<DeleteMessage
 		slot="preface"
-		name={`this application${data.application.logs.length ? ', including its status history,' : ''}`}
+		name={`this application${data.application.logs.length ? ', along with its status history,' : ''}`}
 	/>
 </FormModal>

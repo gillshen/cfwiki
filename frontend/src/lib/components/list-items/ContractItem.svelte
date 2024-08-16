@@ -12,10 +12,11 @@
 		type IndicatorColorType
 	} from 'flowbite-svelte';
 
-	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
+	import { ArrowRightOutline, ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
 	import type { Contract } from '$lib/api/student';
 	import { toShortDate } from '$lib/utils/dateUtils';
+	import { sortServicesByRole } from '$lib/api/contract';
 
 	export let contract: Contract;
 
@@ -51,11 +52,11 @@
 	};
 </script>
 
-<Card class="w-[16rem] min-h-[300px] hover:bg-white flex flex-col justify-between">
+<Card class="min-h-[300px] hover:bg-white flex flex-col justify-between">
 	<div>
 		<div class="flex gap-2 items-center">
 			<Indicator color={setColor(contract.status)} />
-			<P size="sm" color="text-gray-400" class="font-medium">{contract.status}</P>
+			<P size="sm" color="text-gray-500" class="font-medium">{contract.status}</P>
 		</div>
 
 		<Heading tag="h3" class="font-bold text-xl mt-3 mb-1">
@@ -64,22 +65,30 @@
 		</Heading>
 
 		{#if dateString}
-			<P size="sm" color="text-gray-400">{dateString}</P>
+			<P size="sm" color="text-gray-500">{dateString}</P>
 		{/if}
 
 		{#if contract.services.length}
 			<Table noborder divClass="mt-5 w-fit">
 				<TableBody>
-					{#each contract.services as service}
+					{#each contract.services.sort(sortServicesByRole) as service}
 						<TableBodyRow class="bg-inherit">
 							<TableBodyCell tdClass="w-fit font-medium py-2 pr-8">
-								<span class="text-gray-400">{clipRole(service.role)}</span>
+								<span class="text-gray-500">{clipRole(service.role)}</span>
 							</TableBodyCell>
-							<TableBodyCell tdClass="font-normal py-2 pr-8">{service.cf_username}</TableBodyCell>
+							<TableBodyCell tdClass="font-normal py-2 pr-8">
+								<span class={service.end_date ? 'text-gray-500' : ''}>
+									{service.cf_username}
+								</span>
+							</TableBodyCell>
 						</TableBodyRow>
 					{/each}
 				</TableBody>
 			</Table>
+		{:else}
+			<A class="mt-5 text-sm" href={`/contract/${contract.id}`}>
+				Add staff<ArrowRightOutline class="ms-1" />
+			</A>
 		{/if}
 	</div>
 
