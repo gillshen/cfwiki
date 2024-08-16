@@ -31,10 +31,16 @@
 </Select>
 
 <Label for="school-name" class="form-label">Full name</Label>
-<Input id="school-name" type="text" name="name" bind:value={$form.name} required />
+<Input id="school-name" type="text" name="name" maxlength="100" bind:value={$form.name} required />
 
 <Label for="school-alt-name" class="form-label optional">Abbreviation or nickname</Label>
-<Input id="school-alt-name" type="text" name="alt_name" bind:value={$form.alt_name} />
+<Input
+	id="school-alt-name"
+	type="text"
+	name="alt_name"
+	maxlength="20"
+	bind:value={$form.alt_name}
+/>
 
 <Label for="school-country" class="form-label">Country</Label>
 <Select id="school-country" name="country" bind:value={$form.country} required>

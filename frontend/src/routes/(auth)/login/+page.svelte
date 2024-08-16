@@ -11,10 +11,24 @@
 
 <form method="post" action="?/login" use:enhance>
 	<Label for="username" class="form-label">Username</Label>
-	<Input id="username" type="text" name="username" bind:value={$form.username} required />
+	<Input
+		id="username"
+		type="text"
+		name="username"
+		maxlength="100"
+		bind:value={$form.username}
+		required
+	/>
 
 	<Label for="password" class="form-label">Password</Label>
-	<Input id="password" type="password" name="password" bind:value={$form.password} required />
+	<Input
+		id="password"
+		type="password"
+		name="password"
+		maxlength="100"
+		bind:value={$form.password}
+		required
+	/>
 
 	<Button type="submit" class="mt-8">Log in</Button>
 

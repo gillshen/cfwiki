@@ -37,7 +37,7 @@
 	});
 </script>
 
-<article class="w-full h-fit bg-slate-50 rounded-xl px-8 py-4">
+<article class="w-full h-fit bg-stone-50 rounded-xl px-8 py-4">
 	{#if logs.length}
 		<Timeline class="ml-2 mt-4">
 			{#each logs as log}

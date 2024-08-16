@@ -19,11 +19,11 @@
 </script>
 
 <Label for="name" class="form-label">Program name</Label>
-<Input id="name" name="name" bind:value={$form.name} />
+<Input id="name" type="text" name="name" maxlength="100" bind:value={$form.name} />
 
 {#if $form.type === "Master's" || $form.type === 'Doctorate'}
 	<Label for="degree" class="form-label">Degree awarded</Label>
-	<Input id="degree" type="text" name="degree" bind:value={$form.degree} required />
+	<Input id="degree" type="text" name="degree" maxlength="100" bind:value={$form.degree} required />
 {/if}
 
 <Button type="submit" class="mt-8">{entity ? 'Update' : 'Submit'}</Button>

@@ -2,7 +2,7 @@ import { get, createOrUpdate, destroy, buildQuery } from '$lib/api/api';
 import type { Grade } from '$lib/api/grade';
 import type { ContractStatus } from './contract';
 
-type BaseEnrollment = {
+export type BaseEnrollment = {
 	id: number;
 	student: number;
 	school: { id: number; type: string; name: string; alt_name: string; country: string };
@@ -49,4 +49,38 @@ export async function createOrUpdateEnrollment(data: any) {
 
 export async function deleteEnrollment(data: any) {
 	return await destroy(`enrollments/${data.id}/update/`);
+}
+
+export const progressionOrder: Record<string, number> = {
+	G7: 0,
+	G8: 1,
+	G9: 2,
+	G10: 3,
+	G11: 4,
+	G12: 5,
+	'Year 1': 6,
+	'Year 2': 7,
+	'Year 3': 8,
+	'Year 4': 9,
+	'Year 5': 10
+} as const;
+
+export function orderByProgressionDesc(a: BaseEnrollment, b: BaseEnrollment) {
+	if (a.end_progression === b.end_progression) {
+		return (
+			(progressionOrder[b.start_progression] ?? 99) - (progressionOrder[a.start_progression] ?? 99)
+		);
+	} else {
+		return (
+			(progressionOrder[b.end_progression] ?? 99) - (progressionOrder[a.end_progression] ?? 99)
+		);
+	}
+}
+
+export function orderByDateDesc(a: BaseEnrollment, b: BaseEnrollment) {
+	if (a.end_date !== b.end_date) {
+		return (b.end_date ?? '').localeCompare(a.end_date ?? '');
+	} else {
+		return (b.start_date ?? '').localeCompare(a.start_date ?? '');
+	}
 }

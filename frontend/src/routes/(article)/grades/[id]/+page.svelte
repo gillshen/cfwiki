@@ -106,7 +106,7 @@
 {/if}
 
 {#if canEdit}
-	<Button class="mt-8" on:click={modalOpener()} outline>Add a grade</Button>
+	<Button class="mt-8" on:click={modalOpener()} outline>Add a GPA</Button>
 {/if}
 
 <FormModal
@@ -116,7 +116,7 @@
 	entity={activeGrade}
 	action="?/createOrUpdateGrade"
 	extra={[{ name: 'enrollment', type: 'number', value: data.enrollment.id }]}
-	title={`${activeGrade ? 'Update' : 'Add a'} grade`}
+	title={`${activeGrade ? 'Update' : 'Add a'} GPA`}
 	on:close={() => (gradeModal = false)}
 />
 

@@ -59,7 +59,7 @@
 		</div>
 	</article>
 
-	<article class="bg-slate-50 rounded-xl w-full p-8">(Stats)</article>
+	<article class="bg-stone-50 rounded-xl w-full p-8">(Stats)</article>
 
 	<article class="col-span-2 mt-24">
 		<ApplicationsLoader applications={data.applications}>

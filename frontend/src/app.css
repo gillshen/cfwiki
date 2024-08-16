@@ -29,6 +29,10 @@ h2 {
 	color: #aaa;
 	content: ' (optional)';
 }
+.form-label.optional-cap::after {
+	color: #aaa;
+	content: ' (Optional)';
+}
 .form-radio-group {
 	@apply grid grid-cols-1 mb-4 gap-2;
 }

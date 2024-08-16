@@ -58,7 +58,7 @@
 		</div>
 	</article>
 
-	<article class="bg-slate-50 rounded-xl w-full p-8">(Stats)</article>
+	<article class="bg-stone-50 rounded-xl w-full p-8">(Stats)</article>
 
 	{#if data.school.type !== 'Secondary School'}
 		<article class="col-span-2 mt-24">

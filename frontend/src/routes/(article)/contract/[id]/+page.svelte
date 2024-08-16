@@ -43,7 +43,7 @@
 <Hr />
 
 {#if data.contract.services.length}
-	<section class="max-w-[36rem] mb-8 flex gap-8 flex-wrap">
+	<section class="mb-8 w-fit flex flex-wrap gap-8">
 		{#each data.contract.services.sort(sortServicesByRole) as service}
 			<ServiceItem {service}>
 				{#if canEdit}

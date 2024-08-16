@@ -76,6 +76,6 @@
 	{:else if !cityStates.includes($form.base_country)}
 		<!-- Else if the country is not Hong Kong or Sinapore, let the user write in a city -->
 		<Label for="city" class="form-label optional">City</Label>
-		<Input type="text" id="city" name="base_city" bind:value={$form.base_city} />
+		<Input type="text" id="city" name="base_city" maxlength="100" bind:value={$form.base_city} />
 	{/if}
 {/if}

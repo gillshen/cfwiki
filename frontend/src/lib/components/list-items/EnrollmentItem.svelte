@@ -38,7 +38,7 @@
 <TimelineItem
 	title={enrollment.school.name}
 	date={formatDateRange(enrollment)}
-	classLi="bg-slate-50 px-8 pt-4 pb-6 my-0 rounded-xl"
+	classLi="bg-stone-50 px-8 pt-4 pb-6 my-0 rounded-xl"
 >
 	{#if enrollment.curriculum}
 		<P size="sm" class="py-3">
@@ -61,7 +61,7 @@
 										{#if parseNum(grade.scale)}
 											<GradeValueItem value={grade.value} scale={grade.scale} />
 										{:else}
-											<div class="truncate w-40">{grade.comments}</div>
+											<div class="truncate w-[11rem]">{grade.comments}</div>
 										{/if}
 										<span class="text-gray-400">{grade.is_cumulative ? ' (cumul)' : ''}</span>
 									</div>

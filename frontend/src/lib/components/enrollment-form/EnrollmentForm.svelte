@@ -2,13 +2,13 @@
 	import { onMount } from 'svelte';
 	import { Label, Select, Radio, Button, Input, Helper, A } from 'flowbite-svelte';
 
-	import type { Enrollment } from '$lib/api/student';
+	import type { EnrollmentByStudent } from '$lib/api/enrollment';
 	import { fetchSchools, type School } from '$lib/api/school';
 
 	export let form: any;
 	export let message: any;
 	export let errors: any;
-	export let entity: Enrollment | null = null;
+	export let entity: EnrollmentByStudent | null = null;
 
 	// TODO
 	if ($message || $errors) {
@@ -118,6 +118,7 @@
 	<div>
 		<Label for="end-progression" class="form-label optional">Terminal progression</Label>
 		<Select id="end-progression" name="end_progression" bind:value={$form.end_progression}>
+			<option value=""></option>
 			{#each progressions as progression}
 				<option value={progression}>{progression}</option>
 			{/each}
@@ -134,7 +135,13 @@
 	</Select>
 {:else}
 	<Label for="curriculum" class="form-label optional">Major</Label>
-	<Input id="curriculum" type="text" name="curriculum" bind:value={$form.curriculum} />
+	<Input
+		id="curriculum"
+		type="text"
+		name="curriculum"
+		maxlength="100"
+		bind:value={$form.curriculum}
+	/>
 {/if}
 
 <Button type="submit" class="mt-8">{entity ? 'Update' : 'Submit'}</Button>

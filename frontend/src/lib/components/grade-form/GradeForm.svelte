@@ -22,6 +22,8 @@
 	if ($message || $errors) {
 		//
 	}
+
+	let noNumber = false;
 </script>
 
 <input type="number" name="id" class="hidden" bind:value={$form.id} />
@@ -44,25 +46,43 @@
 		</Select>
 	</div>
 
-	<div>
-		<Label for="value" class="form-label">Value</Label>
-		<Input id="value" type="number" name="value" step="0.001" bind:value={$form.value} required />
-	</div>
-	<div>
-		<Label for="scale" class="form-label">Scale</Label>
-		<Input id="scale" type="number" name="scale" step="0.001" bind:value={$form.scale} required />
-	</div>
+	<Checkbox
+		class="font-normal mt-8 mb-4 col-span-2"
+		name="is_cumulative"
+		bind:checked={$form.is_cumulative}
+	>
+		Cumulative
+	</Checkbox>
 
-	<div>
-		<Checkbox class="form-checkbox" name="is_cumulative" bind:checked={$form.is_cumulative}>
-			Cumulative
-		</Checkbox>
-	</div>
-	<div></div>
+	<Checkbox class="font-normal mt-8 mb-2 col-span-2" bind:checked={noNumber}>
+		GPA not available. I will provide a description in the comments.
+	</Checkbox>
+
+	{#if !noNumber}
+		<div>
+			<Label for="value" class="form-label">Value</Label>
+			<Input id="value" type="number" name="value" step="0.001" bind:value={$form.value} required />
+		</div>
+		<div>
+			<Label for="scale" class="form-label">Scale</Label>
+			<Input id="scale" type="number" name="scale" step="0.001" bind:value={$form.scale} required />
+		</div>
+	{/if}
 
 	<div class="col-span-2">
-		<Label for="comments" class="form-label optional">Comments</Label>
-		<Textarea id="comments" name="comments" bind:value={$form.comments} rows="4" />
+		{#if noNumber}
+			<Label for="comments" class="form-label">Description</Label>
+		{:else}
+			<Label for="comments" class="form-label optional">Comments</Label>
+		{/if}
+		<Textarea
+			id="comments"
+			name="comments"
+			maxlength="500"
+			bind:value={$form.comments}
+			rows="2"
+			required={noNumber}
+		/>
 	</div>
 </div>
 

@@ -67,8 +67,8 @@ class Grade(models.Model):
     )
     progression = models.CharField(max_length=50)
     term = models.CharField(max_length=20)
-    value = models.DecimalField(max_digits=6, decimal_places=3)
-    scale = models.DecimalField(max_digits=6, decimal_places=3)
+    value = models.DecimalField(max_digits=6, decimal_places=3, blank=True, null=True)
+    scale = models.DecimalField(max_digits=6, decimal_places=3, blank=True, null=True)
     is_cumulative = models.BooleanField(default=False)
     comments = models.TextField(max_length=500, blank=True)
 

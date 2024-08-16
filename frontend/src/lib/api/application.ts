@@ -131,14 +131,7 @@ export function orderByRoundName(a: ApplicationListItem, b: ApplicationListItem)
 }
 
 export function orderByDueDate(a: ApplicationListItem, b: ApplicationListItem) {
-	if (a.round.due_date === b.round.due_date) {
-		return 0;
-	}
-	return a.round.due_date === null
-		? -1
-		: b.round.due_date === null
-			? 1
-			: a.round.due_date.localeCompare(b.round.due_date);
+	return (a.round.due_date ?? '').localeCompare(b.round.due_date ?? '');
 }
 
 export function orderBySchoolName(a: ApplicationListItem, b: ApplicationListItem) {

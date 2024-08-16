@@ -31,6 +31,12 @@
 <Input id="new-log-date" type="date" name="date" bind:value={$form.date} required />
 
 <Label for="new-log-comments" class="form-label optional">Comments</Label>
-<Textarea id="new-log-comments" name="comments" rows="4" bind:value={$form.comments} />
+<Textarea
+	id="new-log-comments"
+	name="comments"
+	rows="4"
+	maxlength="1000"
+	bind:value={$form.comments}
+/>
 
 <Button type="submit" class="mt-8">{entity ? 'Update' : 'Submit'}</Button>

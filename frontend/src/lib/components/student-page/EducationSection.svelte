@@ -4,7 +4,13 @@
 	import { PlusOutline } from 'flowbite-svelte-icons';
 
 	import type { StudentDetail } from '$lib/api/student';
-	import type { EnrollmentByStudent } from '$lib/api/enrollment';
+
+	import {
+		orderByDateDesc,
+		orderByProgressionDesc,
+		type EnrollmentByStudent
+	} from '$lib/api/enrollment';
+
 	import EnrollmentItem from '$lib/components/list-items/EnrollmentItem.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import LinkButton from '$lib/components/buttons/LinkButton.svelte';
@@ -36,7 +42,7 @@
 
 	{#if student.enrollments.length}
 		<Timeline class="mt-8 flex flex-col gap-4">
-			{#each student.enrollments as enrollment}
+			{#each student.enrollments.sort(orderByDateDesc).sort(orderByProgressionDesc) as enrollment}
 				<EnrollmentItem {enrollment}>
 					{#if canEdit}
 						<UpdateDeleteButton

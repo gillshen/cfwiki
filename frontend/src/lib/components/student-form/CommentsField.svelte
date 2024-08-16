@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { Textarea, Label, P } from 'flowbite-svelte';
+	import { Textarea, Label } from 'flowbite-svelte';
 
 	export let form: any;
 </script>
 
-<P size="sm" class="font-medium">Anything special you want to note about the student?</P>
-
-<Label for="comments" class="form-label optional">Comments</Label>
-<Textarea id="comments" name="comments" bind:value={$form.comments} rows="6" />
+<Label for="comments" class="form-label optional-cap">
+	Anything special you want to note about the student?
+</Label>
+<Textarea id="comments" name="comments" maxlength="5000" bind:value={$form.comments} rows="6" />
