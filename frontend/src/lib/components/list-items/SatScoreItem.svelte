@@ -1,10 +1,6 @@
 <script lang="ts">
-	import {
-		type SatScore,
-		satOverall,
-		satSubToPercentage,
-		satEssayToPercentage
-	} from '$lib/api/scores';
+	import { type SatScore } from '$lib/api/scores';
+	import { satOverall, satSubToPercentage, satEssayToPercentage } from '$lib/utils/scoresUtils';
 
 	import ScoreContainer from '$lib/components/containers/ScoreContainer.svelte';
 	import ScoreItem from '$lib/components/list-items/ScoreItem.svelte';

@@ -12,10 +12,10 @@
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
 	import type { EnrollmentByStudent } from '$lib/api/enrollment';
-	import { groupGradesByProgressionTerm } from '$lib/api/grade';
+	import { groupGradesByProgressionTerm } from '$lib/utils/gradesUtils';
 	import { toShortYearMonth } from '$lib/utils/dateUtils';
-	import GradeValueItem from './GradeValueItem.svelte';
 	import { parseNum } from '$lib/utils/numUtils';
+	import GradeValueItem from '$lib/components/list-items/GradeValueItem.svelte';
 
 	export let enrollment: EnrollmentByStudent;
 

@@ -22,7 +22,7 @@
 <Table>
 	<TableBody>
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-40  min-w-40 font-medium py-4">Term</TableBodyCell>
+			<TableBodyCell tdClass="w-40  min-w-32 font-medium py-4">Term</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
 				{application.program_iteration.term}
 				{application.program_iteration.year}

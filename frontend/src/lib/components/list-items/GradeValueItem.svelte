@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { formatGradeValue } from '$lib/api/grade';
+	import { formatGradeValue } from '$lib/utils/gradesUtils';
 
 	export let value: number | string;
 	export let scale: number | string;

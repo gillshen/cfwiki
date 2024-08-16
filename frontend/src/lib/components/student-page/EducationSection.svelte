@@ -4,12 +4,8 @@
 	import { PlusOutline } from 'flowbite-svelte-icons';
 
 	import type { StudentDetail } from '$lib/api/student';
-
-	import {
-		orderByDateDesc,
-		orderByProgressionDesc,
-		type EnrollmentByStudent
-	} from '$lib/api/enrollment';
+	import type { EnrollmentByStudent } from '$lib/api/enrollment';
+	import { orderByProgressionDesc, orderByDateDesc } from '$lib/utils/enrollmentUtils';
 
 	import EnrollmentItem from '$lib/components/list-items/EnrollmentItem.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';

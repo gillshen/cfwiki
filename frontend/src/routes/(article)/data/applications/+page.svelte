@@ -12,6 +12,7 @@
 	import { Heading } from 'flowbite-svelte';
 
 	import type { ApplicationListItem } from '$lib/api/application';
+	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import AgCellRenderer from '$lib/abstract/agCellRenderer';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 
@@ -34,7 +35,13 @@
 	}
 
 	const columnDefs = [
-		{ headerName: 'Link', field: 'id', filter: NumberFilter, cellRenderer: IDRenderer },
+		{
+			headerName: 'Link',
+			field: 'id',
+			sortable: false,
+			filter: NumberFilter,
+			cellRenderer: IDRenderer
+		},
 		{ headerName: 'Student', field: 'student.fullname', filter: true },
 		{ headerName: 'School', filter: true, valueGetter: schoolValueGetter },
 		{ headerName: 'Program', field: 'program.display_name', filter: true },
@@ -51,7 +58,7 @@
 		const gridOptions: GridOptions = {
 			columnDefs,
 			rowData: applications,
-			suppressDragLeaveHidesColumns: true
+			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		const gridApi = createGrid(gridElement, gridOptions);

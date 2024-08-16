@@ -1,8 +1,6 @@
 import { get, patch, post, destroy } from '$lib/api/api';
 import type { Service } from '$lib/api/contract';
 import type { EnrollmentByStudent } from '$lib/api/enrollment';
-import americanStates from '$lib/constants/americanStates';
-import canadianProvinces from '$lib/constants/canadianProvinces';
 
 import type {
 	ToeflScore,
@@ -18,7 +16,7 @@ import type {
 	LsatScore
 } from '$lib/api/scores';
 
-type BaseStudent = {
+export type BaseStudent = {
 	id: number;
 	surname: string;
 	given_name: string;
@@ -83,33 +81,4 @@ export async function updateStudent(data: any) {
 
 export async function deleteStudent(data: any) {
 	return await destroy(`students/${data.id}/update/`);
-}
-
-export function formatLocation(student: BaseStudent): string {
-	const { base_country, base_subnational, base_city } = student;
-	if (!base_country) {
-		return '';
-	}
-	if (!base_subnational && !base_city) {
-		return base_country;
-	}
-	if (!base_city) {
-		return base_subnational;
-	}
-	if (!base_subnational || base_country === 'China') {
-		return base_city;
-	}
-
-	let subnationalAbbr: string;
-	switch (base_country) {
-		case 'United States':
-			subnationalAbbr = americanStates[base_subnational];
-			break;
-		case 'Canada':
-			subnationalAbbr = canadianProvinces[base_subnational];
-			break;
-		default:
-			subnationalAbbr = '';
-	}
-	return `${base_city}, ${subnationalAbbr}`;
 }

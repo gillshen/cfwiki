@@ -1,10 +1,6 @@
 <script lang="ts">
-	import {
-		type ActScore,
-		actOverall,
-		actSubToPercentage,
-		actWritingToPercentage
-	} from '$lib/api/scores';
+	import { type ActScore } from '$lib/api/scores';
+	import { actOverall, actSubToPercentage, actWritingToPercentage } from '$lib/utils/scoresUtils';
 
 	import ScoreContainer from '$lib/components/containers/ScoreContainer.svelte';
 	import ScoreItem from '$lib/components/list-items/ScoreItem.svelte';

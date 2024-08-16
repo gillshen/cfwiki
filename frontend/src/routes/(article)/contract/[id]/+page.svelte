@@ -2,7 +2,8 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { A, Button, Heading, Hr, Modal } from 'flowbite-svelte';
 
-	import { type Service, sortServicesByRole } from '$lib/api/contract';
+	import { type Service } from '$lib/api/contract';
+	import { orderByEndDateRole } from '$lib/utils/serviceUtils';
 	import ServiceItem from '$lib/components/list-items/ServiceItem.svelte';
 	import ServiceForm from '$lib/components/service-form/ServiceForm.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
@@ -44,7 +45,7 @@
 
 {#if data.contract.services.length}
 	<section class="mb-8 w-fit flex flex-wrap gap-8">
-		{#each data.contract.services.sort(sortServicesByRole) as service}
+		{#each data.contract.services.sort(orderByEndDateRole) as service}
 			<ServiceItem {service}>
 				{#if canEdit}
 					<div class="mt-8">

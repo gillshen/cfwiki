@@ -29,10 +29,10 @@
 	import {
 		orderByRoundName,
 		orderByStatus,
-		orderByStudentName,
 		orderByYearDesc,
+		orderByStudentName,
 		formatMajors
-	} from '$lib/api/application';
+	} from '$lib/utils/applicationUtils';
 
 	export let data;
 

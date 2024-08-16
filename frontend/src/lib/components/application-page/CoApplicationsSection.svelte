@@ -11,18 +11,19 @@
 
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
+	import { type ApplicationListItem, type ApplicationDetail } from '$lib/api/application';
+	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
+
 	import {
-		type ApplicationListItem,
-		type ApplicationDetail,
 		orderByStudentName,
 		orderByStatus,
 		orderByRoundName,
 		formatMajors
-	} from '$lib/api/application';
+	} from '$lib/utils/applicationUtils';
 
-	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import { isUndergraduate } from '$lib/api/program';
-	import { formatCfNames } from '$lib/api/service';
+
+	import { formatCfNames } from '$lib/utils/serviceUtils';
 
 	export let application: ApplicationDetail;
 	export let coApplications: Promise<ApplicationListItem[]>;

@@ -13,7 +13,8 @@
 	} from 'flowbite-svelte';
 
 	import type { Grade } from '$lib/api/grade';
-	import { groupGradesByProgressionTerm } from '$lib/api/grade.js';
+	import { groupGradesByProgressionTerm } from '$lib/utils/gradesUtils';
+
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import GradeForm from '$lib/components/grade-form/GradeForm.svelte';
 	import GradeValueItem from '$lib/components/list-items/GradeValueItem.svelte';

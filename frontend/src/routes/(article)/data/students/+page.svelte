@@ -11,10 +11,13 @@
 
 	import { Heading } from 'flowbite-svelte';
 
-	import { type StudentListItem, formatLocation } from '$lib/api/student';
+	import type { StudentListItem } from '$lib/api/student';
+	import { agGridOptions } from '$lib/abstract/agGridOptions';
+	import { formatLocation } from '$lib/utils/studentUtils';
+	import { formatCfNames } from '$lib/utils/serviceUtils';
+	import { makeDate, toISODate } from '$lib/utils/dateUtils';
 	import AgCellRenderer from '$lib/abstract/agCellRenderer';
 	import countryFlags from '$lib/constants/countryFlags';
-	import { makeDate, toISODate } from '$lib/utils/dateUtils';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 
 	export let data;
@@ -102,11 +105,7 @@
 			return '';
 		}
 		const services = student.latest_contract.services;
-		return services
-			.filter((s) => s.role === role)
-			.map((s) => s.cf_username)
-			.sort()
-			.join(', ');
+		return formatCfNames(services, role);
 	}
 
 	function stratPeopleValueGetter(params: ValueGetterParams): string {
@@ -190,7 +189,7 @@
 		const gridOptions: GridOptions = {
 			columnDefs,
 			rowData: students.sort((a, b) => a.fullname.localeCompare(b.fullname, 'zh-CN')),
-			suppressDragLeaveHidesColumns: true
+			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		const gridApi = createGrid(gridElement, gridOptions);

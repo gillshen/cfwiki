@@ -1,10 +1,6 @@
 <script lang="ts">
-	import {
-		type GreScore,
-		greOverall,
-		greSubToPercentage,
-		greWritingToPercentage
-	} from '$lib/api/scores';
+	import { type GreScore } from '$lib/api/scores';
+	import { greOverall, greSubToPercentage, greWritingToPercentage } from '$lib/utils/scoresUtils';
 
 	import ScoreContainer from '$lib/components/containers/ScoreContainer.svelte';
 	import ScoreItem from '$lib/components/list-items/ScoreItem.svelte';

@@ -11,6 +11,7 @@
 	import { Heading } from 'flowbite-svelte';
 
 	import type { School } from '$lib/api/school';
+	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import countryFlags from '$lib/constants/countryFlags';
 	import AgCellRenderer from '$lib/abstract/agCellRenderer';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
@@ -45,7 +46,7 @@
 		const gridOptions: GridOptions = {
 			columnDefs,
 			rowData: schools.sort((a, b) => a.name.localeCompare(b.name)),
-			suppressDragLeaveHidesColumns: true
+			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		const gridApi = createGrid(gridElement, gridOptions);

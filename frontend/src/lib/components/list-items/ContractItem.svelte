@@ -16,7 +16,8 @@
 
 	import type { Contract } from '$lib/api/student';
 	import { toShortDate } from '$lib/utils/dateUtils';
-	import { sortServicesByRole } from '$lib/api/contract';
+
+	import { orderByEndDateRole } from '$lib/utils/serviceUtils';
 
 	export let contract: Contract;
 
@@ -71,7 +72,7 @@
 		{#if contract.services.length}
 			<Table noborder divClass="mt-5 w-fit">
 				<TableBody>
-					{#each contract.services.sort(sortServicesByRole) as service}
+					{#each contract.services.sort(orderByEndDateRole) as service}
 						<TableBodyRow class="bg-inherit">
 							<TableBodyCell tdClass="w-fit font-medium py-2 pr-8">
 								<span class="text-gray-500">{clipRole(service.role)}</span>

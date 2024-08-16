@@ -2,23 +2,12 @@
 	import { Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
 
 	import type { StudentDetail } from '$lib/api/student';
-	import countryFlags from '$lib/constants/countryFlags';
-	import { formatLocation } from '$lib/api/student';
+	import { formatGender, formatLocation } from '$lib/utils/studentUtils';
 	import { toLongDate } from '$lib/utils/dateUtils';
+	import countryFlags from '$lib/constants/countryFlags';
 	import Comments from '$lib/components/typography/Comments.svelte';
 
 	export let student: StudentDetail;
-
-	const formatGender = (gender: string): string => {
-		switch (gender) {
-			case 'female':
-				return 'Female';
-			case 'male':
-				return 'Male';
-			default:
-				return gender;
-		}
-	};
 
 	const placeHolder = '-';
 </script>
@@ -34,7 +23,7 @@
 
 		<TableBodyRow>
 			<TableBodyCell tdClass="w-40 font-medium py-4">Gender</TableBodyCell>
-			<TableBodyCell tdClass="font-normal py-4">{formatGender(student.gender)}</TableBodyCell>
+			<TableBodyCell tdClass="font-normal py-4">{formatGender(student)}</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>

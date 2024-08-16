@@ -11,14 +11,3 @@ export async function createOrUpdateService(data: any) {
 export async function deleteService(data: any) {
 	return await destroy(`services/${data.id}/update/`);
 }
-
-export function formatCfNames(
-	services: { role: string; cf_username: string }[],
-	role: string
-): string {
-	return services
-		.filter((service) => service.role === role)
-		.map((service) => service.cf_username)
-		.sort()
-		.join(', ');
-}

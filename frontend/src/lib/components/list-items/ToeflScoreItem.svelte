@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { type ToeflScore, toeflOverall, toeflSubToPercentage } from '$lib/api/scores';
+	import { type ToeflScore } from '$lib/api/scores';
+	import { toeflOverall, toeflSubToPercentage } from '$lib/utils/scoresUtils';
+
 	import ScoreContainer from '$lib/components/containers/ScoreContainer.svelte';
 	import ScoreItem from '$lib/components/list-items/ScoreItem.svelte';
 	import ScoreBar from '$lib/components/list-items/ScoreBar.svelte';

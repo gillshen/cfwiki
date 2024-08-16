@@ -1,5 +1,4 @@
-import { destroy, get, patch, post } from '$lib/api/api';
-import { cfRoles } from '$lib/api/service';
+import { createOrUpdate, get, patch, destroy } from '$lib/api/api';
 
 export const contractTypes = ['UG Freshman', 'UG Transfer', "Master's", 'PhD'] as const;
 export type ContractType = (typeof contractTypes)[number];
@@ -36,11 +35,7 @@ export async function fetchContract(id: number): Promise<ContractDetail> {
 }
 
 export async function createOrUpdateContract(data: any) {
-	if (data.id) {
-		return await patch(`contracts/${data.id}/update/`, data);
-	} else {
-		return await post('contracts/new/', data);
-	}
+	return await createOrUpdate(data, 'contracts');
 }
 
 export async function updateContract(data: any) {
@@ -49,25 +44,4 @@ export async function updateContract(data: any) {
 
 export async function deleteContract(data: any) {
 	return await destroy(`contracts/${data.id}/update/`);
-}
-
-export function sortServicesByRole(a: Service, b: Service) {
-	if (a.end_date !== b.end_date) {
-		return a.end_date === null
-			? -1
-			: b.end_date === null
-				? 1
-				: a.end_date.localeCompare(b.end_date);
-	}
-
-	const roles = Array.from(cfRoles) as string[];
-
-	let indexA = roles.indexOf(a.role) ?? 99;
-	let indexB = roles.indexOf(b.role) ?? 99;
-
-	if (indexA === indexB) {
-		return a.role.localeCompare(b.role);
-	} else {
-		return indexA - indexB;
-	}
 }
