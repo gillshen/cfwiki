@@ -69,7 +69,7 @@
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-40 font-medium py-4 align-top">Comments</TableBodyCell>
+			<TableBodyCell tdClass="w-40 min-w-40 font-medium py-4 align-top">Comments</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
 				{#if student.comments}
 					<Comments text={student.comments} divClass="pr-4" />

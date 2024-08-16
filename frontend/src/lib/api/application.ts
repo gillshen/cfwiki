@@ -19,6 +19,10 @@ export type ApplicationListItem = {
 	program: { type: string; display_name: string };
 	program_iteration: { year: number; term: string };
 	round: { name: string; due_date: string | null };
+	major_1: string;
+	major_2: string;
+	major_3: string;
+	comments: string;
 	latest_log: { status: ApplicationStatus; date: string } | null;
 };
 
@@ -37,6 +41,10 @@ export type ApplicationDetail = {
 		timezone: string;
 		decision_date: string | null;
 	};
+	major_1: string;
+	major_2: string;
+	major_3: string;
+	comments: string;
 	logs: ApplicationLog[];
 };
 
@@ -78,6 +86,16 @@ export async function changeApplicationRound(data: {
 	round_name: string;
 }) {
 	return await patch(`applications/${data.id}/update-round/`, data);
+}
+
+export async function updateApplication(data: {
+	id: number;
+	major_1: string;
+	major_2: string;
+	major_3: string;
+	comments: string;
+}) {
+	return await patch(`applications/${data.id}/update/`, data);
 }
 
 export async function deleteApplication(data: any) {
@@ -155,4 +173,9 @@ export function orderBySchoolName(a: ApplicationListItem, b: ApplicationListItem
 
 export function orderByStudentName(a: ApplicationListItem, b: ApplicationListItem) {
 	return a.student.fullname.localeCompare(b.student.fullname);
+}
+
+export function formatMajors(application: ApplicationListItem): string {
+	const majors = [application.major_1, application.major_2, application.major_3];
+	return majors.filter(Boolean).join('; ');
 }

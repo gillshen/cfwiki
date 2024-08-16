@@ -24,12 +24,14 @@
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { toShortDate, toShortYearMonth } from '$lib/utils/dateUtils';
+	import { isUndergraduate } from '$lib/api/program';
 
 	import {
 		orderByRoundName,
 		orderByStatus,
 		orderByStudentName,
-		orderByYearDesc
+		orderByYearDesc,
+		formatMajors
 	} from '$lib/api/application';
 
 	export let data;
@@ -89,10 +91,15 @@
 									<TableBodyCell class="font-normal">{appl.program_iteration.year}</TableBodyCell>
 									<TableBodyCell class="font-normal">{appl.program.type}</TableBodyCell>
 									<TableBodyCell class="max-w-20">{appl.student.fullname}</TableBodyCell>
-									<!-- TODO major or program -->
+
 									<TableBodyCell class="font-normal max-w-48 truncate">
-										{appl.program.display_name}
+										{#if isUndergraduate(appl.program)}
+											{formatMajors(appl) || '-'}
+										{:else}
+											{appl.program.display_name}
+										{/if}
 									</TableBodyCell>
+
 									<TableBodyCell class="font-normal max-w-16">{appl.round.name}</TableBodyCell>
 									<TableBodyCell class="font-normal">
 										{toShortDate(appl.round.due_date) || '-'}

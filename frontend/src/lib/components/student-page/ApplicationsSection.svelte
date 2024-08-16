@@ -16,15 +16,17 @@
 	import type { StudentDetail } from '$lib/api/student';
 
 	import {
+		type ApplicationListItem,
 		orderByDueDate,
 		orderBySchoolName,
 		orderByStatus,
 		orderByYearDesc,
-		type ApplicationListItem
+		formatMajors
 	} from '$lib/api/application';
 
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import { toShortDate } from '$lib/utils/dateUtils';
+	import { isUndergraduate } from '$lib/api/program';
 
 	export let student: StudentDetail;
 	export let applications: Promise<ApplicationListItem[]>;
@@ -58,13 +60,18 @@
 							</TableBodyCell>
 							<TableBodyCell class="font-normal">{appl.program_iteration.year}</TableBodyCell>
 							<TableBodyCell class="font-normal">{appl.program.type}</TableBodyCell>
-							<TableBodyCell class="w-fit max-w-48 truncate">
+							<TableBodyCell class="w-fit max-w-56 truncate">
 								{appl.schools.map((s) => s.name).join(' + ')}
 							</TableBodyCell>
-							<!-- TODO major or program -->
-							<TableBodyCell class="font-normal max-w-44 truncate">
-								{appl.program.display_name}
+
+							<TableBodyCell class="font-normal max-w-48 truncate">
+								{#if isUndergraduate(appl.program)}
+									{formatMajors(appl) || '-'}
+								{:else}
+									{appl.program.display_name}
+								{/if}
 							</TableBodyCell>
+
 							<TableBodyCell class="font-normal max-w-16">{appl.round.name}</TableBodyCell>
 							<TableBodyCell class="font-normal">
 								{toShortDate(appl.round.due_date) || '-'}

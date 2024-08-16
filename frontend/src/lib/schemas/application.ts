@@ -19,3 +19,13 @@ export const roundChangeSchema = z.object({
 });
 
 export type RoundChangeSchema = typeof roundChangeSchema;
+
+export const applicationUpdateSchema = z.object({
+	id: z.number(),
+	major_1: z.string(),
+	major_2: z.string(),
+	major_3: z.string(),
+	comments: z.string()
+});
+
+export type ApplicationUpdateSchema = typeof applicationUpdateSchema;

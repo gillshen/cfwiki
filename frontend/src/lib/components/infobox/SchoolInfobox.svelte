@@ -15,7 +15,7 @@
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-40 font-medium py-4 align-top">Full name</TableBodyCell>
+			<TableBodyCell tdClass="w-40 min-w-40 font-medium py-4 align-top">Full name</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{school.name}</TableBodyCell>
 		</TableBodyRow>
 

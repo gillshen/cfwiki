@@ -17,7 +17,7 @@
 		</TableBodyRow>
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-40 font-medium py-4 align-top">
+			<TableBodyCell tdClass="w-40 min-w-40 font-medium py-4 align-top">
 				School{program.schools.length > 1 ? 's' : ''}
 			</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">

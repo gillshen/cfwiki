@@ -16,7 +16,8 @@
 		type ApplicationDetail,
 		orderByStudentName,
 		orderByStatus,
-		orderByRoundName
+		orderByRoundName,
+		formatMajors
 	} from '$lib/api/application';
 
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
@@ -64,8 +65,8 @@
 								{formatCfNames(appl.services, '文案') || '-'}
 							</TableBodyCell>
 							{#if isUndergraduate(appl.program)}
-								<TableBodyCell class="font-normal">
-									<span class="text-gray-400">TODO</span>
+								<TableBodyCell class="font-normal max-w-56 truncate">
+									{formatMajors(appl) || '-'}
 								</TableBodyCell>
 							{/if}
 							<TableBodyCell class="font-normal max-w-16">{appl.round.name}</TableBodyCell>

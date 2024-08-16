@@ -28,7 +28,8 @@
 		orderByRoundName,
 		orderByStatus,
 		orderByStudentName,
-		orderByYearDesc
+		orderByYearDesc,
+		formatMajors
 	} from '$lib/api/application';
 
 	export let data;
@@ -89,11 +90,13 @@
 								</TableBodyCell>
 								<TableBodyCell class="font-normal">{appl.program_iteration.year}</TableBodyCell>
 								<TableBodyCell class="max-w-20">{appl.student.fullname}</TableBodyCell>
+
 								{#if isUndergraduate(data.program)}
-									<TableBodyCell class="font-normal">
-										<span class="text-gray-400">TODO</span>
+									<TableBodyCell class="font-normal max-w-48 truncate">
+										{formatMajors(appl) || '-'}
 									</TableBodyCell>
 								{/if}
+
 								<TableBodyCell class="font-normal max-w-16">{appl.round.name}</TableBodyCell>
 								<TableBodyCell class="font-normal">
 									{toShortDate(appl.round.due_date) || '-'}

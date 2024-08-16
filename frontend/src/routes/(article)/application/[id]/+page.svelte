@@ -7,10 +7,11 @@
 	import ApplicationInfobox from '$lib/components/infobox/ApplicationInfobox.svelte';
 
 	import Main from '$lib/components/containers/Main.svelte';
-	import RoundRenameForm from '$lib/components/round-name-form/RoundRenameForm.svelte';
-	import RoundDatesForm from '$lib/components/round-dates-form/RoundDatesForm.svelte';
 	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
 	import RoundChangeForm from '$lib/components/round-name-form/RoundChangeForm.svelte';
+	import RoundRenameForm from '$lib/components/round-name-form/RoundRenameForm.svelte';
+	import RoundDatesForm from '$lib/components/round-dates-form/RoundDatesForm.svelte';
+	import ApplicationUpdateForm from '$lib/components/application-update-form/ApplicationUpdateForm.svelte';
 	import LogsSection from '$lib/components/application-page/LogsSection.svelte';
 	import CoApplicationsSection from '$lib/components/application-page/CoApplicationsSection.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
@@ -43,6 +44,7 @@
 	let changeRoundModal = false;
 	let renameRoundModal = false;
 	let updateDatesModal = false;
+	let updateMajorsModal = false;
 	let deleteModal = false;
 
 	const changeRoundIdNotName = () => {
@@ -54,7 +56,7 @@
 		{ text: 'Change round', action: () => (changeRoundModal = true) },
 		{ text: 'Rename round', action: () => (renameRoundModal = true) },
 		{ text: 'Update dates', action: () => (updateDatesModal = true) },
-		{ text: 'Update majors', action: () => alert('update majors') },
+		{ text: 'Update major(s)', action: () => (updateMajorsModal = true) },
 		{ text: 'Delete', action: () => (deleteModal = true), divider: true, dark: true }
 	];
 </script>
@@ -120,6 +122,16 @@
 		</div>
 	</form>
 </Modal>
+
+<FormModal
+	open={updateMajorsModal}
+	superform={data.applicationUpdateForm}
+	fields={ApplicationUpdateForm}
+	action="?/updateApplication"
+	entity={data.application}
+	title="Update majors"
+	on:close={() => (updateMajorsModal = false)}
+/>
 
 <FormModal
 	open={deleteModal}
