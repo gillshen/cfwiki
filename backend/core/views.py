@@ -3,6 +3,7 @@ from rest_framework.generics import (
     RetrieveAPIView,
     CreateAPIView,
     RetrieveUpdateDestroyAPIView,
+    get_object_or_404,
 )
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,6 +13,7 @@ from core.models import CFUser, Student, Service, Contract, Application, Applica
 from core.serializers import (
     CFUserSerializer,
     StudentListSerializer,
+    StudentByUserSerializer,
     StudentDetailSerializer,
     StudentCRUDSerializer,
     ContractDetailSerializer,
@@ -30,9 +32,36 @@ class CFUserListView(ListAPIView):
     serializer_class = CFUserSerializer
 
 
+class CFUserDetailView(RetrieveAPIView):
+    queryset = CFUser.objects.all()
+    serializer_class = CFUserSerializer
+
+    def get_object(self):
+        username = self.kwargs["username"]
+        user = get_object_or_404(CFUser, username=username)
+        self.check_object_permissions(self.request, user)
+        return user
+
+
 class StudentListView(ListAPIView):
-    queryset = Student.objects.all().prefetch_related("contracts")
+    queryset = Student.objects.all().prefetch_related(
+        "contracts",
+        "contracts__services",
+    )
     serializer_class = StudentListSerializer
+
+
+class StudentByUserListView(ListAPIView):
+    serializer_class = StudentByUserSerializer
+
+    def get_queryset(self):
+        query_params = self.request.query_params
+
+        return Student.filter(
+            cfer=query_params.get("cfer"),
+            contract_type=query_params.get("contract_type"),
+            target_year=query_params.get("target_year"),
+        )
 
 
 class StudentDetailView(RetrieveAPIView):
@@ -99,6 +128,7 @@ class ApplicationListView(ListAPIView):
 
         return Application.filter(
             student=query_params.get("student"),
+            cfer=query_params.get("cfer"),
             school=query_params.get("school"),
             program=query_params.get("program"),
             program_iteration=query_params.get("program_iteration"),

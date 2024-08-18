@@ -11,8 +11,16 @@ export type CfUserListItem = {
 	email: string;
 	is_active: boolean;
 	department: Departments.SALES | Departments.SERVICE;
+	public_banner: string;
+	private_banner: string;
 };
+
+export type CfUserDetail = CfUserListItem;
 
 export async function fetchCfUsers(): Promise<CfUserListItem[]> {
 	return await get('users/');
+}
+
+export async function fetchUser(username: string): Promise<CfUserDetail> {
+	return await get(`users/${username}/`);
 }

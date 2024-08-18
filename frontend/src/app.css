@@ -67,3 +67,8 @@ form.modal {
 .dropdown-icon {
 	@apply w-6 h-6 me-1 text-primary-800 inline-block;
 }
+
+/* fix tab panel background */
+div[role='tabpanel'] {
+	@apply bg-inherit;
+}

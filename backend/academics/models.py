@@ -53,9 +53,11 @@ class Enrollment(models.Model):
             .select_related("school", "student")
             .prefetch_related("student__contracts")
         )
+
         if school is not None:
             q = q.filter(school=school)
-        return q
+
+        return q.distinct()
 
 
 class Grade(models.Model):

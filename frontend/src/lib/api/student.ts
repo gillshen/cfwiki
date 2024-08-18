@@ -1,4 +1,4 @@
-import { get, patch, post, destroy } from '$lib/api/api';
+import { get, patch, post, destroy, buildQuery } from '$lib/api/api';
 import type { Service } from '$lib/api/contract';
 import type { EnrollmentByStudent } from '$lib/api/enrollment';
 
@@ -47,6 +47,10 @@ export type StudentListItem = BaseStudent & {
 	latest_contract: Contract;
 };
 
+export type StudentByUserListItem = BaseStudent & {
+	contracts_sorted: Contract[];
+};
+
 export type StudentDetail = BaseStudent & {
 	contracts_sorted: Contract[];
 	enrollments: EnrollmentByStudent[];
@@ -64,7 +68,14 @@ export type StudentDetail = BaseStudent & {
 };
 
 export async function fetchStudents(): Promise<StudentListItem[]> {
-	return await get('students/');
+	return await get(`students/`);
+}
+
+export async function fetchStudentsByUser(
+	params?: Record<string, any>
+): Promise<StudentByUserListItem[]> {
+	const queryString = buildQuery(params);
+	return await get(`students-by-user/${queryString}`);
 }
 
 export async function fetchStudent(id: number): Promise<StudentDetail> {
@@ -82,3 +93,9 @@ export async function updateStudent(data: any) {
 export async function deleteStudent(data: any) {
 	return await destroy(`students/${data.id}/update/`);
 }
+
+export type CohortMember = {
+	student: StudentByUserListItem;
+	contract: Contract;
+	current: boolean;
+};

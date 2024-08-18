@@ -11,25 +11,25 @@ const _termOrder: Record<string, number> = {
 	Year: 4
 } as const;
 
-export function groupGradesByProgressionTerm(grades: Grade[]): GroupedGrades {
+export function groupByProgressionTerm(grades: Grade[]): GroupedGrades {
 	const groupedGrades: GroupedGrades = {};
 
-	grades.forEach((grade: Grade) => {
+	for (const grade of grades) {
 		const key = `${grade.progression}${_joiner}${grade.term}`;
 		if (!groupedGrades[key]) {
 			groupedGrades[key] = [];
 		}
 		groupedGrades[key].push(grade);
-	});
+	}
 
 	const sortedGrades: GroupedGrades = {};
 	const sortedGroupKeys = Object.keys(groupedGrades).sort(_orderByGroupKeys);
 
-	sortedGroupKeys.forEach((key) => {
+	for (const key of sortedGroupKeys) {
 		const group = groupedGrades[key];
 		group.sort(_orderByCumulativeLast);
 		sortedGrades[key.replace(_joiner, ' ')] = group;
-	});
+	}
 
 	return sortedGrades;
 }

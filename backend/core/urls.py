@@ -2,7 +2,9 @@ from django.urls import path
 
 from core.views import (
     CFUserListView,
+    CFUserDetailView,
     StudentListView,
+    StudentByUserListView,
     StudentDetailView,
     StudentCreateView,
     StudentRUDView,
@@ -66,8 +68,10 @@ from academics.views import (
 urlpatterns = [
     # user
     path("users/", CFUserListView.as_view()),
+    path("users/<str:username>/", CFUserDetailView.as_view()),
     # student
     path("students/", StudentListView.as_view()),
+    path("students-by-user/", StudentByUserListView.as_view()),
     path("students/<int:pk>/", StudentDetailView.as_view()),
     path("students/new/", StudentCreateView.as_view()),
     path("students/<int:pk>/update/", StudentRUDView.as_view()),

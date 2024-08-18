@@ -2,6 +2,9 @@ const BASE = 'http://127.0.0.1:8000/api/';
 
 export async function get(url: string) {
 	const response = await fetch(`${BASE}${url}`);
+	if (!response.ok) {
+		throw new Error(response.statusText);
+	}
 	return await response.json();
 }
 

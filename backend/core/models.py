@@ -49,6 +49,27 @@ class Student(models.Model):
     def __str__(self) -> str:
         return self.fullname
 
+    @classmethod
+    def filter(
+        cls,
+        cfer: int = None,
+        contract_type: str = None,
+        target_year: int = None,
+    ):
+        q = cls.objects.all().prefetch_related(
+            "contracts",
+            "contracts__services__cfer",
+        )
+
+        if cfer is not None:
+            q = q.filter(contracts__services__cfer=cfer)
+        if contract_type is not None:
+            q = q.filter(contracts__type=contract_type)
+        if target_year is not None:
+            q = q.filter(contracts__target_year=target_year)
+
+        return q.distinct()
+
     @property
     def fullname(self):
         if self.surname_first:
@@ -197,6 +218,7 @@ class Application(models.Model):
     def filter(
         cls,
         student: int = None,
+        cfer: int = None,
         school: int = None,
         program: int = None,
         program_iteration: int = None,
@@ -214,6 +236,7 @@ class Application(models.Model):
                 "round__program_iteration__program",
             )
             .prefetch_related(
+                "contract__services__cfer",
                 "round__program_iteration__program__schools",
                 "logs",
             )
@@ -221,6 +244,8 @@ class Application(models.Model):
 
         if student is not None:
             q = q.filter(contract__student=student)
+        if cfer is not None:
+            q = q.filter(contract__services__cfer=cfer)
         if school is not None:
             q = q.filter(round__program_iteration__program__schools=school)
         if program is not None:
@@ -234,7 +259,7 @@ class Application(models.Model):
         if application_round is not None:
             q = q.filter(round=application_round)
 
-        return q
+        return q.distinct()
 
     @property
     def student(self) -> Student:

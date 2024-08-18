@@ -44,6 +44,15 @@ class StudentListSerializer(serializers.ModelSerializer):
     latest_contract = ContractByStudentSerializer()
 
 
+class StudentByUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = "__all__"
+
+    fullname = serializers.CharField()
+    contracts_sorted = ContractByStudentSerializer(many=True)
+
+
 class StudentDetailSerializer(serializers.ModelSerializer):
 
     class Meta:

@@ -12,7 +12,7 @@
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
 	import type { EnrollmentByStudent } from '$lib/api/enrollment';
-	import { groupGradesByProgressionTerm } from '$lib/utils/gradesUtils';
+	import { groupByProgressionTerm } from '$lib/utils/gradesUtils';
 	import { toShortYearMonth } from '$lib/utils/dateUtils';
 	import { parseNum } from '$lib/utils/numUtils';
 	import GradeValueItem from '$lib/components/list-items/GradeValueItem.svelte';
@@ -49,7 +49,7 @@
 	{#if enrollment.grades.length}
 		<Table divClass="mt-2">
 			<TableBody>
-				{#each Object.entries(groupGradesByProgressionTerm(enrollment.grades)) as [key, grades]}
+				{#each Object.entries(groupByProgressionTerm(enrollment.grades)) as [key, grades]}
 					<TableBodyRow class="bg-transparent">
 						<TableBodyCell class="text-gray-400 px-0 w-24 align-top">
 							{key}

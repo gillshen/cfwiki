@@ -49,10 +49,33 @@ export function orderBySchoolName(a: ApplicationListItem, b: ApplicationListItem
 }
 
 export function orderByStudentName(a: ApplicationListItem, b: ApplicationListItem) {
-	return a.student.fullname.localeCompare(b.student.fullname);
+	return a.student.fullname.localeCompare(b.student.fullname, 'zh-CN');
 }
 
 export function formatMajors(application: ApplicationListItem): string {
 	const majors = [application.major_1, application.major_2, application.major_3];
 	return majors.filter(Boolean).join('; ');
+}
+
+export function groupByYear(
+	applications: ApplicationListItem[]
+): Record<string, ApplicationListItem[]> {
+	const grouped: Record<string, ApplicationListItem[]> = {};
+
+	for (const appl of applications) {
+		const key = appl.program_iteration.year.toString();
+		if (!grouped[key]) {
+			grouped[key] = [];
+		}
+		grouped[key].push(appl);
+	}
+
+	const sortedGroups: Record<string, ApplicationListItem[]> = {};
+	const sortedKeys = Object.keys(grouped).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
+
+	for (const key of sortedKeys) {
+		// Add a trailing space to prevent JS from reordering the keys
+		sortedGroups[`${key} `] = grouped[key];
+	}
+	return sortedGroups;
 }

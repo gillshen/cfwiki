@@ -13,7 +13,7 @@
 	} from 'flowbite-svelte';
 
 	import type { Grade } from '$lib/api/grade';
-	import { groupGradesByProgressionTerm } from '$lib/utils/gradesUtils';
+	import { groupByProgressionTerm } from '$lib/utils/gradesUtils';
 
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import GradeForm from '$lib/components/grade-form/GradeForm.svelte';
@@ -27,7 +27,7 @@
 	export let data;
 
 	$: canEdit = true;
-	$: groupedGrades = groupGradesByProgressionTerm(data.enrollment.grades);
+	$: groupedGrades = groupByProgressionTerm(data.enrollment.grades);
 
 	let gradeModal = false;
 	let gradeDeleteModal = false;

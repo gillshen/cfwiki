@@ -16,6 +16,7 @@
 	import CoApplicationsSection from '$lib/components/application-page/CoApplicationsSection.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
+	import { isUndergraduate } from '$lib/api/program';
 
 	export let data;
 
@@ -52,11 +53,15 @@
 		changeRoundModal = true;
 	};
 
-	$: applicationActions = [
+	const applicationActions = [
 		{ text: 'Change round', action: () => (changeRoundModal = true) },
 		{ text: 'Rename round', action: () => (renameRoundModal = true) },
-		{ text: 'Update dates', action: () => (updateDatesModal = true) },
-		{ text: 'Update major(s)', action: () => (updateMajorsModal = true) },
+		{ text: 'Update dates', action: () => (updateDatesModal = true), divider: true },
+		{
+			text: 'Update major(s)',
+			action: () => (updateMajorsModal = true),
+			disabled: !isUndergraduate(data.application.program)
+		},
 		{ text: 'Delete', action: () => (deleteModal = true), divider: true, dark: true }
 	];
 </script>

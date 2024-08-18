@@ -1,6 +1,7 @@
-import type { BaseStudent } from '$lib/api/student';
+import type { BaseStudent, StudentByUserListItem, Contract, CohortMember } from '$lib/api/student';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
+import { isPast } from './dateUtils';
 
 export function formatGender(student: BaseStudent): string {
 	switch (student.gender) {
@@ -40,4 +41,89 @@ export function formatLocation(student: BaseStudent): string {
 			subnationalAbbr = '';
 	}
 	return `${base_city}, ${subnationalAbbr}`;
+}
+
+export function groupByTargetYear(
+	username: string,
+	students: StudentByUserListItem[]
+): Record<string, CohortMember[]> {
+	const groupedStudents: Record<string, CohortMember[]> = {};
+
+	for (const student of students) {
+		for (const contract of student.contracts_sorted) {
+			const status = _getServiceStatus(username, contract);
+
+			if (status !== 'never') {
+				const key = contract.target_year.toString();
+				if (!groupedStudents[key]) {
+					groupedStudents[key] = [];
+				}
+				groupedStudents[key].push({ student, contract, current: status === 'current' });
+			}
+		}
+	}
+
+	const sortedGroups: Record<string, CohortMember[]> = {};
+	const sortedGroupKeys = Object.keys(groupedStudents).sort(
+		(a, b) => parseInt(b, 10) - parseInt(a, 10)
+	);
+
+	for (const key of sortedGroupKeys) {
+		// Add a trailing space to prevent JS from reordering the keys
+		sortedGroups[`${key} `] = groupedStudents[key];
+	}
+	return sortedGroups;
+}
+
+function _getServiceStatus(username: string, contract: Contract): 'current' | 'past' | 'never' {
+	const statuses = [];
+
+	for (const service of contract.services) {
+		if (service.cf_username === username) {
+			statuses.push(
+				isPast(service.end_date) || contract.status !== 'In effect' ? 'past' : 'current'
+			);
+		}
+	}
+
+	if (!statuses.length) {
+		return 'never';
+	}
+	return statuses.includes('current') ? 'current' : 'past';
+}
+
+export function categorize(cohort: CohortMember[]): {
+	'UG Freshman': CohortMember[];
+	'UG Transfer': CohortMember[];
+	Graduate: CohortMember[];
+} {
+	const ugFreshman: CohortMember[] = [];
+	const ugTransfer: CohortMember[] = [];
+	const graduate: CohortMember[] = [];
+
+	for (const member of cohort) {
+		switch (member.contract.type) {
+			case 'UG Freshman':
+				ugFreshman.push(member);
+				break;
+			case 'UG Transfer':
+				ugTransfer.push(member);
+				break;
+			default:
+				graduate.push(member);
+		}
+	}
+
+	return {
+		'UG Freshman': ugFreshman,
+		'UG Transfer': ugTransfer,
+		Graduate: graduate
+	};
+}
+
+export function orderByStatusName(a: CohortMember, b: CohortMember) {
+	if (a.current !== b.current) {
+		return a.current ? -1 : 1;
+	}
+	return a.student.fullname.localeCompare(b.student.fullname, 'zh-CN');
 }
