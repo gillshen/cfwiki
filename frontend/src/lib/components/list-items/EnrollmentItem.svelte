@@ -9,7 +9,7 @@
 		A
 	} from 'flowbite-svelte';
 
-	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
+	import { ArrowRightOutline } from 'flowbite-svelte-icons';
 
 	import type { EnrollmentByStudent } from '$lib/api/enrollment';
 	import { groupByProgressionTerm } from '$lib/utils/gradesUtils';
@@ -76,6 +76,6 @@
 
 	<div class="mt-8 flex gap-4">
 		<slot />
-		<A href={`/grades/${enrollment.id}`}><ArrowUpRightFromSquareOutline /></A>
+		<A href={`/grades/${enrollment.id}`}><ArrowRightOutline class="ms-1" /></A>
 	</div>
 </TimelineItem>

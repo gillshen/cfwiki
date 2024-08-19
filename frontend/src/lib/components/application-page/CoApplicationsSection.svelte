@@ -1,26 +1,16 @@
 <script lang="ts">
-	import {
-		Table,
-		TableHead,
-		TableBody,
-		TableBodyRow,
-		TableBodyCell,
-		TableHeadCell,
-		A
-	} from 'flowbite-svelte';
-
-	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
+	import { Table, TableHead, TableBody, TableBodyRow, TableHeadCell } from 'flowbite-svelte';
 
 	import type { ApplicationListItem, ApplicationDetail } from '$lib/api/application';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
+	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
+	import Student from '$lib/components/table-cells/Student.svelte';
+	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
+	import Majors from '$lib/components/table-cells/Majors.svelte';
+	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
+	import PlainCell from '$lib/components/table-cells/PlainCell.svelte';
 
-	import {
-		orderByStudentName,
-		orderByStatus,
-		orderByRoundName,
-		formatMajors
-	} from '$lib/utils/applicationUtils';
-
+	import { orderByStudentName, orderByStatus, orderByRoundName } from '$lib/utils/applicationUtils';
 	import { isUndergraduate } from '$lib/utils/programUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 
@@ -54,23 +44,15 @@
 						.sort(orderByStatus)
 						.sort(orderByRoundName) as appl}
 						<TableBodyRow>
-							<TableBodyCell class="w-4 pl-2">
-								<A href={`/application/${appl.id}`}><ArrowUpRightFromSquareOutline /></A>
-							</TableBodyCell>
-							<TableBodyCell class="max-w-20">{appl.student.fullname}</TableBodyCell>
-							<TableBodyCell class="font-normal">
-								{formatCfNames(appl.services, '顾问') || '-'}
-							</TableBodyCell>
-							<TableBodyCell class="font-normal">
-								{formatCfNames(appl.services, '文案') || '-'}
-							</TableBodyCell>
+							<ApplicationLink application={appl} />
+							<Student application={appl} />
+							<PlainCell text={formatCfNames(appl.services, '顾问')} />
+							<PlainCell text={formatCfNames(appl.services, '文案')} />
 							{#if isUndergraduate(appl.program)}
-								<TableBodyCell class="font-normal max-w-56 truncate">
-									{formatMajors(appl) || '-'}
-								</TableBodyCell>
+								<Majors application={appl} maxWidth="14rem" />
 							{/if}
-							<TableBodyCell class="font-normal max-w-16">{appl.round.name}</TableBodyCell>
-							<TableBodyCell class="">{appl.latest_log?.status ?? '-'}</TableBodyCell>
+							<ApplicationRound application={appl} />
+							<ApplicationStatus application={appl} />
 						</TableBodyRow>
 					{/each}
 				</TableBody>

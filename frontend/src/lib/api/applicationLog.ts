@@ -1,5 +1,20 @@
 import { createOrUpdate, destroy } from '$lib/api/api';
-import { applicationStatusOrder } from '$lib/api/application';
+
+export const applicationStatusOrder: Record<string, number> = {
+	Started: 0,
+	Submitted: 1,
+	'Under Review': 2,
+	Deferred: 3,
+	'On Waitlist': 4,
+	Accepted: 5,
+	Enrolled: 6,
+	Rejected: 7,
+	'Pres. Rejected': 8,
+	'Offer Rescinded': 9,
+	Cancelled: 10,
+	Withdrawn: 11,
+	Untracked: 12
+};
 
 export const applicationStatuses: string[] = Object.keys(applicationStatusOrder);
 

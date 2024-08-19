@@ -11,8 +11,6 @@
 		TableHeadCell
 	} from 'flowbite-svelte';
 
-	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
-
 	import Main from '$lib/components/containers/Main.svelte';
 	import SchoolForm from '$lib/components/school-form/SchoolForm.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
@@ -20,18 +18,22 @@
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
-	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
-	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
+	import EnrollmentsLoader from '$lib/components/misc/EnrollmentsLoader.svelte';
+	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
+	import Student from '$lib/components/table-cells/Student.svelte';
+	import ProgramOrMajors from '$lib/components/table-cells/ProgramOrMajors.svelte';
+	import ShortYearMonth from '$lib/components/table-cells/ShortYearMonth.svelte';
+	import ShortDate from '$lib/components/table-cells/ShortDate.svelte';
+	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
+	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
+	import PlainCell from '$lib/components/table-cells/PlainCell.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
-	import { toShortDate, toShortYearMonth } from '$lib/utils/dateUtils';
-	import { isUndergraduate } from '$lib/utils/programUtils';
 
 	import {
 		orderByRoundName,
 		orderByStatus,
 		orderByYearDesc,
-		orderByStudentName,
-		formatMajors
+		orderByStudentName
 	} from '$lib/utils/applicationUtils';
 
 	export let data;
@@ -85,26 +87,14 @@
 								.sort(orderByRoundName)
 								.sort(orderByYearDesc) as appl}
 								<TableBodyRow>
-									<TableBodyCell class="w-4 pl-2">
-										<A href={`/application/${appl.id}`}><ArrowUpRightFromSquareOutline /></A>
-									</TableBodyCell>
-									<TableBodyCell class="font-normal">{appl.program_iteration.year}</TableBodyCell>
-									<TableBodyCell class="font-normal">{appl.program.type}</TableBodyCell>
-									<TableBodyCell class="max-w-20">{appl.student.fullname}</TableBodyCell>
-
-									<TableBodyCell class="font-normal max-w-48 truncate">
-										{#if isUndergraduate(appl.program)}
-											{formatMajors(appl) || '-'}
-										{:else}
-											{appl.program.display_name}
-										{/if}
-									</TableBodyCell>
-
-									<TableBodyCell class="font-normal max-w-16">{appl.round.name}</TableBodyCell>
-									<TableBodyCell class="font-normal">
-										{toShortDate(appl.round.due_date) || '-'}
-									</TableBodyCell>
-									<TableBodyCell class="">{appl.latest_log?.status ?? '-'}</TableBodyCell>
+									<ApplicationLink application={appl} />
+									<PlainCell text={appl.program_iteration.year} />
+									<PlainCell text={appl.program.type} />
+									<Student application={appl} />
+									<ProgramOrMajors application={appl} maxWidth="12rem" />
+									<ApplicationRound application={appl} />
+									<ShortDate date={appl.round.due_date} />
+									<ApplicationStatus application={appl} />
 								</TableBodyRow>
 							{/each}
 						</TableBody>
@@ -115,16 +105,8 @@
 	{/if}
 
 	<article class="col-span-2 mt-24">
-		<Heading tag="h2" class="text-2xl font-bold flex items-center gap-2">
-			Students and Alumni
-		</Heading>
-
-		{#await data.enrollments}
-			<FetchingDataSign divClass="mt-8" />
-		{:then enrollments}
-			{#if !enrollments.length}
-				<NoDataSign text="None" divClass="mt-6" />
-			{:else}
+		<EnrollmentsLoader enrollments={data.enrollments}>
+			<svelte:fragment let:enrollments>
 				<Table class="mt-8" hoverable={enrollments.length > 1}>
 					<TableHead>
 						<TableHeadCell class="pl-2"></TableHeadCell>
@@ -142,13 +124,9 @@
 								<TableBodyCell class="pl-2">
 									<A href={`/student/${enrollment.student.id}`}>{enrollment.student.fullname}</A>
 								</TableBodyCell>
-								<TableBodyCell class="font-normal">
-									{toShortYearMonth(enrollment.start_date) || '-'}
-								</TableBodyCell>
-								<TableBodyCell class="font-normal">
-									{toShortYearMonth(enrollment.end_date) || '-'}
-								</TableBodyCell>
-								<TableBodyCell class="font-normal">{enrollment.curriculum || '-'}</TableBodyCell>
+								<ShortYearMonth date={enrollment.start_date} />
+								<ShortYearMonth date={enrollment.end_date} />
+								<PlainCell text={enrollment.curriculum} />
 								<TableBodyCell>
 									{#if enrollment.student.latest_contract.status === 'In effect'}
 										<span class="text-green-500">Yes</span>
@@ -160,8 +138,8 @@
 						{/each}
 					</TableBody>
 				</Table>
-			{/if}
-		{/await}
+			</svelte:fragment>
+		</EnrollmentsLoader>
 	</article>
 </Main>
 

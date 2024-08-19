@@ -2,7 +2,6 @@
 	import {
 		Heading,
 		Hr,
-		A,
 		Table,
 		TableBody,
 		TableBodyCell,
@@ -11,26 +10,28 @@
 		TableHeadCell
 	} from 'flowbite-svelte';
 
-	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
-
 	import Main from '$lib/components/containers/Main.svelte';
 	import ProgramInfobox from '$lib/components/infobox/ProgramInfobox.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
+	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
+	import ShortDate from '$lib/components/table-cells/ShortDate.svelte';
+	import Majors from '$lib/components/table-cells/Majors.svelte';
+	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
+	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ProgramForm from '$lib/components/program-form/ProgramForm.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { formatSchoolNamesShort, isUndergraduate } from '$lib/utils/programUtils';
-	import { toShortDate } from '$lib/utils/dateUtils';
 
 	import {
 		orderByRoundName,
 		orderByStatus,
 		orderByYearDesc,
-		orderByStudentName,
-		formatMajors
+		orderByStudentName
 	} from '$lib/utils/applicationUtils';
+	import Student from '$lib/components/table-cells/Student.svelte';
 
 	export let data;
 
@@ -51,6 +52,7 @@
 		<div class="mt-8">
 			{#await data.applications then applications}
 				<UpdateDeleteButton
+					text="Actions"
 					updateAction={() => (programUpdateModal = true)}
 					deleteAction={() => (programDeleteModal = true)}
 					updateDisabled={isUndergraduate(data.program)}
@@ -85,23 +87,15 @@
 							.sort(orderByRoundName)
 							.sort(orderByYearDesc) as appl}
 							<TableBodyRow>
-								<TableBodyCell class="w-4 pl-2">
-									<A href={`/application/${appl.id}`}><ArrowUpRightFromSquareOutline /></A>
-								</TableBodyCell>
+								<ApplicationLink application={appl} />
 								<TableBodyCell class="font-normal">{appl.program_iteration.year}</TableBodyCell>
-								<TableBodyCell class="max-w-20">{appl.student.fullname}</TableBodyCell>
-
+								<Student application={appl} />
 								{#if isUndergraduate(data.program)}
-									<TableBodyCell class="font-normal max-w-48 truncate">
-										{formatMajors(appl) || '-'}
-									</TableBodyCell>
+									<Majors application={appl} />
 								{/if}
-
-								<TableBodyCell class="font-normal max-w-16">{appl.round.name}</TableBodyCell>
-								<TableBodyCell class="font-normal">
-									{toShortDate(appl.round.due_date) || '-'}
-								</TableBodyCell>
-								<TableBodyCell class="">{appl.latest_log?.status ?? '-'}</TableBodyCell>
+								<ApplicationRound application={appl} />
+								<ShortDate date={appl.round.due_date} />
+								<ApplicationStatus application={appl} />
 							</TableBodyRow>
 						{/each}
 					</TableBody>

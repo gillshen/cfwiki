@@ -55,6 +55,13 @@ form.modal {
 }
 .ag-theme-alpine {
 	--ag-font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial, sans-serif;
+	--ag-row-hover-color: #fff5f2;
+	--ag-grid-size: 0.4rem;
+	--ag-odd-row-background-color: rgba(250, 250, 249, 0.8);
+	--ag-input-focus-box-shadow: 0 0 0;
+	--ag-input-focus-border-color: #fe795d;
+	--ag-header-column-resize-handle-display: block;
+	--ag-header-column-resize-handle-color: rgb(168 162 158);
 	font-variant-numeric: tabular-nums;
 }
 .data-grid a {
@@ -62,6 +69,12 @@ form.modal {
 }
 .data-grid.full-page {
 	height: calc(100vh - 12rem);
+}
+.data-grid .ag-header-cell {
+	@apply bg-stone-100 hover:!bg-stone-200;
+}
+.data-grid .ag-header-cell:hover .ag-icon:hover {
+	@apply text-primary-500;
 }
 
 .dropdown-icon {
@@ -71,4 +84,32 @@ form.modal {
 /* fix tab panel background */
 div[role='tabpanel'] {
 	@apply bg-inherit;
+}
+
+.status-submitted {
+	@apply text-indigo-500;
+}
+.status-under-review {
+	@apply text-blue-500;
+}
+.status-started,
+.status-deferred {
+	@apply text-amber-600;
+}
+.status-on-waitlist {
+	@apply text-purple-600;
+}
+.status-accepted,
+.status-enrolled {
+	@apply text-green-500;
+}
+.status-rejected,
+.status-pres-rejected,
+.status-offer-rescinded {
+	@apply text-rose-500;
+}
+.status-cancelled,
+.status-withdrawn,
+.status-untracked {
+	@apply text-gray-500;
 }

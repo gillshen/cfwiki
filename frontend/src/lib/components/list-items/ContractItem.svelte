@@ -12,7 +12,7 @@
 		type IndicatorColorType
 	} from 'flowbite-svelte';
 
-	import { ArrowRightOutline, ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
+	import { ArrowRightOutline } from 'flowbite-svelte-icons';
 
 	import type { Contract } from '$lib/api/student';
 	import { isPast, toShortDate } from '$lib/utils/dateUtils';
@@ -95,7 +95,7 @@
 	<div class="mt-8 flex gap-4">
 		<slot />
 		<A href={`/contract/${contract.id}`}>
-			<ArrowUpRightFromSquareOutline />
+			<ArrowRightOutline class="ms-1" />
 		</A>
 	</div>
 </Card>

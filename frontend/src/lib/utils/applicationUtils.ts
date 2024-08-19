@@ -1,4 +1,5 @@
-import { type ApplicationListItem, applicationStatusOrder } from '$lib/api/application';
+import type { ApplicationListItem } from '$lib/api/application';
+import { applicationStatusOrder, type ApplicationStatus } from '$lib/api/applicationLog';
 import { sortedSchoolNames } from '$lib/api/school';
 
 const _roundOrder: Record<string, number> = {
@@ -78,4 +79,12 @@ export function groupByYear(
 		sortedGroups[`${key} `] = grouped[key];
 	}
 	return sortedGroups;
+}
+
+export function statusToClass(status: ApplicationStatus | undefined): string {
+	if (!status) {
+		return '';
+	} else {
+		return status.replace('.', '').replace(/ /, '-').toLowerCase();
+	}
 }

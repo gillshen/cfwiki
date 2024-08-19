@@ -1,33 +1,31 @@
 <script lang="ts">
 	import {
 		Button,
-		A,
 		Table,
 		TableBody,
 		TableBodyRow,
-		TableBodyCell,
 		TableHead,
 		TableHeadCell,
 		Tooltip
 	} from 'flowbite-svelte';
 
-	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
-
 	import type { StudentDetail } from '$lib/api/student';
 	import type { ApplicationListItem } from '$lib/api/application';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
+	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
+	import Schools from '$lib/components/table-cells/Schools.svelte';
+	import ProgramOrMajors from '$lib/components/table-cells/ProgramOrMajors.svelte';
+	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
+	import ShortDate from '$lib/components/table-cells/ShortDate.svelte';
+	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
+	import PlainCell from '$lib/components/table-cells/PlainCell.svelte';
 
 	import {
 		orderByDueDate,
 		orderBySchoolName,
 		orderByStatus,
-		orderByYearDesc,
-		formatMajors
+		orderByYearDesc
 	} from '$lib/utils/applicationUtils';
-
-	import { toShortDate } from '$lib/utils/dateUtils';
-
-	import { isUndergraduate } from '$lib/utils/programUtils';
 
 	export let student: StudentDetail;
 	export let applications: Promise<ApplicationListItem[]>;
@@ -56,28 +54,14 @@
 						.sort(orderByStatus)
 						.sort(orderByYearDesc) as appl}
 						<TableBodyRow>
-							<TableBodyCell class="w-4 pl-2">
-								<A href={`/application/${appl.id}`}><ArrowUpRightFromSquareOutline /></A>
-							</TableBodyCell>
-							<TableBodyCell class="font-normal">{appl.program_iteration.year}</TableBodyCell>
-							<TableBodyCell class="font-normal">{appl.program.type}</TableBodyCell>
-							<TableBodyCell class="w-fit max-w-56 truncate">
-								{appl.schools.map((s) => s.name).join(' + ')}
-							</TableBodyCell>
-
-							<TableBodyCell class="font-normal max-w-48 truncate">
-								{#if isUndergraduate(appl.program)}
-									{formatMajors(appl) || '-'}
-								{:else}
-									{appl.program.display_name}
-								{/if}
-							</TableBodyCell>
-
-							<TableBodyCell class="font-normal max-w-16">{appl.round.name}</TableBodyCell>
-							<TableBodyCell class="font-normal">
-								{toShortDate(appl.round.due_date) || '-'}
-							</TableBodyCell>
-							<TableBodyCell class="">{appl.latest_log?.status ?? '-'}</TableBodyCell>
+							<ApplicationLink application={appl} />
+							<PlainCell text={appl.program_iteration.year} />
+							<PlainCell text={appl.program.type} />
+							<Schools application={appl} maxWidth="14rem" />
+							<ProgramOrMajors application={appl} maxWidth="12rem" />
+							<ApplicationRound application={appl} />
+							<ShortDate date={appl.round.due_date} />
+							<ApplicationStatus application={appl} />
 						</TableBodyRow>
 					{/each}
 				</TableBody>

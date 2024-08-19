@@ -9,27 +9,29 @@
 		TableBodyRow,
 		TableBodyCell,
 		TableHeadCell,
-		A,
 		Badge,
 		Button
 	} from 'flowbite-svelte';
 
-	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
-
 	import {
 		orderByDueDate,
 		orderByStatus,
-		formatMajors,
 		orderByStudentName,
 		orderBySchoolName,
-		groupByYear
+		groupByYear,
+		orderByRoundName
 	} from '$lib/utils/applicationUtils';
 
 	import { categorize, groupByTargetYear } from '$lib/utils/studentUtils';
-	import { toShortDate } from '$lib/utils/dateUtils';
-	import { isUndergraduate } from '$lib/utils/programUtils';
 	import UserCohortCard from '$lib/components/list-items/UserCohortCard.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
+	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
+	import Student from '$lib/components/table-cells/Student.svelte';
+	import Schools from '$lib/components/table-cells/Schools.svelte';
+	import ProgramOrMajors from '$lib/components/table-cells/ProgramOrMajors.svelte';
+	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
+	import ShortDate from '$lib/components/table-cells/ShortDate.svelte';
+	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
 
 	export let data;
 </script>
@@ -94,36 +96,20 @@
 								{#each appls
 									.sort(orderBySchoolName)
 									.sort(orderByStudentName)
+									.sort(orderByRoundName)
 									.sort(orderByDueDate)
 									.sort(orderByStatus) as appl}
 									<TableBodyRow>
-										<TableBodyCell class="w-4 pl-2">
-											<A href={`/application/${appl.id}`}><ArrowUpRightFromSquareOutline /></A>
-										</TableBodyCell>
-
+										<ApplicationLink application={appl} />
 										<TableBodyCell class="font-normal max-w-30">{appl.program.type}</TableBodyCell>
-										<TableBodyCell class="font-normal">{appl.student.fullname}</TableBodyCell>
-										<TableBodyCell class="w-fit max-w-56 truncate font-normal">
-											{appl.schools.map((s) => s.name).join(' + ')}
-										</TableBodyCell>
-
-										<TableBodyCell class="font-normal max-w-48 truncate">
-											{#if isUndergraduate(appl.program)}
-												{formatMajors(appl) || '-'}
-											{:else}
-												{appl.program.display_name}
-											{/if}
-										</TableBodyCell>
-
-										<TableBodyCell class="font-normal max-w-16">{appl.round.name}</TableBodyCell>
+										<Student application={appl} />
+										<Schools application={appl} maxWidth="14rem" />
+										<ProgramOrMajors application={appl} maxWidth="12rem" />
+										<ApplicationRound application={appl} />
 										{#if appl.latest_log?.status && appl.latest_log.status !== 'Started'}
-											<TableBodyCell>
-												{appl.latest_log?.status || '-'}
-											</TableBodyCell>
+											<ApplicationStatus application={appl} />
 										{:else}
-											<TableBodyCell class="font-normal">
-												{toShortDate(appl.round.due_date) || '-'}
-											</TableBodyCell>
+											<ShortDate date={appl.round.due_date} />
 										{/if}
 									</TableBodyRow>
 								{/each}

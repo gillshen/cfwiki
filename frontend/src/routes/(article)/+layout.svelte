@@ -45,7 +45,7 @@
 			<span class="self-center whitespace-nowrap text-lg font-semibold">ChoiceFreezer</span>
 		</NavBrand>
 
-		<div class="flex align-baseline md:order-2">
+		<div class="flex align-baseline md:order-2 ml-12">
 			<Avatar bordered size="sm" />
 			<Dropdown class="w-[8rem] z-20" placement="bottom-end">
 				<DropdownItem>Account</DropdownItem>
@@ -55,10 +55,8 @@
 		</div>
 
 		<NavUl>
-			<NavLi href="/home" class="mr-4">Home</NavLi>
-
 			<NavLi class="cursor-pointer">
-				CF People<ChevronDownOutline class="dropdown-icon" />
+				CFers<ChevronDownOutline class="dropdown-icon" />
 			</NavLi>
 			<Dropdown>
 				<div class="grid grid-cols-4 gap-x-4 px-1">
@@ -78,7 +76,7 @@
 				</div>
 				{#if exUsers.length}
 					<DropdownDivider />
-					<DropdownItem class="rounded-md w-fit mx-1" href="/excf">Ex-CF</DropdownItem>
+					<DropdownItem class="rounded-md w-fit mx-1" href="/excf">Ex-CFers</DropdownItem>
 				{/if}
 			</Dropdown>
 
