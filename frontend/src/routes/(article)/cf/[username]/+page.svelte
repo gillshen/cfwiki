@@ -27,7 +27,7 @@
 
 	import { categorize, groupByTargetYear } from '$lib/utils/studentUtils';
 	import { toShortDate } from '$lib/utils/dateUtils';
-	import { isUndergraduate } from '$lib/api/program';
+	import { isUndergraduate } from '$lib/utils/programUtils';
 	import UserCohortCard from '$lib/components/list-items/UserCohortCard.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 
@@ -48,7 +48,7 @@
 					{@const cohorts = categorize(cohort)}
 
 					<div class="flex flex-col">
-						<Heading tag="h3" class="text-2xl tabular-nums">{year.trim()}</Heading>
+						<Heading tag="h2" class="text-xl tabular-nums">{year.trim()}</Heading>
 
 						<div class="grid grid-cols-3 gap-8 mt-4">
 							{#each Object.entries(cohorts) as [contractType, cohort]}
@@ -74,7 +74,7 @@
 			<div class="flex flex-col gap-12">
 				{#each Object.entries(groupByYear(applications)) as [year, appls]}
 					<div>
-						<Heading tag="h3" class="flex items-center gap-2 text-2xl tabular-nums mb-4">
+						<Heading tag="h2" class="flex items-center gap-2 text-xl tabular-nums mb-4">
 							{year.trim()}
 							<Badge>{appls.length}</Badge>
 						</Heading>

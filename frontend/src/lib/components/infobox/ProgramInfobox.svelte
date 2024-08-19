@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
 
-	import { isUndergraduate, type ProgramDetail } from '$lib/api/program';
+	import type { ProgramDetail } from '$lib/api/program';
+	import { isUndergraduate } from '$lib/utils/programUtils';
 	import LinkWithIcon from '$lib/components/links/LinkWithIcon.svelte';
 
 	export let program: ProgramDetail;

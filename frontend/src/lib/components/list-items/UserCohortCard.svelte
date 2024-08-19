@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Card, A, Avatar, Heading, Badge } from 'flowbite-svelte';
+	import { A, Heading, Badge } from 'flowbite-svelte';
 
 	import type { CohortMember } from '$lib/api/student';
 	import { orderByStatusName } from '$lib/utils/studentUtils';
@@ -12,11 +12,8 @@
 	const pastStudents = sortedCohort.filter((item) => !item.current);
 </script>
 
-<Card class="flex flex-col w-full h-fit">
-	<Heading
-		tag="h3"
-		class="flex items-center gap-2 text-xl font-medium mx-6 pb-2 border-b-2 border-primary-700"
-	>
+<div class="flex flex-col w-full h-fit px-4 py-6 bg-stone-50 rounded-xl overflow-x-hidden">
+	<Heading tag="h3" class="flex items-center gap-2 ml-6 w-fit text-xl font-medium">
 		{contractType}
 		{#if currentStudents.length}
 			<Badge>{currentStudents.length}</Badge>
@@ -26,7 +23,9 @@
 		{/if}
 	</Heading>
 
-	<div class="flex flex-col gap-6 mx-6 mt-4 mb-2">
+	<hr class="mx-6 mt-2 mb-4" />
+
+	<div class="flex flex-col gap-6 mx-6 mb-2">
 		{#if currentStudents.length}
 			<div class="flex flex-col gap-2">
 				{#each currentStudents as { student }}
@@ -47,4 +46,4 @@
 			</div>
 		{/if}
 	</div>
-</Card>
+</div>

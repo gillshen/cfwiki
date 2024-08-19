@@ -1,5 +1,4 @@
 import { get, patch, post, destroy } from '$lib/api/api';
-import { orderByName } from '$lib/api/school';
 
 export const programTypes = [
 	'UG Freshman',
@@ -50,14 +49,4 @@ export async function updateProgram(data: any) {
 
 export async function deleteProgram(data: any) {
 	return await destroy(`programs/${data.id}/update/`);
-}
-
-export function formatSchoolNamesShort(program: ProgramListItem | ProgramDetail): string {
-	return orderByName(program.schools)
-		.map((s) => s.alt_name || s.name)
-		.join(' + ');
-}
-
-export function isUndergraduate(program: { type: string }): boolean {
-	return program.type === 'UG Freshman' || program.type === 'UG Transfer';
 }

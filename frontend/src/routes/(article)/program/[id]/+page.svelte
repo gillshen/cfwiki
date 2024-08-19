@@ -21,7 +21,7 @@
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
-	import { formatSchoolNamesShort, isUndergraduate } from '$lib/api/program';
+	import { formatSchoolNamesShort, isUndergraduate } from '$lib/utils/programUtils';
 	import { toShortDate } from '$lib/utils/dateUtils';
 
 	import {

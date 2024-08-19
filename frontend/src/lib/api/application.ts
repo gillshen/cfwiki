@@ -110,8 +110,9 @@ export const applicationStatusOrder: Record<string, number> = {
 	Accepted: 5,
 	Enrolled: 6,
 	Rejected: 7,
-	'Offer Rescinded': 8,
-	Cancelled: 9,
-	Withdrawn: 10,
-	'Not Tracked': 11
+	'Pres. Rejected': 8,
+	'Offer Rescinded': 9,
+	Cancelled: 10,
+	Withdrawn: 11,
+	Untracked: 12
 };

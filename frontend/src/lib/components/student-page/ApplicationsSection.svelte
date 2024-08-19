@@ -26,7 +26,8 @@
 	} from '$lib/utils/applicationUtils';
 
 	import { toShortDate } from '$lib/utils/dateUtils';
-	import { isUndergraduate } from '$lib/api/program';
+
+	import { isUndergraduate } from '$lib/utils/programUtils';
 
 	export let student: StudentDetail;
 	export let applications: Promise<ApplicationListItem[]>;

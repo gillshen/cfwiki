@@ -16,7 +16,7 @@
 	import CoApplicationsSection from '$lib/components/application-page/CoApplicationsSection.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
-	import { isUndergraduate } from '$lib/api/program';
+	import { isUndergraduate } from '$lib/utils/programUtils';
 
 	export let data;
 

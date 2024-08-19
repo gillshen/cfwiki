@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
+
 	import {
 		Label,
 		Input,
@@ -14,8 +15,9 @@
 		Heading
 	} from 'flowbite-svelte';
 
-	import { programTypes } from '$lib/api/program';
 	import ProgramForm from '$lib/components/program-form/ProgramForm.svelte';
+	import { programTypes } from '$lib/api/program';
+	import { formatSelectOption } from '$lib/utils/programUtils';
 
 	export let data;
 
@@ -130,7 +132,7 @@
 		<Label for="program" class="form-label">Program</Label>
 		<Select id="program" name="program" bind:value={programId} required>
 			{#each programs as program}
-				<option value={program.id}>{program.display_name}</option>
+				<option value={program.id}>{formatSelectOption(program)}</option>
 			{/each}
 		</Select>
 		<Helper class="mt-2">
