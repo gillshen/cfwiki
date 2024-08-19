@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { superForm } from 'sveltekit-superforms';
+
 	import {
 		Table,
 		TableBody,
@@ -11,14 +13,23 @@
 		Button,
 		Heading
 	} from 'flowbite-svelte';
-	import { superForm } from 'sveltekit-superforms';
+
+	import Toast from '$lib/components/misc/Toast.svelte';
 	import { activeYears } from '$lib/utils/dateUtils';
 	import { getRoundNames } from '$lib/constants/applicationRounds.js';
 	import { academicTerms } from '$lib/constants/progressions';
 
 	export let data;
 
-	const { form, enhance } = superForm(data.newApplicationForm);
+	const { form, enhance } = superForm(data.newApplicationForm, {
+		onUpdated({ form }) {
+			if (!form.valid) {
+				showToast = true;
+			}
+		}
+	});
+
+	let showToast = false;
 </script>
 
 <Heading tag="h3">Create an application</Heading>
@@ -90,3 +101,9 @@
 		</div>
 	</form>
 </div>
+
+{#if showToast}
+	<Toast type="error" onClose={() => (showToast = false)}>
+		Operation failed. Maybe the application you were trying to create already exists.
+	</Toast>
+{/if}

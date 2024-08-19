@@ -1,5 +1,8 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from django.db import IntegrityError
 from core.models import CFUser, Student, Contract, Service, Application, ApplicationLog
+
 from target.models import School, Program, ProgramIteration, ApplicationRound
 import academics.serializers
 
@@ -87,6 +90,12 @@ class ServiceCRUDSerializer(serializers.ModelSerializer):
         model = Service
         fields = "__all__"
 
+    def create(self, validated_data):
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            raise ValidationError({"detail": "Service already exists"})
+
 
 class ContractDetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -109,6 +118,12 @@ class ContractCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
         fields = "__all__"
+
+    def create(self, validated_data):
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            raise ValidationError({"detail": "Contract already exists"})
 
 
 class ApplicationListSerializer(serializers.ModelSerializer):
@@ -242,10 +257,14 @@ class ApplicationCreateUpdateSerializer(serializers.ModelSerializer):
             program_iteration=program_iteration,
             name=validated_data["round_name"],
         )
-        application = Application.objects.create(
-            contract=validated_data["contract"],
-            round=application_round,
-        )
+        try:
+            application = Application.objects.create(
+                contract=validated_data["contract"],
+                round=application_round,
+            )
+        except IntegrityError:
+            raise ValidationError({"detail": "Application already exists"})
+
         return application
 
     def update(self, instance, validated_data):

@@ -87,6 +87,6 @@
 >
 	<DeleteMessage
 		slot="preface"
-		name={`this educational experience (at ${activeEnrollment?.school.name})`}
+		name={`this educational experience (${activeEnrollment?.school.name})`}
 	/>
 </FormModal>

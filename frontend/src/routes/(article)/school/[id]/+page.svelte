@@ -24,7 +24,7 @@
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { toShortDate, toShortYearMonth } from '$lib/utils/dateUtils';
-	import { isUndergraduate } from '$lib/api/program';
+	import { isUndergraduate } from '$lib/utils/programUtils';
 
 	import {
 		orderByRoundName,

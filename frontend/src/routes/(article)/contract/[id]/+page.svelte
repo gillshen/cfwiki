@@ -2,7 +2,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { A, Button, Heading, Hr, Modal } from 'flowbite-svelte';
 
-	import { type Service } from '$lib/api/contract';
+	import type { Service } from '$lib/api/contract';
 	import { orderByEndDateRole } from '$lib/utils/serviceUtils';
 	import ServiceItem from '$lib/components/list-items/ServiceItem.svelte';
 	import ServiceForm from '$lib/components/service-form/ServiceForm.svelte';
@@ -10,6 +10,7 @@
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
+	import Toast from '$lib/components/misc/Toast.svelte';
 
 	export let data;
 
@@ -17,6 +18,8 @@
 		onUpdated({ form }) {
 			if (form.valid) {
 				serviceModal = false;
+			} else {
+				showToast = true;
 			}
 		}
 	});
@@ -33,6 +36,8 @@
 			serviceModal = true;
 		};
 	};
+
+	let showToast = false;
 </script>
 
 <Heading tag="h1" class="alt-page-title">
@@ -97,3 +102,9 @@
 		name={`this record (${activeService?.cf_username} advising ${data.contract.student_name})`}
 	/>
 </FormModal>
+
+{#if showToast}
+	<Toast type="error" onClose={() => (showToast = false)}>
+		Operation failed. Maybe you were trying to duplicate an existing record?
+	</Toast>
+{/if}

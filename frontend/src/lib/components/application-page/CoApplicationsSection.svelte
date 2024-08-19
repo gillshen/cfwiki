@@ -11,7 +11,7 @@
 
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
-	import { type ApplicationListItem, type ApplicationDetail } from '$lib/api/application';
+	import type { ApplicationListItem, ApplicationDetail } from '$lib/api/application';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 
 	import {
@@ -21,8 +21,7 @@
 		formatMajors
 	} from '$lib/utils/applicationUtils';
 
-	import { isUndergraduate } from '$lib/api/program';
-
+	import { isUndergraduate } from '$lib/utils/programUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 
 	export let application: ApplicationDetail;

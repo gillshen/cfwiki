@@ -3,6 +3,8 @@
 	import { Modal } from 'flowbite-svelte';
 	import { superForm, type SuperValidated } from 'sveltekit-superforms';
 
+	import Toast from '$lib/components/misc/Toast.svelte';
+
 	export let superform: SuperValidated<any>;
 	export let fields: any;
 	export let action: string;
@@ -18,9 +20,13 @@
 		onUpdated({ form }) {
 			if (form.valid) {
 				dispatch('close');
+			} else {
+				showToast = true;
 			}
 		}
 	});
+
+	let showToast = false;
 </script>
 
 <Modal {title} bind:open outsideclose on:close={() => dispatch('close')}>
@@ -35,3 +41,9 @@
 		</div>
 	</form>
 </Modal>
+
+{#if showToast}
+	<Toast type="error" onClose={() => (showToast = false)}>
+		Operation failed. Maybe you were trying to duplicate an existing record?
+	</Toast>
+{/if}

@@ -52,14 +52,14 @@
 	};
 </script>
 
-<Card class="min-h-[300px] hover:bg-white flex flex-col justify-between">
+<Card class="min-h-[300px] min-w-[224px] hover:bg-white flex flex-col justify-between">
 	<div>
 		<div class="flex gap-2 items-center">
 			<Indicator color={setColor(contract.status)} />
 			<P size="sm" color="text-gray-500" class="font-medium">{contract.status}</P>
 		</div>
 
-		<Heading tag="h3" class="font-bold text-xl mt-3 mb-1">
+		<Heading tag="h3" class="font-bold text-xl tracking-wide mt-3 mb-1">
 			{contract.type}
 			{contract.target_year}
 		</Heading>

@@ -13,7 +13,7 @@
 </script>
 
 <div class="flex flex-col w-full h-fit px-4 py-6 bg-stone-50 rounded-xl overflow-x-hidden">
-	<Heading tag="h3" class="flex items-center gap-2 ml-6 w-fit text-xl font-medium">
+	<Heading tag="h3" class="flex items-center gap-2 ml-6 w-fit text-xl font-bold  tracking-wide">
 		{contractType}
 		{#if currentStudents.length}
 			<Badge>{currentStudents.length}</Badge>

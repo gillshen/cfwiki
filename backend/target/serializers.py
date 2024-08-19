@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from django.db import IntegrityError
 from target.models import School, Program, ApplicationRound
 
 
@@ -12,6 +14,12 @@ class SchoolCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
         fields = "__all__"
+
+    def create(self, validated_data):
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            raise ValidationError({"detail": "School already exists"})
 
 
 class ProgramSerializer(serializers.ModelSerializer):

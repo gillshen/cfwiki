@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from django.db import IntegrityError
 
 from academics.models import (
     Enrollment,
@@ -85,6 +87,12 @@ class EnrollmentCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
         fields = "__all__"
+
+    def create(self, validated_data):
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            raise ValidationError({"detail": "Educational experience already exists"})
 
 
 class GradeCRUDSerializer(serializers.ModelSerializer):

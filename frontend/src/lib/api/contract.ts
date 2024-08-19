@@ -1,6 +1,6 @@
 import { createOrUpdate, get, patch, destroy } from '$lib/api/api';
 
-export const contractTypes = ['UG Freshman', 'UG Transfer', "Master's", 'Doctorate'] as const;
+export const contractTypes = ['UG Freshman', 'UG Transfer', 'Graduate', 'Other'] as const;
 export type ContractType = (typeof contractTypes)[number];
 
 export const contractStatuses = ['In effect', 'Fulfilled', 'Terminated'] as const;
