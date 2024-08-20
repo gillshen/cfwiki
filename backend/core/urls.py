@@ -16,7 +16,6 @@ from core.views import (
     ApplicationListView,
     ApplicationDetailView,
     ApplicationCreateView,
-    ApplicationUpdateRoundView,
     ApplicationRUDView,
     ApplicationLogCreateView,
     ApplicationLogRUDView,
@@ -31,6 +30,8 @@ from target.views import (
     ProgramDetailView,
     ProgramCreateView,
     ProgramRUDView,
+    ApplicationRoundListView,
+    ApplicationRoundCreateView,
     ApplicationRoundRUDView,
 )
 
@@ -93,12 +94,13 @@ urlpatterns = [
     path("programs/new/", ProgramCreateView.as_view()),
     path("programs/<int:pk>/update/", ProgramRUDView.as_view()),
     # application round
+    path("application-rounds/", ApplicationRoundListView.as_view()),
+    path("application-rounds/new/", ApplicationRoundCreateView.as_view()),
     path("application-rounds/<int:pk>/update/", ApplicationRoundRUDView.as_view()),
     # application
     path("applications/", ApplicationListView.as_view()),
     path("applications/<int:pk>/", ApplicationDetailView.as_view()),
     path("applications/new/", ApplicationCreateView.as_view()),
-    path("applications/<int:pk>/update-round/", ApplicationUpdateRoundView.as_view()),
     path("applications/<int:pk>/update/", ApplicationRUDView.as_view()),
     # application log
     path("application-logs/new/", ApplicationLogCreateView.as_view()),

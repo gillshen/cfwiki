@@ -13,7 +13,9 @@ from target.serializers import (
     ProgramSerializer,
     ProgramCreateSerializer,
     ProgramCRUDSerializer,
-    ApplicationRoundCRUDSerializer,
+    ApplicationRoundListSerializer,
+    ApplicationRoundRUDSerializer,
+    ApplicationRoundCreateSerializer,
 )
 
 
@@ -57,6 +59,22 @@ class ProgramRUDView(RetrieveUpdateDestroyAPIView):
     serializer_class = ProgramCRUDSerializer
 
 
+class ApplicationRoundListView(ListAPIView):
+    serializer_class = ApplicationRoundListSerializer
+
+    def get_queryset(self):
+        q = ApplicationRound.objects.all().select_related("program_iteration")
+        program_id = self.request.query_params.get("program")
+        if program_id is not None:
+            q = q.filter(program_iteration__program=program_id)
+        return q
+
+
 class ApplicationRoundRUDView(RetrieveUpdateDestroyAPIView):
     queryset = ApplicationRound.objects.all()
-    serializer_class = ApplicationRoundCRUDSerializer
+    serializer_class = ApplicationRoundRUDSerializer
+
+
+class ApplicationRoundCreateView(CreateAPIView):
+    queryset = ApplicationRound.objects.all()
+    serializer_class = ApplicationRoundCreateSerializer

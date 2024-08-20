@@ -236,58 +236,7 @@ class ApplicationDetailSerializer(serializers.ModelSerializer):
     logs = ApplicationLogSerializer(many=True)
 
 
-class ApplicationCreateUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Application
-        fields = ["id", "contract", "program", "year", "term", "round_name"]
-
-    program = serializers.IntegerField(write_only=True)
-    year = serializers.IntegerField(write_only=True)
-    term = serializers.CharField(write_only=True)
-    round_name = serializers.CharField(write_only=True)
-
-    def create(self, validated_data):
-        program = Program.objects.get(id=validated_data["program"])
-        program_iteration, _ = ProgramIteration.objects.get_or_create(
-            program=program,
-            year=validated_data["year"],
-            term=validated_data["term"],
-        )
-        application_round, _ = ApplicationRound.objects.get_or_create(
-            program_iteration=program_iteration,
-            name=validated_data["round_name"],
-        )
-        try:
-            application = Application.objects.create(
-                contract=validated_data["contract"],
-                round=application_round,
-            )
-        except IntegrityError:
-            raise ValidationError({"detail": "Application already exists"})
-
-        return application
-
-    def update(self, instance, validated_data):
-        round_name = validated_data["round_name"]
-
-        if instance.round.name != round_name:
-            program = Program.objects.get(id=validated_data["program"])
-            program_iteration = ProgramIteration.objects.get(
-                program=program,
-                year=validated_data["year"],
-                term=validated_data["term"],
-            )
-            application_round, _ = ApplicationRound.objects.get_or_create(
-                program_iteration=program_iteration,
-                name=validated_data["round_name"],
-            )
-            instance.round = application_round
-            instance.save()
-
-        return instance
-
-
-class ApplicationRUDSerializer(serializers.ModelSerializer):
+class ApplicationCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = "__all__"

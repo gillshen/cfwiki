@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.db import IntegrityError
-from target.models import School, Program, ApplicationRound
+from target.models import School, Program, ProgramIteration, ApplicationRound
 
 
 class SchoolSerializer(serializers.ModelSerializer):
@@ -60,7 +60,60 @@ class ProgramCRUDSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ApplicationRoundCRUDSerializer(serializers.ModelSerializer):
+class ApplicationRoundListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationRound
+        fields = "__all__"
+
+    class ProgramIterationSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = ProgramIteration
+            fields = "__all__"
+
+    program_iteration = ProgramIterationSerializer()
+
+
+class ApplicationRoundCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationRound
+        fields = [
+            "program",
+            "year",
+            "term",
+            "name",
+            "due_date",
+            "due_time",
+            "timezone",
+            "decision_date",
+        ]
+
+    program = serializers.IntegerField(write_only=True)
+    year = serializers.IntegerField(write_only=True)
+    term = serializers.CharField(write_only=True)
+
+    def create(self, validated_data):
+        program = Program.objects.get(id=validated_data["program"])
+        program_iteration, _ = ProgramIteration.objects.get_or_create(
+            program=program,
+            year=validated_data["year"],
+            term=validated_data["term"],
+        )
+        try:
+            application_round = ApplicationRound.objects.create(
+                program_iteration=program_iteration,
+                name=validated_data["name"],
+                due_date=validated_data["due_date"],
+                due_time=validated_data["due_time"],
+                timezone=validated_data["timezone"],
+                decision_date=validated_data["decision_date"],
+            )
+        except IntegrityError:
+            raise ValidationError({"detail": "Application round already exists"})
+
+        return application_round
+
+
+class ApplicationRoundRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationRound
         fields = "__all__"

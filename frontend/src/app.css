@@ -36,6 +36,9 @@ h2 {
 .form-radio-group {
 	@apply grid grid-cols-1 mb-4 gap-2;
 }
+.form-radio {
+	@apply font-normal w-fit;
+}
 .form-checkbox {
 	@apply mt-8 mb-6 space-x-1 font-normal;
 }

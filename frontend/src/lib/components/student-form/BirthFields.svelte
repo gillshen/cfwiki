@@ -9,9 +9,9 @@
 
 <Label class="form-label">Gender</Label>
 <div class="grid grid-cols-1 mb-4 gap-2">
-	<Radio name="gender" value="female" class="font-normal" bind:group={$form.gender}>Female</Radio>
-	<Radio name="gender" value="male" class="font-normal" bind:group={$form.gender}>Male</Radio>
-	<Radio name="gender" value="other" class="font-normal" bind:group={$form.gender} required
+	<Radio name="gender" value="female" class="form-radio" bind:group={$form.gender}>Female</Radio>
+	<Radio name="gender" value="male" class="form-radio" bind:group={$form.gender}>Male</Radio>
+	<Radio name="gender" value="other" class="form-radio" bind:group={$form.gender} required
 		>Other</Radio
 	>
 </div>

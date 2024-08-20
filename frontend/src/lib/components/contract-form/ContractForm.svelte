@@ -44,7 +44,7 @@
 		<Radio
 			name="status"
 			value={contractStatus}
-			class="font-normal"
+			class="form-radio"
 			bind:group={$form.status}
 			required>{contractStatus}</Radio
 		>

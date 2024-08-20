@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { Label, Select, Button, P, A } from 'flowbite-svelte';
-	import { getRoundNames } from '$lib/constants/applicationRounds';
+	import { Label, Button, P, A, Input } from 'flowbite-svelte';
 
 	export let form: any;
-	export let programType: string;
 	export let redirectToRoundIdForm: () => void;
 </script>
 
@@ -19,10 +17,6 @@
 </div>
 
 <Label for="round-name" class="form-label">Name</Label>
-<Select id="round-name" name="name" bind:value={$form.name} required>
-	{#each getRoundNames(programType) as roundName}
-		<option value={roundName}>{roundName}</option>
-	{/each}
-</Select>
+<Input id="round-name" type="text" name="name" maxlength="50" bind:value={$form.name} required />
 
 <Button type="submit" class="mt-8">Update</Button>

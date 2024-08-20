@@ -137,6 +137,7 @@
 	const columnDefs = [
 		{
 			headerName: 'Name',
+			flex: 1,
 			valueGetter: nameValueGetter,
 			comparator: localeComparator,
 			cellRenderer: NameRenderer
@@ -151,6 +152,7 @@
 		},
 		{
 			headerName: 'Home',
+			flex: 1,
 			valueGetter: homeValueGetter,
 			comparator: localeComparator,
 			valueFormatter: homeValueFormatter

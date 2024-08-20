@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { Label, Input, Select, Hr } from 'flowbite-svelte';
 	import { timeZones } from '$lib/constants/timeZones';
-	import { Label, Input, Select, Hr, Button } from 'flowbite-svelte';
 
 	export let form: any;
 </script>
@@ -33,5 +33,3 @@
 		<Input id="decision-date" type="date" name="decision_date" bind:value={$form.decision_date} />
 	</div>
 </div>
-
-<Button type="submit" class="mt-8">Update</Button>

@@ -35,10 +35,10 @@
 	<div>
 		<Label for="date" class="form-label">Predicted or final</Label>
 		<div class="grid grid-cols-1 gap-2">
-			<Radio name="type" value="predicted" class="font-normal" bind:group={$form.type}
+			<Radio name="type" value="predicted" class="form-radio" bind:group={$form.type}
 				>Predicted</Radio
 			>
-			<Radio name="type" value="final" class="font-normal" bind:group={$form.type} required
+			<Radio name="type" value="final" class="form-radio" bind:group={$form.type} required
 				>Final</Radio
 			>
 		</div>

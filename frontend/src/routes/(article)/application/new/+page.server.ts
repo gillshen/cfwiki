@@ -7,7 +7,15 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '$env/static/private';
 import { fetchContract, type ContractDetail } from '$lib/api/contract';
 import { fetchProgram, type ProgramListItem } from '$lib/api/program';
+
+import {
+	createApplicationRound,
+	fetchApplicationRounds,
+	type ApplicationRoundListItem
+} from '$lib/api/applicationRound';
+
 import { newApplicationSchema } from '$lib/schemas/application';
+import { newRoundSchema } from '$lib/schemas/applicationRound';
 import { createApplication } from '$lib/api/application';
 import { formAction } from '$lib/abstract/formAction';
 
@@ -36,15 +44,26 @@ export const load: PageServerLoad = async ({ url }) => {
 			throw error(404, 'Program not found');
 		}
 
-		const newApplicationForm = await superValidate(zod(newApplicationSchema));
+		const applicationRounds: ApplicationRoundListItem[] = await fetchApplicationRounds(programId);
 
-		return { contract, program, newApplicationForm };
+		const newApplicationForm = await superValidate(zod(newApplicationSchema));
+		const newApplicationRoundForm = await superValidate(zod(newRoundSchema));
+
+		return {
+			contract,
+			program,
+			applicationRounds,
+			newApplicationForm,
+			newApplicationRoundForm
+		};
 	} catch (err) {
 		throw error(400, 'Invalid token');
 	}
 };
 
 export const actions = {
+	createApplicationRound: formAction(newRoundSchema, createApplicationRound),
+
 	createApplication: formAction(newApplicationSchema, createApplication, (newApplication) => {
 		throw redirect(303, `/application/${newApplication.id}`);
 	})

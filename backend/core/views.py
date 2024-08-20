@@ -21,8 +21,7 @@ from core.serializers import (
     ServiceCRUDSerializer,
     ApplicationListSerializer,
     ApplicationDetailSerializer,
-    ApplicationCreateUpdateSerializer,
-    ApplicationRUDSerializer,
+    ApplicationCRUDSerializer,
     ApplicationLogCRUDSerializer,
 )
 
@@ -158,19 +157,12 @@ class ApplicationDetailView(RetrieveAPIView):
 
 class ApplicationCreateView(CreateAPIView):
     queryset = Application.objects.all()
-    serializer_class = ApplicationCreateUpdateSerializer
-
-
-class ApplicationUpdateRoundView(RetrieveUpdateDestroyAPIView):
-    # for updating `round` only
-    queryset = Application.objects.all()
-    serializer_class = ApplicationCreateUpdateSerializer
+    serializer_class = ApplicationCRUDSerializer
 
 
 class ApplicationRUDView(RetrieveUpdateDestroyAPIView):
-    # for general update and delete
     queryset = Application.objects.all()
-    serializer_class = ApplicationRUDSerializer
+    serializer_class = ApplicationCRUDSerializer
 
     def destroy(self, request, *args, **kwargs):
         """Return the student after deletion"""

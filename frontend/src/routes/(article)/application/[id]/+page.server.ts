@@ -6,7 +6,6 @@ import { zod } from 'sveltekit-superforms/adapters';
 import {
 	type ApplicationDetail,
 	fetchApplication,
-	changeApplicationRound,
 	fetchCoApplications,
 	updateApplication,
 	deleteApplication
@@ -52,9 +51,9 @@ export async function load(event: PageServerLoadEvent) {
 }
 
 export const actions = {
-	updateRoundId: formAction(roundChangeSchema, changeApplicationRound),
 	updateRoundName: formAction(roundNameSchema, updateApplicationRound),
 	updateRoundDates: formAction(roundDatesSchema, updateApplicationRound),
+	updateRoundId: formAction(roundChangeSchema, updateApplication),
 	updateMajors: formAction(majorsUpdateSchema, updateApplication),
 	updateComments: formAction(commentsUpdateSchema, updateApplication),
 

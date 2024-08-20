@@ -9,7 +9,7 @@
 	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
 	import RoundChangeForm from '$lib/components/application-update-form/RoundChangeForm.svelte';
 	import RoundRenameForm from '$lib/components/application-round-form/RoundRenameForm.svelte';
-	import RoundDatesForm from '$lib/components/round-dates-form/RoundDatesForm.svelte';
+	import RoundDatesForm from '$lib/components/application-round-form/RoundDatesForm.svelte';
 	import MajorsForm from '$lib/components/application-update-form/MajorsForm.svelte';
 	import CommentsForm from '$lib/components/application-update-form/CommentsForm.svelte';
 	import LogsSection from '$lib/components/application-page/LogsSection.svelte';
@@ -118,11 +118,7 @@
 	<form class="modal" method="post" action="?/updateRoundName" use:roundRenamEnhance>
 		<input type="number" name="id" class="hidden" bind:value={$roundRenameForm.id} />
 		<div class="form-width mx-auto">
-			<RoundRenameForm
-				form={roundRenameForm}
-				programType={data.application.program.type}
-				redirectToRoundIdForm={changeRoundIdNotName}
-			/>
+			<RoundRenameForm form={roundRenameForm} redirectToRoundIdForm={changeRoundIdNotName} />
 		</div>
 	</form>
 </Modal>

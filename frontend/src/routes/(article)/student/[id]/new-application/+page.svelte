@@ -91,19 +91,19 @@
 		<div class="form-radio-group">
 			<Radio
 				value="University"
-				class="font-normal"
+				class="form-radio"
 				bind:group={schoolType}
 				on:change={onSchoolTypeChange}>University</Radio
 			>
 			<Radio
 				value="Secondary School"
-				class="font-normal"
+				class="form-radio"
 				bind:group={schoolType}
 				on:change={onSchoolTypeChange}>Secondary School</Radio
 			>
 			<Radio
 				value="Other"
-				class="font-normal"
+				class="form-radio"
 				bind:group={schoolType}
 				on:change={onSchoolTypeChange}
 				required>Other</Radio

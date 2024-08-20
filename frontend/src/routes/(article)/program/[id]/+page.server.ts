@@ -3,7 +3,7 @@ import { error, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-import { deleteProgram, fetchProgram, updateProgram, type ProgramListItem } from '$lib/api/program';
+import { deleteProgram, fetchProgram, updateProgram, type ProgramDetail } from '$lib/api/program';
 import { fetchApplications } from '$lib/api/application';
 import { programUpdateSchema } from '$lib/schemas/program';
 import { deleteSchema } from '$lib/schemas/delete';
@@ -16,7 +16,7 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Invalid id');
 	}
 
-	const program: ProgramListItem = await fetchProgram(id);
+	const program: ProgramDetail = await fetchProgram(id);
 
 	if (program?.id === undefined) {
 		throw error(404, 'Program not found');

@@ -67,33 +67,11 @@ export async function fetchCoApplications(
 	return coApplications.filter((appl) => appl.id !== application.id);
 }
 
-export async function createApplication(data: {
-	contract: number;
-	program: number;
-	year: number;
-	term: string;
-	round_name: string;
-}) {
+export async function createApplication(data: any) {
 	return await post('applications/new/', data);
 }
 
-export async function changeApplicationRound(data: {
-	id: number;
-	program: number;
-	year: number;
-	term: string;
-	round_name: string;
-}) {
-	return await patch(`applications/${data.id}/update-round/`, data);
-}
-
-export async function updateApplication(data: {
-	id: number;
-	major_1: string;
-	major_2: string;
-	major_3: string;
-	comments: string;
-}) {
+export async function updateApplication(data: any) {
 	return await patch(`applications/${data.id}/update/`, data);
 }
 
