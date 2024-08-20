@@ -5,11 +5,10 @@
 	import { isUndergraduate } from '$lib/utils/programUtils';
 
 	export let application: ApplicationListItem;
-	export let maxWidth: string = '12rem';
 </script>
 
 {#if isUndergraduate(application.program)}
-	<Majors {application} {maxWidth} />
+	<Majors {application} />
 {:else}
-	<Program {application} {maxWidth} />
+	<Program {application} />
 {/if}

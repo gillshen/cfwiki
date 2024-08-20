@@ -4,7 +4,6 @@
 		Hr,
 		Table,
 		TableBody,
-		TableBodyCell,
 		TableBodyRow,
 		TableHead,
 		TableHeadCell
@@ -14,10 +13,12 @@
 	import ProgramInfobox from '$lib/components/infobox/ProgramInfobox.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
+	import Student from '$lib/components/table-cells/Student.svelte';
 	import ShortDate from '$lib/components/table-cells/ShortDate.svelte';
 	import Majors from '$lib/components/table-cells/Majors.svelte';
 	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
 	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
+	import PlainCell from '$lib/components/table-cells/PlainCell.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ProgramForm from '$lib/components/program-form/ProgramForm.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
@@ -31,7 +32,6 @@
 		orderByYearDesc,
 		orderByStudentName
 	} from '$lib/utils/applicationUtils';
-	import Student from '$lib/components/table-cells/Student.svelte';
 
 	export let data;
 
@@ -67,7 +67,8 @@
 	<article class="col-span-2 mt-24">
 		<ApplicationsLoader applications={data.applications}>
 			<svelte:fragment let:applications>
-				<Table class="mt-8" hoverable={applications.length > 1}>
+				<!-- TODO divide by year -->
+				<Table divClass="mt-8" hoverable={applications.length > 1}>
 					<TableHead>
 						<TableHeadCell></TableHeadCell>
 						<TableHeadCell>Year</TableHeadCell>
@@ -85,17 +86,17 @@
 							.sort(orderByStudentName)
 							.sort(orderByStatus)
 							.sort(orderByRoundName)
-							.sort(orderByYearDesc) as appl}
+							.sort(orderByYearDesc) as application}
 							<TableBodyRow>
-								<ApplicationLink application={appl} />
-								<TableBodyCell class="font-normal">{appl.program_iteration.year}</TableBodyCell>
-								<Student application={appl} />
+								<ApplicationLink {application} />
+								<PlainCell text={application.program_iteration.year} />
+								<Student {application} />
 								{#if isUndergraduate(data.program)}
-									<Majors application={appl} />
+									<Majors {application} />
 								{/if}
-								<ApplicationRound application={appl} />
-								<ShortDate date={appl.round.due_date} />
-								<ApplicationStatus application={appl} />
+								<ApplicationRound {application} />
+								<ShortDate date={application.round.due_date} />
+								<ApplicationStatus {application} />
 							</TableBodyRow>
 						{/each}
 					</TableBody>

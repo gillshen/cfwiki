@@ -3,9 +3,8 @@
 	import type { ApplicationListItem } from '$lib/api/application';
 
 	export let application: ApplicationListItem;
-	export let maxWidth: string = '14rem';
 </script>
 
-<TableBodyCell class={`max-w-[${maxWidth}] truncate`}>
+<TableBodyCell class={`max-w-[16rem] truncate`}>
 	{application.schools.map((s) => s.name).join(' + ')}
 </TableBodyCell>

@@ -51,27 +51,27 @@ form.modal {
 }
 
 .grid-title {
-	@apply text-3xl font-bold pt-4 pb-6;
+	@apply text-3xl font-bold pt-4 pb-6 tracking-wide;
 }
 .ag-theme-alpine {
+	--ag-borders: none;
 	--ag-font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial, sans-serif;
-	--ag-row-hover-color: #fff5f2;
+	--ag-row-hover-color: rgba(235, 235, 234, 0.8);
 	--ag-grid-size: 0.4rem;
 	--ag-odd-row-background-color: rgba(250, 250, 249, 0.8);
 	--ag-input-focus-box-shadow: 0 0 0;
 	--ag-input-focus-border-color: #fe795d;
-	--ag-header-column-resize-handle-display: block;
-	--ag-header-column-resize-handle-color: rgb(168 162 158);
+	--ag-header-column-resize-handle-display: none;
 	font-variant-numeric: tabular-nums;
 }
 .data-grid a {
 	@apply text-primary-800 hover:text-primary-600;
 }
 .data-grid.full-page {
-	height: calc(100vh - 12rem);
+	height: calc(100vh - 11rem);
 }
 .data-grid .ag-header-cell {
-	@apply bg-stone-100 hover:!bg-stone-200;
+	@apply bg-stone-50 hover:!bg-stone-100;
 }
 .data-grid .ag-header-cell:hover .ag-icon:hover {
 	@apply text-primary-500;
@@ -106,7 +106,7 @@ div[role='tabpanel'] {
 .status-rejected,
 .status-pres-rejected,
 .status-offer-rescinded {
-	@apply text-rose-500;
+	@apply text-rose-700;
 }
 .status-cancelled,
 .status-withdrawn,

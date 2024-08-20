@@ -25,7 +25,7 @@
 		noDataText="No other applicants this year and term"
 	>
 		<svelte:fragment let:applications>
-			<Table class="mt-8" hoverable={applications.length > 1}>
+			<Table divClass="mt-8" hoverable={applications.length > 1}>
 				<TableHead>
 					<TableHeadCell></TableHeadCell>
 					<TableHeadCell>Student</TableHeadCell>
@@ -42,17 +42,17 @@
 					{#each applications
 						.sort(orderByStudentName)
 						.sort(orderByStatus)
-						.sort(orderByRoundName) as appl}
+						.sort(orderByRoundName) as application}
 						<TableBodyRow>
-							<ApplicationLink application={appl} />
-							<Student application={appl} />
-							<PlainCell text={formatCfNames(appl.services, '顾问')} />
-							<PlainCell text={formatCfNames(appl.services, '文案')} />
-							{#if isUndergraduate(appl.program)}
-								<Majors application={appl} maxWidth="14rem" />
+							<ApplicationLink {application} />
+							<Student {application} />
+							<PlainCell text={formatCfNames(application.services, '顾问')} />
+							<PlainCell text={formatCfNames(application.services, '文案')} />
+							{#if isUndergraduate(application.program)}
+								<Majors {application} />
 							{/if}
-							<ApplicationRound application={appl} />
-							<ApplicationStatus application={appl} />
+							<ApplicationRound {application} />
+							<ApplicationStatus {application} />
 						</TableBodyRow>
 					{/each}
 				</TableBody>

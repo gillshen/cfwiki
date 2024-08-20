@@ -12,8 +12,9 @@
 
 	import type { School } from '$lib/api/school';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
+	import { AgCellRenderer } from '$lib/abstract/agCellRenderer';
+	import { localeComparator } from '$lib/utils/gridUtils';
 	import countryFlags from '$lib/constants/countryFlags';
-	import AgCellRenderer from '$lib/abstract/agCellRenderer';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 
 	export let data;
@@ -35,17 +36,18 @@
 	}
 
 	const columnDefs = [
-		{ headerName: 'Name', field: 'name', filter: true, cellRenderer: NameRenderer },
-		{ headerName: 'Alt. name', field: 'alt_name', filter: true },
-		{ headerName: 'Type', field: 'type', filter: true },
-		{ headerName: 'Country', field: 'country', filter: true, valueFormatter: countryValueFormatter }
+		{ headerName: 'Name', field: 'name', cellRenderer: NameRenderer, comparator: localeComparator },
+		{ headerName: 'Alt. name', field: 'alt_name' },
+		{ headerName: 'Type', field: 'type' },
+		{ headerName: 'Country', field: 'country', valueFormatter: countryValueFormatter }
 	];
 
 	onMount(async () => {
 		const schools = await data.schools;
 		const gridOptions: GridOptions = {
+			defaultColDef: { filter: true },
 			columnDefs,
-			rowData: schools.sort((a, b) => a.name.localeCompare(b.name)),
+			rowData: schools.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')),
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;

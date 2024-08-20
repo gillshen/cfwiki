@@ -24,6 +24,7 @@
 	import ProgramOrMajors from '$lib/components/table-cells/ProgramOrMajors.svelte';
 	import ShortYearMonth from '$lib/components/table-cells/ShortYearMonth.svelte';
 	import ShortDate from '$lib/components/table-cells/ShortDate.svelte';
+	import ProgramType from '$lib/components/table-cells/ProgramType.svelte';
 	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
 	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
 	import PlainCell from '$lib/components/table-cells/PlainCell.svelte';
@@ -68,7 +69,8 @@
 		<article class="col-span-2 mt-24">
 			<ApplicationsLoader applications={data.applications}>
 				<svelte:fragment let:applications>
-					<Table class="mt-8" hoverable={applications.length > 1}>
+					<!-- TODO divide by year and type -->
+					<Table divClass="mt-8" hoverable={applications.length > 1}>
 						<TableHead>
 							<TableHeadCell></TableHeadCell>
 							<TableHeadCell>Year</TableHeadCell>
@@ -85,16 +87,16 @@
 								.sort(orderByStudentName)
 								.sort(orderByStatus)
 								.sort(orderByRoundName)
-								.sort(orderByYearDesc) as appl}
+								.sort(orderByYearDesc) as application}
 								<TableBodyRow>
-									<ApplicationLink application={appl} />
-									<PlainCell text={appl.program_iteration.year} />
-									<PlainCell text={appl.program.type} />
-									<Student application={appl} />
-									<ProgramOrMajors application={appl} maxWidth="12rem" />
-									<ApplicationRound application={appl} />
-									<ShortDate date={appl.round.due_date} />
-									<ApplicationStatus application={appl} />
+									<ApplicationLink {application} />
+									<PlainCell text={application.program_iteration.year} />
+									<ProgramType {application} />
+									<Student {application} />
+									<ProgramOrMajors {application} />
+									<ApplicationRound {application} />
+									<ShortDate date={application.round.due_date} />
+									<ApplicationStatus {application} />
 								</TableBodyRow>
 							{/each}
 						</TableBody>
@@ -107,7 +109,7 @@
 	<article class="col-span-2 mt-24">
 		<EnrollmentsLoader enrollments={data.enrollments}>
 			<svelte:fragment let:enrollments>
-				<Table class="mt-8" hoverable={enrollments.length > 1}>
+				<Table divClass="mt-8" hoverable={enrollments.length > 1}>
 					<TableHead>
 						<TableHeadCell class="pl-2"></TableHeadCell>
 						<TableHeadCell>Start date</TableHeadCell>

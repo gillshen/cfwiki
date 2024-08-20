@@ -26,6 +26,7 @@
 	import UserCohortCard from '$lib/components/list-items/UserCohortCard.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
+	import ProgramType from '$lib/components/table-cells/ProgramType.svelte';
 	import Student from '$lib/components/table-cells/Student.svelte';
 	import Schools from '$lib/components/table-cells/Schools.svelte';
 	import ProgramOrMajors from '$lib/components/table-cells/ProgramOrMajors.svelte';
@@ -81,15 +82,15 @@
 							<Badge>{appls.length}</Badge>
 						</Heading>
 
-						<Table hoverable={appls.length > 1}>
+						<Table divClass="mt-4" hoverable={appls.length > 1}>
 							<TableHead>
 								<TableHeadCell class="pl-2"></TableHeadCell>
 								<TableHeadCell>Type</TableHeadCell>
+								<TableHeadCell>Due/Status</TableHeadCell>
 								<TableHeadCell>Student</TableHeadCell>
 								<TableHeadCell>School</TableHeadCell>
 								<TableHeadCell>Program/Major</TableHeadCell>
 								<TableHeadCell>Round</TableHeadCell>
-								<TableHeadCell>Due/Status</TableHeadCell>
 							</TableHead>
 
 							<TableBody>
@@ -101,16 +102,16 @@
 									.sort(orderByStatus) as appl}
 									<TableBodyRow>
 										<ApplicationLink application={appl} />
-										<TableBodyCell class="font-normal max-w-30">{appl.program.type}</TableBodyCell>
-										<Student application={appl} />
-										<Schools application={appl} maxWidth="14rem" />
-										<ProgramOrMajors application={appl} maxWidth="12rem" />
-										<ApplicationRound application={appl} />
+										<ProgramType application={appl} />
 										{#if appl.latest_log?.status && appl.latest_log.status !== 'Started'}
 											<ApplicationStatus application={appl} />
 										{:else}
 											<ShortDate date={appl.round.due_date} />
 										{/if}
+										<Student application={appl} />
+										<Schools application={appl} />
+										<ProgramOrMajors application={appl} />
+										<ApplicationRound application={appl} />
 									</TableBodyRow>
 								{/each}
 							</TableBody>

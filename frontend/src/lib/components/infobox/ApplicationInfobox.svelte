@@ -2,7 +2,7 @@
 	import { Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
 
 	import type { ApplicationDetail } from '$lib/api/application';
-	import LinkWithIcon from '$lib/components/links/LinkWithIcon.svelte';
+	import LinkWithIcon from '$lib/components/infobox/LinkWithIcon.svelte';
 	import Comments from '$lib/components/typography/Comments.svelte';
 	import { formatDueDateTime, toLongDate } from '$lib/utils/dateUtils';
 

@@ -13,6 +13,7 @@
 	import type { ApplicationListItem } from '$lib/api/application';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
+	import ProgramType from '$lib/components/table-cells/ProgramType.svelte';
 	import Schools from '$lib/components/table-cells/Schools.svelte';
 	import ProgramOrMajors from '$lib/components/table-cells/ProgramOrMajors.svelte';
 	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
@@ -35,7 +36,7 @@
 <article class="mt-24 col-span-2">
 	<ApplicationsLoader {applications}>
 		<svelte:fragment let:applications>
-			<Table class="mt-8" hoverable={applications.length > 1}>
+			<Table divClass="mt-8" hoverable={applications.length > 1}>
 				<TableHead>
 					<TableHeadCell></TableHeadCell>
 					<TableHeadCell>Year</TableHeadCell>
@@ -52,16 +53,16 @@
 						.sort(orderBySchoolName)
 						.sort(orderByDueDate)
 						.sort(orderByStatus)
-						.sort(orderByYearDesc) as appl}
+						.sort(orderByYearDesc) as application}
 						<TableBodyRow>
-							<ApplicationLink application={appl} />
-							<PlainCell text={appl.program_iteration.year} />
-							<PlainCell text={appl.program.type} />
-							<Schools application={appl} maxWidth="14rem" />
-							<ProgramOrMajors application={appl} maxWidth="12rem" />
-							<ApplicationRound application={appl} />
-							<ShortDate date={appl.round.due_date} />
-							<ApplicationStatus application={appl} />
+							<ApplicationLink {application} />
+							<PlainCell text={application.program_iteration.year} />
+							<ProgramType {application} />
+							<Schools {application} />
+							<ProgramOrMajors {application} />
+							<ApplicationRound {application} />
+							<ShortDate date={application.round.due_date} />
+							<ApplicationStatus {application} />
 						</TableBodyRow>
 					{/each}
 				</TableBody>

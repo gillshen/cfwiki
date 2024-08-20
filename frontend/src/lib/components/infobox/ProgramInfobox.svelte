@@ -3,7 +3,7 @@
 
 	import type { ProgramDetail } from '$lib/api/program';
 	import { isUndergraduate } from '$lib/utils/programUtils';
-	import LinkWithIcon from '$lib/components/links/LinkWithIcon.svelte';
+	import LinkWithIcon from '$lib/components/infobox/LinkWithIcon.svelte';
 
 	export let program: ProgramDetail;
 

@@ -13,12 +13,14 @@
 
 	import type { StudentListItem } from '$lib/api/student';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
+	import { AgCellRenderer, SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
 	import { formatLocation, orderByName } from '$lib/utils/studentUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 	import { makeDate, toISODate } from '$lib/utils/dateUtils';
-	import AgCellRenderer from '$lib/abstract/agCellRenderer';
+	import { localeComparator } from '$lib/utils/gridUtils';
 	import countryFlags from '$lib/constants/countryFlags';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
+	import Gender from '$lib/components/grid-cells/Gender.svelte';
 
 	export let data;
 
@@ -43,6 +45,15 @@
 
 	function nameValueGetter(params: ValueGetterParams): string {
 		return _getName(params.data);
+	}
+
+	class GenderRenderer extends SvelteCellRenderer {
+		createComponent(params: ICellRendererParams): void {
+			this.component = new Gender({
+				target: this.eGui,
+				props: { student: params.data }
+			});
+		}
 	}
 
 	function genderValueFormatter(params: ValueFormatterParams): string {
@@ -123,17 +134,6 @@
 		return _getLatestServices(params.data, '流程顾问');
 	}
 
-	// TODO
-	const localeComparator = (
-		a: string,
-		b: string,
-		nodeA: any,
-		nodeB: any,
-		isDescending: boolean
-	) => {
-		return a.localeCompare(b, 'zh-CN');
-	};
-
 	const columnDefs = [
 		{
 			headerName: 'Name',
@@ -141,7 +141,7 @@
 			comparator: localeComparator,
 			cellRenderer: NameRenderer
 		},
-		{ headerName: 'Gender', field: 'gender', valueFormatter: genderValueFormatter },
+		{ headerName: 'Gender', field: 'gender', cellRenderer: GenderRenderer },
 		{ headerName: 'Citizenship', field: 'citizenship', valueFormatter: citizenshipValueFormatter },
 		{
 			headerName: 'Date of birth',

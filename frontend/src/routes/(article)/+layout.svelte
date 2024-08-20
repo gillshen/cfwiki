@@ -45,7 +45,7 @@
 			<span class="self-center whitespace-nowrap text-lg font-semibold">ChoiceFreezer</span>
 		</NavBrand>
 
-		<div class="flex align-baseline md:order-2 ml-12">
+		<div class="flex align-baseline md:order-2 w-[150px] justify-end">
 			<Avatar bordered size="sm" />
 			<Dropdown class="w-[8rem] z-20" placement="bottom-end">
 				<DropdownItem>Account</DropdownItem>

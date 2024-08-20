@@ -26,7 +26,7 @@
 	const { form: roundRenameForm, enhance: roundRenamEnhance } = superForm(data.roundRenameForm, {
 		onUpdated({ form }) {
 			if (form.valid) {
-				renameRoundModal = false;
+				roundRenameModal = false;
 			} else {
 				showRoundRenameError = true;
 			}
@@ -38,38 +38,38 @@
 	const { form: datesUpdateForm, enhance: datesUpdateEnhance } = superForm(data.datesUpdateForm, {
 		onUpdated({ form }) {
 			if (form.valid) {
-				updateDatesModal = false;
+				datesUpdateModal = false;
 			}
 		},
 		// force update the form values
 		invalidateAll: 'force'
 	});
 
-	let changeRoundModal = false;
-	let renameRoundModal = false;
-	let updateDatesModal = false;
-	let updateMajorsModal = false;
-	let updateCommentsModal = false;
+	let roundChangeModal = false;
+	let roundRenameModal = false;
+	let datesUpdateModal = false;
+	let majorsUpdateModal = false;
+	let commentsUpdateModal = false;
 	let deleteModal = false;
 
 	let showRoundRenameError = false;
 
 	const changeRoundIdNotName = () => {
-		renameRoundModal = false;
-		changeRoundModal = true;
+		roundRenameModal = false;
+		roundChangeModal = true;
 	};
 
 	const applicationActions = [
-		{ text: 'Change round', action: () => (changeRoundModal = true) },
+		{ text: 'Change round', action: () => (roundChangeModal = true) },
 		{
 			text: 'Update majors',
-			action: () => (updateMajorsModal = true),
+			action: () => (majorsUpdateModal = true),
 			disabled: !isUndergraduate(data.application.program),
 			divider: true
 		},
-		{ text: 'Update round name', action: () => (renameRoundModal = true) },
-		{ text: 'Update dates', action: () => (updateDatesModal = true) },
-		{ text: 'Update comments', action: () => (updateCommentsModal = true) },
+		{ text: 'Update round name', action: () => (roundRenameModal = true) },
+		{ text: 'Update dates', action: () => (datesUpdateModal = true) },
+		{ text: 'Update comments', action: () => (commentsUpdateModal = true) },
 		{ text: 'Delete', action: () => (deleteModal = true), divider: true, dark: true }
 	];
 </script>
@@ -105,16 +105,16 @@
 </Main>
 
 <FormModal
-	open={changeRoundModal}
+	open={roundChangeModal}
 	superform={data.roundChangeForm}
 	fields={RoundChangeForm}
 	action="?/updateRoundId"
 	entity={data.application}
 	title="Change application round"
-	on:close={() => (changeRoundModal = false)}
+	on:close={() => (roundChangeModal = false)}
 />
 
-<Modal title="Rename application round" bind:open={renameRoundModal} outsideclose>
+<Modal title="Rename application round" bind:open={roundRenameModal} outsideclose>
 	<form class="modal" method="post" action="?/updateRoundName" use:roundRenamEnhance>
 		<input type="number" name="id" class="hidden" bind:value={$roundRenameForm.id} />
 		<div class="form-width mx-auto">
@@ -127,7 +127,7 @@
 	</form>
 </Modal>
 
-<Modal title="Update key dates" bind:open={updateDatesModal} outsideclose>
+<Modal title="Update key dates" bind:open={datesUpdateModal} outsideclose>
 	<form class="modal" method="post" action="?/updateRoundDates" use:datesUpdateEnhance>
 		<input type="number" name="id" class="hidden" bind:value={$datesUpdateForm.id} />
 		<div class="form-width mx-auto">
@@ -137,23 +137,23 @@
 </Modal>
 
 <FormModal
-	open={updateMajorsModal}
+	open={majorsUpdateModal}
 	superform={data.majorsUpdateForm}
 	fields={MajorsForm}
 	action="?/updateMajors"
 	entity={data.application}
 	title="Update majors"
-	on:close={() => (updateMajorsModal = false)}
+	on:close={() => (majorsUpdateModal = false)}
 />
 
 <FormModal
-	open={updateCommentsModal}
+	open={commentsUpdateModal}
 	superform={data.commentsUpdateForm}
 	fields={CommentsForm}
 	action="?/updateComments"
 	entity={data.application}
 	title="Update comments"
-	on:close={() => (updateCommentsModal = false)}
+	on:close={() => (commentsUpdateModal = false)}
 />
 
 <FormModal

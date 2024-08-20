@@ -13,21 +13,31 @@
 
 	import type { ApplicationListItem } from '$lib/api/application';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
+	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
 	import { formatMajors } from '$lib/utils/applicationUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
-	import AgCellRenderer from '$lib/abstract/agCellRenderer';
+	import { localeComparator } from '$lib/utils/gridUtils';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
+	import ApplicationLink from '$lib/components/grid-cells/ApplicationLink.svelte';
+	import ApplicationStatus from '$lib/components/grid-cells/ApplicationStatus.svelte';
 
 	export let data;
 
-	class IDRenderer extends AgCellRenderer {
-		declare eGui: HTMLAnchorElement;
+	class IdRenderer extends SvelteCellRenderer {
+		createComponent(params: ICellRendererParams): void {
+			this.component = new ApplicationLink({
+				target: this.eGui,
+				props: { application: params.data }
+			});
+		}
+	}
 
-		init(params: ICellRendererParams<any, any, any>): void {
-			this.eGui = document.createElement('a');
-			const application: ApplicationListItem = params.data;
-			this.eGui.href = `/application/${application.id}/`;
-			this.eGui.innerHTML = 'Link';
+	class StatusRenderer extends SvelteCellRenderer {
+		createComponent(params: ICellRendererParams): void {
+			this.component = new ApplicationStatus({
+				target: this.eGui,
+				props: { application: params.data }
+			});
 		}
 	}
 
@@ -60,24 +70,14 @@
 		return formatCfNames(params.data.services, '流程顾问');
 	}
 
-	// TODO
-	const localeComparator = (
-		a: string,
-		b: string,
-		nodeA: any,
-		nodeB: any,
-		isDescending: boolean
-	) => {
-		return a.localeCompare(b, 'zh-CN');
-	};
-
 	const columnDefs = [
 		{
 			headerName: 'Link',
 			field: 'id',
+			minWidth: 60,
 			sortable: false,
 			filter: false,
-			cellRenderer: IDRenderer
+			cellRenderer: IdRenderer
 		},
 		{ headerName: 'Year', field: 'program_iteration.year', filter: NumberFilter },
 		{ headerName: 'Term', field: 'program_iteration.term' },
@@ -87,12 +87,12 @@
 		{ headerName: '文案', valueGetter: workPeopleValueGetter },
 		{ headerName: '服务', valueGetter: salesAssistantsValueGetter },
 		{ headerName: '流程', valueGetter: workAssistantsValueGetter },
-		{ headerName: 'School', valueGetter: schoolValueGetter },
+		{ headerName: 'School', valueGetter: schoolValueGetter, flex: 1 },
 		{ headerName: 'Program', field: 'program.display_name' },
-		{ headerName: 'Major', valueGetter: majorValueGetter },
+		{ headerName: 'Major', valueGetter: majorValueGetter, flex: 1 },
 		{ headerName: 'Round', field: 'round.name' },
 		{ headerName: 'Due', field: 'round.due_date' },
-		{ headerName: 'Status', field: 'latest_log.status' },
+		{ headerName: 'Status', field: 'latest_log.status', cellRenderer: StatusRenderer },
 		{ headerName: 'Last update', field: 'latest_log.date' }
 	];
 
