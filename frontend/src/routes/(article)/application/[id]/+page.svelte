@@ -5,17 +5,18 @@
 
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ApplicationInfobox from '$lib/components/infobox/ApplicationInfobox.svelte';
-
 	import Main from '$lib/components/containers/Main.svelte';
 	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
-	import RoundChangeForm from '$lib/components/round-name-form/RoundChangeForm.svelte';
-	import RoundRenameForm from '$lib/components/round-name-form/RoundRenameForm.svelte';
+	import RoundChangeForm from '$lib/components/application-update-form/RoundChangeForm.svelte';
+	import RoundRenameForm from '$lib/components/application-round-form/RoundRenameForm.svelte';
 	import RoundDatesForm from '$lib/components/round-dates-form/RoundDatesForm.svelte';
-	import ApplicationUpdateForm from '$lib/components/application-update-form/ApplicationUpdateForm.svelte';
+	import MajorsForm from '$lib/components/application-update-form/MajorsForm.svelte';
+	import CommentsForm from '$lib/components/application-update-form/CommentsForm.svelte';
 	import LogsSection from '$lib/components/application-page/LogsSection.svelte';
 	import CoApplicationsSection from '$lib/components/application-page/CoApplicationsSection.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
+	import Toast from '$lib/components/misc/Toast.svelte';
 	import { isUndergraduate } from '$lib/utils/programUtils';
 
 	export let data;
@@ -26,6 +27,8 @@
 		onUpdated({ form }) {
 			if (form.valid) {
 				renameRoundModal = false;
+			} else {
+				showRoundRenameError = true;
 			}
 		},
 		// force update the form values
@@ -46,7 +49,10 @@
 	let renameRoundModal = false;
 	let updateDatesModal = false;
 	let updateMajorsModal = false;
+	let updateCommentsModal = false;
 	let deleteModal = false;
+
+	let showRoundRenameError = false;
 
 	const changeRoundIdNotName = () => {
 		renameRoundModal = false;
@@ -55,13 +61,15 @@
 
 	const applicationActions = [
 		{ text: 'Change round', action: () => (changeRoundModal = true) },
-		{ text: 'Rename round', action: () => (renameRoundModal = true) },
-		{ text: 'Update dates', action: () => (updateDatesModal = true), divider: true },
 		{
-			text: 'Update major(s)',
+			text: 'Update majors',
 			action: () => (updateMajorsModal = true),
-			disabled: !isUndergraduate(data.application.program)
+			disabled: !isUndergraduate(data.application.program),
+			divider: true
 		},
+		{ text: 'Update round name', action: () => (renameRoundModal = true) },
+		{ text: 'Update dates', action: () => (updateDatesModal = true) },
+		{ text: 'Update comments', action: () => (updateCommentsModal = true) },
 		{ text: 'Delete', action: () => (deleteModal = true), divider: true, dark: true }
 	];
 </script>
@@ -130,12 +138,22 @@
 
 <FormModal
 	open={updateMajorsModal}
-	superform={data.applicationUpdateForm}
-	fields={ApplicationUpdateForm}
-	action="?/updateApplication"
+	superform={data.majorsUpdateForm}
+	fields={MajorsForm}
+	action="?/updateMajors"
 	entity={data.application}
 	title="Update majors"
 	on:close={() => (updateMajorsModal = false)}
+/>
+
+<FormModal
+	open={updateCommentsModal}
+	superform={data.commentsUpdateForm}
+	fields={CommentsForm}
+	action="?/updateComments"
+	entity={data.application}
+	title="Update comments"
+	on:close={() => (updateCommentsModal = false)}
 />
 
 <FormModal
@@ -152,3 +170,9 @@
 		name={`this application${data.application.logs.length ? ', along with its status history,' : ''}`}
 	/>
 </FormModal>
+
+{#if showRoundRenameError}
+	<Toast type="error" onClose={() => (showRoundRenameError = false)}>
+		Operation failed, possibly because the name has already been taken.
+	</Toast>
+{/if}

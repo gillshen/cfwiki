@@ -12,7 +12,12 @@ import {
 	deleteApplication
 } from '$lib/api/application';
 
-import { applicationUpdateSchema, roundChangeSchema } from '$lib/schemas/application';
+import {
+	commentsUpdateSchema,
+	majorsUpdateSchema,
+	roundChangeSchema
+} from '$lib/schemas/application';
+
 import { roundNameSchema, roundDatesSchema } from '$lib/schemas/applicationRound';
 import { applicationLogSchema } from '$lib/schemas/applicationLog';
 import { deleteSchema } from '$lib/schemas/delete';
@@ -36,10 +41,11 @@ export async function load(event: PageServerLoadEvent) {
 	return {
 		application,
 		coApplications: fetchCoApplications(application),
-		applicationUpdateForm: await superValidate(zod(applicationUpdateSchema)),
 		roundChangeForm: await superValidate(zod(roundChangeSchema)),
 		roundRenameForm: await superValidate(application.round, zod(roundNameSchema)),
 		datesUpdateForm: await superValidate(application.round, zod(roundDatesSchema)),
+		majorsUpdateForm: await superValidate(zod(majorsUpdateSchema)),
+		commentsUpdateForm: await superValidate(zod(commentsUpdateSchema)),
 		logForm: await superValidate(zod(applicationLogSchema)),
 		deleteForm: await superValidate(zod(deleteSchema))
 	};
@@ -49,7 +55,8 @@ export const actions = {
 	updateRoundId: formAction(roundChangeSchema, changeApplicationRound),
 	updateRoundName: formAction(roundNameSchema, updateApplicationRound),
 	updateRoundDates: formAction(roundDatesSchema, updateApplicationRound),
-	updateApplication: formAction(applicationUpdateSchema, updateApplication),
+	updateMajors: formAction(majorsUpdateSchema, updateApplication),
+	updateComments: formAction(commentsUpdateSchema, updateApplication),
 
 	deleteApplication: formAction(deleteSchema, deleteApplication, (student) => {
 		throw redirect(303, `/student/${student.id}`);

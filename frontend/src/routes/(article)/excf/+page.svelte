@@ -5,7 +5,7 @@
 	export let data;
 </script>
 
-<Heading tag="h1" class="page-title">Former CF People</Heading>
+<Heading tag="h1" class="page-title">Ex-CFers</Heading>
 
 <Hr />
 

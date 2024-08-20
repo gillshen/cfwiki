@@ -121,9 +121,14 @@ export function categorize(cohort: CohortMember[]): {
 	};
 }
 
+export function orderByName(a: { fullname: string }, b: { fullname: string }) {
+	return a.fullname.localeCompare(b.fullname, 'zh-CN');
+}
+
 export function orderByStatusName(a: CohortMember, b: CohortMember) {
 	if (a.current !== b.current) {
 		return a.current ? -1 : 1;
+	} else {
+		return orderByName(a.student, b.student);
 	}
-	return a.student.fullname.localeCompare(b.student.fullname, 'zh-CN');
 }

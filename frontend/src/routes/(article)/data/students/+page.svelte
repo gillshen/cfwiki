@@ -13,7 +13,7 @@
 
 	import type { StudentListItem } from '$lib/api/student';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
-	import { formatLocation } from '$lib/utils/studentUtils';
+	import { formatLocation, orderByName } from '$lib/utils/studentUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 	import { makeDate, toISODate } from '$lib/utils/dateUtils';
 	import AgCellRenderer from '$lib/abstract/agCellRenderer';
@@ -23,12 +23,10 @@
 	export let data;
 
 	function _getName(student: StudentListItem): string {
-		if (student.preferred_name && student.preferred_name !== student.given_name) {
-			return `${student.fullname} ${student.preferred_name}`;
-		} else if (student.surname_first) {
+		if (!student.preferred_name || student.preferred_name === student.given_name) {
 			return student.fullname;
 		} else {
-			return `${student.surname}, ${student.given_name}`;
+			return `${student.fullname} ${student.preferred_name}`;
 		}
 	}
 
@@ -63,15 +61,12 @@
 		return `${flag}\xa0\xa0${params.value}`;
 	}
 
-	function dobValueGetter(params: ValueGetterParams): Date | null {
-		const dob = params.data.date_of_birth;
-		if (!dob) {
-			return null;
-		}
-		return makeDate(dob);
+	function dateOfBirthValueGetter(params: ValueGetterParams): Date | null {
+		const dateString = params.data.date_of_birth;
+		return dateString ? makeDate(dateString) : null;
 	}
 
-	function dobValueFormatter(params: ValueFormatterParams): string {
+	function dateOfBirthValueFormatter(params: ValueFormatterParams): string {
 		return toISODate(params.value);
 	}
 
@@ -128,72 +123,63 @@
 		return _getLatestServices(params.data, '流程顾问');
 	}
 
-	const localeCmp = (a: string, b: string, nodeA: any, nodeB: any, isDescending: boolean) => {
+	// TODO
+	const localeComparator = (
+		a: string,
+		b: string,
+		nodeA: any,
+		nodeB: any,
+		isDescending: boolean
+	) => {
 		return a.localeCompare(b, 'zh-CN');
 	};
 
 	const columnDefs = [
 		{
 			headerName: 'Name',
-			filter: true,
 			valueGetter: nameValueGetter,
-			comparator: localeCmp,
+			comparator: localeComparator,
 			cellRenderer: NameRenderer
 		},
-		{
-			headerName: 'Gender',
-			field: 'gender',
-			filter: true,
-			valueFormatter: genderValueFormatter
-		},
-		{
-			headerName: 'Citizenship',
-			field: 'citizenship',
-			filter: true,
-			valueFormatter: citizenshipValueFormatter
-		},
+		{ headerName: 'Gender', field: 'gender', valueFormatter: genderValueFormatter },
+		{ headerName: 'Citizenship', field: 'citizenship', valueFormatter: citizenshipValueFormatter },
 		{
 			headerName: 'Date of birth',
 			filter: 'agDateColumnFilter',
-			valueGetter: dobValueGetter,
-			valueFormatter: dobValueFormatter
+			valueGetter: dateOfBirthValueGetter,
+			valueFormatter: dateOfBirthValueFormatter
 		},
 		{
 			headerName: 'Home',
-			filter: true,
 			valueGetter: homeValueGetter,
-			comparator: localeCmp,
+			comparator: localeComparator,
 			valueFormatter: homeValueFormatter
 		},
-		{ headerName: 'Contract type', filter: true, valueGetter: latestContractTypeValueGetter },
+		{ headerName: 'Contract type', valueGetter: latestContractTypeValueGetter },
 		{
 			headerName: 'Target year',
 			filter: 'agNumberColumnFilter',
 			valueGetter: lastestTargetYearValueGetter
 		},
-		{ headerName: '顾问', filter: true, valueGetter: salesPeopleValueGetter },
-		{ headerName: '文案', filter: true, valueGetter: workPeopleValueGetter },
-		{ headerName: '战略顾问', filter: true, valueGetter: stratPeopleValueGetter, hide: true },
-		{
-			headerName: '服务顾问',
-			filter: true,
-			valueGetter: salesAssistantsValueGetter,
-			hide: true
-		},
-		{ headerName: '流程顾问', filter: true, valueGetter: workAssistantsValueGetter },
-		{ headerName: 'Contract status', filter: true, valueGetter: contractStatusValueGetter }
+		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
+		{ headerName: '文案', valueGetter: workPeopleValueGetter },
+		{ headerName: '战略', valueGetter: stratPeopleValueGetter },
+		{ headerName: '服务', valueGetter: salesAssistantsValueGetter },
+		{ headerName: '流程', valueGetter: workAssistantsValueGetter },
+		{ headerName: 'Contract status', valueGetter: contractStatusValueGetter }
 	];
 
 	onMount(async () => {
 		const students = await data.students;
 		const gridOptions: GridOptions = {
+			defaultColDef: { filter: true },
 			columnDefs,
-			rowData: students.sort((a, b) => a.fullname.localeCompare(b.fullname, 'zh-CN')),
+			rowData: students.sort(orderByName),
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		const gridApi = createGrid(gridElement, gridOptions);
-		gridApi.sizeColumnsToFit();
+		gridApi.autoSizeAllColumns();
 	});
 </script>
 

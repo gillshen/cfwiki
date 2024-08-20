@@ -59,15 +59,15 @@
 				CFers<ChevronDownOutline class="dropdown-icon" />
 			</NavLi>
 			<Dropdown>
-				<div class="grid grid-cols-4 gap-x-4 px-1">
+				<div class="grid grid-cols-4 gap-x-4 px-2 mb-2">
 					{#each cfServicePeople as cfUser}
-						<DropdownItem class="rounded-md" href={`/cf/${cfUser.username}`}
-							>{cfUser.username}</DropdownItem
-						>
+						<DropdownItem class="rounded-md" href={`/cf/${cfUser.username}`}>
+							{cfUser.username}
+						</DropdownItem>
 					{/each}
 				</div>
 				<DropdownDivider />
-				<div class="grid grid-cols-4 gap-x-4 px-1">
+				<div class="grid grid-cols-4 gap-x-4 px-2 mb-2 mt-2">
 					{#each cfSalesPeople as cfUser}
 						<DropdownItem class="rounded-md" href={`/cf/${cfUser.username}`}>
 							{cfUser.username}
@@ -76,7 +76,7 @@
 				</div>
 				{#if exUsers.length}
 					<DropdownDivider />
-					<DropdownItem class="rounded-md w-fit mx-1" href="/excf">Ex-CFers</DropdownItem>
+					<DropdownItem class="rounded-md w-fit mx-2 mt-2 mb-1" href="/excf">Ex-CFers</DropdownItem>
 				{/if}
 			</Dropdown>
 

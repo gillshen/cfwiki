@@ -25,7 +25,7 @@
 		<span class="text-sm font-medium">{text}</span>
 	{/if}
 </div>
-<Dropdown class="w-40 z-20" {placement}>
+<Dropdown class="w-fit min-w-40 z-20" {placement}>
 	{#each actions as { text, action, divider, dark, disabled }}
 		{#if divider}
 			<DropdownDivider />

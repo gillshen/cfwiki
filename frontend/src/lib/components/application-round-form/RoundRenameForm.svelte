@@ -13,7 +13,7 @@
 		believe the current name is incorrect.
 	</P>
 	<P size="sm" color="text-gray-600">
-		If you are trying to <strong>move</strong> the application to another round,
+		If you are trying to move the application to another round,
 		<A on:click={redirectToRoundIdForm}>click here</A>.
 	</P>
 </div>

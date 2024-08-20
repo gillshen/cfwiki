@@ -55,7 +55,7 @@ export function orderByStudentName(a: ApplicationListItem, b: ApplicationListIte
 
 export function formatMajors(application: ApplicationListItem): string {
 	const majors = [application.major_1, application.major_2, application.major_3];
-	return majors.filter(Boolean).join('; ');
+	return majors.filter(Boolean).join(' | ');
 }
 
 export function groupByYear(
