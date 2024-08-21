@@ -118,6 +118,10 @@
 	onMount(async () => {
 		const applications = await data.applications;
 
+		if (!applications.length) {
+			return;
+		}
+
 		const gridOptions: GridOptions = {
 			defaultColDef: { filter: true },
 			columnDefs,

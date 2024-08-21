@@ -31,6 +31,19 @@ class School(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    @classmethod
+    def filter(cls, school_type: str = None):
+        q = cls.objects.all()
+
+        if school_type == "university":
+            q = q.filter(type=School.Type.UNIVERSITY)
+        elif school_type == "secondary-school":
+            q = q.filter(type=School.Type.SECONDARY)
+        elif school_type == "other":
+            q = q.filter(type=School.Type.OTHER)
+
+        return q
+
 
 class Program(models.Model):
     # It would be nice to have a unique constraint at the database level

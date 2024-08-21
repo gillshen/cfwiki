@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { Badge, Heading } from 'flowbite-svelte';
 
 	import {
 		createGrid,
@@ -8,16 +9,18 @@
 		type ValueFormatterParams
 	} from 'ag-grid-community';
 
-	import { Heading } from 'flowbite-svelte';
-
 	import type { School } from '$lib/api/school';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { AgCellRenderer } from '$lib/abstract/agCellRenderer';
 	import { localeComparator } from '$lib/utils/gridUtils';
 	import countryFlags from '$lib/constants/countryFlags';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
+	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 
-	export let data;
+	export let data: {
+		schools: Promise<School[]>;
+		schoolType: string;
+	};
 
 	class NameRenderer extends AgCellRenderer {
 		declare eGui: HTMLAnchorElement;
@@ -36,14 +39,25 @@
 	}
 
 	const columnDefs = [
-		{ headerName: 'Name', field: 'name', cellRenderer: NameRenderer, comparator: localeComparator },
-		{ headerName: 'Alt. name', field: 'alt_name' },
-		{ headerName: 'Type', field: 'type' },
-		{ headerName: 'Country', field: 'country', valueFormatter: countryValueFormatter }
+		{
+			headerName: 'Name',
+			field: 'name',
+			width: 500,
+			flex: 5,
+			cellRenderer: NameRenderer,
+			comparator: localeComparator
+		},
+		{ headerName: 'Alt. name', field: 'alt_name', flex: 2 },
+		{ headerName: 'Country', field: 'country', flex: 2, valueFormatter: countryValueFormatter }
 	];
 
 	onMount(async () => {
 		const schools = await data.schools;
+
+		if (!schools.length) {
+			return;
+		}
+
 		const gridOptions: GridOptions = {
 			defaultColDef: { filter: true },
 			columnDefs,
@@ -51,15 +65,25 @@
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
-		const gridApi = createGrid(gridElement, gridOptions);
-		gridApi.sizeColumnsToFit();
+		createGrid(gridElement, gridOptions);
 	});
 </script>
 
-<Heading tag="h1" class="grid-title">Schools</Heading>
+<Heading tag="h1" class="grid-title flex gap-2 items-center">
+	{data.schoolType}
+	{#await data.schools then schools}
+		{#if schools.length}
+			<Badge>{schools.length}</Badge>
+		{/if}
+	{/await}
+</Heading>
 
 {#await data.schools}
 	<FetchingDataSign />
-{:then _}
-	<div id="grid" class="data-grid ag-theme-alpine full-page" />
+{:then schools}
+	{#if schools.length}
+		<div id="grid" class="data-grid ag-theme-alpine full-page" />
+	{:else}
+		<NoDataSign text="No schools in this category" />
+	{/if}
 {/await}

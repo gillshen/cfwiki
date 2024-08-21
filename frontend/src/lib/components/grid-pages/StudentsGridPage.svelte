@@ -174,6 +174,10 @@
 	onMount(async () => {
 		const students = await data.students;
 
+		if (!students.length) {
+			return;
+		}
+
 		const gridOptions: GridOptions = {
 			defaultColDef: { filter: true },
 			columnDefs,

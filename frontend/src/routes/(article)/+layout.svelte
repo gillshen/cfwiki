@@ -39,7 +39,11 @@
 		.filter((user) => user.department === Departments.SERVICE)
 		.sort((a, b) => a.username.localeCompare(b.username));
 
-	$: pageWidth = $page.url.pathname.startsWith('/data') ? 'max-w-full' : 'max-w-[1280px]';
+	$: pageWidth =
+		$page.url.pathname.startsWith('/data/students') ||
+		$page.url.pathname.startsWith('/data/applications')
+			? 'max-w-full'
+			: 'max-w-[1280px]';
 </script>
 
 <div class={`container ${pageWidth} mx-auto px-12 pb-8`}>
@@ -137,10 +141,19 @@
 			</Dropdown>
 
 			<NavLi class="cursor-pointer">
-				More<ChevronDownOutline class="dropdown-icon" />
+				Schools & Programs<ChevronDownOutline class="dropdown-icon" />
 			</NavLi>
-			<Dropdown placement="bottom" class="w-32 z-20">
-				<DropdownItem href="/data/schools">Schools</DropdownItem>
+			<Dropdown placement="bottom" class="w-44 z-20">
+				<DropdownItem href="/data/schools/universities" class="dropdown-link">
+					Universities
+				</DropdownItem>
+				<DropdownItem href="/data/schools/secondary-schools" class="dropdown-link">
+					Secondary schools
+				</DropdownItem>
+				<DropdownItem href="/data/schools/other-institutions" class="dropdown-link">
+					Other institutions
+				</DropdownItem>
+				<DropdownDivider />
 				<DropdownItem href="/data/programs">Programs</DropdownItem>
 			</Dropdown>
 		</NavUl>

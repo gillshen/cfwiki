@@ -1,4 +1,4 @@
-import { get, patch, post, destroy } from '$lib/api/api';
+import { get, patch, post, destroy, buildQuery } from '$lib/api/api';
 
 export type School = {
 	id: number;
@@ -8,8 +8,10 @@ export type School = {
 	country: string;
 };
 
-export async function fetchSchools(): Promise<School[]> {
-	return await get('schools/');
+export async function fetchSchools(params?: {
+	type: 'university' | 'secondary-school' | 'other';
+}): Promise<School[]> {
+	return await get(`schools/${buildQuery(params)}`);
 }
 
 export async function fetchSchool(id: number): Promise<School> {

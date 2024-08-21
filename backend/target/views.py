@@ -20,8 +20,11 @@ from target.serializers import (
 
 
 class SchoolListView(ListAPIView):
-    queryset = School.objects.all()
     serializer_class = SchoolSerializer
+
+    def get_queryset(self):
+        query_params = self.request.query_params
+        return School.filter(school_type=query_params.get("type"))
 
 
 class SchoolDetailView(RetrieveAPIView):
