@@ -5,6 +5,7 @@
 	import {
 		createGrid,
 		NumberFilter,
+		type GridApi,
 		type GridOptions,
 		type ICellRendererParams,
 		type ValueGetterParams
@@ -20,6 +21,7 @@
 	import ApplicationLink from '$lib/components/grid-cells/ApplicationLink.svelte';
 	import ApplicationStatus from '$lib/components/grid-cells/ApplicationStatus.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
+	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
 
 	export let data: {
 		applications: Promise<ApplicationListItem[]>;
@@ -115,6 +117,12 @@
 		{ headerName: 'Last update', field: 'latest_log.date' }
 	];
 
+	let gridApi: GridApi;
+
+	const exportAsCsv = () => {
+		gridApi!.exportDataAsCsv({ fileName: 'cf_applications' });
+	};
+
 	onMount(async () => {
 		const applications = await data.applications;
 
@@ -129,24 +137,30 @@
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
-		const gridApi = createGrid(gridElement, gridOptions);
+		gridApi = createGrid(gridElement, gridOptions);
 		gridApi.autoSizeAllColumns();
 	});
 </script>
 
-<Heading tag="h1" class="grid-title flex gap-2 items-center">
-	Applications:
-	{#if data.pending}
-		Pending
-	{:else if data.year && data.applicationType}
-		{formatApplicationType(data.applicationType)} {data.year}
-	{:else}
-		All
-	{/if}
-	{#await data.applications then applications}
-		{#if applications.length}
-			<Badge>{applications.length}</Badge>
+<Heading tag="h1" class="grid-title flex gap-2 items-center justify-between">
+	<div class="flex gap-4 items-center">
+		Applications:
+		{#if data.pending}
+			Pending
+		{:else if data.year && data.applicationType}
+			{formatApplicationType(data.applicationType)} {data.year}
+		{:else}
+			All
 		{/if}
+		{#await data.applications then applications}
+			{#if applications.length}
+				<Badge>{applications.length}</Badge>
+			{/if}
+		{/await}
+	</div>
+
+	{#await data.applications then _}
+		<GridButtons onDownload={exportAsCsv} onConfig={() => alert('config')} />
 	{/await}
 </Heading>
 

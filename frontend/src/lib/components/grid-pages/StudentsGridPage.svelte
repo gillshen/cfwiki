@@ -4,6 +4,7 @@
 
 	import {
 		createGrid,
+		type GridApi,
 		type GridOptions,
 		type ValueFormatterParams,
 		type ValueGetterParams,
@@ -22,6 +23,7 @@
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import Gender from '$lib/components/grid-cells/Gender.svelte';
+	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
 
 	export let data: {
 		students: Promise<StudentListItem[]>;
@@ -150,7 +152,12 @@
 		},
 		{ headerName: 'Contract status', valueGetter: contractStatusValueGetter, hide: !!data.current },
 		{ headerName: 'Gender', field: 'gender', cellRenderer: GenderRenderer },
-		{ headerName: 'Citizenship', field: 'citizenship', valueFormatter: citizenshipValueFormatter },
+		{
+			headerName: 'Citizenship',
+			field: 'citizenship',
+			valueFormatter: citizenshipValueFormatter,
+			useValueFormatterForExport: false
+		},
 		{
 			headerName: 'Date of birth',
 			filter: 'agDateColumnFilter',
@@ -162,7 +169,8 @@
 			flex: 1,
 			valueGetter: homeValueGetter,
 			comparator: localeComparator,
-			valueFormatter: homeValueFormatter
+			valueFormatter: homeValueFormatter,
+			useValueFormatterForExport: false
 		},
 		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
 		{ headerName: '文案', valueGetter: workPeopleValueGetter },
@@ -170,6 +178,12 @@
 		{ headerName: '服务', valueGetter: salesAssistantsValueGetter },
 		{ headerName: '流程', valueGetter: workAssistantsValueGetter }
 	];
+
+	let gridApi: GridApi;
+
+	const exportAsCsv = () => {
+		gridApi!.exportDataAsCsv({ fileName: 'cf_students' });
+	};
 
 	onMount(async () => {
 		const students = await data.students;
@@ -185,24 +199,30 @@
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
-		const gridApi = createGrid(gridElement, gridOptions);
+		gridApi = createGrid(gridElement, gridOptions);
 		gridApi.autoSizeAllColumns();
 	});
 </script>
 
-<Heading tag="h1" class="grid-title flex gap-2 items-center">
-	Students:
-	{#if data.current}
-		Current
-	{:else if data.contractType && data.targetYear}
-		{data.contractType} {data.targetYear}
-	{:else}
-		All
-	{/if}
-	{#await data.students then students}
-		{#if students.length}
-			<Badge>{students.length}</Badge>
+<Heading tag="h1" class="grid-title flex gap-2 items-center justify-between">
+	<div class="flex gap-4 items-center">
+		Students:
+		{#if data.current}
+			Current
+		{:else if data.contractType && data.targetYear}
+			{data.contractType} {data.targetYear}
+		{:else}
+			All
 		{/if}
+		{#await data.students then students}
+			{#if students.length}
+				<Badge>{students.length}</Badge>
+			{/if}
+		{/await}
+	</div>
+
+	{#await data.students then _}
+		<GridButtons onDownload={exportAsCsv} onConfig={() => alert('config')} />
 	{/await}
 </Heading>
 

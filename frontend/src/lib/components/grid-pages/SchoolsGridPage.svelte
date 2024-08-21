@@ -4,6 +4,7 @@
 
 	import {
 		createGrid,
+		type GridApi,
 		type GridOptions,
 		type ICellRendererParams,
 		type ValueFormatterParams
@@ -16,6 +17,7 @@
 	import countryFlags from '$lib/constants/countryFlags';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
+	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
 
 	export let data: {
 		schools: Promise<School[]>;
@@ -48,8 +50,20 @@
 			comparator: localeComparator
 		},
 		{ headerName: 'Alt. name', field: 'alt_name', flex: 2 },
-		{ headerName: 'Country', field: 'country', flex: 2, valueFormatter: countryValueFormatter }
+		{
+			headerName: 'Country',
+			field: 'country',
+			flex: 2,
+			valueFormatter: countryValueFormatter,
+			useValueFormatterForExport: false
+		}
 	];
+
+	let gridApi: GridApi;
+
+	const exportAsCsv = () => {
+		gridApi!.exportDataAsCsv({ fileName: 'cf_schools' });
+	};
 
 	onMount(async () => {
 		const schools = await data.schools;
@@ -65,16 +79,22 @@
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
-		createGrid(gridElement, gridOptions);
+		gridApi = createGrid(gridElement, gridOptions);
 	});
 </script>
 
-<Heading tag="h1" class="grid-title flex gap-2 items-center">
-	{data.schoolType}
-	{#await data.schools then schools}
-		{#if schools.length}
-			<Badge>{schools.length}</Badge>
-		{/if}
+<Heading tag="h1" class="grid-title flex gap-8 items-center justify-between">
+	<div class="flex gap-4 items-center">
+		{data.schoolType}
+		{#await data.schools then schools}
+			{#if schools.length}
+				<Badge>{schools.length}</Badge>
+			{/if}
+		{/await}
+	</div>
+
+	{#await data.schools then _}
+		<GridButtons onDownload={exportAsCsv} onConfig={() => alert('config')} />
 	{/await}
 </Heading>
 
