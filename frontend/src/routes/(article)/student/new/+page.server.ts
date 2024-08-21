@@ -1,13 +1,12 @@
 import { redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { studentSchema } from '$lib/schemas/student.js';
-import { createStudent } from '$lib/api/student.js';
-import { formAction } from '$lib/abstract/formAction.js';
+import { studentSchema } from '$lib/schemas/student';
+import { createStudent } from '$lib/api/student';
+import { formAction } from '$lib/abstract/formAction';
 
-export async function load(event) {
-	const studentForm = await superValidate(zod(studentSchema));
-	return { studentForm };
+export async function load(_) {
+	return { studentForm: await superValidate(zod(studentSchema)) };
 }
 
 export const actions = {

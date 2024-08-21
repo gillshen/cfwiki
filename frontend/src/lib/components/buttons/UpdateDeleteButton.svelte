@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { PenOutline } from 'flowbite-svelte-icons';
-	import MultiActionButton from './MultiActionButton.svelte';
+	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
 
 	export let updateAction: () => void;
 	export let deleteAction: () => void;

@@ -1,7 +1,7 @@
 import type { BaseStudent, StudentByUserListItem, Contract, CohortMember } from '$lib/api/student';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
-import { isPast } from './dateUtils';
+import { isPast } from '$lib/utils/dateUtils';
 
 export function formatGender(student: BaseStudent): string {
 	switch (student.gender) {

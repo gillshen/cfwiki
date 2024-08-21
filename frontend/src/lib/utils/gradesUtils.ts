@@ -1,6 +1,6 @@
-import { progressionOrder } from '$lib/api/enrollment';
 import type { Grade, GroupedGrades } from '$lib/api/grade';
-import { parseNum } from './numUtils';
+import { progressionOrder } from '$lib/api/enrollment';
+import { parseNum } from '$lib/utils/numUtils';
 
 const _joiner = '\u9999';
 const _termOrder: Record<string, number> = {

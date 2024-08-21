@@ -2,7 +2,7 @@
 	import { Dropdown, Avatar, type SizeType } from 'flowbite-svelte';
 
 	import { toShortYearMonth } from '$lib/utils/dateUtils';
-	import DropdownActionItem from './DropdownActionItem.svelte';
+	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
 
 	export let subject: string;
 	export let score: number | string | null;

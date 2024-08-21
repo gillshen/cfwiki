@@ -21,7 +21,7 @@
 	import RoundForm from '$lib/components/application-round-form/RoundForm.svelte';
 	import { activeYears } from '$lib/utils/dateUtils';
 	import { academicTerms } from '$lib/constants/progressions';
-	import { filterRounds, formatRound } from '$lib/utils/applicationRoundUtils';
+	import { filterSortRounds, formatRound } from '$lib/utils/applicationRoundUtils';
 
 	export let data;
 
@@ -105,7 +105,7 @@
 
 			<Label for="round" class="form-label">Round</Label>
 			<Select id="round" name="round" bind:value={$form.round} required>
-				{#each filterRounds(data.applicationRounds, year, term) as applRound}
+				{#each filterSortRounds(data.applicationRounds, year, term) as applRound}
 					<option value={applRound.id}>{formatRound(applRound)}</option>
 				{/each}
 			</Select>

@@ -1,26 +1,10 @@
 import type { ApplicationListItem } from '$lib/api/application';
 import { applicationStatusOrder, type ApplicationStatus } from '$lib/api/applicationLog';
 import { sortedSchoolNames } from '$lib/api/school';
-
-const _roundOrder: Record<string, number> = {
-	ED1: 0,
-	REA: 1,
-	EA1: 2,
-	ED2: 3,
-	EA2: 4,
-	Priority: 5,
-	RD: 6,
-	Regular: 6,
-	'Round 1': 7,
-	'Round 2': 8,
-	'Round 3': 9,
-	'Round 4': 10,
-	'Round 5': 11,
-	Rolling: 99
-};
+import { orderByRoundName as _orderByRoundName } from '$lib/utils/applicationRoundUtils';
 
 export function orderByRoundName(a: ApplicationListItem, b: ApplicationListItem) {
-	return (_roundOrder[a.round.name] ?? -1) - (_roundOrder[b.round.name] ?? -1);
+	return _orderByRoundName(a.round.name, b.round.name);
 }
 
 export function orderByStatus(a: ApplicationListItem, b: ApplicationListItem) {

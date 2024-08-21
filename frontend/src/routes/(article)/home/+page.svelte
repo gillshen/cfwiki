@@ -1,28 +1,7 @@
 <script lang="ts">
-	import { Button } from 'flowbite-svelte';
-	import { Tabs, TabItem, A } from 'flowbite-svelte';
+	import UserPage from '$lib/components/user-page/UserPage.svelte';
+
+	export let data;
 </script>
 
-<div>
-	<Tabs tabStyle="underline">
-		<TabItem title="Students" open>
-			<Button class="mb-4" href="/student/new/">Create a student file</Button>
-			<div>
-				<A href="/data/students/">List of students</A>
-			</div>
-		</TabItem>
-
-		<TabItem title="Applications">
-			<div>
-				<A href="/data/applications/">List of applications</A>
-			</div>
-		</TabItem>
-
-		<TabItem title="Schools">
-			<Button class="mb-4" href="/school/new/">Create a school file</Button>
-			<div>
-				<A href="/data/schools/">List of schools</A>
-			</div>
-		</TabItem>
-	</Tabs>
-</div>
+<UserPage {data} />

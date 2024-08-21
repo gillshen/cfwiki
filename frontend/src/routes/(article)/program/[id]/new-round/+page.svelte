@@ -21,8 +21,8 @@
 					{data.program.schools.length > 1 ? 'Schools' : 'School'}
 				</TableBodyCell>
 				<TableBodyCell tdClass="font-normal">
-					<div class="flex gap-2">
-						{#each data.program.schools as school}
+					<div class="flex flex-col gap-2">
+						{#each data.program.schools.sort((a, b) => a.name.localeCompare(b.name)) as school}
 							<div>{school.name}</div>
 						{/each}
 					</div>

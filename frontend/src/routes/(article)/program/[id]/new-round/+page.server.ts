@@ -6,7 +6,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { fetchProgram, type ProgramDetail } from '$lib/api/program';
 import { newRoundSchema } from '$lib/schemas/applicationRound';
 import { createApplicationRound } from '$lib/api/applicationRound';
-import { formAction } from '$lib/abstract/formAction.js';
+import { formAction } from '$lib/abstract/formAction';
 import { academicTerms } from '$lib/constants/progressions';
 
 let applicationId: string;

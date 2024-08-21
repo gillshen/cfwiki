@@ -1,6 +1,6 @@
 import { get, createOrUpdate, destroy, buildQuery } from '$lib/api/api';
 import type { Grade } from '$lib/api/grade';
-import type { ContractStatus } from './contract';
+import type { ContractStatus } from '$lib/api/contract';
 
 export type BaseEnrollment = {
 	id: number;

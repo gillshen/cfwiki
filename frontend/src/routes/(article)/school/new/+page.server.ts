@@ -3,11 +3,10 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { schoolSchema } from '$lib/schemas/school';
 import { createSchool } from '$lib/api/school';
-import { formAction } from '$lib/abstract/formAction.js';
+import { formAction } from '$lib/abstract/formAction';
 
 export async function load(_) {
-	const schoolForm = await superValidate(zod(schoolSchema));
-	return { schoolForm };
+	return { schoolForm: await superValidate(zod(schoolSchema)) };
 }
 
 export const actions = {

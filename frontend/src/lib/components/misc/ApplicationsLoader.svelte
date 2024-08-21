@@ -10,16 +10,19 @@
 	export let heading: string = 'Applications';
 	export let noDataText: string = 'No applications';
 	export let errorText: string = '';
+	export let showHeading: boolean = true;
 </script>
 
-<Heading tag="h2" class="text-2xl font-bold flex items-center gap-2">
-	{heading}
-	{#await applications then applications}
-		{#if applications.length}
-			<Badge>{applications.length}</Badge>
-		{/if}
-	{/await}
-</Heading>
+{#if showHeading}
+	<Heading tag="h2" class="text-2xl font-bold flex items-center gap-2">
+		{heading}
+		{#await applications then applications}
+			{#if applications.length}
+				<Badge>{applications.length}</Badge>
+			{/if}
+		{/await}
+	</Heading>
+{/if}
 
 {#await applications}
 	<FetchingDataSign divClass="mt-8" />
