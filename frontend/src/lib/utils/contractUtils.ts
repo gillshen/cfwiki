@@ -1,6 +1,6 @@
 import type { ContractType } from '$lib/api/contract';
 
-export function slugToType(slug: string): ContractType {
+export function slugToContractType(slug: string): ContractType {
 	switch (slug) {
 		case 'freshman':
 			return 'UG Freshman';
@@ -15,7 +15,7 @@ export function slugToType(slug: string): ContractType {
 	}
 }
 
-export function typeToSlug(
+export function contractTypeToSlug(
 	contractType: ContractType
 ): 'freshman' | 'transfer' | 'graduate' | 'other' {
 	switch (contractType) {

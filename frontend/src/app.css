@@ -81,7 +81,10 @@ form.modal {
 }
 
 .dropdown-icon {
-	@apply w-6 h-6 me-1 text-primary-800 inline-block;
+	@apply w-6 h-6 me-1 text-primary-700 inline-block;
+}
+.dropdown-link {
+	@apply hover:text-primary-700 hover:!bg-transparent;
 }
 
 /* fix tab panel background */

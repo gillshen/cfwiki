@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Case, When, Value
+from django.db.models import Case, When, Value, OuterRef, Subquery, Q
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
@@ -228,6 +228,8 @@ class Application(models.Model):
         year: int = None,
         term: str = None,
         application_round: int = None,
+        application_type: str = None,
+        status: str = None,
     ):
         q = (
             cls.objects.all()
@@ -262,7 +264,80 @@ class Application(models.Model):
         if application_round is not None:
             q = q.filter(round=application_round)
 
+        if application_type == "undergraduate":
+            q = q.filter(round__program_iteration__program__type="UG Freshman")
+        elif application_type == "transfer":
+            q = q.filter(round__program_iteration__program__type="UG Transfer")
+        elif application_type == "masters":
+            q = q.filter(round__program_iteration__program__type="Master's")
+        elif application_type == "doctorate":
+            q = q.filter(round__program_iteration__program__type="Doctorate")
+        elif application_type == "graduate":
+            q = q.filter(
+                round__program_iteration__program__type__in=["Master's", "Doctorate"]
+            )
+        elif application_type == "other":
+            q = q.exclude(
+                round__program_iteration__program__type__in=[
+                    "UG Freshman",
+                    "UG Transfer",
+                    "Master's",
+                    "Doctorate",
+                ]
+            )
+
+        if status == "pending":
+            q = Application.get_pending(q)
+        elif status == "resolved":
+            q = Application.get_resolved(q)
+
         return q.distinct()
+
+    @staticmethod
+    def _annotate_with_latest_status(queryset):
+        latest_status_subquery = ApplicationLog.objects.filter(
+            application=OuterRef("pk")
+        ).order_by("-date", "-updated")
+
+        return queryset.annotate(
+            latest_status=Subquery(latest_status_subquery.values("status")[:1])
+        )
+
+    @classmethod
+    def get_pending(cls, queryset=None):
+        if queryset is None:
+            queryset = cls.objects.all()
+
+        annotated_with_latest_status = cls._annotate_with_latest_status(queryset)
+
+        pending = annotated_with_latest_status.filter(
+            Q(latest_status__isnull=True)
+            | Q(latest_status="Started")
+            | Q(latest_status="Submitted")
+            | Q(latest_status="Under Review")
+            | Q(latest_status="Deferred")
+            | Q(latest_status="On Waitlist")
+        )
+
+        return pending
+
+    @classmethod
+    def get_resolved(cls, queryset=None):
+        if queryset is None:
+            queryset = cls.objects.all()
+
+        annotated_with_latest_status = cls._annotate_with_latest_status(queryset)
+
+        resolved = annotated_with_latest_status.exclude(
+            Q(latest_status__isnull=True)
+            | Q(latest_status="Started")
+            | Q(latest_status="Submitted")
+            | Q(latest_status="Under Review")
+            | Q(latest_status="Deferred")
+            | Q(latest_status="On Waitlist")
+        )
+
+        return resolved
 
     @property
     def student(self) -> Student:

@@ -140,6 +140,8 @@ class ApplicationListView(ListAPIView):
             year=query_params.get("year"),
             term=query_params.get("term"),
             application_round=query_params.get("application_round"),
+            application_type=query_params.get("application_type"),
+            status=query_params.get("status"),
         )
 
 

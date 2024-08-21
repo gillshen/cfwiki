@@ -1,9 +1,9 @@
 import type { PageServerLoadEvent } from './$types';
-import { fetchStudents } from '$lib/api/student';
 import { error } from '@sveltejs/kit';
 
 import type { ContractType } from '$lib/api/contract';
-import { slugToType } from '$lib/utils/contractUtils';
+import { fetchStudents } from '$lib/api/student';
+import { slugToContractType } from '$lib/utils/contractUtils';
 
 export async function load(event: PageServerLoadEvent) {
 	const targetYear = parseInt(event.params.year, 10);
@@ -15,7 +15,7 @@ export async function load(event: PageServerLoadEvent) {
 	let contractType: ContractType;
 
 	try {
-		contractType = slugToType(event.params.type);
+		contractType = slugToContractType(event.params.type);
 	} catch (err) {
 		throw error(404, 'Invalid contract type');
 	}

@@ -1,6 +1,10 @@
 import { get, post, patch, buildQuery, destroy } from '$lib/api/api';
 import type { ApplicationStatus, ApplicationLog } from '$lib/api/applicationLog';
 
+export const applicationTypes = ['freshman', 'transfer', 'graduate', 'other'] as const;
+
+export type ApplicationType = (typeof applicationTypes)[number];
+
 type Service = {
 	cf_username: string;
 	role: string;

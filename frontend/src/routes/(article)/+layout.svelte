@@ -15,12 +15,14 @@
 		Hr
 	} from 'flowbite-svelte';
 
-	import { ChevronDownOutline } from 'flowbite-svelte-icons';
+	import { ChevronDownOutline, ChevronRightOutline } from 'flowbite-svelte-icons';
 
 	import { Departments } from '$lib/api/user';
 	import { quickAccessYears } from '$lib/utils/dateUtils';
 	import { contractTypes } from '$lib/api/contract';
-	import { typeToSlug } from '$lib/utils/contractUtils';
+	import { contractTypeToSlug } from '$lib/utils/contractUtils';
+	import { applicationTypes } from '$lib/api/application';
+	import { formatApplicationType } from '$lib/utils/applicationUtils';
 
 	export let data;
 
@@ -63,7 +65,7 @@
 			<Dropdown>
 				<div class="grid grid-cols-4 gap-x-4 px-2 mb-2">
 					{#each cfServicePeople as cfUser}
-						<DropdownItem class="rounded-md" href={`/cf/${cfUser.username}`}>
+						<DropdownItem class="dropdown-link" href={`/cf/${cfUser.username}`}>
 							{cfUser.username}
 						</DropdownItem>
 					{/each}
@@ -71,14 +73,16 @@
 				<DropdownDivider />
 				<div class="grid grid-cols-4 gap-x-4 px-2 mb-2 mt-2">
 					{#each cfSalesPeople as cfUser}
-						<DropdownItem class="rounded-md" href={`/cf/${cfUser.username}`}>
+						<DropdownItem class="dropdown-link" href={`/cf/${cfUser.username}`}>
 							{cfUser.username}
 						</DropdownItem>
 					{/each}
 				</div>
 				{#if exUsers.length}
 					<DropdownDivider />
-					<DropdownItem class="rounded-md w-fit mx-2 mt-2 mb-1" href="/excf">Ex-CFers</DropdownItem>
+					<DropdownItem class="dropdown-link w-fit mx-2 mt-2 mb-1" href="/excf">
+						Ex-CFers
+					</DropdownItem>
 				{/if}
 			</Dropdown>
 
@@ -87,12 +91,15 @@
 			</NavLi>
 			<Dropdown class="w-44 z-20">
 				{#each years as year}
-					<DropdownItem>{year}</DropdownItem>
+					<DropdownItem class="flex items-center justify-between">
+						{year}<ChevronRightOutline class="dropdown-icon" />
+					</DropdownItem>
 					<Dropdown class="w-44 z-30" placement="right-start">
 						{#each contractTypes as contractType}
 							<DropdownItem
-								href={`/data/students/${year}/${typeToSlug(contractType)}`}
+								href={`/data/students/${year}/${contractTypeToSlug(contractType)}`}
 								target="_self"
+								class="dropdown-link"
 							>
 								{contractType}
 							</DropdownItem>
@@ -100,8 +107,8 @@
 					</Dropdown>
 				{/each}
 				<DropdownDivider />
-				<DropdownItem href="/data/students/current">Current</DropdownItem>
-				<DropdownItem href="/data/students/all">All</DropdownItem>
+				<DropdownItem href="/data/students/current" class="dropdown-link">Current</DropdownItem>
+				<DropdownItem href="/data/students/all" class="dropdown-link">All</DropdownItem>
 			</Dropdown>
 
 			<NavLi class="cursor-pointer">
@@ -109,11 +116,24 @@
 			</NavLi>
 			<Dropdown class="w-44 z-20">
 				{#each years as year}
-					<DropdownItem href={`/data/applications?year=${year}`}>{year}</DropdownItem>
+					<DropdownItem class="flex items-center justify-between">
+						{year}<ChevronRightOutline class="dropdown-icon" />
+					</DropdownItem>
+					<Dropdown class="w-44 z-30" placement="right-start">
+						{#each applicationTypes as applicationType}
+							<DropdownItem
+								href={`/data/applications/${year}/${applicationType}`}
+								target="_self"
+								class="dropdown-link"
+							>
+								{formatApplicationType(applicationType)}
+							</DropdownItem>
+						{/each}
+					</Dropdown>
 				{/each}
 				<DropdownDivider />
-				<DropdownItem href="/data/applications?status=pending">Pending</DropdownItem>
-				<DropdownItem href="/data/applications">All</DropdownItem>
+				<DropdownItem href="/data/applications/pending" class="dropdown-link">Pending</DropdownItem>
+				<DropdownItem href="/data/applications/all" class="dropdown-link">All</DropdownItem>
 			</Dropdown>
 
 			<NavLi class="cursor-pointer">

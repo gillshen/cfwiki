@@ -205,9 +205,9 @@
 {#await data.students}
 	<FetchingDataSign />
 {:then students}
-	{#if !students.length}
-		<NoDataSign text="No students in this category" />
-	{:else}
+	{#if students.length}
 		<div id="grid" class="data-grid ag-theme-alpine full-page" />
+	{:else}
+		<NoDataSign text="No students in this category" />
 	{/if}
 {/await}

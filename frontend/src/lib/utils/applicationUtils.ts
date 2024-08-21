@@ -1,7 +1,22 @@
-import type { ApplicationListItem } from '$lib/api/application';
+import type { ApplicationListItem, ApplicationType } from '$lib/api/application';
 import { applicationStatusOrder, type ApplicationStatus } from '$lib/api/applicationLog';
 import { sortedSchoolNames } from '$lib/api/school';
 import { orderByRoundName as _orderByRoundName } from '$lib/utils/applicationRoundUtils';
+
+export function formatApplicationType(applicationType: ApplicationType | string): string {
+	switch (applicationType) {
+		case 'freshman':
+			return 'UG Freshman';
+		case 'transfer':
+			return 'UG Transfer';
+		case 'graduate':
+			return 'Graduate';
+		case 'other':
+			return 'Other';
+		default:
+			return applicationType;
+	}
+}
 
 export function orderByRoundName(a: ApplicationListItem, b: ApplicationListItem) {
 	return _orderByRoundName(a.round.name, b.round.name);
