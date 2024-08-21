@@ -43,11 +43,17 @@ class CFUserDetailView(RetrieveAPIView):
 
 
 class StudentListView(ListAPIView):
-    queryset = Student.objects.all().prefetch_related(
-        "contracts",
-        "contracts__services",
-    )
+
     serializer_class = StudentListSerializer
+
+    def get_queryset(self):
+        query_params = self.request.query_params
+
+        return Student.filter(
+            target_year=query_params.get("target_year"),
+            contract_type=query_params.get("contract_type"),
+            contract_status=query_params.get("contract_status"),
+        )
 
 
 class StudentByUserListView(ListAPIView):

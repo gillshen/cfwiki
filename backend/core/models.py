@@ -55,6 +55,7 @@ class Student(models.Model):
         cfer: int = None,
         contract_type: str = None,
         target_year: int = None,
+        contract_status: str = None,
     ):
         q = cls.objects.all().prefetch_related(
             "contracts",
@@ -67,6 +68,8 @@ class Student(models.Model):
             q = q.filter(contracts__type=contract_type)
         if target_year is not None:
             q = q.filter(contracts__target_year=target_year)
+        if contract_status is not None:
+            q = q.filter(contracts__status=contract_status)
 
         return q.distinct()
 

@@ -42,6 +42,7 @@ export function buildQuery(params?: Record<string, any>): string {
 	}
 
 	const queryString = Object.entries(params)
+		.filter(([_, value]) => value !== undefined)
 		.map(([key, value]) => `${key}=${value}`)
 		.join('&');
 

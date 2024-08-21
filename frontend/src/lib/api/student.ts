@@ -67,15 +67,14 @@ export type StudentDetail = BaseStudent & {
 	lsat: LsatScore[];
 };
 
-export async function fetchStudents(): Promise<StudentListItem[]> {
-	return await get(`students/`);
+export async function fetchStudents(params?: Record<string, any>): Promise<StudentListItem[]> {
+	return await get(`students/${buildQuery(params)}`);
 }
 
 export async function fetchStudentsByUser(
 	params?: Record<string, any>
 ): Promise<StudentByUserListItem[]> {
-	const queryString = buildQuery(params);
-	return await get(`students-by-user/${queryString}`);
+	return await get(`students-by-user/${buildQuery(params)}`);
 }
 
 export async function fetchStudent(id: number): Promise<StudentDetail> {

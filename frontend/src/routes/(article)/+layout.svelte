@@ -19,6 +19,8 @@
 
 	import { Departments } from '$lib/api/user';
 	import { quickAccessYears } from '$lib/utils/dateUtils';
+	import { contractTypes } from '$lib/api/contract';
+	import { typeToSlug } from '$lib/utils/contractUtils';
 
 	export let data;
 
@@ -85,11 +87,21 @@
 			</NavLi>
 			<Dropdown class="w-44 z-20">
 				{#each years as year}
-					<DropdownItem href={`/data/students?year=${year}`}>{year}</DropdownItem>
+					<DropdownItem>{year}</DropdownItem>
+					<Dropdown class="w-44 z-30" placement="right-start">
+						{#each contractTypes as contractType}
+							<DropdownItem
+								href={`/data/students/${year}/${typeToSlug(contractType)}`}
+								target="_self"
+							>
+								{contractType}
+							</DropdownItem>
+						{/each}
+					</Dropdown>
 				{/each}
 				<DropdownDivider />
-				<DropdownItem href="/data/students?status=current">Current</DropdownItem>
-				<DropdownItem href="/data/students">All</DropdownItem>
+				<DropdownItem href="/data/students/current">Current</DropdownItem>
+				<DropdownItem href="/data/students/all">All</DropdownItem>
 			</Dropdown>
 
 			<NavLi class="cursor-pointer">

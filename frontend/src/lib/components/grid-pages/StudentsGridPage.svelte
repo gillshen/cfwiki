@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { Badge, Heading } from 'flowbite-svelte';
 
 	import {
 		createGrid,
@@ -9,9 +10,8 @@
 		type ICellRendererParams
 	} from 'ag-grid-community';
 
-	import { Heading } from 'flowbite-svelte';
-
 	import type { StudentListItem } from '$lib/api/student';
+	import type { ContractType } from '$lib/api/contract';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { AgCellRenderer, SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
 	import { formatLocation, orderByName } from '$lib/utils/studentUtils';
@@ -20,9 +20,15 @@
 	import { localeComparator } from '$lib/utils/gridUtils';
 	import countryFlags from '$lib/constants/countryFlags';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
+	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import Gender from '$lib/components/grid-cells/Gender.svelte';
 
-	export let data;
+	export let data: {
+		students: Promise<StudentListItem[]>;
+		targetYear?: number | undefined;
+		contractType?: ContractType | undefined;
+		current?: boolean;
+	};
 
 	function _getName(student: StudentListItem): string {
 		if (!student.preferred_name || student.preferred_name === student.given_name) {
@@ -53,17 +59,6 @@
 				target: this.eGui,
 				props: { student: params.data }
 			});
-		}
-	}
-
-	function genderValueFormatter(params: ValueFormatterParams): string {
-		switch (params.value) {
-			case 'female':
-				return 'F';
-			case 'male':
-				return 'M';
-			default:
-				return params.value;
 		}
 	}
 
@@ -142,6 +137,18 @@
 			comparator: localeComparator,
 			cellRenderer: NameRenderer
 		},
+		{
+			headerName: 'Target year',
+			filter: 'agNumberColumnFilter',
+			valueGetter: lastestTargetYearValueGetter,
+			hide: !!data.targetYear
+		},
+		{
+			headerName: 'Contract type',
+			valueGetter: latestContractTypeValueGetter,
+			hide: !!data.contractType
+		},
+		{ headerName: 'Contract status', valueGetter: contractStatusValueGetter, hide: !!data.current },
 		{ headerName: 'Gender', field: 'gender', cellRenderer: GenderRenderer },
 		{ headerName: 'Citizenship', field: 'citizenship', valueFormatter: citizenshipValueFormatter },
 		{
@@ -157,22 +164,16 @@
 			comparator: localeComparator,
 			valueFormatter: homeValueFormatter
 		},
-		{ headerName: 'Contract type', valueGetter: latestContractTypeValueGetter },
-		{
-			headerName: 'Target year',
-			filter: 'agNumberColumnFilter',
-			valueGetter: lastestTargetYearValueGetter
-		},
 		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
 		{ headerName: '文案', valueGetter: workPeopleValueGetter },
 		{ headerName: '战略', valueGetter: stratPeopleValueGetter },
 		{ headerName: '服务', valueGetter: salesAssistantsValueGetter },
-		{ headerName: '流程', valueGetter: workAssistantsValueGetter },
-		{ headerName: 'Contract status', valueGetter: contractStatusValueGetter }
+		{ headerName: '流程', valueGetter: workAssistantsValueGetter }
 	];
 
 	onMount(async () => {
 		const students = await data.students;
+
 		const gridOptions: GridOptions = {
 			defaultColDef: { filter: true },
 			columnDefs,
@@ -185,10 +186,28 @@
 	});
 </script>
 
-<Heading tag="h1" class="grid-title">Students</Heading>
+<Heading tag="h1" class="grid-title flex gap-2 items-center">
+	Students:
+	{#if data.current}
+		Current
+	{:else if data.contractType && data.targetYear}
+		{data.contractType} {data.targetYear}
+	{:else}
+		All
+	{/if}
+	{#await data.students then students}
+		{#if students.length}
+			<Badge>{students.length}</Badge>
+		{/if}
+	{/await}
+</Heading>
 
 {#await data.students}
 	<FetchingDataSign />
-{:then _}
-	<div id="grid" class="data-grid ag-theme-alpine full-page" />
+{:then students}
+	{#if !students.length}
+		<NoDataSign text="No students in this category" />
+	{:else}
+		<div id="grid" class="data-grid ag-theme-alpine full-page" />
+	{/if}
 {/await}
