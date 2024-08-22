@@ -3,7 +3,7 @@ import { error, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-import { deleteSchool, fetchSchool, updateSchool, type School } from '$lib/api/school';
+import { deleteSchool, fetchSchool, updateSchool, type SchoolWithStats } from '$lib/api/school';
 import { fetchApplications } from '$lib/api/application';
 import { schoolSchema } from '$lib/schemas/school';
 import { deleteSchema } from '$lib/schemas/delete';
@@ -17,7 +17,7 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Invalid id');
 	}
 
-	const school: School = await fetchSchool(id);
+	const school: SchoolWithStats = await fetchSchool(id);
 
 	if (school?.id === undefined) {
 		throw error(404, 'School not found');

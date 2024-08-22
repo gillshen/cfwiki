@@ -15,6 +15,7 @@
 	import SchoolForm from '$lib/components/school-form/SchoolForm.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import SchoolInfobox from '$lib/components/infobox/SchoolInfobox.svelte';
+	import ApplicationStats from '$lib/components/application-stats/ApplicationStats.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
@@ -63,7 +64,9 @@
 		</div>
 	</article>
 
-	<article class="bg-stone-50 rounded-xl w-full p-8">(Stats)</article>
+	<article class="bg-stone-50 rounded-xl w-full p-8">
+		<ApplicationStats stats={data.school.application_stats} />
+	</article>
 
 	{#if data.school.type !== 'Secondary School'}
 		<article class="col-span-2 mt-24">

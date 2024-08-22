@@ -34,7 +34,7 @@ class SchoolStatsListView(SchoolListView):
 
 class SchoolDetailView(RetrieveAPIView):
     queryset = School.objects.all()
-    serializer_class = SchoolSerializer
+    serializer_class = SchoolStatsSerializer
 
 
 class SchoolCreateView(CreateAPIView):

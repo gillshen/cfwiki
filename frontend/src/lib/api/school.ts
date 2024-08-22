@@ -30,7 +30,7 @@ export async function fetchSchoolsWithStats(params?: {
 	return await get(`schools/stats/${buildQuery(params)}`);
 }
 
-export async function fetchSchool(id: number): Promise<School> {
+export async function fetchSchool(id: number): Promise<SchoolWithStats> {
 	return await get(`schools/${id}/`);
 }
 
