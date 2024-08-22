@@ -48,7 +48,18 @@ class School(models.Model):
     def application_stats(self):
         from core.models import Application
 
-        return Application.get_stats(school=self.id)
+        ug_stats = Application.get_stats(
+            school=self.id,
+            application_type="undergraduate",
+        )
+        grad_stats = Application.get_stats(
+            school=self.id,
+            application_type="graduate",
+        )
+        return {
+            "ug": ug_stats,
+            "grad": grad_stats,
+        }
 
 
 class Program(models.Model):

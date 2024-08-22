@@ -1,4 +1,5 @@
 import { get, patch, post, destroy, buildQuery } from '$lib/api/api';
+import type { ApplicationStats } from '$lib/api/stats';
 
 export const programTypes = [
 	'UG Freshman',
@@ -30,13 +31,7 @@ export type ProgramListItem = Program & {
 };
 
 export type ProgramWithStats = ProgramListItem & {
-	application_stats: {
-		applied: number;
-		pending: number;
-		accepted: number;
-		denied: number;
-		neutral: number;
-	};
+	application_stats: ApplicationStats;
 };
 
 export type ProgramDetail = ProgramWithStats;

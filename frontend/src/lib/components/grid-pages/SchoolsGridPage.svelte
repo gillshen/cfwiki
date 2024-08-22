@@ -7,7 +7,8 @@
 		type GridApi,
 		type GridOptions,
 		type ICellRendererParams,
-		type ValueFormatterParams
+		type ValueFormatterParams,
+		type ValueGetterParams
 	} from 'ag-grid-community';
 
 	import type { SchoolWithStats } from '$lib/api/school';
@@ -20,9 +21,9 @@
 
 	import {
 		localeComparator,
+		calcSuccessRate,
 		noZeroValueFormatter,
-		successRateValueFormatter,
-		successRateValueGetter
+		percentageValueFormatter
 	} from '$lib/utils/gridUtils';
 
 	export let data: {
@@ -46,18 +47,26 @@
 		return `${flag}\xa0\xa0${params.value}`;
 	}
 
+	function ugSuccessRateValueGetter(params: ValueGetterParams): number | string {
+		return calcSuccessRate(params.data.application_stats.ug);
+	}
+
+	function gradSuccessRateValueGetter(params: ValueGetterParams): number | string {
+		return calcSuccessRate(params.data.application_stats.grad);
+	}
+
 	const columnTypes = {
 		stats: {
 			valueFormatter: noZeroValueFormatter
 		}
 	};
 
-	const columnDefs = [
+	const columnDefs: any[] = [
 		{
 			headerName: 'Name',
 			field: 'name',
 			width: 500,
-			flex: 4,
+			flex: 3,
 			cellRenderer: NameRenderer,
 			comparator: localeComparator
 		},
@@ -67,29 +76,83 @@
 			field: 'country',
 			flex: 1.5,
 			valueFormatter: countryValueFormatter
-		},
-		{ headerName: 'Applied', field: 'application_stats.applied', type: ['rightAligned', 'stats'] },
-		{ headerName: 'Pending', field: 'application_stats.pending', type: ['rightAligned', 'stats'] },
+		}
+	];
+
+	const statsColumnDefs = [
 		{
-			headerName: 'Accepted',
-			field: 'application_stats.accepted',
+			headerName: 'UG applied',
+			field: 'application_stats.ug.applied',
 			type: ['rightAligned', 'stats']
 		},
-		{ headerName: 'Denied', field: 'application_stats.denied', type: ['rightAligned', 'stats'] },
 		{
-			headerName: 'Acceptance rate',
+			headerName: 'UG pending',
+			field: 'application_stats.ug.pending',
+			type: ['rightAligned', 'stats']
+		},
+		{
+			headerName: 'UG accepted',
+			field: 'application_stats.ug.accepted',
+			type: ['rightAligned', 'stats']
+		},
+		{
+			headerName: 'UG denied',
+			field: 'application_stats.ug.denied',
+			type: ['rightAligned', 'stats']
+		},
+		{
+			headerName: 'UG acceptance rate',
 			flex: 1.2,
-			valueGetter: successRateValueGetter,
-			valueFormatter: successRateValueFormatter,
+			valueGetter: ugSuccessRateValueGetter,
+			valueFormatter: percentageValueFormatter,
 			type: 'rightAligned'
 		},
 		{
-			headerName: 'Cancelled, etc.',
-			field: 'application_stats.neutral',
+			headerName: 'UG cancelled, etc.',
+			field: 'application_stats.ug.neutral',
+			flex: 1.2,
+			type: ['rightAligned', 'stats']
+		},
+		{
+			headerName: 'Grad applied',
+			field: 'application_stats.grad.applied',
+			type: ['rightAligned', 'stats']
+		},
+		{
+			headerName: 'Grad pending',
+			field: 'application_stats.grad.pending',
+			type: ['rightAligned', 'stats']
+		},
+		{
+			headerName: 'Grad accepted',
+			field: 'application_stats.grad.accepted',
+			type: ['rightAligned', 'stats']
+		},
+		{
+			headerName: 'Grad denied',
+			field: 'application_stats.grad.denied',
+			type: ['rightAligned', 'stats']
+		},
+		{
+			headerName: 'Grad acceptance rate',
+			flex: 1.2,
+			valueGetter: gradSuccessRateValueGetter,
+			valueFormatter: percentageValueFormatter,
+			type: 'rightAligned'
+		},
+		{
+			headerName: 'Grad cancelled, etc.',
+			field: 'application_stats.grad.neutral',
 			flex: 1.2,
 			type: ['rightAligned', 'stats']
 		}
 	];
+
+	if (data.schoolType !== 'Secondary Schools') {
+		for (const column of statsColumnDefs) {
+			columnDefs.push(column);
+		}
+	}
 
 	let gridApi: GridApi;
 

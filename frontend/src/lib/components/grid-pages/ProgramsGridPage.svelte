@@ -20,9 +20,9 @@
 	import { formatSchoolNames } from '$lib/utils/programUtils';
 
 	import {
+		calcSuccessRate,
 		noZeroValueFormatter,
-		successRateValueFormatter,
-		successRateValueGetter
+		percentageValueFormatter
 	} from '$lib/utils/gridUtils';
 
 	export let data: {
@@ -51,6 +51,10 @@
 
 	function schoolsGetter(params: ValueGetterParams): string {
 		return formatSchoolNames(params.data);
+	}
+
+	function successRateValueGetter(params: ValueGetterParams): number | string {
+		return calcSuccessRate(params.data.application_stats);
 	}
 
 	const columnTypes = {
@@ -92,7 +96,7 @@
 			headerName: 'Acceptance rate',
 			flex: 1.2,
 			valueGetter: successRateValueGetter,
-			valueFormatter: successRateValueFormatter,
+			valueFormatter: percentageValueFormatter,
 			type: 'rightAligned'
 		},
 		{

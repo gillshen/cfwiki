@@ -297,10 +297,17 @@ class Application(models.Model):
 
     @staticmethod
     def filter_by_type(q, application_type: str):
-        if application_type == "undergraduate":
+        if application_type == "freshman":
             return q.filter(round__program_iteration__program__type="UG Freshman")
         if application_type == "transfer":
             return q.filter(round__program_iteration__program__type="UG Transfer")
+        if application_type == "undergraduate":
+            return q.filter(
+                round__program_iteration__program__type__in=[
+                    "UG Freshman",
+                    "UG Transfer",
+                ]
+            )
         if application_type == "masters":
             return q.filter(round__program_iteration__program__type="Master's")
         if application_type == "doctorate":

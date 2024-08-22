@@ -86,7 +86,7 @@
 		<ApplicationInfobox application={data.application} />
 
 		{#if canEdit}
-			<div class="mt-8">
+			<div class="mt-4">
 				<MultiActionButton text="Actions" actions={applicationActions}>
 					<PenOutline slot="icon" />
 				</MultiActionButton>

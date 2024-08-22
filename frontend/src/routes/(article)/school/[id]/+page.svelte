@@ -52,7 +52,7 @@
 	<article>
 		<SchoolInfobox school={data.school} />
 
-		<div class="mt-8">
+		<div class="mt-4">
 			{#await Promise.all([data.applications, data.enrollments]) then [applications, enrollments]}
 				<UpdateDeleteButton
 					text="Actions"
@@ -64,8 +64,15 @@
 		</div>
 	</article>
 
-	<article class="bg-stone-50 rounded-xl w-full p-8">
-		<ApplicationStats stats={data.school.application_stats} />
+	<!-- Empty div to take up the right column of the first row -->
+	<div></div>
+
+	<article class="bg-stone-50 rounded-xl w-full p-8 mt-16">
+		<ApplicationStats stats={data.school.application_stats.ug} title="Undergraduate statistics" />
+	</article>
+
+	<article class="bg-stone-50 rounded-xl w-full p-8 mt-16">
+		<ApplicationStats stats={data.school.application_stats.grad} title="Graduate statistics" />
 	</article>
 
 	{#if data.school.type !== 'Secondary School'}

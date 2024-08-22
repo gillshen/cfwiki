@@ -49,7 +49,7 @@
 	<article>
 		<ProgramInfobox program={data.program} />
 
-		<div class="mt-8">
+		<div class="mt-4">
 			{#await data.applications then applications}
 				<UpdateDeleteButton
 					text="Actions"

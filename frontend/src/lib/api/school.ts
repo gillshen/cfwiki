@@ -1,4 +1,5 @@
 import { get, patch, post, destroy, buildQuery } from '$lib/api/api';
+import type { ApplicationStats } from '$lib/api/stats';
 
 export type School = {
 	id: number;
@@ -10,11 +11,8 @@ export type School = {
 
 export type SchoolWithStats = School & {
 	application_stats: {
-		applied: number;
-		pending: number;
-		accepted: number;
-		denied: number;
-		neutral: number;
+		ug: ApplicationStats;
+		grad: ApplicationStats;
 	};
 };
 
