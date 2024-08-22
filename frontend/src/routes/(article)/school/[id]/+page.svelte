@@ -87,7 +87,7 @@
 							<TableHeadCell>Type</TableHeadCell>
 							<TableHeadCell>Student</TableHeadCell>
 							<TableHeadCell>Program/Major</TableHeadCell>
-							<TableHeadCell>Round</TableHeadCell>
+							<TableHeadCell>Adm. plan</TableHeadCell>
 							<TableHeadCell>Due</TableHeadCell>
 							<TableHeadCell>Status</TableHeadCell>
 						</TableHead>

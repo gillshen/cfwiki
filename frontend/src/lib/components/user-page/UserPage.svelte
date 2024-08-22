@@ -101,7 +101,7 @@
 									<TableHeadCell>Student</TableHeadCell>
 									<TableHeadCell>School</TableHeadCell>
 									<TableHeadCell>Program/Major</TableHeadCell>
-									<TableHeadCell>Round</TableHeadCell>
+									<TableHeadCell>Adm. plan</TableHeadCell>
 								</TableHead>
 
 								<TableBody>

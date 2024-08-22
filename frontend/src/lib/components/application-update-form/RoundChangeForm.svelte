@@ -23,7 +23,7 @@
 			term: entity.program_iteration.term,
 			application: entity.id
 		};
-		goto(`/program/${entity.program.id}/new-round/${buildQuery(params)}`);
+		goto(`/program/${entity.program.id}/plan/new${buildQuery(params)}`);
 	};
 
 	// TODO
@@ -39,14 +39,14 @@
 
 <input class="hidden" name="id" type="number" bind:value={$form.id} />
 
-<Label for="round" class="form-label">Round</Label>
+<Label for="round" class="form-label">Admission plan</Label>
 <Select id="round" name="round" bind:value={$form.round} required>
 	{#each filterSortRounds(rounds, year, term) as roundOption}
 		<option value={roundOption.id}>{formatRound(roundOption)}</option>
 	{/each}
 </Select>
-<Helper class="mt-4">
-	If your desired round is not listed, <A on:click={onRedirect}>go to this page</A> and create it.
+<Helper class="mt-4 form-helper">
+	If your desired plan is not listed, <A on:click={onRedirect}>go to this page</A> and create it.
 </Helper>
 
 <Button type="submit" class="mt-8">Update</Button>

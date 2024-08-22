@@ -83,7 +83,7 @@
 			<option value={schoolOption.id}>{schoolOption.name}</option>
 		{/each}
 	</Select>
-	<Helper class="mt-2">
+	<Helper class="mt-2 form-helper">
 		If your desired school is not listed, <A href="/school/new">go to this page</A> and create it.
 	</Helper>
 {:else}

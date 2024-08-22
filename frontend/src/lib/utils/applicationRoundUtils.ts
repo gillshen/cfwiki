@@ -1,5 +1,6 @@
 import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
 import { toLongDate } from '$lib/utils/dateUtils';
+import { termOrder } from '$lib/constants/progressions';
 
 const _roundOrder: Record<string, number> = {
 	'ED\\s*1?': 0,
@@ -61,5 +62,44 @@ export function formatRound(applRound: ApplicationRoundListItem): string {
 		return `${applRound.name}, ${toLongDate(applRound.due_date)}`;
 	} else {
 		return applRound.name;
+	}
+}
+
+const _joiner = '\u9999';
+
+export function groupByYearTerm(
+	applRounds: ApplicationRoundListItem[]
+): Record<string, ApplicationRoundListItem[]> {
+	const grouped: Record<string, ApplicationRoundListItem[]> = {};
+
+	for (const applRound of applRounds) {
+		const { year, term } = applRound.program_iteration;
+		const key = `${term}${_joiner}${year}`;
+		if (!grouped[key]) {
+			grouped[key] = [];
+		}
+		grouped[key].push(applRound);
+	}
+
+	const sortedGroups: Record<string, ApplicationRoundListItem[]> = {};
+	const sortedKeys = Object.keys(grouped).sort(_orderByGroupKey);
+
+	for (const key of sortedKeys) {
+		const group = grouped[key];
+		group.sort((a, b) => orderByRoundName(a.name, b.name));
+		sortedGroups[key.replace(_joiner, ' ')] = group;
+	}
+
+	return sortedGroups;
+}
+
+function _orderByGroupKey(a: string, b: string): number {
+	const [termA, yearA] = a.split(_joiner);
+	const [termB, yearB] = b.split(_joiner);
+
+	if (yearA === yearB) {
+		return (termOrder[termA] ?? 99) - (termOrder[termB] ?? 99);
+	} else {
+		return parseInt(yearB, 10) - parseInt(yearA, 10);
 	}
 }

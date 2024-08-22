@@ -72,7 +72,7 @@
 		{/if}
 
 		<TableBodyRow>
-			<TableBodyCell tdClass="w-40 font-medium py-4">Round</TableBodyCell>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Adm. plan</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{application.round.name}</TableBodyCell>
 		</TableBodyRow>
 

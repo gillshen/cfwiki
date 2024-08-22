@@ -103,14 +103,14 @@
 				{/each}
 			</div>
 
-			<Label for="round" class="form-label">Round</Label>
+			<Label for="round" class="form-label">Admission plan</Label>
 			<Select id="round" name="round" bind:value={$form.round} required>
 				{#each filterSortRounds(data.applicationRounds, year, term) as applRound}
 					<option value={applRound.id}>{formatRound(applRound)}</option>
 				{/each}
 			</Select>
 			{#if year && term}
-				<Helper class="mt-2">
+				<Helper class="mt-2 form-helper">
 					If your desired round is not listed, <A on:click={() => (roundModal = true)}>click here</A
 					> to create it.
 				</Helper>
@@ -126,7 +126,7 @@
 	superform={data.newApplicationRoundForm}
 	fields={RoundForm}
 	action="?/createApplicationRound"
-	title="Create an application round"
+	title="Create an admission plan"
 	extra={[
 		{ name: 'program', type: 'number', value: data.program.id },
 		{ name: 'year', type: 'number', value: year },

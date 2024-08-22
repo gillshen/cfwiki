@@ -113,7 +113,7 @@
 			flex: 2,
 			hide: data.applicationType === 'graduate'
 		},
-		{ headerName: 'Round', field: 'round.name' },
+		{ headerName: 'Adm. plan', field: 'round.name' },
 		{ headerName: 'Due', field: 'round.due_date', flex: 1.5 },
 		{ headerName: 'Status', field: 'latest_log.status', cellRenderer: StatusRenderer },
 		{ headerName: 'Last update', field: 'latest_log.date', flex: 1.5 }

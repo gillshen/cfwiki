@@ -116,7 +116,7 @@
 				<option value={school.id}>{school.name}</option>
 			{/each}
 		</Select>
-		<Helper class="mt-2">
+		<Helper class="mt-2 form-helper">
 			If your desired school is not listed, <A href="/school/new">go to this page</A> and create it.
 		</Helper>
 
@@ -135,7 +135,7 @@
 				<option value={program.id}>{formatSelectOption(program)}</option>
 			{/each}
 		</Select>
-		<Helper class="mt-2">
+		<Helper class="mt-2 form-helper">
 			If your desired program is not listed, <A on:click={onOpenNewProgramForm}>click here</A> to create
 			it.
 		</Helper>

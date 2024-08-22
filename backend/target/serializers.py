@@ -74,7 +74,7 @@ class ProgramCRUDSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ApplicationRoundListSerializer(serializers.ModelSerializer):
+class ApplicationRoundSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationRound
         fields = "__all__"

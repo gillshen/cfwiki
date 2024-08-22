@@ -15,7 +15,7 @@ import {
 } from '$lib/api/applicationRound';
 
 import { newApplicationSchema } from '$lib/schemas/application';
-import { newRoundSchema } from '$lib/schemas/applicationRound';
+import { roundSchema } from '$lib/schemas/applicationRound';
 import { createApplication } from '$lib/api/application';
 import { formAction } from '$lib/abstract/formAction';
 
@@ -47,7 +47,7 @@ export const load: PageServerLoad = async ({ url }) => {
 		const applicationRounds: ApplicationRoundListItem[] = await fetchApplicationRounds(programId);
 
 		const newApplicationForm = await superValidate(zod(newApplicationSchema));
-		const newApplicationRoundForm = await superValidate(zod(newRoundSchema));
+		const newApplicationRoundForm = await superValidate(zod(roundSchema));
 
 		return {
 			contract,
@@ -62,7 +62,7 @@ export const load: PageServerLoad = async ({ url }) => {
 };
 
 export const actions = {
-	createApplicationRound: formAction(newRoundSchema, createApplicationRound),
+	createApplicationRound: formAction(roundSchema, createApplicationRound),
 
 	createApplication: formAction(newApplicationSchema, createApplication, (newApplication) => {
 		throw redirect(303, `/application/${newApplication.id}`);

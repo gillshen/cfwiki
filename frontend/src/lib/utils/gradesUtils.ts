@@ -1,15 +1,9 @@
 import type { Grade, GroupedGrades } from '$lib/api/grade';
 import { progressionOrder } from '$lib/api/enrollment';
 import { parseNum } from '$lib/utils/numUtils';
+import { termOrder } from '$lib/constants/progressions';
 
 const _joiner = '\u9999';
-const _termOrder: Record<string, number> = {
-	Fall: 0,
-	Winter: 1,
-	Spring: 2,
-	Summer: 3,
-	Year: 4
-} as const;
 
 export function groupByProgressionTerm(grades: Grade[]): GroupedGrades {
 	const groupedGrades: GroupedGrades = {};
@@ -23,7 +17,7 @@ export function groupByProgressionTerm(grades: Grade[]): GroupedGrades {
 	}
 
 	const sortedGrades: GroupedGrades = {};
-	const sortedGroupKeys = Object.keys(groupedGrades).sort(_orderByGroupKeys);
+	const sortedGroupKeys = Object.keys(groupedGrades).sort(_orderByGroupKey);
 
 	for (const key of sortedGroupKeys) {
 		const group = groupedGrades[key];
@@ -34,12 +28,12 @@ export function groupByProgressionTerm(grades: Grade[]): GroupedGrades {
 	return sortedGrades;
 }
 
-function _orderByGroupKeys(a: string, b: string): number {
+function _orderByGroupKey(a: string, b: string): number {
 	const [progA, termA] = a.split(_joiner);
 	const [progB, termB] = b.split(_joiner);
 
 	if (progA === progB) {
-		return (_termOrder[termA] ?? 99) - (_termOrder[termB] ?? 99);
+		return (termOrder[termA] ?? 99) - (termOrder[termB] ?? 99);
 	} else {
 		return (progressionOrder[progA] ?? 99) - (progressionOrder[progB] ?? 99);
 	}

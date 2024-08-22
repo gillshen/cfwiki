@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-export const newRoundSchema = z.object({
+export const roundSchema = z.object({
+	id: z.number().optional(),
 	program: z.number(),
 	year: z.number(),
 	term: z.string(),
@@ -11,7 +12,7 @@ export const newRoundSchema = z.object({
 	decision_date: z.string().nullable().default(null)
 });
 
-export const NewRoundSchema = typeof newRoundSchema;
+export const RoundSchema = typeof roundSchema;
 
 export const roundNameSchema = z.object({
 	id: z.number(),

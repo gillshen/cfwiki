@@ -12,9 +12,9 @@
 	}
 </script>
 
-<Label for="name" class="form-label">Round name</Label>
+<Label for="name" class="form-label">Plan name</Label>
 <Input id="name" type="text" name="name" maxlength="50" bind:value={$form.name} required />
-<Helper class="mt-2">Such as "ED", "Round 1", or "Rolling"</Helper>
+<Helper class="mt-2 form-helper">Such as "ED", "Round 1", or "Rolling"</Helper>
 
 <DatesFields {form} />
 

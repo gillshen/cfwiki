@@ -34,7 +34,7 @@
 					{#if isUndergraduate(application.program)}
 						<TableHeadCell>Major</TableHeadCell>
 					{/if}
-					<TableHeadCell>Round</TableHeadCell>
+					<TableHeadCell>Adm. plan</TableHeadCell>
 					<TableHeadCell>Status</TableHeadCell>
 				</TableHead>
 

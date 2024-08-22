@@ -15,10 +15,16 @@ export type ApplicationRoundListItem = {
 	decision_date: string | null;
 };
 
+export type ApplicationRoundDetail = ApplicationRoundListItem;
+
 export async function fetchApplicationRounds(
 	programId: number
 ): Promise<ApplicationRoundListItem[]> {
 	return await get(`application-rounds/?program=${programId}`);
+}
+
+export async function fetchApplicationRound(id: number): Promise<ApplicationRoundDetail> {
+	return await get(`application-rounds/${id}/`);
 }
 
 export async function createApplicationRound(data: any) {

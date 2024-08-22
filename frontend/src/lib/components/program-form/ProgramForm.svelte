@@ -21,7 +21,7 @@
 <Label for="name" class="form-label">Program name</Label>
 <Input id="name" type="text" name="name" maxlength="100" bind:value={$form.name} />
 {#if $form.type === 'UG Freshman' || $form.type === 'UG Transfer'}
-	<Helper class="mt-2">
+	<Helper class="mt-2 form-helper">
 		For a UG Freshman/Transfer program, normally you should leave this field blank.
 	</Helper>
 {/if}

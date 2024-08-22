@@ -42,6 +42,9 @@ h2 {
 .form-checkbox {
 	@apply mt-8 mb-6 space-x-1 font-normal;
 }
+.form-helper {
+	@apply text-gray-500;
+}
 form.modal {
 	@apply px-12 pb-12;
 }

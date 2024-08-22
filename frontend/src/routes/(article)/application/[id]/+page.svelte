@@ -60,14 +60,14 @@
 	};
 
 	const applicationActions = [
-		{ text: 'Change round', action: () => (roundChangeModal = true) },
+		{ text: 'Change admission plan', action: () => (roundChangeModal = true) },
+		{ text: 'Rename admission plan', action: () => (roundRenameModal = true) },
 		{
 			text: 'Update majors',
 			action: () => (majorsUpdateModal = true),
 			disabled: !isUndergraduate(data.application.program),
 			divider: true
 		},
-		{ text: 'Update round name', action: () => (roundRenameModal = true) },
 		{ text: 'Update dates', action: () => (datesUpdateModal = true) },
 		{ text: 'Update comments', action: () => (commentsUpdateModal = true) },
 		{ text: 'Delete', action: () => (deleteModal = true), divider: true, dark: true }
@@ -110,7 +110,7 @@
 	fields={RoundChangeForm}
 	action="?/updateRoundId"
 	entity={data.application}
-	title="Change application round"
+	title="Change admission plan"
 	on:close={() => (roundChangeModal = false)}
 />
 
