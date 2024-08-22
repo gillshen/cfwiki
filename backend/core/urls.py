@@ -23,6 +23,7 @@ from core.views import (
 
 from target.views import (
     SchoolListView,
+    SchoolStatsListView,
     SchoolDetailView,
     SchoolCreateView,
     SchoolRUDView,
@@ -85,6 +86,7 @@ urlpatterns = [
     path("services/<int:pk>/update/", ServiceRUDView.as_view()),
     # school
     path("schools/", SchoolListView.as_view()),
+    path("schools/stats/", SchoolStatsListView.as_view()),
     path("schools/<int:pk>/", SchoolDetailView.as_view()),
     path("schools/new/", SchoolCreateView.as_view()),
     path("schools/<int:pk>/update/", SchoolRUDView.as_view()),

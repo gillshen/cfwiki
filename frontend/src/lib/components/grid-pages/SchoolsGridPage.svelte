@@ -7,10 +7,11 @@
 		type GridApi,
 		type GridOptions,
 		type ICellRendererParams,
-		type ValueFormatterParams
+		type ValueFormatterParams,
+		type ValueGetterParams
 	} from 'ag-grid-community';
 
-	import type { School } from '$lib/api/school';
+	import type { SchoolWithStats } from '$lib/api/school';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { AgCellRenderer } from '$lib/abstract/agCellRenderer';
 	import { localeComparator } from '$lib/utils/gridUtils';
@@ -20,7 +21,7 @@
 	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
 
 	export let data: {
-		schools: Promise<School[]>;
+		schools: Promise<SchoolWithStats[]>;
 		schoolType: string;
 	};
 
@@ -29,7 +30,7 @@
 
 		init(params: ICellRendererParams<any, any, any>): void {
 			this.eGui = document.createElement('a');
-			const school: School = params.data;
+			const school: SchoolWithStats = params.data;
 			this.eGui.href = `/school/${school.id}/`;
 			this.eGui.innerHTML = school.name;
 		}
@@ -40,22 +41,66 @@
 		return `${flag}\xa0\xa0${params.value}`;
 	}
 
+	function noZeroValueFormatter(params: ValueFormatterParams): string {
+		return params.value === 0 ? '' : params.value;
+	}
+
+	function successRateValueGetter(params: ValueGetterParams): number | string {
+		const { accepted, failed } = params.data.application_stats;
+		const successRate = accepted / (accepted + failed);
+		return isNaN(successRate) ? '' : successRate;
+	}
+
+	function successRateValueFormatter(params: ValueFormatterParams): string {
+		if (typeof params.value !== 'number') {
+			return '';
+		} else {
+			return `${(params.value * 100).toFixed(1)}%`;
+		}
+	}
+
+	const columnTypes = {
+		stats: {
+			valueFormatter: noZeroValueFormatter
+		}
+	};
+
 	const columnDefs = [
 		{
 			headerName: 'Name',
 			field: 'name',
 			width: 500,
-			flex: 5,
+			flex: 4,
 			cellRenderer: NameRenderer,
 			comparator: localeComparator
 		},
-		{ headerName: 'Alt. name', field: 'alt_name', flex: 2 },
+		{ headerName: 'Alt. name', field: 'alt_name', flex: 1.5 },
 		{
 			headerName: 'Country',
 			field: 'country',
-			flex: 2,
-			valueFormatter: countryValueFormatter,
-			useValueFormatterForExport: false
+			flex: 1.5,
+			valueFormatter: countryValueFormatter
+		},
+		{ headerName: 'Applied', field: 'application_stats.applied', type: ['rightAligned', 'stats'] },
+		{ headerName: 'Pending', field: 'application_stats.pending', type: ['rightAligned', 'stats'] },
+		{
+			headerName: 'Accepted',
+			field: 'application_stats.accepted',
+			type: ['rightAligned', 'stats']
+		},
+		{ headerName: 'Failed', field: 'application_stats.failed', type: ['rightAligned', 'stats'] },
+		{
+			headerName: 'Aborted/Untracked',
+			field: 'application_stats.neutral',
+			flex: 1.5,
+			type: ['rightAligned', 'stats']
+		},
+		{
+			headerName: 'Success rate',
+			flex: 1.2,
+			valueGetter: successRateValueGetter,
+			valueFormatter: successRateValueFormatter,
+			type: 'rightAligned'
 		}
 	];
 
@@ -73,7 +118,13 @@
 		}
 
 		const gridOptions: GridOptions = {
-			defaultColDef: { filter: true },
+			defaultColDef: {
+				filter: true,
+				flex: 1,
+				minWidth: 100,
+				useValueFormatterForExport: false
+			},
+			columnTypes,
 			columnDefs,
 			rowData: schools.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')),
 			...agGridOptions

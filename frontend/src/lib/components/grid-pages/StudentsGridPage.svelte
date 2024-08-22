@@ -134,7 +134,7 @@
 	const columnDefs = [
 		{
 			headerName: 'Name',
-			flex: 1,
+			flex: 1.5,
 			valueGetter: nameValueGetter,
 			comparator: localeComparator,
 			cellRenderer: NameRenderer
@@ -166,14 +166,14 @@
 		},
 		{
 			headerName: 'Home',
-			flex: 1,
+			flex: 1.5,
 			valueGetter: homeValueGetter,
 			comparator: localeComparator,
 			valueFormatter: homeValueFormatter,
 			useValueFormatterForExport: false
 		},
 		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
-		{ headerName: '文案', valueGetter: workPeopleValueGetter },
+		{ headerName: '文案', valueGetter: workPeopleValueGetter, flex: 1.2 },
 		{ headerName: '战略', valueGetter: stratPeopleValueGetter },
 		{ headerName: '服务', valueGetter: salesAssistantsValueGetter },
 		{ headerName: '流程', valueGetter: workAssistantsValueGetter }
@@ -193,14 +193,17 @@
 		}
 
 		const gridOptions: GridOptions = {
-			defaultColDef: { filter: true },
+			defaultColDef: {
+				filter: true,
+				flex: 1,
+				minWidth: 100
+			},
 			columnDefs,
 			rowData: students.sort(orderByName),
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		gridApi = createGrid(gridElement, gridOptions);
-		gridApi.autoSizeAllColumns();
 	});
 </script>
 

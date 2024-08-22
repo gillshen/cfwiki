@@ -10,6 +10,17 @@ class SchoolSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class SchoolStatsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields = "__all__"
+
+    application_stats = serializers.SerializerMethodField()
+
+    def get_application_stats(self, obj):
+        return obj.application_stats
+
+
 class SchoolCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = School

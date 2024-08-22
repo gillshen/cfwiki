@@ -81,6 +81,7 @@
 		{
 			headerName: 'Link',
 			field: 'id',
+			flex: 0.5,
 			minWidth: 60,
 			sortable: false,
 			filter: false,
@@ -93,28 +94,29 @@
 			hide: data.year !== undefined
 		},
 		{ headerName: 'Term', field: 'program_iteration.term', hide: true },
-		{ headerName: 'Student', field: 'student.fullname', comparator: localeComparator },
+		{ headerName: 'Student', field: 'student.fullname', flex: 1.5, comparator: localeComparator },
 		{ headerName: '战略', valueGetter: stratPeopleValueGetter },
 		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
-		{ headerName: '文案', valueGetter: workPeopleValueGetter },
+		{ headerName: '文案', valueGetter: workPeopleValueGetter, flex: 1.2 },
 		{ headerName: '服务', valueGetter: salesAssistantsValueGetter },
 		{ headerName: '流程', valueGetter: workAssistantsValueGetter },
-		{ headerName: 'School', valueGetter: schoolValueGetter, flex: 1 },
+		{ headerName: 'School', valueGetter: schoolValueGetter, flex: 3 },
 		{
 			headerName: 'Program',
 			field: 'program.display_name',
+			flex: 3,
 			hide: data.applicationType === 'freshman' || data.applicationType === 'transfer'
 		},
 		{
 			headerName: 'Major',
 			valueGetter: majorValueGetter,
-			flex: 1,
+			flex: 2,
 			hide: data.applicationType === 'graduate'
 		},
 		{ headerName: 'Round', field: 'round.name' },
-		{ headerName: 'Due', field: 'round.due_date' },
+		{ headerName: 'Due', field: 'round.due_date', flex: 1.5 },
 		{ headerName: 'Status', field: 'latest_log.status', cellRenderer: StatusRenderer },
-		{ headerName: 'Last update', field: 'latest_log.date' }
+		{ headerName: 'Last update', field: 'latest_log.date', flex: 1.5 }
 	];
 
 	let gridApi: GridApi;
@@ -131,14 +133,17 @@
 		}
 
 		const gridOptions: GridOptions = {
-			defaultColDef: { filter: true },
+			defaultColDef: {
+				filter: true,
+				flex: 1,
+				minWidth: 100
+			},
 			columnDefs,
 			rowData: applications,
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		gridApi = createGrid(gridElement, gridOptions);
-		gridApi.autoSizeAllColumns();
 	});
 </script>
 

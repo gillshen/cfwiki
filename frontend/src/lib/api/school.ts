@@ -8,10 +8,26 @@ export type School = {
 	country: string;
 };
 
+export type SchoolWithStats = School & {
+	application_stats: {
+		applied: number;
+		pending: number;
+		accepted: number;
+		failed: number;
+		neutral: number;
+	};
+};
+
 export async function fetchSchools(params?: {
 	type: 'university' | 'secondary-school' | 'other';
 }): Promise<School[]> {
 	return await get(`schools/${buildQuery(params)}`);
+}
+
+export async function fetchSchoolsWithStats(params?: {
+	type: 'university' | 'secondary-school' | 'other';
+}): Promise<SchoolWithStats[]> {
+	return await get(`schools/stats/${buildQuery(params)}`);
 }
 
 export async function fetchSchool(id: number): Promise<School> {

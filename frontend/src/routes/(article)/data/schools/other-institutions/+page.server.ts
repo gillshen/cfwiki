@@ -1,8 +1,8 @@
-import { fetchSchools } from '$lib/api/school';
+import { fetchSchoolsWithStats } from '$lib/api/school';
 
 export async function load(_) {
 	return {
 		schoolType: 'Other Institutions',
-		schools: fetchSchools({ type: 'other' })
+		schools: fetchSchoolsWithStats({ type: 'other' })
 	};
 }

@@ -44,6 +44,33 @@ class School(models.Model):
 
         return q
 
+    @property
+    def application_stats(self):
+        from core.models import Application
+
+        q = Application.filter(school=self.id)
+
+        stats = {
+            "applied": q.count(),
+            "pending": 0,
+            "accepted": 0,
+            "failed": 0,
+            "neutral": 0,
+        }
+
+        if not stats["applied"]:
+            return stats
+
+        stats["pending"] = Application.get_pending(q).count()
+        if stats["pending"] == stats["applied"]:
+            return stats
+
+        stats["accepted"] = Application.get_accepted(q).count()
+        stats["failed"] = Application.get_failed(q).count()
+        stats["neutral"] = Application.get_neutral(q).count()
+
+        return stats
+
 
 class Program(models.Model):
     # It would be nice to have a unique constraint at the database level

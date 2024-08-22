@@ -39,11 +39,7 @@
 		.filter((user) => user.department === Departments.SERVICE)
 		.sort((a, b) => a.username.localeCompare(b.username));
 
-	$: pageWidth =
-		$page.url.pathname.startsWith('/data/students') ||
-		$page.url.pathname.startsWith('/data/applications')
-			? 'max-w-full'
-			: 'max-w-[1280px]';
+	$: pageWidth = $page.url.pathname.startsWith('/data/') ? 'max-w-full' : 'max-w-[1280px]';
 </script>
 
 <div class={`container ${pageWidth} mx-auto px-12 pb-8`}>

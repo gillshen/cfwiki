@@ -263,21 +263,29 @@ class Application(models.Model):
             q = q.filter(round__program_iteration__term=term)
         if application_round is not None:
             q = q.filter(round=application_round)
+        if application_type is not None:
+            q = cls.filter_by_type(q, application_type)
+        if status is not None:
+            q = cls.filter_by_status(q, status)
 
+        return q.distinct()
+
+    @staticmethod
+    def filter_by_type(q, application_type: str):
         if application_type == "undergraduate":
-            q = q.filter(round__program_iteration__program__type="UG Freshman")
-        elif application_type == "transfer":
-            q = q.filter(round__program_iteration__program__type="UG Transfer")
-        elif application_type == "masters":
-            q = q.filter(round__program_iteration__program__type="Master's")
-        elif application_type == "doctorate":
-            q = q.filter(round__program_iteration__program__type="Doctorate")
-        elif application_type == "graduate":
-            q = q.filter(
+            return q.filter(round__program_iteration__program__type="UG Freshman")
+        if application_type == "transfer":
+            return q.filter(round__program_iteration__program__type="UG Transfer")
+        if application_type == "masters":
+            return q.filter(round__program_iteration__program__type="Master's")
+        if application_type == "doctorate":
+            return q.filter(round__program_iteration__program__type="Doctorate")
+        if application_type == "graduate":
+            return q.filter(
                 round__program_iteration__program__type__in=["Master's", "Doctorate"]
             )
-        elif application_type == "other":
-            q = q.exclude(
+        if application_type == "other":
+            return q.exclude(
                 round__program_iteration__program__type__in=[
                     "UG Freshman",
                     "UG Transfer",
@@ -285,13 +293,21 @@ class Application(models.Model):
                     "Doctorate",
                 ]
             )
+        return q
 
+    @classmethod
+    def filter_by_status(cls, q, status):
         if status == "pending":
-            q = Application.get_pending(q)
-        elif status == "resolved":
-            q = Application.get_resolved(q)
-
-        return q.distinct()
+            return cls.get_pending(q)
+        if status == "resolved":
+            return cls.get_resolved(q)
+        if status == "accepted":
+            return cls.get_accepted(q)
+        if status == "failed":
+            return cls.get_failed(q)
+        if status == "neutral":
+            return cls.get_neutral(q)
+        return q
 
     @staticmethod
     def _annotate_with_latest_status(queryset):
@@ -304,13 +320,8 @@ class Application(models.Model):
         )
 
     @classmethod
-    def get_pending(cls, queryset=None):
-        if queryset is None:
-            queryset = cls.objects.all()
-
-        annotated_with_latest_status = cls._annotate_with_latest_status(queryset)
-
-        pending = annotated_with_latest_status.filter(
+    def get_pending(cls, queryset):
+        return cls._annotate_with_latest_status(queryset).filter(
             Q(latest_status__isnull=True)
             | Q(latest_status="Started")
             | Q(latest_status="Submitted")
@@ -318,17 +329,10 @@ class Application(models.Model):
             | Q(latest_status="Deferred")
             | Q(latest_status="On Waitlist")
         )
-
-        return pending
 
     @classmethod
-    def get_resolved(cls, queryset=None):
-        if queryset is None:
-            queryset = cls.objects.all()
-
-        annotated_with_latest_status = cls._annotate_with_latest_status(queryset)
-
-        resolved = annotated_with_latest_status.exclude(
+    def get_resolved(cls, queryset):
+        return cls._annotate_with_latest_status(queryset).exclude(
             Q(latest_status__isnull=True)
             | Q(latest_status="Started")
             | Q(latest_status="Submitted")
@@ -337,7 +341,27 @@ class Application(models.Model):
             | Q(latest_status="On Waitlist")
         )
 
-        return resolved
+    @classmethod
+    def get_accepted(cls, queryset):
+        return cls._annotate_with_latest_status(queryset).filter(
+            Q(latest_status="Accepted") | Q(latest_status="Enrolled")
+        )
+
+    @classmethod
+    def get_failed(cls, queryset):
+        return cls._annotate_with_latest_status(queryset).filter(
+            Q(latest_status="Rejected")
+            | Q(latest_status="Pres. Rejected")
+            | Q(latest_status="Offer Rescinded")
+        )
+
+    @classmethod
+    def get_neutral(cls, queryset):
+        return cls._annotate_with_latest_status(queryset).filter(
+            Q(latest_status="Cancelled")
+            | Q(latest_status="Withdrawn")
+            | Q(latest_status="Untracked")
+        )
 
     @property
     def student(self) -> Student:
