@@ -9,7 +9,13 @@ export function formatSelectOption(program: ProgramListItem): string {
 	return `${program.display_name} (${schoolNames})`;
 }
 
-export function formatSchoolNamesShort(program: ProgramListItem | ProgramDetail): string {
+export function formatSchoolNames(program: ProgramListItem): string {
+	return orderByName(program.schools)
+		.map((s) => s.name)
+		.join(' + ');
+}
+
+export function formatSchoolNamesShort(program: ProgramListItem): string {
 	return orderByName(program.schools)
 		.map((s) => s.alt_name || s.name)
 		.join(' + ');

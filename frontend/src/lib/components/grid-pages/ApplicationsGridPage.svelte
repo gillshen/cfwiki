@@ -18,7 +18,7 @@
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 	import { localeComparator } from '$lib/utils/gridUtils';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
-	import ApplicationLink from '$lib/components/grid-cells/ApplicationLink.svelte';
+	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
 	import ApplicationStatus from '$lib/components/grid-cells/ApplicationStatus.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
@@ -32,9 +32,9 @@
 
 	class IdRenderer extends SvelteCellRenderer {
 		createComponent(params: ICellRendererParams): void {
-			this.component = new ApplicationLink({
+			this.component = new IdLink({
 				target: this.eGui,
-				props: { application: params.data }
+				props: { entity: params.data, path: '/application' }
 			});
 		}
 	}

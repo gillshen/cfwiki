@@ -12,6 +12,7 @@ from target.serializers import (
     SchoolStatsSerializer,
     SchoolCRUDSerializer,
     ProgramSerializer,
+    ProgramStatsSerializer,
     ProgramCreateSerializer,
     ProgramCRUDSerializer,
     ApplicationRoundListSerializer,
@@ -48,13 +49,20 @@ class SchoolRUDView(RetrieveUpdateDestroyAPIView):
 
 
 class ProgramListView(ListAPIView):
-    queryset = Program.objects.all().prefetch_related("schools")
     serializer_class = ProgramSerializer
+
+    def get_queryset(self):
+        query_params = self.request.query_params
+        return Program.filter(program_type=query_params.get("type"))
+
+
+class ProgramStatsListView(ProgramListView):
+    serializer_class = ProgramStatsSerializer
 
 
 class ProgramDetailView(RetrieveAPIView):
     queryset = Program.objects.all()
-    serializer_class = ProgramSerializer
+    serializer_class = ProgramStatsSerializer
 
 
 class ProgramCreateView(CreateAPIView):

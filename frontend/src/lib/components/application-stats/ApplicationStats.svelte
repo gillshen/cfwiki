@@ -21,7 +21,7 @@
 		applied: number;
 		pending: number;
 		accepted: number;
-		failed: number;
+		denied: number;
 		neutral: number;
 	};
 	export let title: string = 'Application statistics';
@@ -32,7 +32,7 @@
 		labels: ['Pending', 'Accepted', 'Denied', 'Cancelled, etc.'],
 		datasets: [
 			{
-				data: [stats.pending, stats.accepted, stats.failed, stats.neutral],
+				data: [stats.pending, stats.accepted, stats.denied, stats.neutral],
 
 				// use the leading space to create some padding
 				label: ' number',
@@ -51,14 +51,14 @@
 	};
 
 	const formatSuccessRate = () => {
-		const rate = (stats.accepted * 100) / (stats.accepted + stats.failed);
-		return `${rate.toFixed(1)}%`;
+		const rate = (stats.accepted * 100) / (stats.accepted + stats.denied);
+		return rate.toFixed(1);
 	};
 
 	const tableRows = [
 		['Pending', stats.pending],
 		['Accepted', stats.accepted],
-		['Denied', stats.failed],
+		['Denied', stats.denied],
 		['Cancelled, etc.', stats.neutral]
 	];
 
@@ -92,7 +92,10 @@
 			<P size="4xl" weight="medium">{stats.applied}</P>
 			<P size="sm">applications</P>
 			<hr class="mt-6 mb-4" />
-			<P size="4xl" weight="medium">{formatSuccessRate()}</P>
+			<div class="flex items-baseline gap-1">
+				<P size="4xl" weight="medium">{formatSuccessRate()}</P>
+				<P size="xl" weight="medium">%</P>
+			</div>
 			<div class="flex items-center">
 				<P size="sm">acceptance rate</P>
 				<QuestionCircleOutline size="sm" class="ms-1" />

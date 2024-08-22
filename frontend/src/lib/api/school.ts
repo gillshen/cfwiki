@@ -13,7 +13,7 @@ export type SchoolWithStats = School & {
 		applied: number;
 		pending: number;
 		accepted: number;
-		failed: number;
+		denied: number;
 		neutral: number;
 	};
 };

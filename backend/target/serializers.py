@@ -10,11 +10,7 @@ class SchoolSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class SchoolStatsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = School
-        fields = "__all__"
-
+class SchoolStatsSerializer(SchoolSerializer):
     application_stats = serializers.SerializerMethodField()
 
     def get_application_stats(self, obj):
@@ -45,6 +41,13 @@ class ProgramSerializer(serializers.ModelSerializer):
 
     schools = SchoolSerializer(many=True)
     display_name = serializers.CharField()
+
+
+class ProgramStatsSerializer(ProgramSerializer):
+    application_stats = serializers.SerializerMethodField()
+
+    def get_application_stats(self, obj):
+        return obj.application_stats
 
 
 class ProgramCreateSerializer(serializers.ModelSerializer):

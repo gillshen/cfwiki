@@ -7,43 +7,50 @@
 		type GridApi,
 		type GridOptions,
 		type ICellRendererParams,
-		type ValueFormatterParams
+		type ValueGetterParams
 	} from 'ag-grid-community';
 
-	import type { SchoolWithStats } from '$lib/api/school';
+	import type { ProgramWithStats } from '$lib/api/program';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
-	import { AgCellRenderer } from '$lib/abstract/agCellRenderer';
-	import countryFlags from '$lib/constants/countryFlags';
+	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
+	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
+	import { formatSchoolNames } from '$lib/utils/programUtils';
 
 	import {
-		localeComparator,
 		noZeroValueFormatter,
 		successRateValueFormatter,
 		successRateValueGetter
 	} from '$lib/utils/gridUtils';
 
 	export let data: {
-		schools: Promise<SchoolWithStats[]>;
-		schoolType: string;
+		programs: Promise<ProgramWithStats[]>;
+		programType: string;
 	};
 
-	class NameRenderer extends AgCellRenderer {
-		declare eGui: HTMLAnchorElement;
-
-		init(params: ICellRendererParams<any, any, any>): void {
-			this.eGui = document.createElement('a');
-			const school: SchoolWithStats = params.data;
-			this.eGui.href = `/school/${school.id}/`;
-			this.eGui.innerHTML = school.name;
+	class IdRenderer extends SvelteCellRenderer {
+		createComponent(params: ICellRendererParams): void {
+			this.component = new IdLink({
+				target: this.eGui,
+				props: { entity: params.data, path: '/program' }
+			});
 		}
 	}
 
-	function countryValueFormatter(params: ValueFormatterParams): string {
-		const flag = countryFlags[params.value];
-		return `${flag}\xa0\xa0${params.value}`;
+	function programTypeValueGetter(params: ValueGetterParams): string {
+		if (params.data.type === 'UG Freshman') {
+			return 'Freshman';
+		} else if (params.data.type === 'UG Transfer') {
+			return 'Transfer';
+		} else {
+			return params.data.type;
+		}
+	}
+
+	function schoolsGetter(params: ValueGetterParams): string {
+		return formatSchoolNames(params.data);
 	}
 
 	const columnTypes = {
@@ -54,20 +61,24 @@
 
 	const columnDefs = [
 		{
-			headerName: 'Name',
-			field: 'name',
-			width: 500,
-			flex: 4,
-			cellRenderer: NameRenderer,
-			comparator: localeComparator
+			headerName: 'Link',
+			field: 'id',
+			flex: 0.5,
+			minWidth: 60,
+			sortable: false,
+			filter: false,
+			cellRenderer: IdRenderer
 		},
-		{ headerName: 'Alt. name', field: 'alt_name', flex: 1.5 },
+		{ headerName: 'Type', field: 'type', valueGetter: programTypeValueGetter },
+		{ headerName: 'School', field: 'schools', flex: 2.5, valueGetter: schoolsGetter },
+		{ headerName: 'Name', field: 'name', flex: 2.5, hide: data.programType === 'Undergraduate' },
 		{
-			headerName: 'Country',
-			field: 'country',
-			flex: 1.5,
-			valueFormatter: countryValueFormatter
+			headerName: 'Degree',
+			field: 'degree',
+			flex: 1.8,
+			hide: data.programType === 'Undergraduate'
 		},
+
 		{ headerName: 'Applied', field: 'application_stats.applied', type: ['rightAligned', 'stats'] },
 		{ headerName: 'Pending', field: 'application_stats.pending', type: ['rightAligned', 'stats'] },
 		{
@@ -76,6 +87,7 @@
 			type: ['rightAligned', 'stats']
 		},
 		{ headerName: 'Denied', field: 'application_stats.denied', type: ['rightAligned', 'stats'] },
+
 		{
 			headerName: 'Acceptance rate',
 			flex: 1.2,
@@ -94,13 +106,13 @@
 	let gridApi: GridApi;
 
 	const exportAsCsv = () => {
-		gridApi!.exportDataAsCsv({ fileName: 'cf_schools' });
+		gridApi!.exportDataAsCsv({ fileName: 'cf_programs' });
 	};
 
 	onMount(async () => {
-		const schools = await data.schools;
+		const programs = await data.programs;
 
-		if (!schools.length) {
+		if (!programs.length) {
 			return;
 		}
 
@@ -113,7 +125,7 @@
 			},
 			columnTypes,
 			columnDefs,
-			rowData: schools.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')),
+			rowData: programs.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')),
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
@@ -123,25 +135,25 @@
 
 <Heading tag="h1" class="grid-title flex gap-8 items-center justify-between">
 	<div class="flex gap-4 items-center">
-		{data.schoolType}
-		{#await data.schools then schools}
-			{#if schools.length}
-				<Badge>{schools.length}</Badge>
+		{`${data.programType} Programs`}
+		{#await data.programs then programs}
+			{#if programs.length}
+				<Badge>{programs.length}</Badge>
 			{/if}
 		{/await}
 	</div>
 
-	{#await data.schools then _}
+	{#await data.programs then _}
 		<GridButtons onDownload={exportAsCsv} onConfig={() => alert('config')} />
 	{/await}
 </Heading>
 
-{#await data.schools}
+{#await data.programs}
 	<FetchingDataSign />
-{:then schools}
-	{#if schools.length}
+{:then programs}
+	{#if programs.length}
 		<div id="grid" class="data-grid ag-theme-alpine full-page" />
 	{:else}
-		<NoDataSign text="No schools in this category" />
+		<NoDataSign text="No programs in this category" />
 	{/if}
 {/await}

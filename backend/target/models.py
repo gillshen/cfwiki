@@ -48,28 +48,7 @@ class School(models.Model):
     def application_stats(self):
         from core.models import Application
 
-        q = Application.filter(school=self.id)
-
-        stats = {
-            "applied": q.count(),
-            "pending": 0,
-            "accepted": 0,
-            "failed": 0,
-            "neutral": 0,
-        }
-
-        if not stats["applied"]:
-            return stats
-
-        stats["pending"] = Application.get_pending(q).count()
-        if stats["pending"] == stats["applied"]:
-            return stats
-
-        stats["accepted"] = Application.get_accepted(q).count()
-        stats["failed"] = Application.get_failed(q).count()
-        stats["neutral"] = Application.get_neutral(q).count()
-
-        return stats
+        return Application.get_stats(school=self.id)
 
 
 class Program(models.Model):
@@ -85,6 +64,25 @@ class Program(models.Model):
     def __str__(self) -> str:
         school_names = " + ".join(s.name for s in self.schools.all())
         return f"{school_names} | {self.display_name}".strip()
+
+    @classmethod
+    def filter(cls, program_type: str = None):
+        q = cls.objects.all().prefetch_related("schools")
+
+        if program_type == "undergraduate":
+            q = q.filter(type__in=["UG Freshman", "UG Transfer"])
+        elif program_type == "graduate":
+            q = q.filter(type__in=["Master's", "Doctorate"])
+        elif program_type == "non-degree":
+            q = q.filter(type="Non-degree")
+
+        return q
+
+    @property
+    def application_stats(self):
+        from core.models import Application
+
+        return Application.get_stats(program=self.id)
 
     @property
     def display_name(self) -> str:

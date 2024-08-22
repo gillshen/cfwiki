@@ -139,7 +139,7 @@
 			<NavLi class="cursor-pointer">
 				Schools & Programs<ChevronDownOutline class="dropdown-icon" />
 			</NavLi>
-			<Dropdown placement="bottom" class="w-44 z-20">
+			<Dropdown placement="bottom" class="w-60 z-20">
 				<DropdownItem href="/data/schools/universities" class="dropdown-link">
 					Universities
 				</DropdownItem>
@@ -149,8 +149,18 @@
 				<DropdownItem href="/data/schools/other-institutions" class="dropdown-link">
 					Other institutions
 				</DropdownItem>
+
 				<DropdownDivider />
-				<DropdownItem href="/data/programs">Programs</DropdownItem>
+
+				<DropdownItem href="/data/programs/undergraduate" class="dropdown-link">
+					Undergraduate programs
+				</DropdownItem>
+				<DropdownItem href="/data/programs/graduate" class="dropdown-link">
+					Graduate programs
+				</DropdownItem>
+				<DropdownItem href="/data/programs/non-degree" class="dropdown-link">
+					Non-degree programs
+				</DropdownItem>
 			</Dropdown>
 		</NavUl>
 	</Navbar>

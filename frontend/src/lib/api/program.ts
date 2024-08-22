@@ -1,4 +1,4 @@
-import { get, patch, post, destroy } from '$lib/api/api';
+import { get, patch, post, destroy, buildQuery } from '$lib/api/api';
 
 export const programTypes = [
 	'UG Freshman',
@@ -29,10 +29,28 @@ export type ProgramListItem = Program & {
 	display_name: string;
 };
 
-export type ProgramDetail = ProgramListItem;
+export type ProgramWithStats = ProgramListItem & {
+	application_stats: {
+		applied: number;
+		pending: number;
+		accepted: number;
+		denied: number;
+		neutral: number;
+	};
+};
 
-export async function fetchPrograms(): Promise<ProgramListItem[]> {
-	return await get('programs/');
+export type ProgramDetail = ProgramWithStats;
+
+export async function fetchPrograms(params?: {
+	type: 'undergraduate' | 'graduate' | 'non-degree';
+}): Promise<ProgramListItem[]> {
+	return await get(`programs/${buildQuery(params)}`);
+}
+
+export async function fetchProgramsWithStats(params?: {
+	type: 'undergraduate' | 'graduate' | 'non-degree';
+}): Promise<ProgramDetail[]> {
+	return await get(`programs/stats/${buildQuery(params)}`);
 }
 
 export async function fetchProgram(id: number): Promise<ProgramDetail> {

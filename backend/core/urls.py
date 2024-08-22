@@ -28,6 +28,7 @@ from target.views import (
     SchoolCreateView,
     SchoolRUDView,
     ProgramListView,
+    ProgramStatsListView,
     ProgramDetailView,
     ProgramCreateView,
     ProgramRUDView,
@@ -92,6 +93,7 @@ urlpatterns = [
     path("schools/<int:pk>/update/", SchoolRUDView.as_view()),
     # program
     path("programs/", ProgramListView.as_view()),
+    path("programs/stats/", ProgramStatsListView.as_view()),
     path("programs/<int:pk>/", ProgramDetailView.as_view()),
     path("programs/new/", ProgramCreateView.as_view()),
     path("programs/<int:pk>/update/", ProgramRUDView.as_view()),

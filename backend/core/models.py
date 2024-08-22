@@ -218,6 +218,31 @@ class Application(models.Model):
         return f"{self.contract} > {self.round}"
 
     @classmethod
+    def get_stats(cls, **kwargs):
+        q = cls.filter(**kwargs)
+
+        stats = {
+            "applied": q.count(),
+            "pending": 0,
+            "accepted": 0,
+            "denied": 0,
+            "neutral": 0,
+        }
+
+        if not stats["applied"]:
+            return stats
+
+        stats["pending"] = cls.get_pending(q).count()
+        if stats["pending"] == stats["applied"]:
+            return stats
+
+        stats["accepted"] = cls.get_accepted(q).count()
+        stats["denied"] = cls.get_denied(q).count()
+        stats["neutral"] = cls.get_neutral(q).count()
+
+        return stats
+
+    @classmethod
     def filter(
         cls,
         student: int = None,
@@ -303,8 +328,8 @@ class Application(models.Model):
             return cls.get_resolved(q)
         if status == "accepted":
             return cls.get_accepted(q)
-        if status == "failed":
-            return cls.get_failed(q)
+        if status == "denied":
+            return cls.get_denied(q)
         if status == "neutral":
             return cls.get_neutral(q)
         return q
@@ -348,7 +373,7 @@ class Application(models.Model):
         )
 
     @classmethod
-    def get_failed(cls, queryset):
+    def get_denied(cls, queryset):
         return cls._annotate_with_latest_status(queryset).filter(
             Q(latest_status="Rejected")
             | Q(latest_status="Pres. Rejected")
