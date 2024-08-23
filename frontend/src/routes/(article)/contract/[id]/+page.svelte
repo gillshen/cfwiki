@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
-	import { A, Button, Heading, Hr, Modal } from 'flowbite-svelte';
+	import { A, Button, Heading, Hr } from 'flowbite-svelte';
 
 	import type { Service } from '$lib/api/contract';
 	import { orderByEndDateRole } from '$lib/utils/serviceUtils';
@@ -13,16 +12,6 @@
 	import Toast from '$lib/components/misc/Toast.svelte';
 
 	export let data;
-
-	const { form, enhance } = superForm(data.serviceForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				serviceModal = false;
-			} else {
-				showToast = true;
-			}
-		}
-	});
 
 	$: canEdit = true;
 
@@ -70,23 +59,17 @@
 
 <Button outline on:click={modalOpener()}>Add staff</Button>
 
-<Modal
+<FormModal
+	open={serviceModal}
+	superform={data.serviceForm}
+	fields={ServiceForm}
+	action="?/createOrUpdateService"
+	entity={activeService}
 	title={activeService ? 'Update staff information' : 'Add staff'}
-	bind:open={serviceModal}
-	outsideclose
->
-	<form class="modal" method="post" action="?/createOrUpdateService" use:enhance>
-		<input type="number" name="contract" class="hidden" bind:value={data.contract.id} />
-		<div class="form-width mx-auto">
-			<ServiceForm
-				{form}
-				service={activeService}
-				cfPeople={data.cfUsers}
-				submitButtonText={activeService ? 'Update' : 'Submit'}
-			/>
-		</div>
-	</form>
-</Modal>
+	extra={[{ name: 'contract', type: 'number', value: data.contract.id }]}
+	cfers={data.cfUsers}
+	on:close={() => (serviceModal = false)}
+/>
 
 <FormModal
 	open={serviceDeleteModal}

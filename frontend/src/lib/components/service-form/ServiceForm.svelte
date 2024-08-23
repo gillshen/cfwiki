@@ -5,7 +5,7 @@
 	import { cfRoles } from '$lib/api/service';
 
 	export let form: any;
-	export let cfPeople: CfUserListItem[];
+	export let cfers: CfUserListItem[];
 	export let service: Service | null = null;
 	export let submitButtonText = 'Submit';
 
@@ -20,7 +20,7 @@
 
 <Label for="cfer" class="form-label">CF Person</Label>
 <Select id="cfer" name="cfer" bind:value={$form.cfer} required>
-	{#each cfPeople.sort((a, b) => a.username.localeCompare(b.username)) as cfer}
+	{#each cfers.sort((a, b) => a.username.localeCompare(b.username)) as cfer}
 		<option value={cfer.id}>{cfer.username}</option>
 	{/each}
 </Select>

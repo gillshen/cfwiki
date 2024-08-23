@@ -16,6 +16,7 @@
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
+	import RowCountBadge from '$lib/components/grid-pages/RowCountBadge.svelte';
 	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
 	import { formatSchoolNames } from '$lib/utils/programUtils';
 
@@ -24,7 +25,6 @@
 		noZeroValueFormatter,
 		percentageValueFormatter
 	} from '$lib/utils/gridUtils';
-	import RowCountBadge from './RowCountBadge.svelte';
 
 	export let data: {
 		programs: Promise<ProgramWithStats[]>;

@@ -1,36 +1,15 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
+	import { Label, Input, Button, Select, Radio, A, Helper, Hr, Heading } from 'flowbite-svelte';
 
-	import {
-		Label,
-		Input,
-		Button,
-		Select,
-		Radio,
-		A,
-		Helper,
-		Hr,
-		Modal,
-		Checkbox,
-		Heading
-	} from 'flowbite-svelte';
-
-	import ProgramForm from '$lib/components/program-form/ProgramForm.svelte';
 	import { programTypes } from '$lib/api/program';
 	import { formatSelectOption } from '$lib/utils/programUtils';
+	import FormModal from '$lib/components/form-modal/FormModal.svelte';
+	import NewProgramForm from '$lib/components/program-form/NewProgramForm.svelte';
 
 	export let data;
 
-	const { form, message, errors, enhance } = superForm(data.newProgramForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				createProgramModal = false;
-			}
-		}
-	});
-
-	let schoolId: number | string = '';
-	let programId: number | string = '';
+	let schoolId: number | '' = '';
+	let programId: number | '' = '';
 
 	let schoolType = 'University';
 
@@ -46,7 +25,6 @@
 	});
 
 	let createProgramModal = false;
-	let newProgramIsJoint = false;
 
 	const onSchoolTypeChange = () => {
 		schoolId = '';
@@ -62,9 +40,7 @@
 		programId = '';
 	};
 
-	const onOpenNewProgramForm = () => {
-		$form.school_1 = typeof schoolId === 'number' ? schoolId : 0;
-		$form.type = programType;
+	const openModal = () => {
 		createProgramModal = true;
 	};
 </script>
@@ -136,47 +112,21 @@
 			{/each}
 		</Select>
 		<Helper class="mt-2 form-helper">
-			If your desired program is not listed, <A on:click={onOpenNewProgramForm}>click here</A> to create
-			it.
+			If your desired program is not listed, <A on:click={openModal}>click here</A> to create it.
 		</Helper>
 
-		<Hr />
-
-		<Button type="submit">Next</Button>
+		<Button type="submit" class="mt-8">Next</Button>
 	</form>
 </div>
 
-<Modal title="Create a program" bind:open={createProgramModal} outsideclose>
-	<form class="modal" method="post" action="?/createProgram" use:enhance>
-		<div class="form-width mx-auto">
-			<Label for="school-1" class="form-label">School</Label>
-			<Select id="school-1" name="school_1" bind:value={$form.school_1} required>
-				{#each schools as school}
-					<option value={school.id}>{school.name}</option>
-				{/each}
-			</Select>
-
-			<Label for="new-program-type" class="form-label">Program type</Label>
-			<Select id="new-program-type" name="type" bind:value={$form.type} required>
-				{#each programTypes as programTypeOption}
-					<option value={programTypeOption}>{programTypeOption}</option>
-				{/each}
-			</Select>
-
-			<Checkbox class="form-checkbox" bind:checked={newProgramIsJoint}>
-				Is this a joint program?
-			</Checkbox>
-
-			{#if newProgramIsJoint}
-				<Label for="school-2" class="form-label">The other school</Label>
-				<Select id="school-2" name="school_2" bind:value={$form.school_2} required>
-					{#each schools as school}
-						<option value={school.id}>{school.name}</option>
-					{/each}
-				</Select>
-			{/if}
-
-			<ProgramForm {form} {message} {errors} />
-		</div>
-	</form>
-</Modal>
+<FormModal
+	open={createProgramModal}
+	superform={data.newProgramForm}
+	fields={NewProgramForm}
+	action="?/createProgram"
+	title="Create a program"
+	{schools}
+	{schoolId}
+	{programType}
+	on:close={() => (createProgramModal = false)}
+/>
