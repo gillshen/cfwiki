@@ -1,15 +1,13 @@
 <script lang="ts">
 	import { Heading, A, Hr, Modal } from 'flowbite-svelte';
 	import { PenOutline } from 'flowbite-svelte-icons';
-	import { superForm } from 'sveltekit-superforms';
 
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ApplicationInfobox from '$lib/components/infobox/ApplicationInfobox.svelte';
 	import Main from '$lib/components/containers/Main.svelte';
 	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
 	import RoundChangeForm from '$lib/components/application-update-form/RoundChangeForm.svelte';
-	import RoundRenameForm from '$lib/components/application-round-form/RoundRenameForm.svelte';
-	import RoundDatesForm from '$lib/components/application-round-form/RoundDatesForm.svelte';
+	import RoundUpdateDialog from '$lib/components/application-round-form/RoundUpdateDialog.svelte';
 	import MajorsForm from '$lib/components/application-update-form/MajorsForm.svelte';
 	import CommentsForm from '$lib/components/application-update-form/CommentsForm.svelte';
 	import LogsSection from '$lib/components/application-page/LogsSection.svelte';
@@ -23,52 +21,28 @@
 
 	$: canEdit = true;
 
-	const { form: roundRenameForm, enhance: roundRenamEnhance } = superForm(data.roundRenameForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				roundRenameModal = false;
-			} else {
-				showRoundRenameError = true;
-			}
-		},
-		// force update the form values
-		invalidateAll: 'force'
-	});
-
-	const { form: datesUpdateForm, enhance: datesUpdateEnhance } = superForm(data.datesUpdateForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				datesUpdateModal = false;
-			}
-		},
-		// force update the form values
-		invalidateAll: 'force'
-	});
-
 	let roundChangeModal = false;
-	let roundRenameModal = false;
-	let datesUpdateModal = false;
+	let roundUpdateModal = false;
 	let majorsUpdateModal = false;
 	let commentsUpdateModal = false;
 	let deleteModal = false;
 
 	let showRoundRenameError = false;
 
-	const changeRoundIdNotName = () => {
-		roundRenameModal = false;
+	const redirectToRoundChange = () => {
+		roundUpdateModal = false;
 		roundChangeModal = true;
 	};
 
 	const applicationActions = [
 		{ text: 'Change admission plan', action: () => (roundChangeModal = true) },
-		{ text: 'Rename admission plan', action: () => (roundRenameModal = true) },
+		{ text: 'Update admission plan', action: () => (roundUpdateModal = true) },
 		{
 			text: 'Update majors',
 			action: () => (majorsUpdateModal = true),
 			disabled: !isUndergraduate(data.application.program),
 			divider: true
 		},
-		{ text: 'Update dates', action: () => (datesUpdateModal = true) },
 		{ text: 'Update comments', action: () => (commentsUpdateModal = true) },
 		{ text: 'Delete', action: () => (deleteModal = true), divider: true, dark: true }
 	];
@@ -114,22 +88,15 @@
 	on:close={() => (roundChangeModal = false)}
 />
 
-<Modal title="Rename application round" bind:open={roundRenameModal} outsideclose>
-	<form class="modal" method="post" action="?/updateRoundName" use:roundRenamEnhance>
-		<input type="number" name="id" class="hidden" bind:value={$roundRenameForm.id} />
-		<div class="form-width mx-auto">
-			<RoundRenameForm form={roundRenameForm} redirectToRoundIdForm={changeRoundIdNotName} />
-		</div>
-	</form>
-</Modal>
-
-<Modal title="Update key dates" bind:open={datesUpdateModal} outsideclose>
-	<form class="modal" method="post" action="?/updateRoundDates" use:datesUpdateEnhance>
-		<input type="number" name="id" class="hidden" bind:value={$datesUpdateForm.id} />
-		<div class="form-width mx-auto">
-			<RoundDatesForm form={datesUpdateForm} />
-		</div>
-	</form>
+<Modal title="Update admission plan" bind:open={roundUpdateModal} outsideclose>
+	<div class="form-width mx-auto">
+		<RoundUpdateDialog
+			programId={data.application.program.id}
+			roundId={data.application.round.id}
+			applicationId={data.application.id}
+			{redirectToRoundChange}
+		/>
+	</div>
 </Modal>
 
 <FormModal

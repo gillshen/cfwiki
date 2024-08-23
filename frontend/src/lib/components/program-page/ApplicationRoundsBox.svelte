@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Table, TableBody, TableBodyRow, TableBodyCell, A } from 'flowbite-svelte';
+	import { Table, TableBody, TableBodyRow, TableBodyCell } from 'flowbite-svelte';
+	import { CalendarMonthOutline } from 'flowbite-svelte-icons';
 
 	import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
 	import ApplicationRoundPopover from '$lib/components/program-page/ApplicationRoundPopover.svelte';
@@ -17,19 +18,22 @@
 					{key}
 				</TableBodyCell>
 
-				<TableBodyCell tdClass="font-medium py-4 w-fit">
-					<div class="flex flex-col gap-2 w-fit">
+				<TableBodyCell tdClass="font-medium py-4 w-fit max-w-[80px] align-top">
+					<div class="flex flex-col gap-3 w-fit">
 						{#each rounds as applRound}
-							<A>{applRound.name}</A>
+							<div class="text-primary-600 hover:underline cursor-pointer">{applRound.name}</div>
 							<ApplicationRoundPopover {applRound} />
 						{/each}
 					</div>
 				</TableBodyCell>
 
-				<TableBodyCell tdClass="font-normal text-gray-500 py-4">
-					<div class="flex flex-col gap-2">
+				<TableBodyCell tdClass="font-normal text-gray-500 py-4 align-top">
+					<div class="flex flex-col gap-3">
 						{#each rounds as applRound}
-							<div>{toShortDate(applRound.due_date) || '-'}</div>
+							<div class="flex items-center">
+								<CalendarMonthOutline class="me-1 text-gray-400" />
+								{toShortDate(applRound.due_date) || '?'}
+							</div>
 						{/each}
 					</div>
 				</TableBodyCell>

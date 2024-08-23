@@ -17,11 +17,9 @@ import {
 	roundChangeSchema
 } from '$lib/schemas/application';
 
-import { roundNameSchema, roundDatesSchema } from '$lib/schemas/applicationRound';
 import { applicationLogSchema } from '$lib/schemas/applicationLog';
 import { deleteSchema } from '$lib/schemas/delete';
 import { formAction } from '$lib/abstract/formAction';
-import { updateApplicationRound } from '$lib/api/applicationRound';
 import { createOrUpdateApplicationLog, deleteApplicationLog } from '$lib/api/applicationLog';
 
 export async function load(event: PageServerLoadEvent) {
@@ -41,8 +39,6 @@ export async function load(event: PageServerLoadEvent) {
 		application,
 		coApplications: fetchCoApplications(application),
 		roundChangeForm: await superValidate(zod(roundChangeSchema)),
-		roundRenameForm: await superValidate(application.round, zod(roundNameSchema)),
-		datesUpdateForm: await superValidate(application.round, zod(roundDatesSchema)),
 		majorsUpdateForm: await superValidate(zod(majorsUpdateSchema)),
 		commentsUpdateForm: await superValidate(zod(commentsUpdateSchema)),
 		logForm: await superValidate(zod(applicationLogSchema)),
@@ -51,8 +47,6 @@ export async function load(event: PageServerLoadEvent) {
 }
 
 export const actions = {
-	updateRoundName: formAction(roundNameSchema, updateApplicationRound),
-	updateRoundDates: formAction(roundDatesSchema, updateApplicationRound),
 	updateRoundId: formAction(roundChangeSchema, updateApplication),
 	updateMajors: formAction(majorsUpdateSchema, updateApplication),
 	updateComments: formAction(commentsUpdateSchema, updateApplication),

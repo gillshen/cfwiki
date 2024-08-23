@@ -88,7 +88,8 @@
 		{
 			headerName: 'UG pending',
 			field: 'application_stats.ug.pending',
-			type: ['rightAligned', 'stats']
+			type: ['rightAligned', 'stats'],
+			hide: true
 		},
 		{
 			headerName: 'UG accepted',
@@ -111,7 +112,8 @@
 			headerName: 'UG cancelled, etc.',
 			field: 'application_stats.ug.neutral',
 			flex: 1.2,
-			type: ['rightAligned', 'stats']
+			type: ['rightAligned', 'stats'],
+			hide: true
 		},
 		{
 			headerName: 'Grad applied',
@@ -121,7 +123,8 @@
 		{
 			headerName: 'Grad pending',
 			field: 'application_stats.grad.pending',
-			type: ['rightAligned', 'stats']
+			type: ['rightAligned', 'stats'],
+			hide: true
 		},
 		{
 			headerName: 'Grad accepted',
@@ -144,7 +147,8 @@
 			headerName: 'Grad cancelled, etc.',
 			field: 'application_stats.grad.neutral',
 			flex: 1.2,
-			type: ['rightAligned', 'stats']
+			type: ['rightAligned', 'stats'],
+			hide: true
 		}
 	];
 

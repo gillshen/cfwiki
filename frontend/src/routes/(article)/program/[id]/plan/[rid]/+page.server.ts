@@ -14,6 +14,7 @@ import {
 } from '$lib/api/applicationRound';
 
 let programId: number;
+let applicationId: string | null;
 
 export async function load(event: PageServerLoadEvent) {
 	const id = parseInt(event.params.id, 10);
@@ -41,6 +42,8 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Admission plan not found');
 	}
 
+	applicationId = event.url.searchParams.get('application');
+
 	return {
 		program,
 		roundId: applicationRound.id,
@@ -52,6 +55,10 @@ export async function load(event: PageServerLoadEvent) {
 
 export const actions = {
 	updateApplicationRound: formAction(roundSchema, updateApplicationRound, () => {
-		throw redirect(303, `/program/${programId}`);
+		if (applicationId) {
+			throw redirect(303, `/application/${applicationId}`);
+		} else {
+			throw redirect(303, `/program/${programId}`);
+		}
 	})
 };
