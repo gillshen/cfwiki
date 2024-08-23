@@ -93,8 +93,12 @@
 			<P size="sm">applications</P>
 			<hr class="mt-6 mb-4" />
 			<div class="flex items-baseline gap-1">
-				<P size="4xl" weight="medium">{formatSuccessRate()}</P>
-				<P size="xl" weight="medium">%</P>
+				{#if stats.accepted + stats.denied}
+					<P size="4xl" weight="medium">{formatSuccessRate()}</P>
+					<P size="xl" weight="medium">%</P>
+				{:else}
+					<P size="4xl" weight="medium" color="text-gray-400">N/A</P>
+				{/if}
 			</div>
 			<div class="flex items-center">
 				<P size="sm">acceptance rate</P>

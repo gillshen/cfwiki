@@ -3,12 +3,13 @@
 	import { Label, Select, Radio, Button, Input, Helper, A } from 'flowbite-svelte';
 
 	import type { EnrollmentByStudent } from '$lib/api/enrollment';
-	import { fetchSchools, type School } from '$lib/api/school';
+	import type { School } from '$lib/api/school';
 
 	export let form: any;
 	export let message: any;
 	export let errors: any;
 	export let entity: EnrollmentByStudent | null = null;
+	export let promisedSchools: Promise<School[]>;
 
 	// TODO
 	if ($message || $errors) {
@@ -36,7 +37,7 @@
 
 	onMount(async () => {
 		if (!entity) {
-			schools = await fetchSchools();
+			schools = await promisedSchools;
 		}
 		if (entity) {
 			$form.id = entity.id;

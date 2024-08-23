@@ -5,6 +5,7 @@
 
 	import type { StudentDetail } from '$lib/api/student';
 	import type { EnrollmentByStudent } from '$lib/api/enrollment';
+	import type { School } from '$lib/api/school';
 	import { orderByProgressionDesc, orderByDateDesc } from '$lib/utils/enrollmentUtils';
 
 	import EnrollmentItem from '$lib/components/list-items/EnrollmentItem.svelte';
@@ -20,6 +21,7 @@
 	export let canEdit: boolean = false;
 	export let form: SuperValidated<any>;
 	export let deleteForm: SuperValidated<any>;
+	export let promisedSchools: Promise<School[]>;
 
 	let enrollmentModal = false;
 	let enrollmentDeleteModal = false;
@@ -73,6 +75,7 @@
 	entity={activeEnrollment}
 	extra={[{ name: 'student', type: 'number', value: student.id }]}
 	title={`${activeEnrollment ? 'Update' : 'Add an'} educational experience`}
+	{promisedSchools}
 	on:close={() => (enrollmentModal = false)}
 />
 

@@ -32,6 +32,7 @@
 		{canEdit}
 		form={data.enrollmentForm}
 		deleteForm={data.deleteForm}
+		promisedSchools={data.promisedSchools}
 	/>
 
 	<ScoresSection

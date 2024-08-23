@@ -85,6 +85,7 @@
 	action="?/updateRoundId"
 	entity={data.application}
 	title="Change admission plan"
+	promisedRounds={data.promisedRounds}
 	on:close={() => (roundChangeModal = false)}
 />
 

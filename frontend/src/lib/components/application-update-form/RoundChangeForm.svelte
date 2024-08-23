@@ -4,7 +4,7 @@
 	import { Label, Select, Button, Helper, A } from 'flowbite-svelte';
 
 	import type { ApplicationDetail } from '$lib/api/application';
-	import { fetchApplicationRounds, type ApplicationRoundListItem } from '$lib/api/applicationRound';
+	import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
 	import { filterSortRounds, formatRound } from '$lib/utils/applicationRoundUtils';
 	import { buildQuery } from '$lib/api/api';
 
@@ -12,6 +12,7 @@
 	export let message: any;
 	export let errors: any;
 	export let entity: ApplicationDetail;
+	export let promisedRounds: Promise<ApplicationRoundListItem[]>;
 
 	let rounds: ApplicationRoundListItem[] = [];
 
@@ -31,7 +32,7 @@
 	}
 
 	onMount(async () => {
-		rounds = await fetchApplicationRounds(entity.program.id);
+		rounds = await promisedRounds;
 		$form.id = entity.id;
 		$form.round = entity.round.id;
 	});

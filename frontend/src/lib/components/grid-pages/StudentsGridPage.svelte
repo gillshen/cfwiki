@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Badge, Heading } from 'flowbite-svelte';
+	import { Heading } from 'flowbite-svelte';
 
 	import {
 		createGrid,
@@ -23,6 +23,7 @@
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import Gender from '$lib/components/grid-cells/Gender.svelte';
+	import RowCountBadge from '$lib/components/grid-pages/RowCountBadge.svelte';
 	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
 
 	export let data: {
@@ -180,6 +181,13 @@
 	];
 
 	let gridApi: GridApi;
+	let rowCount: number;
+
+	const showDisplayedRowCount = () => {
+		if (gridApi) {
+			rowCount = gridApi.getDisplayedRowCount();
+		}
+	};
 
 	const exportAsCsv = () => {
 		gridApi!.exportDataAsCsv({ fileName: 'cf_students' });
@@ -200,6 +208,8 @@
 			},
 			columnDefs,
 			rowData: students.sort(orderByName),
+			onFilterChanged: showDisplayedRowCount,
+			onModelUpdated: showDisplayedRowCount,
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
@@ -217,11 +227,8 @@
 		{:else}
 			All
 		{/if}
-		{#await data.students then students}
-			{#if students.length}
-				<Badge>{students.length}</Badge>
-			{/if}
-		{/await}
+
+		<RowCountBadge promisedData={data.students} {rowCount} />
 	</div>
 
 	{#await data.students then _}

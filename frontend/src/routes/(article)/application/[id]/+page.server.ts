@@ -17,6 +17,7 @@ import {
 	roundChangeSchema
 } from '$lib/schemas/application';
 
+import { fetchApplicationRounds } from '$lib/api/applicationRound';
 import { applicationLogSchema } from '$lib/schemas/applicationLog';
 import { deleteSchema } from '$lib/schemas/delete';
 import { formAction } from '$lib/abstract/formAction';
@@ -37,6 +38,7 @@ export async function load(event: PageServerLoadEvent) {
 
 	return {
 		application,
+		promisedRounds: fetchApplicationRounds(application.program.id),
 		coApplications: fetchCoApplications(application),
 		roundChangeForm: await superValidate(zod(roundChangeSchema)),
 		majorsUpdateForm: await superValidate(zod(majorsUpdateSchema)),

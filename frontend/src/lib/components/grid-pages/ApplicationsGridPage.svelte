@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Badge, Heading } from 'flowbite-svelte';
+	import { Heading } from 'flowbite-svelte';
 
 	import {
 		createGrid,
@@ -21,6 +21,7 @@
 	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
 	import ApplicationStatus from '$lib/components/grid-cells/ApplicationStatus.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
+	import RowCountBadge from '$lib/components/grid-pages/RowCountBadge.svelte';
 	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
 
 	export let data: {
@@ -120,6 +121,13 @@
 	];
 
 	let gridApi: GridApi;
+	let rowCount: number;
+
+	const showDisplayedRowCount = () => {
+		if (gridApi) {
+			rowCount = gridApi.getDisplayedRowCount();
+		}
+	};
 
 	const exportAsCsv = () => {
 		gridApi!.exportDataAsCsv({ fileName: 'cf_applications' });
@@ -140,6 +148,8 @@
 			},
 			columnDefs,
 			rowData: applications,
+			onFilterChanged: showDisplayedRowCount,
+			onModelUpdated: showDisplayedRowCount,
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
@@ -157,11 +167,8 @@
 		{:else}
 			All
 		{/if}
-		{#await data.applications then applications}
-			{#if applications.length}
-				<Badge>{applications.length}</Badge>
-			{/if}
-		{/await}
+
+		<RowCountBadge promisedData={data.applications} {rowCount} />
 	</div>
 
 	{#await data.applications then _}

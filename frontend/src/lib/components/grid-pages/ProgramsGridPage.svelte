@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Badge, Heading } from 'flowbite-svelte';
+	import { Heading } from 'flowbite-svelte';
 
 	import {
 		createGrid,
@@ -24,6 +24,7 @@
 		noZeroValueFormatter,
 		percentageValueFormatter
 	} from '$lib/utils/gridUtils';
+	import RowCountBadge from './RowCountBadge.svelte';
 
 	export let data: {
 		programs: Promise<ProgramWithStats[]>;
@@ -108,7 +109,13 @@
 	];
 
 	let gridApi: GridApi;
+	let rowCount: number;
 
+	const showDisplayedRowCount = () => {
+		if (gridApi) {
+			rowCount = gridApi.getDisplayedRowCount();
+		}
+	};
 	const exportAsCsv = () => {
 		gridApi!.exportDataAsCsv({ fileName: 'cf_programs' });
 	};
@@ -130,6 +137,8 @@
 			columnTypes,
 			columnDefs,
 			rowData: programs.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')),
+			onFilterChanged: showDisplayedRowCount,
+			onModelUpdated: showDisplayedRowCount,
 			...agGridOptions
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
@@ -140,11 +149,7 @@
 <Heading tag="h1" class="grid-title flex gap-8 items-center justify-between">
 	<div class="flex gap-4 items-center">
 		{`${data.programType} Programs`}
-		{#await data.programs then programs}
-			{#if programs.length}
-				<Badge>{programs.length}</Badge>
-			{/if}
-		{/await}
+		<RowCountBadge promisedData={data.programs} {rowCount} />
 	</div>
 
 	{#await data.programs then _}

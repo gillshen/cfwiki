@@ -36,7 +36,7 @@
 		{/each}
 		<div class="form-width mx-auto">
 			<slot name="preface" />
-			<svelte:component this={fields} {form} {message} {errors} {entity} />
+			<svelte:component this={fields} {form} {message} {errors} {entity} {...$$restProps} />
 			<slot />
 		</div>
 	</form>

@@ -15,7 +15,7 @@ export function noZeroValueFormatter(params: ValueFormatterParams): string {
 }
 
 export function percentageValueFormatter(params: ValueFormatterParams): string {
-	if (typeof params.value !== 'number') {
+	if (isNaN(params.value)) {
 		return '';
 	} else {
 		return `${(params.value * 100).toFixed(1)}\u202f%`;

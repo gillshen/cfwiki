@@ -5,6 +5,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 import { deleteStudent, fetchStudent, type StudentDetail } from '$lib/api/student';
 import { fetchApplications } from '$lib/api/application';
+import { fetchSchools } from '$lib/api/school';
 import { contractSchema } from '$lib/schemas/contract';
 import { enrollmentSchema } from '$lib/schemas/enrollment';
 
@@ -63,6 +64,7 @@ export async function load(event: PageServerLoadEvent) {
 
 	return {
 		student,
+		promisedSchools: fetchSchools(),
 		applications: fetchApplications({ student: student.id }),
 		contractForm: await superValidate(zod(contractSchema)),
 		enrollmentForm: await superValidate(zod(enrollmentSchema)),
