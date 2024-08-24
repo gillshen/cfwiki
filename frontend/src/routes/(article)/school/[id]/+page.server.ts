@@ -4,6 +4,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { deleteSchool, fetchSchool, updateSchool, type SchoolWithStats } from '$lib/api/school';
+import { fetchPrograms } from '$lib/api/program';
 import { fetchApplications } from '$lib/api/application';
 import { schoolSchema } from '$lib/schemas/school';
 import { deleteSchema } from '$lib/schemas/delete';
@@ -25,6 +26,7 @@ export async function load(event: PageServerLoadEvent) {
 
 	return {
 		school,
+		programs: fetchPrograms({ school: school.id }),
 		schoolForm: await superValidate(school, zod(schoolSchema)),
 		deleteForm: await superValidate(zod(deleteSchema)),
 		applications: fetchApplications({ school: school.id }),

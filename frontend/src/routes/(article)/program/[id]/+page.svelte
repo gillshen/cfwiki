@@ -102,7 +102,7 @@
 		<ApplicationStats stats={data.program.application_stats} />
 	</article>
 
-	<article class="col-span-2 mt-24">
+	<article class="col-span-2 mt-16">
 		<ApplicationsLoader applications={data.applications}>
 			<svelte:fragment let:applications>
 				<!-- TODO divide by year -->

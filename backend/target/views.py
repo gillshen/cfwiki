@@ -53,7 +53,11 @@ class ProgramListView(ListAPIView):
 
     def get_queryset(self):
         query_params = self.request.query_params
-        return Program.filter(program_type=query_params.get("type"))
+
+        return Program.filter(
+            school=query_params.get("school"),
+            program_type=query_params.get("type"),
+        )
 
 
 class ProgramStatsListView(ProgramListView):

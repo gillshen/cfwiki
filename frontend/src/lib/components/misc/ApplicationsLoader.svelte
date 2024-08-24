@@ -8,7 +8,7 @@
 
 	export let applications: Promise<ApplicationListItem[]>;
 	export let heading: string = 'Applications';
-	export let noDataText: string = 'No applications';
+	export let noDataText: string = 'None';
 	export let errorText: string = '';
 	export let showHeading: boolean = true;
 </script>

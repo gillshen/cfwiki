@@ -16,7 +16,7 @@
 	export let coApplications: Promise<ApplicationListItem[]>;
 </script>
 
-<article class="col-span-2 mt-24">
+<article class="col-span-2 mt-16">
 	<ApplicationsLoader
 		applications={coApplications}
 		heading="Co-applicants"

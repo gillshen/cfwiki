@@ -179,7 +179,7 @@
 	];
 </script>
 
-<article class="mt-24">
+<article class="mt-16">
 	<Heading tag="h2" class="text-2xl font-bold">Test Scores</Heading>
 
 	<div class="flex flex-col gap-6 divide-y-2 divide-dotted">

@@ -35,7 +35,7 @@
 	};
 </script>
 
-<article class="mt-24">
+<article class="mt-16">
 	<Heading tag="h2" class="text-2xl font-bold">Educational Experiences</Heading>
 
 	{#if student.enrollments.length}

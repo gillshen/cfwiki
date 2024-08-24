@@ -33,7 +33,7 @@
 	export let canEdit: boolean = false;
 </script>
 
-<article class="mt-24 col-span-2">
+<article class="mt-16 col-span-2">
 	<ApplicationsLoader {applications}>
 		<svelte:fragment let:applications>
 			<Table divClass="mt-8" hoverable={applications.length > 1}>

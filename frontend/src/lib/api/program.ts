@@ -37,7 +37,8 @@ export type ProgramWithStats = ProgramListItem & {
 export type ProgramDetail = ProgramWithStats;
 
 export async function fetchPrograms(params?: {
-	type: 'undergraduate' | 'graduate' | 'non-degree';
+	school?: number;
+	type?: 'undergraduate' | 'graduate' | 'non-degree';
 }): Promise<ProgramListItem[]> {
 	return await get(`programs/${buildQuery(params)}`);
 }

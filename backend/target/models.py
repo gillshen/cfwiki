@@ -77,9 +77,11 @@ class Program(models.Model):
         return f"{school_names} | {self.display_name}".strip()
 
     @classmethod
-    def filter(cls, program_type: str = None):
+    def filter(cls, school: int = None, program_type: str = None):
         q = cls.objects.all().prefetch_related("schools")
 
+        if school is not None:
+            q = q.filter(schools=school)
         if program_type == "undergraduate":
             q = q.filter(type__in=["UG Freshman", "UG Transfer"])
         elif program_type == "graduate":

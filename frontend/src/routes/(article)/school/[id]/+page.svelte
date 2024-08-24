@@ -30,6 +30,9 @@
 	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
 	import PlainCell from '$lib/components/table-cells/PlainCell.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
+	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
+	import ProgramsListBox from '$lib/components/program-page/ProgramsListBox.svelte';
+	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 
 	import {
 		orderByRoundName,
@@ -62,21 +65,33 @@
 				/>
 			{/await}
 		</div>
+
+		<div>
+			<Heading tag="h2" class="text-2xl font-bold mt-16">Programs</Heading>
+			{#await data.programs}
+				<FetchingDataSign divClass="mt-8" />
+			{:then programs}
+				{#if programs.length}
+					<ProgramsListBox {programs} />
+				{:else}
+					<NoDataSign text="None" divClass="mt-6" />
+				{/if}
+			{/await}
+		</div>
 	</article>
 
-	<!-- Empty div to take up the right column of the first row -->
-	<div></div>
+	<article class="flex flex-col gap-8">
+		<div class="bg-stone-50 rounded-xl w-full p-8">
+			<ApplicationStats stats={data.school.application_stats.ug} title="Undergraduate statistics" />
+		</div>
 
-	<article class="bg-stone-50 rounded-xl w-full p-8 mt-16">
-		<ApplicationStats stats={data.school.application_stats.ug} title="Undergraduate statistics" />
-	</article>
-
-	<article class="bg-stone-50 rounded-xl w-full p-8 mt-16">
-		<ApplicationStats stats={data.school.application_stats.grad} title="Graduate statistics" />
+		<div class="bg-stone-50 rounded-xl w-full p-8">
+			<ApplicationStats stats={data.school.application_stats.grad} title="Graduate statistics" />
+		</div>
 	</article>
 
 	{#if data.school.type !== 'Secondary School'}
-		<article class="col-span-2 mt-24">
+		<article class="col-span-2 mt-16">
 			<ApplicationsLoader applications={data.applications}>
 				<svelte:fragment let:applications>
 					<!-- TODO divide by year and type -->
@@ -116,7 +131,7 @@
 		</article>
 	{/if}
 
-	<article class="col-span-2 mt-24">
+	<article class="col-span-2 mt-16">
 		<EnrollmentsLoader enrollments={data.enrollments}>
 			<svelte:fragment let:enrollments>
 				<Table divClass="mt-8" hoverable={enrollments.length > 1}>

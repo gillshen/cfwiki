@@ -2,7 +2,7 @@
 	import { Label, Input, Button, Select, Radio, A, Helper, Hr, Heading } from 'flowbite-svelte';
 
 	import { programTypes } from '$lib/api/program';
-	import { formatSelectOption } from '$lib/utils/programUtils';
+	import { enhanceDisplayName } from '$lib/utils/programUtils';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import NewProgramForm from '$lib/components/program-form/NewProgramForm.svelte';
 
@@ -108,7 +108,7 @@
 		<Label for="program" class="form-label">Program</Label>
 		<Select id="program" name="program" bind:value={programId} required>
 			{#each programs as program}
-				<option value={program.id}>{formatSelectOption(program)}</option>
+				<option value={program.id}>{enhanceDisplayName(program)}</option>
 			{/each}
 		</Select>
 		<Helper class="mt-2 form-helper">

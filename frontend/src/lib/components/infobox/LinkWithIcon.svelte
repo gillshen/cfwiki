@@ -4,9 +4,15 @@
 
 	export let href: string = '';
 	export let text: string = '';
+	export let iconFirst: boolean = false;
 </script>
 
 <A {href}>
+	{#if iconFirst}
+		<LinkOutline class="size-4 me-2" />
+	{/if}
 	<span class="text-gray-900">{text}</span>
-	<LinkOutline class="size-4 ms-2" />
+	{#if !iconFirst}
+		<LinkOutline class="size-4 ms-2" />
+	{/if}
 </A>
