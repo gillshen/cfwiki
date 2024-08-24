@@ -52,11 +52,6 @@ export function orderByStudentName(a: ApplicationListItem, b: ApplicationListIte
 	return a.student.fullname.localeCompare(b.student.fullname, 'zh-CN');
 }
 
-export function formatMajors(application: ApplicationListItem): string {
-	const majors = [application.major_1, application.major_2, application.major_3];
-	return majors.filter(Boolean).join(' | ');
-}
-
 export function groupByYear(
 	applications: ApplicationListItem[]
 ): Record<string, ApplicationListItem[]> {

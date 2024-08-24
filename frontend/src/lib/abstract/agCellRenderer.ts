@@ -48,6 +48,7 @@ export class SvelteCellRenderer implements ICellRendererComp {
 
 	init(params: ICellRendererParams) {
 		this.eGui = document.createElement('div');
+		this.eGui.classList.add('truncate');
 		this.createComponent(params);
 	}
 

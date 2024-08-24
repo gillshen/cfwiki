@@ -14,7 +14,7 @@
 	import type { ApplicationListItem } from '$lib/api/application';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
-	import { formatApplicationType, formatMajors } from '$lib/utils/applicationUtils';
+	import { formatApplicationType } from '$lib/utils/applicationUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 	import { localeComparator } from '$lib/utils/gridUtils';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
@@ -52,10 +52,6 @@
 	function schoolValueGetter(params: ValueGetterParams): string {
 		const application: ApplicationListItem = params.data;
 		return application.schools.map((s) => s.name).join(' | ');
-	}
-
-	function majorValueGetter(params: ValueGetterParams): string {
-		return formatMajors(params.data);
 	}
 
 	function stratPeopleValueGetter(params: ValueGetterParams): string {
@@ -100,7 +96,7 @@
 		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
 		{ headerName: '文案', valueGetter: workPeopleValueGetter, flex: 1.2 },
 		{ headerName: '服务', valueGetter: salesAssistantsValueGetter },
-		{ headerName: '流程', valueGetter: workAssistantsValueGetter },
+		{ headerName: '流程', valueGetter: workAssistantsValueGetter, hide: true },
 		{ headerName: 'School', valueGetter: schoolValueGetter, flex: 3 },
 		{
 			headerName: 'Program',
@@ -108,12 +104,7 @@
 			flex: 3,
 			hide: data.applicationType === 'freshman' || data.applicationType === 'transfer'
 		},
-		{
-			headerName: 'Major',
-			valueGetter: majorValueGetter,
-			flex: 2,
-			hide: data.applicationType === 'graduate'
-		},
+		{ headerName: 'Major/Track', field: 'majors_or_track', flex: 2 },
 		{ headerName: 'Adm. plan', field: 'round.name' },
 		{ headerName: 'Due', field: 'round.due_date', flex: 1.5 },
 		{ headerName: 'Status', field: 'latest_log.status', cellRenderer: StatusRenderer },

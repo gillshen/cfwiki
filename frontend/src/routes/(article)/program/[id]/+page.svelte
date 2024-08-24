@@ -24,7 +24,7 @@
 	import LinkButton from '$lib/components/buttons/LinkButton.svelte';
 
 	import Student from '$lib/components/table-cells/Student.svelte';
-	import Majors from '$lib/components/table-cells/Majors.svelte';
+	import MajorsOrTrack from '$lib/components/table-cells/MajorsOrTrack.svelte';
 	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
 	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
 	import PlainCell from '$lib/components/table-cells/PlainCell.svelte';
@@ -111,9 +111,7 @@
 						<TableHeadCell></TableHeadCell>
 						<TableHeadCell>Year</TableHeadCell>
 						<TableHeadCell>Student</TableHeadCell>
-						{#if isUndergraduate(data.program)}
-							<TableHeadCell>Major</TableHeadCell>
-						{/if}
+						<TableHeadCell>{isUndergraduate(data.program) ? 'Major' : 'Track'}</TableHeadCell>
 						<TableHeadCell>Adm. plan</TableHeadCell>
 						<TableHeadCell>Due</TableHeadCell>
 						<TableHeadCell>Status</TableHeadCell>
@@ -129,9 +127,7 @@
 								<ApplicationLink {application} />
 								<PlainCell text={application.program_iteration.year} />
 								<Student {application} />
-								{#if isUndergraduate(data.program)}
-									<Majors {application} />
-								{/if}
+								<MajorsOrTrack {application} />
 								<ApplicationRound {application} />
 								<ShortDate date={application.round.due_date} />
 								<ApplicationStatus {application} />

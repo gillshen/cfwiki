@@ -129,7 +129,7 @@ class ContractCRUDSerializer(serializers.ModelSerializer):
 class ApplicationListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        fields = "__all__"
+        exclude = ["major_1", "major_2", "major_3", "track"]
 
     class StudentSerializer(serializers.ModelSerializer):
         class Meta:
@@ -179,6 +179,7 @@ class ApplicationListSerializer(serializers.ModelSerializer):
             fields = ["status", "date"]
 
     latest_log = ApplicationLogSerializer()
+    majors_or_track = serializers.CharField()
 
 
 class ApplicationDetailSerializer(serializers.ModelSerializer):

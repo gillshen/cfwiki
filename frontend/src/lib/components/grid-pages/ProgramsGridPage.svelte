@@ -77,12 +77,7 @@
 		{ headerName: 'Type', field: 'type', valueGetter: programTypeValueGetter },
 		{ headerName: 'School', field: 'schools', flex: 2.5, valueGetter: schoolsGetter },
 		{ headerName: 'Name', field: 'name', flex: 2.5, hide: data.programType === 'Undergraduate' },
-		{
-			headerName: 'Degree',
-			field: 'degree',
-			flex: 1.8,
-			hide: data.programType === 'Undergraduate'
-		},
+		{ headerName: 'Degree', field: 'degree', hide: data.programType === 'Undergraduate' },
 
 		{ headerName: 'Applied', field: 'application_stats.applied', type: ['rightAligned', 'stats'] },
 		{ headerName: 'Pending', field: 'application_stats.pending', type: ['rightAligned', 'stats'] },

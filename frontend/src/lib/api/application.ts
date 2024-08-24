@@ -22,9 +22,7 @@ export type ApplicationListItem = {
 	program: { type: string; display_name: string };
 	program_iteration: { year: number; term: string };
 	round: { name: string; due_date: string | null };
-	major_1: string;
-	major_2: string;
-	major_3: string;
+	majors_or_track: string;
 	comments: string;
 	latest_log: { status: ApplicationStatus; date: string } | null;
 };
@@ -47,6 +45,7 @@ export type ApplicationDetail = {
 	major_1: string;
 	major_2: string;
 	major_3: string;
+	track: string;
 	comments: string;
 	logs: ApplicationLog[];
 };

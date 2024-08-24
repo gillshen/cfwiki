@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type { ApplicationListItem } from '$lib/api/application';
 	import Program from '$lib/components/table-cells/Program.svelte';
-	import Majors from '$lib/components/table-cells/Majors.svelte';
+	import MajorsOrTrack from '$lib/components/table-cells/MajorsOrTrack.svelte';
 	import { isUndergraduate } from '$lib/utils/programUtils';
 
 	export let application: ApplicationListItem;
 </script>
 
 {#if isUndergraduate(application.program)}
-	<Majors {application} />
+	<MajorsOrTrack {application} />
 {:else}
 	<Program {application} />
 {/if}

@@ -27,7 +27,7 @@
 					</div>
 				</TableBodyCell>
 
-				<TableBodyCell tdClass="font-normal text-gray-500 py-4 align-top">
+				<TableBodyCell tdClass="font-normal min-w-32 text-gray-500 py-4 align-top">
 					<div class="flex flex-col gap-3">
 						{#each rounds as applRound}
 							<div class="flex items-center">

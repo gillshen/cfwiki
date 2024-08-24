@@ -103,10 +103,10 @@ div[role='tabpanel'] {
 }
 .status-started,
 .status-deferred {
-	@apply text-amber-600;
+	@apply text-amber-500;
 }
 .status-on-waitlist {
-	@apply text-purple-600;
+	@apply text-purple-500;
 }
 .status-accepted,
 .status-enrolled {
@@ -115,7 +115,7 @@ div[role='tabpanel'] {
 .status-rejected,
 .status-pres-rejected,
 .status-offer-rescinded {
-	@apply text-rose-700;
+	@apply text-rose-500;
 }
 .status-cancelled,
 .status-withdrawn,

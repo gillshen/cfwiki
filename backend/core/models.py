@@ -200,9 +200,14 @@ class Application(models.Model):
         on_delete=models.CASCADE,
     )
 
+    # Undergraduate majors
     major_1 = models.CharField(max_length=100, blank=True)
     major_2 = models.CharField(max_length=100, blank=True)
     major_3 = models.CharField(max_length=100, blank=True)
+
+    # Track/concentration/pathway/certificate of a graduate program
+    track = models.CharField(max_length=100, blank=True)
+
     comments = models.CharField(max_length=1000, blank=True)
 
     class Meta:
@@ -419,11 +424,15 @@ class Application(models.Model):
     def program_iteration(self):
         return self.round.program_iteration
 
-    # useful for the serializer with custom creation logic
+    @property
+    def majors(self):
+        return " | ".join(filter(None, [self.major_1, self.major_2, self.major_3]))
 
     @property
-    def program_id(self):
-        return self.program.id
+    def majors_or_track(self):
+        return self.track or self.majors
+
+    # For admin display
 
     @property
     def year(self):
