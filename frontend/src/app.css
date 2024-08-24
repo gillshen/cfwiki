@@ -96,7 +96,7 @@ div[role='tabpanel'] {
 }
 
 .status-submitted {
-	@apply text-indigo-500;
+	@apply text-sky-600;
 }
 .status-under-review {
 	@apply text-blue-500;

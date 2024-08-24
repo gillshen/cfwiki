@@ -1,4 +1,4 @@
-import type { ProgramListItem } from '$lib/api/program';
+import type { ProgramListItem, ProgramType } from '$lib/api/program';
 import { orderByName as _orderByName } from '$lib/api/school';
 
 export function enhanceDisplayName(program: ProgramListItem): string {
@@ -25,7 +25,7 @@ export function isUndergraduate(program: { type: string }): boolean {
 	return program.type === 'UG Freshman' || program.type === 'UG Transfer';
 }
 
-export function filterForType(programs: ProgramListItem[], type: string): ProgramListItem[] {
+export function filterForType(programs: ProgramListItem[], type: ProgramType): ProgramListItem[] {
 	return programs.filter((p) => p.type === type);
 }
 

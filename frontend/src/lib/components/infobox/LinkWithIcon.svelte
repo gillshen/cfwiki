@@ -7,7 +7,7 @@
 	export let iconFirst: boolean = false;
 </script>
 
-<A {href}>
+<A {href} class="w-fit">
 	{#if iconFirst}
 		<LinkOutline class="size-4 me-2" />
 	{/if}

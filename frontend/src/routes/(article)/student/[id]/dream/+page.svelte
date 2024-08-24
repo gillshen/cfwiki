@@ -1,17 +1,20 @@
 <script lang="ts">
 	import { Label, Input, Button, Select, Radio, A, Helper, Hr, Heading } from 'flowbite-svelte';
+	import { ArrowRightOutline } from 'flowbite-svelte-icons';
 
-	import { programTypes } from '$lib/api/program';
-	import { enhanceDisplayName } from '$lib/utils/programUtils';
+	import { type ProgramType, programTypes as allProgramTypes } from '$lib/api/program';
+	import { enhanceDisplayName, orderByName } from '$lib/utils/programUtils';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import NewProgramForm from '$lib/components/program-form/NewProgramForm.svelte';
 
 	export let data;
 
+	let contractId: number;
 	let schoolId: number | '' = '';
 	let programId: number | '' = '';
 
 	let schoolType = 'University';
+	let programTypes: ProgramType[] = [];
 
 	$: schools = data.schools
 		.filter((a) => a.type === schoolType)
@@ -25,6 +28,26 @@
 	});
 
 	let createProgramModal = false;
+
+	const onContractTypeChange = () => {
+		if (!contractId) {
+			return;
+		}
+		const selectedContract = data.student.contracts_sorted.filter((c) => c.id === contractId)[0];
+		switch (selectedContract.type) {
+			case 'UG Freshman':
+				programTypes = ['UG Freshman', 'Non-degree'];
+				break;
+			case 'UG Transfer':
+				programTypes = ['UG Transfer', 'Non-degree'];
+				break;
+			case 'Graduate':
+				programTypes = ["Master's", 'Doctorate', 'Non-degree'];
+				break;
+			default:
+				programTypes = Array.from(allProgramTypes);
+		}
+	};
 
 	const onSchoolTypeChange = () => {
 		schoolId = '';
@@ -54,10 +77,22 @@
 		<input type="number" name="student" class="hidden" value={data.student.id} />
 
 		<Label for="student-name" class="form-label">Student</Label>
-		<Input id="student-name" type="text" value={data.student.fullname} readonly />
+		<Input
+			id="student-name"
+			type="text"
+			value={data.student.fullname}
+			class="text-gray-500 focus:ring-0 cursor-not-allowed"
+			readonly
+		/>
 
 		<Label for="contract" class="form-label">Contract</Label>
-		<Select id="contract" name="contract" required>
+		<Select
+			id="contract"
+			name="contract"
+			bind:value={contractId}
+			on:change={onContractTypeChange}
+			required
+		>
 			{#each data.student.contracts_sorted as contract}
 				<option value={contract.id}>{contract.type} {contract.target_year}</option>
 			{/each}
@@ -107,7 +142,7 @@
 
 		<Label for="program" class="form-label">Program</Label>
 		<Select id="program" name="program" bind:value={programId} required>
-			{#each programs as program}
+			{#each programs.sort(orderByName) as program}
 				<option value={program.id}>{enhanceDisplayName(program)}</option>
 			{/each}
 		</Select>
@@ -115,7 +150,7 @@
 			If your desired program is not listed, <A on:click={openModal}>click here</A> to create it.
 		</Helper>
 
-		<Button type="submit" class="mt-8">Next</Button>
+		<Button type="submit" class="mt-8 w-24">Next<ArrowRightOutline class="ms-1" /></Button>
 	</form>
 </div>
 

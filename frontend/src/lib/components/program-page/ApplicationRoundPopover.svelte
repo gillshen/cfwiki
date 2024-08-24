@@ -28,7 +28,7 @@
 
 		<div class="mt-8 flex gap-4">
 			<A href={`/program/${program}/plan/${id}`}>Update</A>
-			<A on:click={() => alert('delete')}>Delete</A>
+			<A on:click={() => alert('TODO delete')}>Delete</A>
 		</div>
 	</div>
 </Popover>

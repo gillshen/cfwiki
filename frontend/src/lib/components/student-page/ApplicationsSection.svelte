@@ -71,7 +71,7 @@
 	</ApplicationsLoader>
 
 	{#if canEdit && student.contracts_sorted.length}
-		<Button outline href={`/student/${student.id}/new-application`} class="mt-8">
+		<Button outline href={`/student/${student.id}/dream`} class="mt-8">
 			Create an application
 		</Button>
 	{:else if canEdit}
