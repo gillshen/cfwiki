@@ -1,5 +1,15 @@
+import { isFuture } from 'date-fns';
+
 import type { Service } from '$lib/api/contract';
 import { cfRoles } from '$lib/api/service';
+
+export function isActive(service: Service): boolean {
+	return !service.end_date || isFuture(service.end_date);
+}
+
+export function filterForActive(services: Service[]): Service[] {
+	return services.filter((s) => isActive(s));
+}
 
 export function orderByEndDateRole(a: Service, b: Service) {
 	if (a.end_date !== b.end_date) {

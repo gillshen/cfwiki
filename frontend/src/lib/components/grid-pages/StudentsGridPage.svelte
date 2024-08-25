@@ -16,7 +16,7 @@
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { AgCellRenderer, SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
 	import { formatLocation, orderByName } from '$lib/utils/studentUtils';
-	import { formatCfNames } from '$lib/utils/serviceUtils';
+	import { filterForActive, formatCfNames } from '$lib/utils/serviceUtils';
 	import { makeDate, toISODate } from '$lib/utils/dateUtils';
 	import { localeComparator } from '$lib/utils/gridUtils';
 	import countryFlags from '$lib/constants/countryFlags';
@@ -108,7 +108,7 @@
 		if (!student.latest_contract) {
 			return '';
 		}
-		const services = student.latest_contract.services;
+		const services = filterForActive(student.latest_contract.services);
 		return formatCfNames(services, role);
 	}
 

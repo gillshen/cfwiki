@@ -15,8 +15,8 @@
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
 
 	import type { Contract } from '$lib/api/student';
-	import { isPast, toShortDate } from '$lib/utils/dateUtils';
-	import { orderByEndDateRole } from '$lib/utils/serviceUtils';
+	import { toShortDate } from '$lib/utils/dateUtils';
+	import { isActive, orderByEndDateRole } from '$lib/utils/serviceUtils';
 
 	export let contract: Contract;
 
@@ -77,7 +77,7 @@
 								<span class="text-gray-500">{clipRole(service.role)}</span>
 							</TableBodyCell>
 							<TableBodyCell tdClass="font-normal py-2 pr-8">
-								<span class={isPast(service.end_date) ? 'text-gray-500' : ''}>
+								<span class={isActive(service) ? '' : 'text-gray-500'}>
 									{service.cf_username}
 								</span>
 							</TableBodyCell>

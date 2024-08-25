@@ -64,10 +64,17 @@ class Student(models.Model):
 
         if cfer is not None:
             q = q.filter(contracts__services__cfer=cfer)
+
+        if contract_type is not None and target_year is not None:
+            q = q.filter(
+                contracts__type=contract_type,
+                contracts__target_year=target_year,
+            )
         if contract_type is not None:
             q = q.filter(contracts__type=contract_type)
         if target_year is not None:
             q = q.filter(contracts__target_year=target_year)
+
         if contract_status is not None:
             q = q.filter(contracts__status=contract_status)
 

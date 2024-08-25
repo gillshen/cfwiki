@@ -1,7 +1,7 @@
 import type { BaseStudent, StudentByUserListItem, Contract, CohortMember } from '$lib/api/student';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
-import { isPast } from '$lib/utils/dateUtils';
+import { isActive } from '$lib/utils/serviceUtils';
 
 export function formatGender(student: BaseStudent): string {
 	switch (student.gender) {
@@ -78,11 +78,12 @@ export function groupByTargetYear(
 function _getServiceStatus(username: string, contract: Contract): 'current' | 'past' | 'never' {
 	const statuses = [];
 
+	// A cfer may work in multiple roles on the same contract,
+	// so the overall status would be 'past' only if all roles have ended
 	for (const service of contract.services) {
 		if (service.cf_username === username) {
-			statuses.push(
-				isPast(service.end_date) || contract.status !== 'In effect' ? 'past' : 'current'
-			);
+			const roleStatus = contract.status === 'In effect' && isActive(service) ? 'current' : 'past';
+			statuses.push(roleStatus);
 		}
 	}
 

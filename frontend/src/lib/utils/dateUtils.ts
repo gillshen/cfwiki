@@ -1,10 +1,6 @@
 import { format } from 'date-fns';
 import { format as formatWithTimeZone, toZonedTime, fromZonedTime } from 'date-fns-tz';
 
-export function isPast(dateString: string | null | undefined): boolean {
-	return dateString ? makeDate(dateString)! < new Date() : false;
-}
-
 export function makeDate(dateString: string | null | undefined): Date | null {
 	if (!dateString) {
 		return null;

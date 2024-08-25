@@ -6,14 +6,19 @@
 
 	export let form: any;
 	export let cfers: CfUserListItem[];
-	export let service: Service | null = null;
-	export let submitButtonText = 'Submit';
+	export let errors: any;
+	export let message: any;
+	export let entity: Service | null = null;
 
-	$form.id = service?.id;
-	$form.cfer = service?.cfer;
-	$form.role = service?.role;
-	$form.start_date = service?.start_date;
-	$form.end_date = service?.end_date;
+	if ($message || $errors) {
+		// TODO
+	}
+
+	$form.id = entity?.id;
+	$form.cfer = entity?.cfer;
+	$form.role = entity?.role;
+	$form.start_date = entity?.start_date;
+	$form.end_date = entity?.end_date;
 </script>
 
 <input type="number" name="id" class="hidden" bind:value={$form.id} />
@@ -38,4 +43,4 @@
 <Label for="end-date" class="form-label optional">End date</Label>
 <Input id="end-date" type="date" name="end_date" bind:value={$form.end_date} />
 
-<Button type="submit" class="mt-8">{submitButtonText}</Button>
+<Button type="submit" class="mt-8">{entity ? 'Update' : 'Submit'}</Button>
