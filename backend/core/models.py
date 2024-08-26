@@ -216,6 +216,7 @@ class Application(models.Model):
     track = models.CharField(max_length=100, blank=True)
 
     comments = models.CharField(max_length=1000, blank=True)
+    double_application = models.BooleanField(default=False)
 
     class Meta:
         constraints = [
@@ -223,6 +224,7 @@ class Application(models.Model):
                 "contract",
                 "round",
                 name="application_unique_contract_round",
+                condition=Q(double_application=False),
             )
         ]
 
