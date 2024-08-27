@@ -1,5 +1,11 @@
 from django.contrib import admin
-from target.models import School, Program, ProgramIteration, ApplicationRound
+from target.models import (
+    School,
+    ProgramGroup,
+    Program,
+    ProgramIteration,
+    ApplicationRound,
+)
 
 
 @admin.register(School)
@@ -7,9 +13,14 @@ class SchoolAdmin(admin.ModelAdmin):
     list_display = "id", "type", "name", "alt_name", "country"
 
 
+@admin.register(ProgramGroup)
+class ProgramGroupAdmin(admin.ModelAdmin):
+    list_display = "id", "name"
+
+
 @admin.register(Program)
 class ProgramAdmin(admin.ModelAdmin):
-    list_display = "id", "type", "host_schools", "name", "degree"
+    list_display = "id", "type", "host_schools", "name", "degree", "is_defunct"
 
     def host_schools(self, instance) -> str:
         return " | ".join([s.name for s in instance.schools.all()])

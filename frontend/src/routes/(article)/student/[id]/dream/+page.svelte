@@ -24,7 +24,7 @@
 
 	$: programs = data.programs.filter((p) => {
 		const schoolIds = p.schools.map((s) => s.id);
-		return p.type === programType && typeof schoolId === 'number' && schoolIds.includes(schoolId);
+		return typeof schoolId === 'number' && p.type === programType && schoolIds.includes(schoolId);
 	});
 
 	let createProgramModal = false;

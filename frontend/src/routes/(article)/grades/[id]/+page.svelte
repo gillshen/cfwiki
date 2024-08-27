@@ -51,12 +51,13 @@
 <Hr />
 
 {#if data.enrollment.grades.length}
-	<section class="w-[48rem] min-w-[32rem] flex flex-col">
+	<section class="flex flex-col">
 		<Table hoverable={data.enrollment.grades.length > 1}>
 			<TableHead>
 				<TableHeadCell class="pl-2">Year</TableHeadCell>
 				<TableHeadCell>Period</TableHeadCell>
 				<TableHeadCell>Grade</TableHeadCell>
+				<TableHeadCell>Weighted</TableHeadCell>
 				<TableHeadCell>Cumulative</TableHeadCell>
 				<TableHeadCell>Comments</TableHeadCell>
 				<TableHeadCell></TableHeadCell>
@@ -65,15 +66,19 @@
 				{#each Object.values(groupedGrades) as grades}
 					{#each grades as grade}
 						<TableBodyRow>
-							<TableBodyCell class="pl-2 w-16">{grade.progression}</TableBodyCell>
+							<TableBodyCell class="pl-2 min-w-24">{grade.progression}</TableBodyCell>
 
-							<TableBodyCell class="w-24 font-normal">{grade.term}</TableBodyCell>
+							<TableBodyCell class="font-normal min-w-32">{grade.term}</TableBodyCell>
 
-							<TableBodyCell class="w-24">
+							<TableBodyCell class="min-w-32">
 								<GradeValueItem value={grade.value} scale={grade.scale} />
 							</TableBodyCell>
 
-							<TableBodyCell class="font-normal w-16">
+							<TableBodyCell class="font-normal min-w-24">
+								{grade.is_weighted ? 'Yes' : placeHolder}
+							</TableBodyCell>
+
+							<TableBodyCell class="font-normal min-w-24">
 								{grade.is_cumulative ? 'Yes' : placeHolder}
 							</TableBodyCell>
 

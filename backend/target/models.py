@@ -62,6 +62,17 @@ class School(models.Model):
         }
 
 
+class ProgramGroup(models.Model):
+    name = models.CharField(max_length=100)
+
+    constraints = [
+        models.UniqueConstraint(Lower("name"), name="programfamily_unique_name")
+    ]
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Program(models.Model):
     # It would be nice to have a unique constraint at the database level
     # but this is not possible because `schools` is a many-to-many field
@@ -71,6 +82,9 @@ class Program(models.Model):
     schools = models.ManyToManyField(School, related_name="programs")
     name = models.CharField(max_length=100, blank=True)
     degree = models.CharField(max_length=100, blank=True)
+    is_defunct = models.BooleanField(default=False)
+
+    groups = models.ManyToManyField(ProgramGroup, related_name="programs", blank=True)
 
     def __str__(self) -> str:
         school_names = " + ".join(s.name for s in self.schools.all())

@@ -8,6 +8,7 @@
 	export let program: ProgramDetail;
 
 	$: programDegree = isUndergraduate(program) ? "Bachelor's" : program.degree || '-';
+	$: programStatus = program.is_defunct ? 'Defunct' : 'Normal';
 </script>
 
 <Table>
@@ -38,6 +39,11 @@
 		<TableBodyRow>
 			<TableBodyCell tdClass="w-40 font-medium py-4">Degree</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{programDegree}</TableBodyCell>
+		</TableBodyRow>
+
+		<TableBodyRow>
+			<TableBodyCell tdClass="w-40 font-medium py-4">Status</TableBodyCell>
+			<TableBodyCell tdClass="font-normal py-4">{programStatus}</TableBodyCell>
 		</TableBodyRow>
 	</TableBody>
 </Table>

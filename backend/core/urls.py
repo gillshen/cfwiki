@@ -32,6 +32,7 @@ from target.views import (
     ProgramDetailView,
     ProgramCreateView,
     ProgramRUDView,
+    ProgramGroupListView,
     ApplicationRoundListView,
     ApplicationRoundDetailView,
     ApplicationRoundCreateView,
@@ -98,6 +99,8 @@ urlpatterns = [
     path("programs/<int:pk>/", ProgramDetailView.as_view()),
     path("programs/new/", ProgramCreateView.as_view()),
     path("programs/<int:pk>/update/", ProgramRUDView.as_view()),
+    # program group
+    path("program-groups/", ProgramGroupListView.as_view()),
     # application round
     path("application-rounds/", ApplicationRoundListView.as_view()),
     path("application-rounds/new/", ApplicationRoundCreateView.as_view()),

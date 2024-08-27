@@ -2,11 +2,12 @@ import type { ProgramListItem, ProgramType } from '$lib/api/program';
 import { orderByName as _orderByName } from '$lib/api/school';
 
 export function enhanceDisplayName(program: ProgramListItem): string {
+	const defunctNote = program.is_defunct ? ' (defunct)' : '';
 	if (program.schools.length <= 1) {
-		return program.display_name;
+		return `${program.display_name}${defunctNote}`;
 	}
 	const schoolNames = formatSchoolNamesShort(program);
-	return `${program.display_name} (${schoolNames})`;
+	return `${program.display_name} (${schoolNames})${defunctNote}`;
 }
 
 export function formatSchoolNames(program: ProgramListItem): string {

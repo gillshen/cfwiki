@@ -31,7 +31,9 @@ class GradeAdmin(admin.ModelAdmin):
         "term",
         "value",
         "scale",
+        "is_weighted",
         "is_cumulative",
+        "comments",
     )
 
 

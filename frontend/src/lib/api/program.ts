@@ -17,6 +17,8 @@ export type Program = {
 	type: string;
 	name: string;
 	degree: string;
+	is_defunct: boolean;
+	groups: number[];
 };
 
 type School = {

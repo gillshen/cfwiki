@@ -5,7 +5,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
-from target.models import School, Program, ApplicationRound
+from target.models import School, Program, ProgramGroup, ApplicationRound
 
 from target.serializers import (
     SchoolSerializer,
@@ -15,6 +15,7 @@ from target.serializers import (
     ProgramStatsSerializer,
     ProgramCreateSerializer,
     ProgramCRUDSerializer,
+    ProgramGroupSerializer,
     ApplicationRoundSerializer,
     ApplicationRoundRUDSerializer,
     ApplicationRoundCreateSerializer,
@@ -77,6 +78,11 @@ class ProgramCreateView(CreateAPIView):
 class ProgramRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Program.objects.all()
     serializer_class = ProgramCRUDSerializer
+
+
+class ProgramGroupListView(ListAPIView):
+    queryset = ProgramGroup.objects.prefetch_related("programs").all()
+    serializer_class = ProgramGroupSerializer
 
 
 class ApplicationRoundListView(ListAPIView):

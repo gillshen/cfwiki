@@ -6,4 +6,9 @@
 	export let program: ProgramListItem;
 </script>
 
-<LinkWithIcon href={`/program/${program.id}`} text={enhanceDisplayName(program)} iconFirst={true} />
+<LinkWithIcon
+	href={`/program/${program.id}`}
+	text={enhanceDisplayName(program)}
+	iconFirst={true}
+	spanClass={program.is_defunct ? 'text-gray-400' : ''}
+/>

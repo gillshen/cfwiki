@@ -7,6 +7,7 @@ export type Grade = {
 	term: string;
 	value: number;
 	scale: number;
+	is_weighted: boolean;
 	is_cumulative: boolean;
 	comments: string;
 };

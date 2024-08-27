@@ -71,6 +71,7 @@ class Grade(models.Model):
     term = models.CharField(max_length=20)
     value = models.DecimalField(max_digits=6, decimal_places=3, blank=True, null=True)
     scale = models.DecimalField(max_digits=6, decimal_places=3, blank=True, null=True)
+    is_weighted = models.BooleanField(default=False)
     is_cumulative = models.BooleanField(default=False)
     comments = models.TextField(max_length=500, blank=True)
 
