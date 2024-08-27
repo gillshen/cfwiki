@@ -135,7 +135,7 @@
 		{/each}
 	</Select>
 {:else}
-	<Label for="curriculum" class="form-label optional">Major</Label>
+	<Label for="curriculum" class="form-label optional">Majors and minors</Label>
 	<Input
 		id="curriculum"
 		type="text"

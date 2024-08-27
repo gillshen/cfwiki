@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { PenOutline } from 'flowbite-svelte-icons';
 	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
+	import UpdateDeleteIcon from './UpdateDeleteIcon.svelte';
 
 	export let updateAction: () => void;
 	export let deleteAction: () => void;
@@ -17,5 +17,5 @@
 	]}
 	disabled={updateDisabled && deleteDisabled}
 >
-	<PenOutline slot="icon" />
+	<UpdateDeleteIcon slot="icon" />
 </MultiActionButton>

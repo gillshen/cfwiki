@@ -18,7 +18,7 @@
 	let showToast = false;
 </script>
 
-<Heading tag="h3" class="page-title">Create a school file</Heading>
+<Heading tag="h3" class="page-title">Create a school profile</Heading>
 
 <Hr />
 

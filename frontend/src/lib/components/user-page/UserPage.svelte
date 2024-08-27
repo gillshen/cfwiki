@@ -78,7 +78,7 @@
 		{/await}
 
 		{#if data.userId === data.host.id}
-			<Button href="/student/new" class="mt-12" outline>Create a student file</Button>
+			<Button href="/student/new" class="mt-12" outline>Create a student profile</Button>
 		{/if}
 	</TabItem>
 

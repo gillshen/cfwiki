@@ -20,9 +20,8 @@
 	<StudentInfobox {student} />
 
 	{#if canEdit}
-		<div class="mt-4">
+		<div class="mt-2">
 			<UpdateDeleteButton
-				text="Actions"
 				updateAction={() => goto(`${student.id}/update`)}
 				deleteAction={() => (deleteModal = true)}
 			/>
@@ -36,7 +35,7 @@
 	fields={DeleteForm}
 	action={`/student/${student.id}?/deleteStudent`}
 	entity={student}
-	title="Delete student file"
+	title="Delete student profile"
 	on:close={() => (deleteModal = false)}
 >
 	<DeleteMessage

@@ -65,15 +65,15 @@
 				{#each Object.values(groupedGrades) as grades}
 					{#each grades as grade}
 						<TableBodyRow>
-							<TableBodyCell class="pl-2 w-16 align-top">{grade.progression}</TableBodyCell>
+							<TableBodyCell class="pl-2 w-16">{grade.progression}</TableBodyCell>
 
-							<TableBodyCell class="w-24 font-normal align-top">{grade.term}</TableBodyCell>
+							<TableBodyCell class="w-24 font-normal">{grade.term}</TableBodyCell>
 
-							<TableBodyCell class="w-24 align-top">
+							<TableBodyCell class="w-24">
 								<GradeValueItem value={grade.value} scale={grade.scale} />
 							</TableBodyCell>
 
-							<TableBodyCell class="font-normal w-16 align-top">
+							<TableBodyCell class="font-normal w-16">
 								{grade.is_cumulative ? 'Yes' : placeHolder}
 							</TableBodyCell>
 
@@ -85,7 +85,7 @@
 								{/if}
 							</TableBodyCell>
 
-							<TableBodyCell class="w-8 align-top">
+							<TableBodyCell class="w-8">
 								{#if canEdit}
 									<UpdateDeleteButton
 										updateAction={modalOpener(grade)}
@@ -134,6 +134,6 @@
 >
 	<DeleteMessage
 		slot="preface"
-		name={`this grade (${activeGrade?.progression} ${activeGrade?.term})`}
+		name={`this grade (${activeGrade?.progression} ${activeGrade?.term}, ${activeGrade?.is_cumulative ? 'cumulative' : 'non-cumulative'})`}
 	/>
 </FormModal>

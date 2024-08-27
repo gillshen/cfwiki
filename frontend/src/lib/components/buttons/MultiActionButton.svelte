@@ -18,7 +18,7 @@
 </script>
 
 <div
-	class={`flex gap-2 items-center w-fit  ${disabled ? 'text-gray-400' : 'text-primary-700 hover:underline hover:cursor-pointer'}`}
+	class={`flex gap-2 items-center w-fit ${disabled ? 'text-gray-400 hover:cursor-default' : 'text-primary-700 hover:cursor-pointer'}`}
 >
 	<slot name="icon" />
 	{#if text}

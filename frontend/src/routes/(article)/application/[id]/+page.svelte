@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Heading, A, Hr, Modal } from 'flowbite-svelte';
-	import { PenOutline } from 'flowbite-svelte-icons';
 
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ApplicationInfobox from '$lib/components/infobox/ApplicationInfobox.svelte';
 	import Main from '$lib/components/containers/Main.svelte';
 	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
+	import UpdateDeleteIcon from '$lib/components/buttons/UpdateDeleteIcon.svelte';
 	import RoundChangeForm from '$lib/components/application-update-form/RoundChangeForm.svelte';
 	import RoundUpdateDialog from '$lib/components/application-round-form/RoundUpdateDialog.svelte';
 	import MajorsForm from '$lib/components/application-update-form/MajorsForm.svelte';
@@ -60,9 +60,9 @@
 		<ApplicationInfobox application={data.application} />
 
 		{#if canEdit}
-			<div class="mt-4">
-				<MultiActionButton text="Actions" actions={applicationActions}>
-					<PenOutline slot="icon" />
+			<div class="mt-2">
+				<MultiActionButton actions={applicationActions}>
+					<UpdateDeleteIcon slot="icon" />
 				</MultiActionButton>
 			</div>
 		{/if}
@@ -75,7 +75,7 @@
 		{canEdit}
 	/>
 
-	<CoApplicationsSection application={data.application} coApplications={data.coApplications} />
+	<CoApplicationsSection coApplications={data.coApplications} />
 </Main>
 
 <FormModal
