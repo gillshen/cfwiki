@@ -65,7 +65,6 @@
 				<UpdateDeleteButton
 					updateAction={() => (programUpdateModal = true)}
 					deleteAction={() => (programDeleteModal = true)}
-					updateDisabled={isUndergraduate(data.program)}
 					deleteDisabled={!!applications.length}
 				/>
 			{/await}

@@ -7,6 +7,7 @@ export const gradeSchema = z.object({
 	term: z.string().min(1).max(20),
 	value: z.number(),
 	scale: z.number(),
+	is_weighted: z.boolean(),
 	is_cumulative: z.boolean(),
 	comments: z.string().trim().max(500)
 });

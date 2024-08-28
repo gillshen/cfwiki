@@ -17,8 +17,10 @@
 	let programTypes: ProgramType[] = [];
 
 	$: schools = data.schools
-		.filter((a) => a.type === schoolType)
+		.filter((s) => s.type === schoolType)
 		.sort((a, b) => a.name.localeCompare(b.name));
+
+	$: selectedSchool = data.schools.filter((s) => s.id === schoolId)[0];
 
 	let programType = '';
 
@@ -81,7 +83,7 @@
 			id="student-name"
 			type="text"
 			value={data.student.fullname}
-			class="text-gray-500 focus:ring-0 cursor-not-allowed"
+			class="form-input-readonly"
 			readonly
 		/>
 
@@ -98,49 +100,53 @@
 			{/each}
 		</Select>
 
-		<Label class="form-label">School type</Label>
-		<div class="form-radio-group">
-			{#each ['University', 'Secondary School', 'Other'] as schoolTypeOption}
-				<Radio
-					value={schoolTypeOption}
-					class="form-radio"
-					bind:group={schoolType}
-					on:change={onSchoolTypeChange}
-					required>{schoolTypeOption}</Radio
-				>
-			{/each}
-		</div>
+		{#if contractId}
+			<Hr />
 
-		<Label for="school" class="form-label">School</Label>
-		<Select id="school" name="school" bind:value={schoolId} on:change={onSchoolChange} required>
-			{#each schools as school}
-				<option value={school.id}>{school.name}</option>
-			{/each}
-		</Select>
-		<Helper class="mt-2 form-helper">
-			If your desired school is not listed, <A href="/school/new">go to this page</A> and create it.
-		</Helper>
+			<Label class="form-label">School type</Label>
+			<div class="form-radio-group">
+				{#each ['University', 'Secondary School', 'Other'] as schoolTypeOption}
+					<Radio
+						value={schoolTypeOption}
+						class="form-radio"
+						bind:group={schoolType}
+						on:change={onSchoolTypeChange}
+						required>{schoolTypeOption}</Radio
+					>
+				{/each}
+			</div>
 
-		<Hr />
+			<Label for="school" class="form-label">School</Label>
+			<Select id="school" name="school" bind:value={schoolId} on:change={onSchoolChange} required>
+				{#each schools as school}
+					<option value={school.id}>{school.name}</option>
+				{/each}
+			</Select>
+			<Helper class="mt-2 form-helper">
+				If your desired school is not listed, <A href="/school/new">go to this page</A> and create it.
+			</Helper>
 
-		<Label for="program-type" class="form-label">Program type</Label>
-		<Select id="program-type" bind:value={programType} on:change={onProgramTypeChange} required>
-			{#each programTypes as programTypeOption}
-				<option value={programTypeOption}>{programTypeOption}</option>
-			{/each}
-		</Select>
+			<Label for="program-type" class="form-label">Program type</Label>
+			<Select id="program-type" bind:value={programType} on:change={onProgramTypeChange} required>
+				{#each programTypes as programTypeOption}
+					<option value={programTypeOption}>{programTypeOption}</option>
+				{/each}
+			</Select>
 
-		<Label for="program" class="form-label">Program</Label>
-		<Select id="program" name="program" bind:value={programId} required>
-			{#each programs.sort(orderByName) as program}
-				<option value={program.id}>{enhanceDisplayName(program)}</option>
-			{/each}
-		</Select>
-		<Helper class="mt-2 form-helper">
-			If your desired program is not listed, <A on:click={openModal}>click here</A> to create it.
-		</Helper>
+			{#if schoolId && programType}
+				<Label for="program" class="form-label">Program</Label>
+				<Select id="program" name="program" bind:value={programId} required>
+					{#each programs.sort(orderByName) as program}
+						<option value={program.id}>{enhanceDisplayName(program)}</option>
+					{/each}
+				</Select>
+				<Helper class="mt-2 form-helper">
+					If your desired program is not listed, <A on:click={openModal}>click here</A> to create it.
+				</Helper>
+			{/if}
 
-		<Button type="submit" class="mt-8 w-24">Next<ArrowRightOutline class="ms-1" /></Button>
+			<Button type="submit" class="mt-8 w-24">Next<ArrowRightOutline class="ms-1" /></Button>
+		{/if}
 	</form>
 </div>
 
@@ -150,8 +156,8 @@
 	fields={NewProgramForm}
 	action="?/createProgram"
 	title="Create a program"
+	school={selectedSchool}
 	{schools}
-	{schoolId}
 	{programType}
 	on:close={() => (createProgramModal = false)}
 />

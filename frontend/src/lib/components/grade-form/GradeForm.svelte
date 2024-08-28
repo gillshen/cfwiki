@@ -15,6 +15,7 @@
 	$form.term = entity?.term;
 	$form.value = entity?.value;
 	$form.scale = entity?.scale;
+	$form.is_weighted = entity?.is_weighted;
 	$form.is_cumulative = entity?.is_cumulative;
 	$form.comments = entity?.comments;
 
@@ -23,7 +24,7 @@
 		//
 	}
 
-	let noNumber = false;
+	let descriptionInsteadOfNumber = false;
 </script>
 
 <input type="number" name="id" class="hidden" bind:value={$form.id} />
@@ -47,30 +48,46 @@
 	</div>
 
 	<Checkbox
-		class="font-normal mt-8 mb-4 col-span-2"
-		name="is_cumulative"
-		bind:checked={$form.is_cumulative}
+		class="font-normal mt-8 mb-2 space-x-1 col-span-2"
+		bind:checked={descriptionInsteadOfNumber}
 	>
-		Cumulative
+		Numeric GPA not available. I will provide a verbal description.
 	</Checkbox>
 
-	<Checkbox class="font-normal mt-8 mb-2 col-span-2" bind:checked={noNumber}>
-		GPA not available. I will provide a description in the comments.
-	</Checkbox>
-
-	{#if !noNumber}
+	{#if !descriptionInsteadOfNumber}
 		<div>
 			<Label for="value" class="form-label">Value</Label>
 			<Input id="value" type="number" name="value" step="0.001" bind:value={$form.value} required />
 		</div>
 		<div>
 			<Label for="scale" class="form-label">Scale</Label>
-			<Input id="scale" type="number" name="scale" step="0.001" bind:value={$form.scale} required />
+			<Input
+				id="scale"
+				type="number"
+				name="scale"
+				min="0.001"
+				step="0.001"
+				bind:value={$form.scale}
+				required
+			/>
+		</div>
+
+		<div class="mt-6 mb-6 col-span-2 flex flex-col gap-4">
+			<Checkbox name="is_weighted" class="font-normal space-x-1" bind:checked={$form.is_weighted}>
+				Weighted
+			</Checkbox>
+			<Checkbox
+				name="is_cumulative"
+				class="font-normal space-x-1"
+				bind:checked={$form.is_cumulative}
+			>
+				Cumulative
+			</Checkbox>
 		</div>
 	{/if}
 
 	<div class="col-span-2">
-		{#if noNumber}
+		{#if descriptionInsteadOfNumber}
 			<Label for="comments" class="form-label">Description</Label>
 		{:else}
 			<Label for="comments" class="form-label optional">Comments</Label>
@@ -80,8 +97,8 @@
 			name="comments"
 			maxlength="500"
 			bind:value={$form.comments}
-			rows="2"
-			required={noNumber}
+			rows="4"
+			required={descriptionInsteadOfNumber}
 		/>
 	</div>
 </div>

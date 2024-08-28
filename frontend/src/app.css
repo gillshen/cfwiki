@@ -45,6 +45,9 @@ h2 {
 .form-helper {
 	@apply text-gray-500;
 }
+.form-input-readonly {
+	@apply text-gray-500 focus:ring-0 cursor-not-allowed;
+}
 form.modal {
 	@apply px-12 pb-12;
 }

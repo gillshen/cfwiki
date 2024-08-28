@@ -13,7 +13,8 @@ export type NewProgramSchema = typeof newProgramSchema;
 export const programUpdateSchema = z.object({
 	id: z.number(),
 	name: z.string().trim().max(100),
-	degree: z.string().trim().max(100)
+	degree: z.string().trim().max(100),
+	is_defunct: z.boolean()
 });
 
 export type ProgramUpdateSchema = typeof programUpdateSchema;
