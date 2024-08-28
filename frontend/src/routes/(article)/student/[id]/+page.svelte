@@ -38,15 +38,7 @@
 	<ScoresSection
 		student={data.student}
 		{canEdit}
-		greScoreForm={data.greScoreForm}
-		satScoreForm={data.satScoreForm}
-		actScoreForm={data.actScoreForm}
-		toeflForm={data.toeflForm}
-		ieltsForm={data.ieltsForm}
-		duolingoForm={data.duolingoForm}
-		apScoreForm={data.apScoreForm}
-		ibGradeForm={data.ibGradeForm}
-		alevelGradeForm={data.alevelGradeForm}
+		scoreForms={data.scoreForms}
 		deleteForm={data.deleteForm}
 	/>
 

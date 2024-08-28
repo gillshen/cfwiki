@@ -20,7 +20,7 @@
 	<StudentInfobox {student} />
 
 	{#if canEdit}
-		<div class="mt-2">
+		<div class="mt-3">
 			<UpdateDeleteButton
 				updateAction={() => goto(`${student.id}/update`)}
 				deleteAction={() => (deleteModal = true)}

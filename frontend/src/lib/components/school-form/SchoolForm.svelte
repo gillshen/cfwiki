@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Input, Label, Select } from 'flowbite-svelte';
+	import { Button, Input, Label, Select, Radio } from 'flowbite-svelte';
 
 	import type { School } from '$lib/api/school';
 	import countryFlags, { sortMostAppliedFirst } from '$lib/constants/countryFlags';
@@ -24,11 +24,13 @@
 </script>
 
 <Label for="school-type" class="form-label">Type</Label>
-<Select id="school-type" name="type" bind:value={$form.type} required>
+<div class="form-radio-group">
 	{#each ['University', 'Secondary School', 'Other'] as schoolType}
-		<option value={schoolType}>{schoolType}</option>
+		<Radio name="type" value={schoolType} class="form-radio" bind:group={$form.type} required
+			>{schoolType}</Radio
+		>
 	{/each}
-</Select>
+</div>
 
 <Label for="school-name" class="form-label">Full name</Label>
 <Input id="school-name" type="text" name="name" maxlength="100" bind:value={$form.name} required />

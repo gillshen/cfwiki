@@ -330,8 +330,12 @@ class GMATScore(models.Model):
     total = models.PositiveSmallIntegerField(blank=True, null=True)
     verbal = models.SmallIntegerField(blank=True, null=True)
     quant = models.SmallIntegerField(blank=True, null=True)
+    data_insights = models.SmallIntegerField(blank=True, null=True)
     reasoning = models.SmallIntegerField(blank=True, null=True)
     writing = models.DecimalField(max_digits=2, decimal_places=1, blank=True, null=True)
+
+    # whether the test is the pre-2023 version
+    is_legacy = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = "GMAT scores"

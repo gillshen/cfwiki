@@ -79,12 +79,12 @@ class ALevelGradeAdmin(admin.ModelAdmin):
 
 @admin.register(GREScore)
 class GREScoreAdmin(admin.ModelAdmin):
-    list_display = "id", "student", "total", "date"
+    list_display = "id", "student", "total", "verbal", "quant", "date"
 
 
 @admin.register(GMATScore)
 class GMATScoreAdmin(admin.ModelAdmin):
-    list_display = "id", "student", "total", "date"
+    list_display = "id", "student", "total", "verbal", "quant", "data_insights", "date"
 
 
 @admin.register(LSATScore)

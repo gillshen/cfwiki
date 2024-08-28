@@ -90,7 +90,7 @@
 	<div class="grid grid-cols-2 gap-8">
 		<Card>
 			<P size="4xl" weight="medium">{stats.applied}</P>
-			<P size="sm">applications</P>
+			<P size="sm">application{stats.applied > 1 ? 's' : ''}</P>
 			<hr class="mt-6 mb-4" />
 			<div class="flex items-baseline gap-1">
 				{#if stats.accepted + stats.denied}

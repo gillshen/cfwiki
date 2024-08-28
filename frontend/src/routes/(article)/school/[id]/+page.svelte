@@ -55,7 +55,7 @@
 	<article>
 		<SchoolInfobox school={data.school} />
 
-		<div class="mt-2">
+		<div class="mt-3">
 			{#await Promise.all([data.applications, data.enrollments]) then [applications, enrollments]}
 				<UpdateDeleteButton
 					updateAction={() => (schoolUpdateModal = true)}

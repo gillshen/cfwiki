@@ -43,7 +43,7 @@
 			{#each logs as log}
 				<ApplicationLogItem {log}>
 					{#if canEdit}
-						<div class="mt-2">
+						<div class="mt-3">
 							<UpdateDeleteButton
 								updateAction={logModalOpener(log)}
 								deleteAction={() => {

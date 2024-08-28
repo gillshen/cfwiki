@@ -60,7 +60,7 @@
 		<ApplicationInfobox application={data.application} />
 
 		{#if canEdit}
-			<div class="mt-2">
+			<div class="mt-3">
 				<MultiActionButton actions={applicationActions}>
 					<UpdateDeleteIcon slot="icon" />
 				</MultiActionButton>

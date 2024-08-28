@@ -18,7 +18,9 @@ import {
 	apScoreSchema,
 	ibGradeSchema,
 	alevelGradeSchema,
-	greScoreSchema
+	greScoreSchema,
+	gmatScoreSchema,
+	lsatScoreSchema
 } from '$lib/schemas/scores';
 
 import { deleteSchema } from '$lib/schemas/delete';
@@ -36,6 +38,8 @@ import {
 	createOrUpdateIbGrade,
 	createOrUpdateAlevelGrade,
 	createOrUpdateGreScore,
+	createOrUpdateGmatScore,
+	createOrUpdateLsatScore,
 	deleteToeflScore,
 	deleteIeltsScore,
 	deleteDuolingoScore,
@@ -44,7 +48,9 @@ import {
 	deleteApScore,
 	deleteIbGrade,
 	deleteAlevelGrade,
-	deleteGreScore
+	deleteGreScore,
+	deleteGmatScore,
+	deleteLsatScore
 } from '$lib/api/scores';
 
 import { formAction } from '$lib/abstract/formAction';
@@ -68,15 +74,19 @@ export async function load(event: PageServerLoadEvent) {
 		applications: fetchApplications({ student: student.id }),
 		contractForm: await superValidate(zod(contractSchema)),
 		enrollmentForm: await superValidate(zod(enrollmentSchema)),
-		toeflForm: await superValidate(zod(toeflSchema)),
-		ieltsForm: await superValidate(zod(ieltschema)),
-		duolingoForm: await superValidate(zod(duolingoSchema)),
-		satScoreForm: await superValidate(zod(satScoreSchema)),
-		actScoreForm: await superValidate(zod(actScoreSchema)),
-		apScoreForm: await superValidate(zod(apScoreSchema)),
-		ibGradeForm: await superValidate(zod(ibGradeSchema)),
-		alevelGradeForm: await superValidate(zod(alevelGradeSchema)),
-		greScoreForm: await superValidate(zod(greScoreSchema)),
+		scoreForms: {
+			toefl: await superValidate(zod(toeflSchema)),
+			ielts: await superValidate(zod(ieltschema)),
+			duolingo: await superValidate(zod(duolingoSchema)),
+			sat: await superValidate(zod(satScoreSchema)),
+			act: await superValidate(zod(actScoreSchema)),
+			ap: await superValidate(zod(apScoreSchema)),
+			ib: await superValidate(zod(ibGradeSchema)),
+			alevel: await superValidate(zod(alevelGradeSchema)),
+			gre: await superValidate(zod(greScoreSchema)),
+			gamt: await superValidate(zod(gmatScoreSchema)),
+			lsat: await superValidate(zod(lsatScoreSchema))
+		},
 		deleteForm: await superValidate(zod(deleteSchema))
 	};
 }
@@ -93,6 +103,8 @@ export const actions = {
 	createOrUpdateIbGrade: formAction(ibGradeSchema, createOrUpdateIbGrade),
 	createOrUpdateAlevelGrade: formAction(alevelGradeSchema, createOrUpdateAlevelGrade),
 	createOrUpdateGreScore: formAction(greScoreSchema, createOrUpdateGreScore),
+	createOrUpdateGmatScore: formAction(gmatScoreSchema, createOrUpdateGmatScore),
+	createOrUpdateLsatScore: formAction(lsatScoreSchema, createOrUpdateLsatScore),
 
 	deleteStudent: formAction(deleteSchema, deleteStudent, () => {
 		throw redirect(303, '/home');
@@ -108,5 +120,7 @@ export const actions = {
 	deleteApScore: formAction(deleteSchema, deleteApScore),
 	deleteIbGrade: formAction(deleteSchema, deleteIbGrade),
 	deleteAlevelGrade: formAction(deleteSchema, deleteAlevelGrade),
-	deleteGreScore: formAction(deleteSchema, deleteGreScore)
+	deleteGreScore: formAction(deleteSchema, deleteGreScore),
+	deleteGmatScore: formAction(deleteSchema, deleteGmatScore),
+	deleteLsatScore: formAction(deleteSchema, deleteLsatScore)
 };

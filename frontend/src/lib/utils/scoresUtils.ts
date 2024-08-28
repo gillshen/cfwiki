@@ -81,7 +81,7 @@ export function toeflSubToPercentage(score: number | null): number {
 }
 
 export function ieltsSubToPercentage(score: number | null): number {
-	return toPercentage(score, 0, 9);
+	return toPercentage(score, 0, 9, 1.2);
 }
 
 export function duolingoToPercentage(score: number | null): number {
@@ -93,7 +93,7 @@ export function satSubToPercentage(score: number | null): number {
 }
 
 export function satEssayToPercentage(score: number | null): number {
-	return toPercentage(score, 2, 8);
+	return toPercentage(score, 2, 8, 1.2);
 }
 
 export function actSubToPercentage(score: number | null): number {
@@ -110,4 +110,24 @@ export function greSubToPercentage(score: number | null): number {
 
 export function greWritingToPercentage(score: number | null): number {
 	return toPercentage(score, 0, 6, 1.2);
+}
+
+export function gmatSubToPercentage(score: number | null): number {
+	return toPercentage(score, 60, 90, 1.2);
+}
+
+export function gmatLegacySubToPercentage(score: number | null): number {
+	return toPercentage(score, 0, 60);
+}
+
+export function gmatReasoningToPercentage(score: number | null): number {
+	return toPercentage(score, 0, 8, 1.2);
+}
+
+export function gmatWritingToPercentage(score: number | null): number {
+	return toPercentage(score, 0, 6, 1.2);
+}
+
+export function lsatToPercentage(score: number | null): number {
+	return toPercentage(score, 120, 180, 1.2);
 }

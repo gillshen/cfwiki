@@ -4,8 +4,11 @@
 	import { PlusOutline } from 'flowbite-svelte-icons';
 
 	import type { StudentDetail } from '$lib/api/student';
+
 	import type {
 		GreScore,
+		GmatScore,
+		LsatScore,
 		SatScore,
 		ActScore,
 		ToeflScore,
@@ -17,6 +20,8 @@
 	} from '$lib/api/scores';
 
 	import GreScoreItem from '$lib/components/list-items/GreScoreItem.svelte';
+	import GmatScoreItem from '$lib/components/list-items/GmatScoreItem.svelte';
+	import LsatScoreItem from '$lib/components/list-items/LsatScoreItem.svelte';
 	import SatScoreItem from '$lib/components/list-items/SatScoreItem.svelte';
 	import ActScoreItem from '$lib/components/list-items/ActScoreItem.svelte';
 	import ToeflScoreItem from '$lib/components/list-items/ToeflScoreItem.svelte';
@@ -28,6 +33,8 @@
 
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import GreScoreForm from '$lib/components/gre-score-form/GreScoreForm.svelte';
+	import GmatScoreForm from '$lib/components/gmat-score-form/GmatScoreForm.svelte';
+	import LsatScoreForm from '$lib/components/lsat-score-form/LsatScoreForm.svelte';
 	import SatScoreForm from '$lib/components/sat-score-form/SatScoreForm.svelte';
 	import ActScoreForm from '$lib/components/act-score-form/ActScoreForm.svelte';
 	import ToeflScoreForm from '$lib/components/toefl-score-form/ToeflScoreForm.svelte';
@@ -42,15 +49,19 @@
 
 	export let student: StudentDetail;
 	export let canEdit: boolean = false;
-	export let greScoreForm: SuperValidated<any>;
-	export let satScoreForm: SuperValidated<any>;
-	export let actScoreForm: SuperValidated<any>;
-	export let toeflForm: SuperValidated<any>;
-	export let ieltsForm: SuperValidated<any>;
-	export let duolingoForm: SuperValidated<any>;
-	export let apScoreForm: SuperValidated<any>;
-	export let ibGradeForm: SuperValidated<any>;
-	export let alevelGradeForm: SuperValidated<any>;
+	export let scoreForms: {
+		toefl: SuperValidated<any>;
+		ielts: SuperValidated<any>;
+		duolingo: SuperValidated<any>;
+		sat: SuperValidated<any>;
+		act: SuperValidated<any>;
+		ap: SuperValidated<any>;
+		ib: SuperValidated<any>;
+		alevel: SuperValidated<any>;
+		gre: SuperValidated<any>;
+		gamt: SuperValidated<any>;
+		lsat: SuperValidated<any>;
+	};
 	export let deleteForm: SuperValidated<any>;
 
 	let toeflModal = false;
@@ -88,6 +99,14 @@
 	let greScoreModal = false;
 	let greScoreDeleteModal = false;
 	let activeGreScore: GreScore | null = null;
+
+	let gmatScoreModal = false;
+	let gmatScoreDeleteModal = false;
+	let activeGmatScore: GmatScore | null = null;
+
+	let lsatScoreModal = false;
+	let lsatScoreDeleteModal = false;
+	let activeLsatScore: LsatScore | null = null;
 
 	const toeflModalOpener = (score?: ToeflScore): (() => void) => {
 		return () => {
@@ -152,6 +171,20 @@
 		};
 	};
 
+	const gmatScoreModalOpener = (score?: GmatScore): (() => void) => {
+		return () => {
+			activeGmatScore = score ?? null;
+			gmatScoreModal = true;
+		};
+	};
+
+	const lsatScoreModalOpener = (score?: LsatScore): (() => void) => {
+		return () => {
+			activeLsatScore = score ?? null;
+			lsatScoreModal = true;
+		};
+	};
+
 	const noScore = (student: StudentDetail) => {
 		return (
 			!student.toefl.length &&
@@ -162,7 +195,9 @@
 			!student.ap.length &&
 			!student.ib.length &&
 			!student.alevel.length &&
-			!student.gre.length
+			!student.gre.length &&
+			!student.gmat.length &&
+			!student.lsat.length
 		);
 	};
 
@@ -170,6 +205,8 @@
 		{ text: 'SAT', action: satScoreModalOpener() },
 		{ text: 'ACT', action: actScoreModalOpener() },
 		{ text: 'GRE', action: greScoreModalOpener(), divider: true },
+		{ text: 'GMAT', action: gmatScoreModalOpener() },
+		{ text: 'LSAT', action: lsatScoreModalOpener() },
 		{ text: 'TOEFL', action: toeflModalOpener(), divider: true },
 		{ text: 'IELTS', action: ieltsModalOpener() },
 		{ text: 'Duolingo', action: duolingoModalOpener() },
@@ -191,6 +228,30 @@
 				deleteAction={() => {
 					activeGreScore = score;
 					greScoreDeleteModal = true;
+				}}
+			/>
+		{/each}
+
+		{#each student.gmat as score}
+			<GmatScoreItem
+				{score}
+				{canEdit}
+				updateAction={gmatScoreModalOpener(score)}
+				deleteAction={() => {
+					activeGmatScore = score;
+					gmatScoreDeleteModal = true;
+				}}
+			/>
+		{/each}
+
+		{#each student.lsat as score}
+			<LsatScoreItem
+				{score}
+				{canEdit}
+				updateAction={lsatScoreModalOpener(score)}
+				deleteAction={() => {
+					activeLsatScore = score;
+					lsatScoreDeleteModal = true;
 				}}
 			/>
 		{/each}
@@ -328,7 +389,7 @@
 
 <FormModal
 	open={toeflModal}
-	superform={toeflForm}
+	superform={scoreForms.toefl}
 	fields={ToeflScoreForm}
 	action={`/student/${student.id}?/createOrUpdateToeflScore`}
 	entity={activeToefl}
@@ -351,7 +412,7 @@
 
 <FormModal
 	open={ieltsModal}
-	superform={ieltsForm}
+	superform={scoreForms.ielts}
 	fields={IeltsScoreForm}
 	action={`/student/${student.id}?/createOrUpdateIeltsScore`}
 	entity={activeIelts}
@@ -374,7 +435,7 @@
 
 <FormModal
 	open={duolingoModal}
-	superform={duolingoForm}
+	superform={scoreForms.duolingo}
 	fields={DuolingoScoreForm}
 	action={`/student/${student.id}?/createOrUpdateDuolingoScore`}
 	entity={activeDuolingo}
@@ -397,7 +458,7 @@
 
 <FormModal
 	open={satScoreModal}
-	superform={satScoreForm}
+	superform={scoreForms.sat}
 	fields={SatScoreForm}
 	action={`/student/${student.id}?/createOrUpdateSatScore`}
 	entity={activeSatScore}
@@ -420,7 +481,7 @@
 
 <FormModal
 	open={actScoreModal}
-	superform={actScoreForm}
+	superform={scoreForms.act}
 	fields={ActScoreForm}
 	action={`/student/${student.id}?/createOrUpdateActScore`}
 	entity={activeActScore}
@@ -443,7 +504,7 @@
 
 <FormModal
 	open={apScoreModal}
-	superform={apScoreForm}
+	superform={scoreForms.ap}
 	fields={ApScoreForm}
 	action={`/student/${student.id}?/createOrUpdateApScore`}
 	entity={activeApScore}
@@ -466,7 +527,7 @@
 
 <FormModal
 	open={ibGradeModal}
-	superform={ibGradeForm}
+	superform={scoreForms.ib}
 	fields={IbGradeForm}
 	action={`/student/${student.id}?/createOrUpdateIbGrade`}
 	entity={activeIbGrade}
@@ -489,7 +550,7 @@
 
 <FormModal
 	open={alevelGradeModal}
-	superform={alevelGradeForm}
+	superform={scoreForms.alevel}
 	fields={AlevelGradeForm}
 	action={`/student/${student.id}?/createOrUpdateAlevelGrade`}
 	entity={activeAlevelGrade}
@@ -512,7 +573,7 @@
 
 <FormModal
 	open={greScoreModal}
-	superform={greScoreForm}
+	superform={scoreForms.gre}
 	fields={GreScoreForm}
 	action={`/student/${student.id}?/createOrUpdateGreScore`}
 	entity={activeGreScore}
@@ -531,4 +592,50 @@
 	on:close={() => (greScoreDeleteModal = false)}
 >
 	<DeleteMessage slot="preface" name="this GRE score" />
+</FormModal>
+
+<FormModal
+	open={gmatScoreModal}
+	superform={scoreForms.gamt}
+	fields={GmatScoreForm}
+	action={`/student/${student.id}?/createOrUpdateGmatScore`}
+	entity={activeGmatScore}
+	extra={[{ name: 'student', type: 'number', value: student.id }]}
+	title={`${activeGmatScore ? 'Update' : 'Add a'} GMAT score`}
+	on:close={() => (gmatScoreModal = false)}
+/>
+
+<FormModal
+	open={gmatScoreDeleteModal}
+	superform={deleteForm}
+	fields={DeleteForm}
+	action={`/student/${student.id}?/deleteGmatScore`}
+	entity={activeGmatScore}
+	title="Delete GMAT score"
+	on:close={() => (gmatScoreDeleteModal = false)}
+>
+	<DeleteMessage slot="preface" name="this GMAT score" />
+</FormModal>
+
+<FormModal
+	open={lsatScoreModal}
+	superform={scoreForms.lsat}
+	fields={LsatScoreForm}
+	action={`/student/${student.id}?/createOrUpdateLsatScore`}
+	entity={activeLsatScore}
+	extra={[{ name: 'student', type: 'number', value: student.id }]}
+	title={`${activeLsatScore ? 'Update' : 'Add a'} LSAT score`}
+	on:close={() => (lsatScoreModal = false)}
+/>
+
+<FormModal
+	open={lsatScoreDeleteModal}
+	superform={deleteForm}
+	fields={DeleteForm}
+	action={`/student/${student.id}?/deleteLsatScore`}
+	entity={activeLsatScore}
+	title="Delete LSAT score"
+	on:close={() => (lsatScoreDeleteModal = false)}
+>
+	<DeleteMessage slot="preface" name="this LSAT score" />
 </FormModal>

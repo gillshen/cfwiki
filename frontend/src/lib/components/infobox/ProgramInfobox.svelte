@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
+	import { Table, TableBody, TableBodyCell, TableBodyRow, Alert } from 'flowbite-svelte';
+	import { InfoCircleSolid } from 'flowbite-svelte-icons';
 
 	import type { ProgramDetail } from '$lib/api/program';
 	import { isUndergraduate } from '$lib/utils/programUtils';
@@ -8,8 +9,14 @@
 	export let program: ProgramDetail;
 
 	$: programDegree = isUndergraduate(program) ? "Bachelor's" : program.degree || '-';
-	$: programStatus = program.is_defunct ? 'Defunct' : 'Normal';
 </script>
+
+{#if program.is_defunct}
+	<Alert color="red" class="mb-4">
+		<InfoCircleSolid slot="icon" class="w-5 h-5" />
+		This program is defunct and no longer accepting applications.
+	</Alert>
+{/if}
 
 <Table>
 	<TableBody>
@@ -39,11 +46,6 @@
 		<TableBodyRow>
 			<TableBodyCell tdClass="w-40 font-medium py-4">Degree</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">{programDegree}</TableBodyCell>
-		</TableBodyRow>
-
-		<TableBodyRow>
-			<TableBodyCell tdClass="w-40 font-medium py-4">Status</TableBodyCell>
-			<TableBodyCell tdClass="font-normal py-4">{programStatus}</TableBodyCell>
 		</TableBodyRow>
 	</TableBody>
 </Table>

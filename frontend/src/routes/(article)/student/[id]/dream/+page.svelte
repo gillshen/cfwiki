@@ -100,25 +100,15 @@
 
 		<Label class="form-label">School type</Label>
 		<div class="form-radio-group">
-			<Radio
-				value="University"
-				class="form-radio"
-				bind:group={schoolType}
-				on:change={onSchoolTypeChange}>University</Radio
-			>
-			<Radio
-				value="Secondary School"
-				class="form-radio"
-				bind:group={schoolType}
-				on:change={onSchoolTypeChange}>Secondary School</Radio
-			>
-			<Radio
-				value="Other"
-				class="form-radio"
-				bind:group={schoolType}
-				on:change={onSchoolTypeChange}
-				required>Other</Radio
-			>
+			{#each ['University', 'Secondary School', 'Other'] as schoolTypeOption}
+				<Radio
+					value={schoolTypeOption}
+					class="form-radio"
+					bind:group={schoolType}
+					on:change={onSchoolTypeChange}
+					required>{schoolTypeOption}</Radio
+				>
+			{/each}
 		</div>
 
 		<Label for="school" class="form-label">School</Label>

@@ -60,7 +60,7 @@
 	<article>
 		<ProgramInfobox program={data.program} />
 
-		<div class="mt-2">
+		<div class="mt-3">
 			{#await data.applications then applications}
 				<UpdateDeleteButton
 					updateAction={() => (programUpdateModal = true)}

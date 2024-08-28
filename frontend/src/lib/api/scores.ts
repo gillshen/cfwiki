@@ -65,8 +65,10 @@ export type GmatScore = BaseScore & {
 	total: number | null;
 	verbal: number | null;
 	quant: number | null;
+	data_insights: number | null;
 	reasoning: number | null;
 	writing: number | null;
+	is_legacy: boolean;
 };
 
 export type LsatScore = BaseScore & {

@@ -101,3 +101,23 @@ export const greScoreSchema = z.object({
 });
 
 export type GreScoreSchema = typeof greScoreSchema;
+
+export const gmatScoreSchema = z.object({
+	...common,
+	total: z.number().nullable().default(null),
+	verbal: z.number().nullable().default(null),
+	quant: z.number().nullable().default(null),
+	data_insights: z.number().nullable().default(null),
+	reasoning: z.number().nullable().default(null),
+	writing: z.number().nullable().default(null),
+	is_legacy: z.boolean()
+});
+
+export type GmatScoreSchema = typeof gmatScoreSchema;
+
+export const lsatScoreSchema = z.object({
+	...common,
+	score: z.number().nullable().default(null)
+});
+
+export type LsatScoreSchema = typeof lsatScoreSchema;
