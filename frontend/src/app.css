@@ -125,3 +125,8 @@ div[role='tabpanel'] {
 .status-untracked {
 	@apply text-gray-500;
 }
+
+/* Override timeline styles in /school/[id] */
+.school-page-applications li h3 {
+	@apply !text-sm mb-4 translate-y-0.5;
+}

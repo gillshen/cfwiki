@@ -8,7 +8,6 @@
 		TableBody,
 		TableBodyRow,
 		TableHeadCell,
-		Badge,
 		Button
 	} from 'flowbite-svelte';
 
@@ -28,14 +27,16 @@
 	import ShortDate from '$lib/components/table-cells/ShortDate.svelte';
 	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
+	import ApplicationsAccordian from '$lib/components/containers/ApplicationsAccordian.svelte';
 
 	import {
-		orderByDueDate,
-		orderByStatus,
-		orderByStudentName,
-		orderBySchoolName,
 		groupByYear,
-		orderByRoundName
+		orderByStatus,
+		orderByDueDate,
+		orderByType,
+		orderByStudentName,
+		orderByRoundName,
+		orderBySchoolName
 	} from '$lib/utils/applicationUtils';
 
 	export let data: {
@@ -85,51 +86,45 @@
 	<TabItem title="Applications">
 		<ApplicationsLoader applications={data.applications} showHeading={false}>
 			<svelte:fragment let:applications>
-				<div class="flex flex-col gap-12">
-					{#each Object.entries(groupByYear(applications)) as [year, appls]}
-						<div>
-							<Heading tag="h2" class="flex items-center gap-2 text-xl tabular-nums mb-4">
-								{year.trim()}
-								<Badge>{appls.length}</Badge>
-							</Heading>
+				<ApplicationsAccordian groupedApplications={groupByYear(applications)} divClass="mt-4">
+					<svelte:fragment let:subsetOfApplications>
+						<Table hoverable={subsetOfApplications.length > 1}>
+							<TableHead>
+								<TableHeadCell class="pl-2 w-8"></TableHeadCell>
+								<TableHeadCell class="w-16">Type</TableHeadCell>
+								<TableHeadCell class="w-40">Due/Status</TableHeadCell>
+								<TableHeadCell class="w-40">Student</TableHeadCell>
+								<TableHeadCell class="w-80">School</TableHeadCell>
+								<TableHeadCell class="w-80">Program/Major</TableHeadCell>
+								<TableHeadCell class="w-40">Adm. plan</TableHeadCell>
+							</TableHead>
 
-							<Table divClass="mt-4" hoverable={appls.length > 1}>
-								<TableHead>
-									<TableHeadCell class="pl-2"></TableHeadCell>
-									<TableHeadCell>Type</TableHeadCell>
-									<TableHeadCell>Due/Status</TableHeadCell>
-									<TableHeadCell>Student</TableHeadCell>
-									<TableHeadCell>School</TableHeadCell>
-									<TableHeadCell>Program/Major</TableHeadCell>
-									<TableHeadCell>Adm. plan</TableHeadCell>
-								</TableHead>
-
-								<TableBody>
-									{#each appls
-										.sort(orderBySchoolName)
-										.sort(orderByStudentName)
-										.sort(orderByRoundName)
-										.sort(orderByDueDate)
-										.sort(orderByStatus) as appl}
-										<TableBodyRow>
-											<ApplicationLink application={appl} />
-											<ProgramType application={appl} />
-											{#if appl.latest_log?.status && appl.latest_log.status !== 'Started'}
-												<ApplicationStatus application={appl} />
-											{:else}
-												<ShortDate date={appl.round.due_date} />
-											{/if}
-											<Student application={appl} />
-											<Schools application={appl} />
-											<ProgramOrMajors application={appl} />
-											<ApplicationRound application={appl} />
-										</TableBodyRow>
-									{/each}
-								</TableBody>
-							</Table>
-						</div>
-					{/each}
-				</div>
+							<TableBody>
+								{#each subsetOfApplications
+									.sort(orderBySchoolName)
+									.sort(orderByStudentName)
+									.sort(orderByRoundName)
+									.sort(orderByType)
+									.sort(orderByDueDate)
+									.sort(orderByStatus) as appl}
+									<TableBodyRow>
+										<ApplicationLink application={appl} />
+										<ProgramType application={appl} />
+										{#if appl.latest_log?.status && appl.latest_log.status !== 'Started'}
+											<ApplicationStatus application={appl} />
+										{:else}
+											<ShortDate date={appl.round.due_date} />
+										{/if}
+										<Student application={appl} />
+										<Schools application={appl} />
+										<ProgramOrMajors application={appl} />
+										<ApplicationRound application={appl} />
+									</TableBodyRow>
+								{/each}
+							</TableBody>
+						</Table>
+					</svelte:fragment>
+				</ApplicationsAccordian>
 			</svelte:fragment>
 		</ApplicationsLoader>
 	</TabItem>

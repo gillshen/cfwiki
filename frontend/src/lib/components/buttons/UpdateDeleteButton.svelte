@@ -1,6 +1,6 @@
 <script lang="ts">
 	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
-	import UpdateDeleteIcon from './UpdateDeleteIcon.svelte';
+	import UpdateDeleteIcon from '$lib/components/buttons/UpdateDeleteIcon.svelte';
 
 	export let updateAction: () => void;
 	export let deleteAction: () => void;

@@ -1,3 +1,5 @@
+import type { ColorVariant } from 'flowbite-svelte';
+
 import type { ProgramListItem, ProgramType } from '$lib/api/program';
 import { orderByName as _orderByName } from '$lib/api/school';
 
@@ -32,4 +34,38 @@ export function filterForType(programs: ProgramListItem[], type: ProgramType): P
 
 export function orderByName(a: ProgramListItem, b: ProgramListItem): number {
 	return enhanceDisplayName(a).localeCompare(enhanceDisplayName(b));
+}
+
+export function typeToBadgeColor(programType: string): ColorVariant {
+	switch (programType) {
+		case 'UG Freshman':
+			return 'indigo';
+		case 'UG Transfer':
+			return 'purple';
+		case "Master's":
+		case 'Doctorate':
+		case 'Graduate':
+			return 'yellow';
+		case 'Non-degree':
+			return 'green';
+		default:
+			return 'dark';
+	}
+}
+
+export function typeToBadgeText(programType: string): string {
+	switch (programType) {
+		case 'UG Freshman':
+			return 'UG';
+		case 'UG Transfer':
+			return 'TR';
+		case "Master's":
+			return 'MA';
+		case 'Doctorate':
+			return 'DR';
+		case 'Non-degree':
+			return 'ND';
+		default:
+			return '??';
+	}
 }

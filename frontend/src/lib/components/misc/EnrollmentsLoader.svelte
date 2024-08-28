@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Heading } from 'flowbite-svelte';
+	import { Badge, Heading } from 'flowbite-svelte';
 
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
@@ -12,7 +12,14 @@
 	export let errorText: string = '';
 </script>
 
-<Heading tag="h2" class="text-2xl font-bold flex items-center gap-2">{heading}</Heading>
+<Heading tag="h2" class="text-2xl font-bold flex items-center gap-2">
+	{heading}
+	{#await enrollments then enrollments}
+		{#if enrollments.length}
+			<Badge>{enrollments.length}</Badge>
+		{/if}
+	{/await}
+</Heading>
 
 {#await enrollments}
 	<FetchingDataSign divClass="mt-8" />

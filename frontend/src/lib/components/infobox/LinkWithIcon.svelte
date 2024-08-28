@@ -10,10 +10,10 @@
 
 <A {href} class="w-fit">
 	{#if iconFirst}
-		<LinkOutline class="size-4 me-2" />
+		<LinkOutline size="sm" class="me-2" />
 	{/if}
 	<span class={spanClass || 'text-gray-900'}>{text}</span>
 	{#if !iconFirst}
-		<LinkOutline class="size-4 ms-2" />
+		<LinkOutline size="sm" class="ms-2" />
 	{/if}
 </A>

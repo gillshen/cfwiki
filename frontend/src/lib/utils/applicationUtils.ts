@@ -3,6 +3,15 @@ import { applicationStatusOrder, type ApplicationStatus } from '$lib/api/applica
 import { sortedSchoolNames } from '$lib/api/school';
 import { orderByRoundName as _orderByRoundName } from '$lib/utils/applicationRoundUtils';
 
+const _typeOrdering: Record<string, number> = {
+	'UG Freshman': 0,
+	'UG Transfer': 1,
+	"Master's": 2,
+	Doctorate: 2,
+	Graduate: 2,
+	'Non-degree': 3
+};
+
 export function formatApplicationType(applicationType: ApplicationType | string): string {
 	switch (applicationType) {
 		case 'freshman':
@@ -26,6 +35,10 @@ export function orderByStatus(a: ApplicationListItem, b: ApplicationListItem) {
 	const aStatusOrder: number = applicationStatusOrder[a.latest_log?.status ?? ''] ?? -1;
 	const bStatusOrder: number = applicationStatusOrder[b.latest_log?.status ?? ''] ?? -1;
 	return aStatusOrder - bStatusOrder;
+}
+
+export function orderByType(a: ApplicationListItem, b: ApplicationListItem) {
+	return _typeOrdering[a.program.type] - _typeOrdering[b.program.type];
 }
 
 export function orderByYearDesc(a: ApplicationListItem, b: ApplicationListItem) {
@@ -71,6 +84,31 @@ export function groupByYear(
 	for (const key of sortedKeys) {
 		// Add a trailing space to prevent JS from reordering the keys
 		sortedGroups[`${key} `] = grouped[key];
+	}
+	return sortedGroups;
+}
+
+export function groupByType(
+	applications: ApplicationListItem[]
+): Record<string, ApplicationListItem[]> {
+	const grouped: Record<string, ApplicationListItem[]> = {};
+
+	for (const appl of applications) {
+		let key = appl.program.type;
+		if (key === "Master's" || key === 'Doctorate') {
+			key = 'Graduate';
+		}
+		if (!grouped[key]) {
+			grouped[key] = [];
+		}
+		grouped[key].push(appl);
+	}
+
+	const sortedGroups: Record<string, ApplicationListItem[]> = {};
+	const sortedKeys = Object.keys(grouped).sort((a, b) => _typeOrdering[a] - _typeOrdering[b]);
+
+	for (const key of sortedKeys) {
+		sortedGroups[key] = grouped[key];
 	}
 	return sortedGroups;
 }

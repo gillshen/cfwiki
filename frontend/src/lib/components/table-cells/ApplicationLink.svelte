@@ -8,7 +8,7 @@
 </script>
 
 <TableBodyCell class="w-4 pl-2 pr-0">
-	<A class="translate-y-1" href={`/application/${application.id}`}>
+	<A class="translate-y-0.5" href={`/application/${application.id}`}>
 		<LinkOutline size="sm" />
 	</A>
 </TableBodyCell>

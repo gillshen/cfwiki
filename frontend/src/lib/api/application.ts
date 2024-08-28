@@ -13,6 +13,7 @@ type Service = {
 export type ApplicationListItem = {
 	id: number;
 	student: {
+		id: number;
 		fullname: string;
 		gender: 'female' | 'male' | 'other';
 		citizenship: string;

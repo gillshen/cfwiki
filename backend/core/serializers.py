@@ -134,7 +134,7 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     class StudentSerializer(serializers.ModelSerializer):
         class Meta:
             model = Student
-            fields = ["fullname", "gender", "citizenship"]
+            fields = ["id", "fullname", "gender", "citizenship"]
 
     student = StudentSerializer()
 

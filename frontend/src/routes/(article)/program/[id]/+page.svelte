@@ -1,34 +1,19 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 
-	import {
-		Heading,
-		Hr,
-		Table,
-		TableBody,
-		TableBodyRow,
-		TableHead,
-		TableHeadCell
-	} from 'flowbite-svelte';
-
+	import { Heading, Hr } from 'flowbite-svelte';
 	import { PlusOutline } from 'flowbite-svelte-icons';
 
 	import Main from '$lib/components/containers/Main.svelte';
 	import ProgramInfobox from '$lib/components/infobox/ProgramInfobox.svelte';
 	import ApplicationRoundsBox from '$lib/components/program-page/ApplicationRoundsBox.svelte';
-	import ApplicationStats from '$lib/components/application-stats/ApplicationStats.svelte';
+	import ApplicationStatsDisplay from '$lib/components/application-stats/ApplicationStatsDisplay.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
-	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
+	import ApplicationsAccordian from '$lib/components/containers/ApplicationsAccordian.svelte';
+	import ApplicationsTable from '$lib/components/program-page/ApplicationsTable.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import LinkButton from '$lib/components/buttons/LinkButton.svelte';
-
-	import Student from '$lib/components/table-cells/Student.svelte';
-	import MajorsOrTrack from '$lib/components/table-cells/MajorsOrTrack.svelte';
-	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
-	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
-	import PlainCell from '$lib/components/table-cells/PlainCell.svelte';
-	import ShortDate from '$lib/components/table-cells/ShortDate.svelte';
 
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ProgramForm from '$lib/components/program-form/ProgramForm.svelte';
@@ -36,13 +21,7 @@
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { formatSchoolNamesShort, isUndergraduate } from '$lib/utils/programUtils';
-
-	import {
-		orderByRoundName,
-		orderByStatus,
-		orderByYearDesc,
-		orderByStudentName
-	} from '$lib/utils/applicationUtils';
+	import { groupByYear } from '$lib/utils/applicationUtils';
 
 	export let data;
 
@@ -97,42 +76,20 @@
 	</article>
 
 	<article class="bg-stone-50 rounded-xl w-full p-8 h-fit">
-		<ApplicationStats stats={data.program.application_stats} />
+		<ApplicationStatsDisplay stats={data.program.application_stats} />
 	</article>
 
 	<article class="col-span-2 mt-16">
 		<ApplicationsLoader applications={data.applications}>
 			<svelte:fragment let:applications>
-				<!-- TODO divide by year -->
-				<Table divClass="mt-8" hoverable={applications.length > 1}>
-					<TableHead>
-						<TableHeadCell></TableHeadCell>
-						<TableHeadCell>Year</TableHeadCell>
-						<TableHeadCell>Student</TableHeadCell>
-						<TableHeadCell>{isUndergraduate(data.program) ? 'Major' : 'Track'}</TableHeadCell>
-						<TableHeadCell>Adm. plan</TableHeadCell>
-						<TableHeadCell>Due</TableHeadCell>
-						<TableHeadCell>Status</TableHeadCell>
-					</TableHead>
-
-					<TableBody>
-						{#each applications
-							.sort(orderByStudentName)
-							.sort(orderByStatus)
-							.sort(orderByRoundName)
-							.sort(orderByYearDesc) as application}
-							<TableBodyRow>
-								<ApplicationLink {application} />
-								<PlainCell text={application.program_iteration.year} />
-								<Student {application} />
-								<MajorsOrTrack {application} />
-								<ApplicationRound {application} />
-								<ShortDate date={application.round.due_date} />
-								<ApplicationStatus {application} />
-							</TableBodyRow>
-						{/each}
-					</TableBody>
-				</Table>
+				<ApplicationsAccordian groupedApplications={groupByYear(applications)} divClass="mt-4">
+					<svelte:fragment let:subsetOfApplications>
+						<ApplicationsTable
+							applications={subsetOfApplications}
+							isUndergraduate={isUndergraduate(data.program)}
+						/>
+					</svelte:fragment>
+				</ApplicationsAccordian>
 			</svelte:fragment>
 		</ApplicationsLoader>
 	</article>

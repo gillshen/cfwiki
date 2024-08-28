@@ -1,43 +1,14 @@
 <script lang="ts">
-	import { TableBodyCell, Badge, type ColorVariant } from 'flowbite-svelte';
+	import { TableBodyCell, Badge } from 'flowbite-svelte';
+
 	import type { ApplicationListItem } from '$lib/api/application';
+	import { typeToBadgeColor, typeToBadgeText } from '$lib/utils/programUtils';
 
 	export let application: ApplicationListItem;
-
-	const getText = (programType: string) => {
-		switch (programType) {
-			case 'UG Freshman':
-				return 'UG';
-			case 'UG Transfer':
-				return 'TR';
-			case "Master's":
-				return 'MA';
-			case 'Doctorate':
-				return 'DR';
-			case 'Non-degree':
-				return 'ND';
-			default:
-				return '??';
-		}
-	};
-
-	const getColor = (programType: string): ColorVariant => {
-		switch (programType) {
-			case 'UG Freshman':
-				return 'indigo';
-			case 'UG Transfer':
-				return 'purple';
-			case "Master's":
-			case 'Doctorate':
-				return 'yellow';
-			case 'Non-degree':
-				return 'green';
-			default:
-				return 'none';
-		}
-	};
 </script>
 
 <TableBodyCell class="max-w-10">
-	<Badge color={getColor(application.program.type)}>{getText(application.program.type)}</Badge>
+	<Badge color={typeToBadgeColor(application.program.type)}>
+		{typeToBadgeText(application.program.type)}
+	</Badge>
 </TableBodyCell>

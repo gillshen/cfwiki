@@ -50,7 +50,7 @@
 	<Navbar fluid>
 		<NavBrand href="/home">
 			<img src="/favicon.png" class="me-3 h-6" alt="CF Logo" />
-			<span class="self-center whitespace-nowrap text-lg font-semibold">ChoiceFreezer</span>
+			<span class="self-center whitespace-nowrap text-lg font-semibold">The ChoiceFreezer</span>
 		</NavBrand>
 
 		<div class="flex align-baseline md:order-2 w-[150px] justify-end">

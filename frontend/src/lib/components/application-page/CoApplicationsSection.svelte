@@ -19,19 +19,19 @@
 <article class="col-span-2 mt-16">
 	<ApplicationsLoader
 		applications={coApplications}
-		heading="Co-applicants"
+		heading="Other applicants"
 		noDataText="No other applicants this year and term"
 	>
 		<svelte:fragment let:applications>
-			<Table divClass="mt-8" hoverable={applications.length > 1}>
+			<Table divClass="mt-6" hoverable={applications.length > 1}>
 				<TableHead>
-					<TableHeadCell></TableHeadCell>
-					<TableHeadCell>Student</TableHeadCell>
-					<TableHeadCell>顾问</TableHeadCell>
-					<TableHeadCell>文案</TableHeadCell>
-					<TableHeadCell>Major/Track</TableHeadCell>
-					<TableHeadCell>Adm. plan</TableHeadCell>
-					<TableHeadCell>Status</TableHeadCell>
+					<TableHeadCell class="w-8"></TableHeadCell>
+					<TableHeadCell class="w-40">Status</TableHeadCell>
+					<TableHeadCell class="w-40">Student</TableHeadCell>
+					<TableHeadCell class="w-[30rem]">Major/Track</TableHeadCell>
+					<TableHeadCell class="w-40">Adm. plan</TableHeadCell>
+					<TableHeadCell class="w-40">顾问</TableHeadCell>
+					<TableHeadCell class="w-40">文案</TableHeadCell>
 				</TableHead>
 
 				<TableBody>
@@ -41,12 +41,12 @@
 						.sort(orderByRoundName) as application}
 						<TableBodyRow>
 							<ApplicationLink {application} />
+							<ApplicationStatus {application} />
 							<Student {application} />
-							<PlainCell text={formatCfNames(application.services, '顾问')} />
-							<PlainCell text={formatCfNames(application.services, '文案')} />
 							<MajorsOrTrack {application} />
 							<ApplicationRound {application} />
-							<ApplicationStatus {application} />
+							<PlainCell text={formatCfNames(application.services, '顾问')} />
+							<PlainCell text={formatCfNames(application.services, '文案')} />
 						</TableBodyRow>
 					{/each}
 				</TableBody>
