@@ -11,6 +11,7 @@
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import NewProgramForm from '$lib/components/program-form/NewProgramForm.svelte';
 	import RoundForm from '$lib/components/application-round-form/RoundForm.svelte';
+	import Toast from '$lib/components/misc/Toast.svelte';
 	import { enhanceDisplayName } from '$lib/utils/programUtils';
 	import { formatRound, orderByDueDate, orderByRoundName } from '$lib/utils/applicationRoundUtils';
 
@@ -98,6 +99,47 @@
 		schoolId.set('');
 		onSchoolChange();
 	};
+
+	let showToast = false;
+	let missedUC: School[] = [];
+
+	const stageUC = () => {
+		const ucNames = [
+			'University of California, Berkeley',
+			'University of California, Davis',
+			'University of California, Irvine',
+			'University of California, Los Angeles',
+			'University of California, San Diego',
+			'University of California, Santa Barbara'
+		];
+
+		missedUC = [];
+
+		for (const name of ucNames) {
+			const ucSchool = schools.filter((s) => s.name === name)[0];
+			const ucProgram = programs.filter(
+				(p) => p.type === programTypes && p.schools.map((s) => s.id).includes(ucSchool.id)
+			)[0];
+			const ucRound = applRounds.filter((r) => r.program_iteration.program === ucProgram.id)[0];
+
+			if (ucRound) {
+				staged.update((items) => {
+					// if already added, skip
+					if (items.map((i) => i.round.id).includes(ucRound.id)) {
+						return items;
+					} else {
+						return [...items, { school: ucSchool, program: ucProgram, round: ucRound }];
+					}
+				});
+			} else {
+				missedUC.push(ucSchool);
+			}
+		}
+
+		if (missedUC.length) {
+			showToast = true;
+		}
+	};
 </script>
 
 <form class="form-width">
@@ -148,9 +190,11 @@
 			>
 		{/if}
 
-		<Button outline color="light" type="button" on:click={() => alert('TODO')}>
-			Add UC programs<ChevronDoubleRightOutline class="ms-2" />
-		</Button>
+		{#if programTypes === 'UG Freshman' || programTypes === 'UG Transfer'}
+			<Button outline color="light" type="button" on:click={stageUC}>
+				Add UC programs<ChevronDoubleRightOutline class="ms-2" />
+			</Button>
+		{/if}
 	</div>
 </form>
 
@@ -211,3 +255,20 @@
 		<Button on:click={() => (roundWarningModal = false)}>Okay</Button>
 	</div>
 </Modal>
+
+{#if showToast}
+	<Toast type="error" onClose={() => (showToast = false)}>
+		<div>
+			{missedUC.length} program{missedUC.length > 1 ? 's' : ''} were not added because {missedUC.length >
+			1
+				? 'they lack admission plans'
+				: 'it lacks an admission plan'}:
+		</div>
+
+		<ul class="flex flex-col gap-2 mt-4">
+			{#each missedUC as ucSchool}
+				<li class="font-medium">&bullet; {ucSchool.name}</li>
+			{/each}
+		</ul>
+	</Toast>
+{/if}

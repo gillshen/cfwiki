@@ -100,6 +100,6 @@
 	fields={ApplicationPrepForm}
 	action={`/student/${student.id}?/initiateApplication`}
 	entity={student}
-	title="Create an application"
+	title="Create applications"
 	on:close={() => (newApplicationModal = false)}
 />
