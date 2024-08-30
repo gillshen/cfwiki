@@ -1,11 +1,25 @@
 import { z } from 'zod';
 
-export const newApplicationSchema = z.object({
+import type { School } from '$lib/api/school';
+import type { ProgramListItem } from '$lib/api/program';
+import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
+
+export const batchNewApplicationSchema = z.object({
 	contract: z.number(),
-	round: z.number()
+	rounds: z.number().array()
 });
 
-export type NewApplicationSchema = typeof newApplicationSchema;
+export type BatchNewApplicationSchema = typeof batchNewApplicationSchema;
+
+export const newApplicationPrepSchema = z.object({
+	student: z.number(),
+	contract: z.number(),
+	type: z.string(),
+	year: z.number(),
+	term: z.string()
+});
+
+export type NewApplicationPrepSchema = typeof newApplicationPrepSchema;
 
 export const roundChangeSchema = z.object({
 	id: z.number(),
@@ -23,9 +37,22 @@ export const majorsUpdateSchema = z.object({
 
 export type MajorsUpdateSchema = typeof majorsUpdateSchema;
 
+export const trackUpdateSchema = z.object({
+	id: z.number(),
+	track: z.string().trim()
+});
+
+export type TrackUpdateSchema = typeof trackUpdateSchema;
+
 export const commentsUpdateSchema = z.object({
 	id: z.number(),
 	comments: z.string().trim()
 });
 
 export type CommentsUpdateSchema = typeof commentsUpdateSchema;
+
+export type StagedApplication = {
+	school: School;
+	program: ProgramListItem;
+	round: ApplicationRoundListItem;
+};

@@ -1,4 +1,4 @@
-import { get, post, patch } from '$lib/api/api';
+import { get, post, patch, buildQuery } from '$lib/api/api';
 
 export type ApplicationRoundListItem = {
 	id: number;
@@ -18,9 +18,9 @@ export type ApplicationRoundListItem = {
 export type ApplicationRoundDetail = ApplicationRoundListItem;
 
 export async function fetchApplicationRounds(
-	programId: number
+	params?: Record<string, any>
 ): Promise<ApplicationRoundListItem[]> {
-	return await get(`application-rounds/?program=${programId}`);
+	return await get(`application-rounds/${buildQuery(params)}`);
 }
 
 export async function fetchApplicationRound(id: number): Promise<ApplicationRoundDetail> {

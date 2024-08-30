@@ -27,7 +27,7 @@ export async function load(event: PageServerLoadEvent) {
 		program,
 		programForm: await superValidate(program, zod(programUpdateSchema)),
 		deleteForm: await superValidate(zod(deleteSchema)),
-		applicationRounds: fetchApplicationRounds(program.id),
+		applicationRounds: fetchApplicationRounds({ program: program.id }),
 		applications: fetchApplications({ program: program.id })
 	};
 }

@@ -96,11 +96,16 @@ class Program(models.Model):
 
         if school is not None:
             q = q.filter(schools=school)
+
         if program_type == "undergraduate":
             q = q.filter(type__in=["UG Freshman", "UG Transfer"])
+        elif program_type == "freshman":
+            q = q.filter(type="UG Freshman")
+        elif program_type == "transfer":
+            q = q.filter(type="UG Transfer")
         elif program_type == "graduate":
             q = q.filter(type__in=["Master's", "Doctorate"])
-        elif program_type == "non-degree":
+        elif program_type == "nondegree":
             q = q.filter(type="Non-degree")
 
         return q
@@ -164,3 +169,19 @@ class ApplicationRound(models.Model):
 
     def __str__(self) -> str:
         return f"{self.program_iteration} | {self.name}"
+
+    @classmethod
+    def filter(cls, program: int = None, year: int = None, term: str = None):
+        q = cls.objects.all().prefetch_related(
+            "program_iteration",
+            "program_iteration__program",
+        )
+
+        if program is not None:
+            q = q.filter(program_iteration__program__id=program)
+        if year is not None:
+            q = q.filter(program_iteration__year=year)
+        if term is not None:
+            q = q.filter(program_iteration__term=term)
+
+        return q

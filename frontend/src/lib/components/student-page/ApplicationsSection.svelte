@@ -1,12 +1,14 @@
 <script lang="ts">
+	import type { SuperValidated } from 'sveltekit-superforms';
+
 	import {
 		Button,
+		Helper,
 		Table,
 		TableBody,
 		TableBodyRow,
 		TableHead,
-		TableHeadCell,
-		Tooltip
+		TableHeadCell
 	} from 'flowbite-svelte';
 
 	import type { StudentDetail } from '$lib/api/student';
@@ -20,6 +22,8 @@
 	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
 	import ShortDate from '$lib/components/table-cells/ShortDate.svelte';
 	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
+	import FormModal from '$lib/components/form-modal/FormModal.svelte';
+	import ApplicationPrepForm from '$lib/components/application-prep-form/ApplicationPrepForm.svelte';
 
 	import {
 		groupByYear,
@@ -31,7 +35,10 @@
 
 	export let student: StudentDetail;
 	export let applications: Promise<ApplicationListItem[]>;
+	export let form: SuperValidated<any>;
 	export let canEdit: boolean = false;
+
+	let newApplicationModal = false;
 </script>
 
 <article class="mt-16 col-span-2">
@@ -74,14 +81,25 @@
 	</ApplicationsLoader>
 
 	{#if canEdit && student.contracts_sorted.length}
-		<Button outline href={`/student/${student.id}/dream`} class="mt-8">
-			Create an application
+		<!-- <Button outline href={`/student/${student.id}/dream`} class="mt-8"> -->
+		<Button outline on:click={() => (newApplicationModal = true)} class="mt-8">
+			Create applications
 		</Button>
 	{:else if canEdit}
-		<Button outline disabled class="mt-8">Create an application</Button>
-		<Tooltip class="w-96 font-normal">
-			Applications must be attached to an existing contract. Create a contract first to enable this
+		<Button outline disabled class="mt-8">Create applications</Button>
+		<Helper class="form-helper font-medium mt-2 max-w-[20rem]">
+			Applications must be attached to an existing contract. Add a contract first to enable this
 			option.
-		</Tooltip>
+		</Helper>
 	{/if}
 </article>
+
+<FormModal
+	open={newApplicationModal}
+	superform={form}
+	fields={ApplicationPrepForm}
+	action={`/student/${student.id}?/initiateApplication`}
+	entity={student}
+	title="Create an application"
+	on:close={() => (newApplicationModal = false)}
+/>

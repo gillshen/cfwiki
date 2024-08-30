@@ -16,7 +16,7 @@
 	const dispatch = createEventDispatcher();
 
 	const { form, message, errors, enhance } = superForm(superform, {
-		id: action,
+		id: `${action}-${new Date().toISOString()}`,
 		onUpdated({ form }) {
 			if (form.valid) {
 				dispatch('close');

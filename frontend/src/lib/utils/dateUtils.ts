@@ -37,7 +37,7 @@ export function toISODate(dateString: string | null | undefined): string {
 }
 
 export function activeYears(lookAhead = 5): number[] {
-	const startYear = 2020;
+	const startYear = 2022;
 	const currentYear = new Date().getFullYear();
 	const endYear = currentYear + lookAhead;
 	return Array.from({ length: endYear - startYear }, (_, k) => k + startYear);

@@ -89,11 +89,13 @@ class ApplicationRoundListView(ListAPIView):
     serializer_class = ApplicationRoundSerializer
 
     def get_queryset(self):
-        q = ApplicationRound.objects.all().select_related("program_iteration")
-        program_id = self.request.query_params.get("program")
-        if program_id is not None:
-            q = q.filter(program_iteration__program=program_id)
-        return q
+        query_params = self.request.query_params
+
+        return ApplicationRound.filter(
+            program=query_params.get("program"),
+            year=query_params.get("year"),
+            term=query_params.get("term"),
+        )
 
 
 class ApplicationRoundDetailView(RetrieveAPIView):

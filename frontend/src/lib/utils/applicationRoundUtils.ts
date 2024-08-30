@@ -38,7 +38,7 @@ export function orderByRoundName(nameA: string, nameB: string) {
 	}
 }
 
-const _orderByDueDate = (a: ApplicationRoundListItem, b: ApplicationRoundListItem) => {
+export const orderByDueDate = (a: ApplicationRoundListItem, b: ApplicationRoundListItem) => {
 	if (a.due_date && b.due_date) {
 		return a.due_date.localeCompare(b.due_date);
 	} else {
@@ -54,7 +54,7 @@ export function filterSortRounds(
 	return rounds
 		.filter((r) => r.program_iteration.year === year && r.program_iteration.term === term)
 		.sort((a, b) => orderByRoundName(a.name, b.name))
-		.sort(_orderByDueDate);
+		.sort(orderByDueDate);
 }
 
 export function formatRound(applRound: ApplicationRoundListItem): string {

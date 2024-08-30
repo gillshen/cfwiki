@@ -10,11 +10,15 @@
 	export let entity: null;
 	export let school: School;
 	export let schools: School[];
-	export let programType: string | '' = '';
+	export let programTypes: string | string[] | '' = '';
 
 	$: {
 		$form.school_1 = school.id;
-		$form.type = programType;
+
+		if (typeof programTypes === 'string') {
+			$form.type = programTypes;
+		}
+
 		// Without this line $form.type doesn't get updated - no idea why
 		console.log($form.type, entity);
 	}
@@ -28,14 +32,22 @@
 <Input id="school-1" type="text" class="form-input-readonly" bind:value={school.name} readonly />
 
 <Label for="program-type" class="form-label">Program type</Label>
-<Input
-	id="program-type"
-	type="text"
-	name="type"
-	class="form-input-readonly"
-	bind:value={$form.type}
-	readonly
-/>
+{#if typeof programTypes === 'string'}
+	<Input
+		id="program-type"
+		type="text"
+		name="type"
+		class="form-input-readonly"
+		bind:value={$form.type}
+		readonly
+	/>
+{:else}
+	<Select id="program-type" name="type" bind:value={$form.type}>
+		{#each programTypes as programTypeOption}
+			<option value={programTypeOption}>{programTypeOption}</option>
+		{/each}
+	</Select>
+{/if}
 
 <Checkbox class="form-checkbox" bind:checked={newProgramIsJoint}>Is this a joint program?</Checkbox>
 

@@ -14,6 +14,7 @@ import {
 import {
 	commentsUpdateSchema,
 	majorsUpdateSchema,
+	trackUpdateSchema,
 	roundChangeSchema
 } from '$lib/schemas/application';
 
@@ -38,10 +39,11 @@ export async function load(event: PageServerLoadEvent) {
 
 	return {
 		application,
-		promisedRounds: fetchApplicationRounds(application.program.id),
+		promisedRounds: fetchApplicationRounds({ program: application.program.id }),
 		coApplications: fetchCoApplications(application),
 		roundChangeForm: await superValidate(zod(roundChangeSchema)),
 		majorsUpdateForm: await superValidate(zod(majorsUpdateSchema)),
+		trackUpdateForm: await superValidate(zod(trackUpdateSchema)),
 		commentsUpdateForm: await superValidate(zod(commentsUpdateSchema)),
 		logForm: await superValidate(zod(applicationLogSchema)),
 		deleteForm: await superValidate(zod(deleteSchema))
@@ -51,6 +53,7 @@ export async function load(event: PageServerLoadEvent) {
 export const actions = {
 	updateRoundId: formAction(roundChangeSchema, updateApplication),
 	updateMajors: formAction(majorsUpdateSchema, updateApplication),
+	updateTrack: formAction(trackUpdateSchema, updateApplication),
 	updateComments: formAction(commentsUpdateSchema, updateApplication),
 
 	deleteApplication: formAction(deleteSchema, deleteApplication, (student) => {

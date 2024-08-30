@@ -1,142 +1,119 @@
 <script lang="ts">
+	import { writable } from 'svelte/store';
+	import { Heading, Hr, Input, Alert, Button, A } from 'flowbite-svelte';
+	import { InfoCircleOutline } from 'flowbite-svelte-icons';
 	import { superForm } from 'sveltekit-superforms';
 
-	import {
-		Table,
-		TableBody,
-		TableBodyCell,
-		TableBodyRow,
-		Label,
-		Select,
-		Radio,
-		Hr,
-		Button,
-		Heading,
-		Helper,
-		A
-	} from 'flowbite-svelte';
-
+	import type { StagedApplication } from '$lib/schemas/application';
+	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
+	import ApplicationStagingForm from '$lib/components/application-prep-form/ApplicationStagingForm.svelte';
+	import StagedApplicationCard from '$lib/components/application-prep-form/StagedApplicationCard.svelte';
+	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import Toast from '$lib/components/misc/Toast.svelte';
-	import FormModal from '$lib/components/form-modal/FormModal.svelte';
-	import RoundForm from '$lib/components/application-round-form/RoundForm.svelte';
-	import { activeYears } from '$lib/utils/dateUtils';
-	import { academicTerms } from '$lib/constants/progressions';
-	import { filterSortRounds, formatRound } from '$lib/utils/applicationRoundUtils';
 
 	export let data;
 
-	const { form, enhance } = superForm(data.newApplicationForm, {
+	const contract = writable<number>(data.contract.id);
+	const staged = writable<StagedApplication[]>([]);
+	const schoolId = writable<number | ''>();
+	const programId = writable<number | ''>();
+
+	let showToast = false;
+	let toastMessage = '';
+
+	const { form, enhance } = superForm(data.batchNewApplicationForm, {
+		dataType: 'json',
 		onUpdated({ form }) {
 			if (!form.valid) {
+				toastMessage = form.message;
 				showToast = true;
 			}
 		}
 	});
 
-	let year: number | null = null;
-	let term: string = '';
+	$: nAppls = $form.rounds.length;
 
-	let roundModal = false;
-	let showToast = false;
+	let programTypes: string | string[];
+
+	switch (data.programType) {
+		case 'freshman':
+			programTypes = 'UG Freshman';
+			break;
+		case 'transfer':
+			programTypes = 'UG Transfer';
+			break;
+		case 'graduate':
+			programTypes = ["Master's", 'Doctorate'];
+			break;
+		case 'nondegree':
+			programTypes = 'Non-degree';
+	}
+
+	const removeStaged = (i: number) => {
+		staged.update((items) => items.slice(0, i).concat(items.slice(i + 1)));
+	};
 </script>
 
-<Heading tag="h3" class="page-title">Create an application</Heading>
+<Heading tag="h3" class="page-title">Create applications for {data.term} {data.year}</Heading>
 
 <Hr />
 
-<div class="w-[30rem]">
-	<Table noborder>
-		<TableBody>
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-32 font-medium py-3">Student</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">{data.contract.student_name}</TableBodyCell>
-			</TableBodyRow>
+<div class="grid grid-cols-2 gap-4">
+	<div>
+		<Alert color="blue" class="form-width flex gap-2">
+			<InfoCircleOutline />
+			<span>
+				Use the form below to add programs. The ones you&rsquo;ve added will appear on the right.
+				When done, click <strong>Create x application(s)</strong>.
+			</span>
+		</Alert>
 
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-32 font-medium py-3">Contract</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">
-					{data.contract.type}
-					{data.contract.target_year}
-				</TableBodyCell>
-			</TableBodyRow>
+		{#await Promise.all([data.schools, data.programs, data.applicationRounds])}
+			<FetchingDataSign divClass="mt-6" text="Preparing your form..." />
+		{:then [schools, programs, applRounds]}
+			<ApplicationStagingForm
+				{form}
+				{contract}
+				{staged}
+				{schoolId}
+				{programId}
+				{schools}
+				{programs}
+				{applRounds}
+				{programTypes}
+				year={data.year}
+				term={data.term}
+				newProgramForm={data.newProgramForm}
+				newApplicationRoundForm={data.newApplicationRoundForm}
+			/>
+		{/await}
+	</div>
 
-			{#each data.program.schools.sort((a, b) => a.name.localeCompare(b.name)) as school, index}
-				<TableBodyRow>
-					<TableBodyCell tdClass="w-32 font-medium py-3">
-						{data.program.schools.length > 1 ? `School ${index + 1}` : 'School'}
-					</TableBodyCell>
-					<TableBodyCell tdClass="font-normal">{school.name}</TableBodyCell>
-				</TableBodyRow>
-			{/each}
+	<div class="h-fit min-h-[10rem] flex flex-col px-8 py-6 rounded-lg bg-stone-50">
+		<Heading tag="h2" class="text-2xl font-bold flex mb-8">Applying to ...</Heading>
 
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-32 font-medium py-3">Program</TableBodyCell>
-				<TableBodyCell tdClass="font-normal">{data.program.display_name}</TableBodyCell>
-			</TableBodyRow>
-		</TableBody>
-	</Table>
+		<form class="form-width" method="post" action="?/createApplications" use:enhance>
+			<Input type="number" name="contract" value={$form.contract} class="hidden" />
 
-	<Hr />
-
-	<form method="post" action="?/createApplication" use:enhance>
-		<input type="number" name="contract" class="hidden" value={data.contract.id} />
-		<input type="number" name="program" class="hidden" value={data.program.id} />
-
-		<div class="form-width">
-			<div class="grid grid-cols-2 gap-8">
-				<div>
-					<Label for="year" class="form-label">Year</Label>
-					<Select id="year" name="year" bind:value={year} required>
-						{#each activeYears() as yearOption}
-							<option value={yearOption}>{yearOption}</option>
-						{/each}
-					</Select>
-				</div>
-			</div>
-
-			<Label class="form-label">Term</Label>
-			<div class="grid grid-cols-1 mb-4 gap-2">
-				{#each academicTerms as value}
-					<Radio name="term" {value} class="form-radio" bind:group={term} required>
-						{value}
-					</Radio>
+			<div class="flex flex-col gap-4">
+				{#each $form.rounds as _, i}
+					<Input type="number" name="round" bind:value={$form.rounds[i]} class="hidden" />
+					<StagedApplicationCard item={$staged[i]} onRemove={() => removeStaged(i)} />
 				{/each}
 			</div>
 
-			<Label for="round" class="form-label">Admission plan</Label>
-			<Select id="round" name="round" bind:value={$form.round} required>
-				{#each filterSortRounds(data.applicationRounds, year, term) as applRound}
-					<option value={applRound.id}>{formatRound(applRound)}</option>
-				{/each}
-			</Select>
-			{#if year && term}
-				<Helper class="mt-2 form-helper">
-					If your desired round is not listed, <A on:click={() => (roundModal = true)}>click here</A
-					> to create it.
-				</Helper>
+			{#if !nAppls}
+				<NoDataSign text="You have not added any programs." />
 			{/if}
-
-			<Button type="submit" class="mt-8">Submit</Button>
-		</div>
-	</form>
+			<Button type="submit" class="w-fit mt-6 mb-2" disabled={!nAppls}>
+				Create {nAppls} application{nAppls !== 1 ? 's' : ''}
+			</Button>
+		</form>
+	</div>
 </div>
-
-<FormModal
-	open={roundModal}
-	superform={data.newApplicationRoundForm}
-	fields={RoundForm}
-	action="?/createApplicationRound"
-	title="Create an admission plan"
-	extra={[
-		{ name: 'program', type: 'number', value: data.program.id },
-		{ name: 'year', type: 'number', value: year },
-		{ name: 'term', type: 'text', value: term }
-	]}
-	on:close={() => (roundModal = false)}
-/>
 
 {#if showToast}
 	<Toast type="error" onClose={() => (showToast = false)}>
-		Operation failed. Maybe the application you were trying to create already exists.
+		{toastMessage}. Check <A href={`/student/${data.studentId}`}>the student&rsquo;s page</A>.
 	</Toast>
 {/if}

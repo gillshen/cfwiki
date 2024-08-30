@@ -42,5 +42,10 @@
 		deleteForm={data.deleteForm}
 	/>
 
-	<ApplicationsSection student={data.student} applications={data.applications} {canEdit} />
+	<ApplicationsSection
+		student={data.student}
+		applications={data.applications}
+		form={data.newApplicationPrepForm}
+		{canEdit}
+	/>
 </Main>

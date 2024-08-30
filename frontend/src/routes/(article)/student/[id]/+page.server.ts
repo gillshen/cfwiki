@@ -1,8 +1,12 @@
 import type { PageServerLoadEvent } from './$types';
 import { error, redirect } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
+import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET_KEY } from '$env/static/private';
+
+import { formAction } from '$lib/abstract/formAction';
 import { deleteStudent, fetchStudent, type StudentDetail } from '$lib/api/student';
 import { fetchApplications } from '$lib/api/application';
 import { fetchSchools } from '$lib/api/school';
@@ -24,9 +28,9 @@ import {
 } from '$lib/schemas/scores';
 
 import { deleteSchema } from '$lib/schemas/delete';
-
 import { createOrUpdateContract, deleteContract } from '$lib/api/contract';
 import { createOrUpdateEnrollment, deleteEnrollment } from '$lib/api/enrollment';
+import { newApplicationPrepSchema } from '$lib/schemas/application';
 
 import {
 	createOrUpdateToeflScore,
@@ -53,8 +57,6 @@ import {
 	deleteLsatScore
 } from '$lib/api/scores';
 
-import { formAction } from '$lib/abstract/formAction';
-
 export async function load(event: PageServerLoadEvent) {
 	const id = parseInt(event.params.id, 10);
 
@@ -74,6 +76,7 @@ export async function load(event: PageServerLoadEvent) {
 		applications: fetchApplications({ student: student.id }),
 		contractForm: await superValidate(zod(contractSchema)),
 		enrollmentForm: await superValidate(zod(enrollmentSchema)),
+		newApplicationPrepForm: await superValidate(zod(newApplicationPrepSchema)),
 		scoreForms: {
 			toefl: await superValidate(zod(toeflSchema)),
 			ielts: await superValidate(zod(ieltschema)),
@@ -94,6 +97,18 @@ export async function load(event: PageServerLoadEvent) {
 export const actions = {
 	createOrUpdateContract: formAction(contractSchema, createOrUpdateContract),
 	createOrUpdateEnrollment: formAction(enrollmentSchema, createOrUpdateEnrollment),
+
+	initiateApplication: async ({ request }) => {
+		const form = await superValidate(request, zod(newApplicationPrepSchema));
+		console.log(form.data);
+
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+		const token = jwt.sign(form.data, JWT_SECRET_KEY);
+		throw redirect(302, `/application/new?token=${token}`);
+	},
+
 	createOrUpdateToeflScore: formAction(toeflSchema, createOrUpdateToeflScore),
 	createOrUpdateIeltsScore: formAction(ieltschema, createOrUpdateIeltsScore),
 	createOrUpdateDuolingoScore: formAction(duolingoSchema, createOrUpdateDuolingoScore),

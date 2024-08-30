@@ -17,6 +17,8 @@
 	);
 
 	$: decisionDate = toLongDate(application.round.decision_date);
+
+	$: majors = [application.major_1, application.major_2, application.major_3].filter(Boolean);
 </script>
 
 <Table>
@@ -50,24 +52,25 @@
 			</TableBodyCell>
 		</TableBodyRow>
 
-		{#if application.major_1 || application.major_2 || application.major_3}
+		{#if majors.length}
 			<TableBodyRow>
 				<TableBodyCell tdClass="w-40 font-medium py-4 align-top">
-					{#if [application.major_1, application.major_2, application.major_3].filter(Boolean).length > 1}
-						Majors
-					{:else}
-						Major
-					{/if}
+					{majors.length > 1 ? 'Majors' : 'Major'}
 				</TableBodyCell>
 				<TableBodyCell tdClass="font-normal py-4 truncate">
 					<div class="flex flex-col gap-2 truncate">
-						{#each [application.major_1, application.major_2, application.major_3] as major}
-							{#if major}
-								<div class="truncate">{major}</div>
-							{/if}
+						{#each majors as major}
+							<div class="truncate">{major}</div>
 						{/each}
 					</div>
 				</TableBodyCell>
+			</TableBodyRow>
+		{/if}
+
+		{#if application.track}
+			<TableBodyRow>
+				<TableBodyCell tdClass="w-40 font-medium py-4 align-top">Track</TableBodyCell>
+				<TableBodyCell tdClass="font-normal py-4 truncate">{application.track}</TableBodyCell>
 			</TableBodyRow>
 		{/if}
 

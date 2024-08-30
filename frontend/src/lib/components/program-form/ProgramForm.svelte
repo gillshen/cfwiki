@@ -43,6 +43,10 @@
 {#if isGraduate}
 	<Label for="degree" class="form-label">Degree awarded</Label>
 	<Input id="degree" type="text" name="degree" maxlength="100" bind:value={$form.degree} required />
+	<Helper class="mt-2 form-helper">
+		Use abbreviations if applicable; e.g. &ldquo;MS&rdquo; instead of &ldquo;Master of
+		Science&rdquo;.
+	</Helper>
 {/if}
 
 {#if entity}
