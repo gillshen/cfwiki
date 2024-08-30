@@ -1,6 +1,6 @@
 import { createOrUpdate, destroy } from '$lib/api/api';
 
-type BaseScore = {
+export type BaseScore = {
 	id: number;
 	student: number;
 	date: string | null;

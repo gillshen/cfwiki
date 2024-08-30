@@ -7,7 +7,7 @@
 </script>
 
 <div>
-	<P size="sm" class="font-medium">{label}</P>
+	<P size="sm" class="font-medium -mb-1">{label}</P>
 	<div class="flex gap-4 items-center">
 		<Progressbar progress={percentage} class="w-[250px]" />
 		{#if value !== null}

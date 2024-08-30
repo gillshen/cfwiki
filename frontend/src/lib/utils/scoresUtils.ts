@@ -1,4 +1,14 @@
-import type { ToeflScore, IeltsScore, SatScore, ActScore, GreScore } from '$lib/api/scores';
+import type {
+	BaseScore,
+	ToeflScore,
+	IeltsScore,
+	SatScore,
+	ActScore,
+	GreScore,
+	DuolingoScore,
+	GmatScore,
+	LsatScore
+} from '$lib/api/scores';
 
 export function toeflOverall(score: ToeflScore): number | null {
 	if (
@@ -130,4 +140,47 @@ export function gmatWritingToPercentage(score: number | null): number {
 
 export function lsatToPercentage(score: number | null): number {
 	return toPercentage(score, 120, 180, 1.2);
+}
+
+function _superscore<T extends SatScore | ActScore>(scores: T[]): T {
+	const superScore: any = {};
+
+	for (const score of scores) {
+		for (const key in score) {
+			if (superScore[key] === undefined || score[key] > superScore[key]) {
+				superScore[key] = score[key];
+			}
+		}
+	}
+	return superScore;
+}
+
+export const superSat = (scores: SatScore[]): SatScore => _superscore(scores);
+
+export const superAct = (scores: ActScore[]): ActScore => _superscore(scores);
+
+function _bestScore<
+	T extends ToeflScore | IeltsScore | DuolingoScore | GreScore | GmatScore | LsatScore
+>(scores: T[], getOverall: (score: T) => number | null): T {
+	const sorted = scores.sort((a, b) => (getOverall(b) ?? 0) - (getOverall(a) ?? 0));
+	return sorted[0];
+}
+
+export const bestToefl = (scores: ToeflScore[]): ToeflScore => _bestScore(scores, toeflOverall);
+
+export const bestIelts = (scores: IeltsScore[]): IeltsScore => _bestScore(scores, ieltsOverall);
+
+export const bestDuolingo = (scores: DuolingoScore[]): DuolingoScore =>
+	_bestScore(scores, (score) => score.overall);
+
+export const bestGre = (scores: GreScore[]): GreScore => _bestScore(scores, greOverall);
+
+export const bestGmat = (scores: GmatScore[]): GmatScore =>
+	_bestScore(scores, (score) => score.total);
+
+export const bestLsat = (scores: LsatScore[]): LsatScore =>
+	_bestScore(scores, (score) => score.score);
+
+export function orderByDateDesc(a: BaseScore, b: BaseScore): number {
+	return (b.date ?? '').localeCompare(a.date ?? '');
 }

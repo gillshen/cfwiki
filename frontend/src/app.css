@@ -97,6 +97,10 @@ form.modal {
 div[role='tabpanel'] {
 	@apply bg-inherit;
 }
+/* override tab paddings in the scores sections */
+.scores-section div[role='tabpanel'] {
+	@apply p-0 mx-0 mt-2 mb-0;
+}
 
 .status-submitted {
 	@apply text-sky-600;

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { writable } from 'svelte/store';
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import { Heading } from 'flowbite-svelte';
 	import { PlusOutline } from 'flowbite-svelte-icons';
@@ -19,14 +20,6 @@
 		AlevelGrade
 	} from '$lib/api/scores';
 
-	import GreScoreItem from '$lib/components/list-items/GreScoreItem.svelte';
-	import GmatScoreItem from '$lib/components/list-items/GmatScoreItem.svelte';
-	import LsatScoreItem from '$lib/components/list-items/LsatScoreItem.svelte';
-	import SatScoreItem from '$lib/components/list-items/SatScoreItem.svelte';
-	import ActScoreItem from '$lib/components/list-items/ActScoreItem.svelte';
-	import ToeflScoreItem from '$lib/components/list-items/ToeflScoreItem.svelte';
-	import IeltsScoreItem from '$lib/components/list-items/IeltsScoreItem.svelte';
-	import DuolingoScoreItem from '$lib/components/list-items/DuolingoScoreItem.svelte';
 	import ApScoreItem from '$lib/components/list-items/ApScoreItem.svelte';
 	import IbAlevelGradeItem from '$lib/components/list-items/IbAlevelGradeItem.svelte';
 	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
@@ -47,6 +40,16 @@
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 
+	import ScoreSectionHeading from '$lib/components/student-page/ScoreSectionHeading.svelte';
+	import ToeflSection from '$lib/components/student-page/score-sections/ToeflSection.svelte';
+	import SatSection from '$lib/components/student-page/score-sections/SatSection.svelte';
+	import ActSection from '$lib/components/student-page/score-sections/ActSection.svelte';
+	import IeltsSection from '$lib/components/student-page/score-sections/IeltsSection.svelte';
+	import DuolingoSection from '$lib/components/student-page/score-sections/DuolingoSection.svelte';
+	import GreSection from '$lib/components/student-page/score-sections/GreSection.svelte';
+	import GmatSection from './score-sections/GmatSection.svelte';
+	import LsatSection from './score-sections/LsatSection.svelte';
+
 	export let student: StudentDetail;
 	export let canEdit: boolean = false;
 	export let scoreForms: {
@@ -64,25 +67,25 @@
 	};
 	export let deleteForm: SuperValidated<any>;
 
-	let toeflModal = false;
-	let toeflDeleteModal = false;
-	let activeToefl: ToeflScore | null = null;
+	const toeflModal = writable(false);
+	const toeflDeleteModal = writable(false);
+	const activeToefl = writable<ToeflScore | null>(null);
 
-	let ieltsModal = false;
-	let ieltsDeleteModal = false;
-	let activeIelts: IeltsScore | null = null;
+	const ieltsModal = writable(false);
+	const ieltsDeleteModal = writable(false);
+	const activeIelts = writable<IeltsScore | null>(null);
 
-	let duolingoModal = false;
-	let duolingoDeleteModal = false;
-	let activeDuolingo: DuolingoScore | null = null;
+	const duolingoModal = writable(false);
+	const duolingoDeleteModal = writable(false);
+	const activeDuolingo = writable<DuolingoScore | null>(null);
 
-	let satScoreModal = false;
-	let satScoreDeleteModal = false;
-	let activeSatScore: SatScore | null = null;
+	const satScoreModal = writable(false);
+	const satScoreDeleteModal = writable(false);
+	const activeSatScore = writable<SatScore | null>(null);
 
-	let actScoreModal = false;
-	let actScoreDeleteModal = false;
-	let activeActScore: ActScore | null = null;
+	const actScoreModal = writable(false);
+	const actScoreDeleteModal = writable(false);
+	const activeActScore = writable<ActScore | null>(null);
 
 	let apScoreModal = false;
 	let apScoreDeleteModal = false;
@@ -96,50 +99,85 @@
 	let alevelGradeDeleteModal = false;
 	let activeAlevelGrade: AlevelGrade | null = null;
 
-	let greScoreModal = false;
-	let greScoreDeleteModal = false;
-	let activeGreScore: GreScore | null = null;
+	const greScoreModal = writable(false);
+	const greScoreDeleteModal = writable(false);
+	const activeGreScore = writable<GreScore | null>(null);
 
-	let gmatScoreModal = false;
-	let gmatScoreDeleteModal = false;
-	let activeGmatScore: GmatScore | null = null;
+	const gmatScoreModal = writable(false);
+	const gmatScoreDeleteModal = writable(false);
+	const activeGmatScore = writable<GmatScore | null>(null);
 
-	let lsatScoreModal = false;
-	let lsatScoreDeleteModal = false;
-	let activeLsatScore: LsatScore | null = null;
+	const lsatScoreModal = writable(false);
+	const lsatScoreDeleteModal = writable(false);
+	const activeLsatScore = writable<LsatScore | null>(null);
 
 	const toeflModalOpener = (score?: ToeflScore): (() => void) => {
 		return () => {
-			activeToefl = score ?? null;
-			toeflModal = true;
+			activeToefl.set(score ?? null);
+			toeflModal.set(true);
+		};
+	};
+
+	const toeflDeleteModalOpener = (score: ToeflScore): (() => void) => {
+		return () => {
+			activeToefl.set(score);
+			toeflDeleteModal.set(true);
 		};
 	};
 
 	const ieltsModalOpener = (score?: IeltsScore): (() => void) => {
 		return () => {
-			activeIelts = score ?? null;
-			ieltsModal = true;
+			activeIelts.set(score ?? null);
+			ieltsModal.set(true);
+		};
+	};
+
+	const ieltsDeleteModalOpener = (score: IeltsScore): (() => void) => {
+		return () => {
+			activeIelts.set(score);
+			ieltsDeleteModal.set(true);
 		};
 	};
 
 	const duolingoModalOpener = (score?: DuolingoScore): (() => void) => {
 		return () => {
-			activeDuolingo = score ?? null;
-			duolingoModal = true;
+			activeDuolingo.set(score ?? null);
+			duolingoModal.set(true);
+		};
+	};
+
+	const duolingoDeleteModalOpener = (score: DuolingoScore): (() => void) => {
+		return () => {
+			activeDuolingo.set(score);
+			duolingoDeleteModal.set(true);
 		};
 	};
 
 	const satScoreModalOpener = (score?: SatScore): (() => void) => {
 		return () => {
-			activeSatScore = score ?? null;
-			satScoreModal = true;
+			activeSatScore.set(score ?? null);
+			satScoreModal.set(true);
+		};
+	};
+
+	const satScoreDeleteModalOpener = (score: SatScore): (() => void) => {
+		return () => {
+			activeSatScore.set(score);
+			satScoreDeleteModal.set(true);
 		};
 	};
 
 	const actScoreModalOpener = (score?: ActScore): (() => void) => {
 		return () => {
-			activeActScore = score ?? null;
-			actScoreModal = true;
+			activeActScore.set(score ?? null);
+			actScoreModal.set(true);
+		};
+	};
+
+	const actScoreDeleteModalOpener = (score: ActScore): (() => void) => {
+		return () => {
+			activeActScore.set(score);
+			actScoreDeleteModal.set(true);
 		};
 	};
 
@@ -166,22 +204,43 @@
 
 	const greScoreModalOpener = (score?: GreScore): (() => void) => {
 		return () => {
-			activeGreScore = score ?? null;
-			greScoreModal = true;
+			activeGreScore.set(score ?? null);
+			greScoreModal.set(true);
+		};
+	};
+
+	const greScoreDeleteModalOpener = (score?: GreScore): (() => void) => {
+		return () => {
+			activeGreScore.set(score ?? null);
+			greScoreDeleteModal.set(true);
 		};
 	};
 
 	const gmatScoreModalOpener = (score?: GmatScore): (() => void) => {
 		return () => {
-			activeGmatScore = score ?? null;
-			gmatScoreModal = true;
+			activeGmatScore.set(score ?? null);
+			gmatScoreModal.set(true);
+		};
+	};
+
+	const gmatScoreDeleteModalOpener = (score?: GmatScore): (() => void) => {
+		return () => {
+			activeGmatScore.set(score ?? null);
+			gmatScoreDeleteModal.set(true);
 		};
 	};
 
 	const lsatScoreModalOpener = (score?: LsatScore): (() => void) => {
 		return () => {
-			activeLsatScore = score ?? null;
-			lsatScoreModal = true;
+			activeLsatScore.set(score ?? null);
+			lsatScoreModal.set(true);
+		};
+	};
+
+	const lsatScoreDeleteModalOpener = (score?: LsatScore): (() => void) => {
+		return () => {
+			activeLsatScore.set(score ?? null);
+			lsatScoreDeleteModal.set(true);
 		};
 	};
 
@@ -219,108 +278,66 @@
 <article class="mt-16">
 	<Heading tag="h2" class="text-2xl font-bold">Test Scores</Heading>
 
-	<div class="flex flex-col gap-6 divide-y-2 divide-dotted">
-		{#each student.gre as score}
-			<GreScoreItem
-				{score}
-				{canEdit}
-				updateAction={greScoreModalOpener(score)}
-				deleteAction={() => {
-					activeGreScore = score;
-					greScoreDeleteModal = true;
-				}}
-			/>
-		{/each}
+	<div class="flex flex-col gap-6">
+		<GreSection
+			{student}
+			{canEdit}
+			onUpdate={greScoreModalOpener}
+			onDelete={greScoreDeleteModalOpener}
+		/>
 
-		{#each student.gmat as score}
-			<GmatScoreItem
-				{score}
-				{canEdit}
-				updateAction={gmatScoreModalOpener(score)}
-				deleteAction={() => {
-					activeGmatScore = score;
-					gmatScoreDeleteModal = true;
-				}}
-			/>
-		{/each}
+		<GmatSection
+			{student}
+			{canEdit}
+			onUpdate={gmatScoreModalOpener}
+			onDelete={gmatScoreDeleteModalOpener}
+		/>
 
-		{#each student.lsat as score}
-			<LsatScoreItem
-				{score}
-				{canEdit}
-				updateAction={lsatScoreModalOpener(score)}
-				deleteAction={() => {
-					activeLsatScore = score;
-					lsatScoreDeleteModal = true;
-				}}
-			/>
-		{/each}
+		<LsatSection
+			{student}
+			{canEdit}
+			onUpdate={lsatScoreModalOpener}
+			onDelete={lsatScoreDeleteModalOpener}
+		/>
 
-		{#each student.sat as score}
-			<SatScoreItem
-				{score}
-				{canEdit}
-				updateAction={satScoreModalOpener(score)}
-				deleteAction={() => {
-					activeSatScore = score;
-					satScoreDeleteModal = true;
-				}}
-			/>
-		{/each}
+		<SatSection
+			{student}
+			{canEdit}
+			onUpdate={satScoreModalOpener}
+			onDelete={satScoreDeleteModalOpener}
+		/>
 
-		{#each student.act as score}
-			<ActScoreItem
-				{score}
-				{canEdit}
-				updateAction={actScoreModalOpener(score)}
-				deleteAction={() => {
-					activeActScore = score;
-					actScoreDeleteModal = true;
-				}}
-			/>
-		{/each}
+		<ActSection
+			{student}
+			{canEdit}
+			onUpdate={actScoreModalOpener}
+			onDelete={actScoreDeleteModalOpener}
+		/>
 
-		{#each student.toefl as score}
-			<ToeflScoreItem
-				{score}
-				{canEdit}
-				updateAction={toeflModalOpener(score)}
-				deleteAction={() => {
-					activeToefl = score;
-					toeflDeleteModal = true;
-				}}
-			/>
-		{/each}
+		<ToeflSection
+			{student}
+			{canEdit}
+			onUpdate={toeflModalOpener}
+			onDelete={toeflDeleteModalOpener}
+		/>
 
-		{#each student.ielts as score}
-			<IeltsScoreItem
-				{score}
-				{canEdit}
-				updateAction={ieltsModalOpener(score)}
-				deleteAction={() => {
-					activeIelts = score;
-					ieltsDeleteModal = true;
-				}}
-			/>
-		{/each}
+		<IeltsSection
+			{student}
+			{canEdit}
+			onUpdate={ieltsModalOpener}
+			onDelete={ieltsDeleteModalOpener}
+		/>
 
-		{#each student.duolingo as score}
-			<DuolingoScoreItem
-				{score}
-				{canEdit}
-				updateAction={duolingoModalOpener(score)}
-				deleteAction={() => {
-					activeDuolingo = score;
-					duolingoDeleteModal = true;
-				}}
-			/>
-		{/each}
+		<DuolingoSection
+			{student}
+			{canEdit}
+			onUpdate={duolingoModalOpener}
+			onDelete={duolingoDeleteModalOpener}
+		/>
 	</div>
 
 	{#if student.ap.length}
-		<Heading tag="h3" class="mt-8 text-lg font-medium px-2 pb-0.5 border-b-2 border-primary-700">
-			AP
-		</Heading>
+		<ScoreSectionHeading title="AP" />
 		<div class="mt-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
 			{#each student.ap as score}
 				<ApScoreItem
@@ -337,9 +354,7 @@
 	{/if}
 
 	{#if student.ib.length}
-		<Heading tag="h3" class="mt-8 text-lg font-medium px-2 pb-0.5 border-b-2 border-primary-700">
-			IB
-		</Heading>
+		<ScoreSectionHeading title="IB" />
 		<div class="my-4 mb-8">
 			{#each student.ib as grade}
 				<IbAlevelGradeItem
@@ -356,9 +371,7 @@
 	{/if}
 
 	{#if student.alevel.length}
-		<Heading tag="h3" class="mt-8 text-lg font-medium px-2 pb-0.5 border-b-2 border-primary-700">
-			A-level
-		</Heading>
+		<ScoreSectionHeading title="A-level" />
 		<div class="my-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
 			{#each student.alevel as grade}
 				<IbAlevelGradeItem
@@ -388,116 +401,116 @@
 </article>
 
 <FormModal
-	open={toeflModal}
+	open={$toeflModal}
 	superform={scoreForms.toefl}
 	fields={ToeflScoreForm}
 	action={`/student/${student.id}?/createOrUpdateToeflScore`}
-	entity={activeToefl}
+	entity={$activeToefl}
 	extra={[{ name: 'student', type: 'number', value: student.id }]}
 	title={`${activeToefl ? 'Update' : 'Add a'} TOEFL score`}
-	on:close={() => (toeflModal = false)}
+	on:close={() => toeflModal.set(false)}
 />
 
 <FormModal
-	open={toeflDeleteModal}
+	open={$toeflDeleteModal}
 	superform={deleteForm}
 	fields={DeleteForm}
 	action={`/student/${student.id}?/deleteToeflScore`}
-	entity={activeToefl}
+	entity={$activeToefl}
 	title="Delete TOEFL score"
-	on:close={() => (toeflDeleteModal = false)}
+	on:close={() => toeflDeleteModal.set(false)}
 >
 	<DeleteMessage slot="preface" name="this TOEFL score" />
 </FormModal>
 
 <FormModal
-	open={ieltsModal}
+	open={$ieltsModal}
 	superform={scoreForms.ielts}
 	fields={IeltsScoreForm}
 	action={`/student/${student.id}?/createOrUpdateIeltsScore`}
-	entity={activeIelts}
+	entity={$activeIelts}
 	extra={[{ name: 'student', type: 'number', value: student.id }]}
 	title={`${activeIelts ? 'Update' : 'Add an'} IELTS score`}
-	on:close={() => (ieltsModal = false)}
+	on:close={() => ieltsModal.set(false)}
 />
 
 <FormModal
-	open={ieltsDeleteModal}
+	open={$ieltsDeleteModal}
 	superform={deleteForm}
 	fields={DeleteForm}
 	action={`/student/${student.id}?/deleteIeltsScore`}
-	entity={activeIelts}
+	entity={$activeIelts}
 	title="Delete IELTS score"
-	on:close={() => (ieltsDeleteModal = false)}
+	on:close={() => ieltsDeleteModal.set(false)}
 >
 	<DeleteMessage slot="preface" name="this IELTS score" />
 </FormModal>
 
 <FormModal
-	open={duolingoModal}
+	open={$duolingoModal}
 	superform={scoreForms.duolingo}
 	fields={DuolingoScoreForm}
 	action={`/student/${student.id}?/createOrUpdateDuolingoScore`}
-	entity={activeDuolingo}
+	entity={$activeDuolingo}
 	extra={[{ name: 'student', type: 'number', value: student.id }]}
 	title={`${activeIelts ? 'Update' : 'Add a'} Duolingo score`}
-	on:close={() => (duolingoModal = false)}
+	on:close={() => duolingoModal.set(false)}
 />
 
 <FormModal
-	open={duolingoDeleteModal}
+	open={$duolingoDeleteModal}
 	superform={deleteForm}
 	fields={DeleteForm}
 	action={`/student/${student.id}?/deleteDuolingoScore`}
-	entity={activeDuolingo}
+	entity={$activeDuolingo}
 	title="Delete Duolingo score"
-	on:close={() => (duolingoDeleteModal = false)}
+	on:close={() => duolingoDeleteModal.set(false)}
 >
 	<DeleteMessage slot="preface" name="this Duolingo score" />
 </FormModal>
 
 <FormModal
-	open={satScoreModal}
+	open={$satScoreModal}
 	superform={scoreForms.sat}
 	fields={SatScoreForm}
 	action={`/student/${student.id}?/createOrUpdateSatScore`}
-	entity={activeSatScore}
+	entity={$activeSatScore}
 	extra={[{ name: 'student', type: 'number', value: student.id }]}
 	title={`${activeSatScore ? 'Update' : 'Add an'} SAT score`}
-	on:close={() => (satScoreModal = false)}
+	on:close={() => satScoreModal.set(false)}
 />
 
 <FormModal
-	open={satScoreDeleteModal}
+	open={$satScoreDeleteModal}
 	superform={deleteForm}
 	fields={DeleteForm}
 	action={`/student/${student.id}?/deleteSatScore`}
-	entity={activeSatScore}
+	entity={$activeSatScore}
 	title="Delete SAT score"
-	on:close={() => (satScoreDeleteModal = false)}
+	on:close={() => satScoreDeleteModal.set(false)}
 >
 	<DeleteMessage slot="preface" name="this SAT score" />
 </FormModal>
 
 <FormModal
-	open={actScoreModal}
+	open={$actScoreModal}
 	superform={scoreForms.act}
 	fields={ActScoreForm}
 	action={`/student/${student.id}?/createOrUpdateActScore`}
-	entity={activeActScore}
+	entity={$activeActScore}
 	extra={[{ name: 'student', type: 'number', value: student.id }]}
 	title={`${activeActScore ? 'Update' : 'Add an'} ACT score`}
-	on:close={() => (actScoreModal = false)}
+	on:close={() => actScoreModal.set(false)}
 />
 
 <FormModal
-	open={actScoreDeleteModal}
+	open={$actScoreDeleteModal}
 	superform={deleteForm}
 	fields={DeleteForm}
 	action={`/student/${student.id}?/deleteActScore`}
-	entity={activeActScore}
+	entity={$activeActScore}
 	title="Delete ACT score"
-	on:close={() => (actScoreDeleteModal = false)}
+	on:close={() => actScoreDeleteModal.set(false)}
 >
 	<DeleteMessage slot="preface" name="this ACT score" />
 </FormModal>
@@ -572,70 +585,70 @@
 </FormModal>
 
 <FormModal
-	open={greScoreModal}
+	open={$greScoreModal}
 	superform={scoreForms.gre}
 	fields={GreScoreForm}
 	action={`/student/${student.id}?/createOrUpdateGreScore`}
-	entity={activeGreScore}
+	entity={$activeGreScore}
 	extra={[{ name: 'student', type: 'number', value: student.id }]}
 	title={`${activeGreScore ? 'Update' : 'Add a'} GRE score`}
-	on:close={() => (greScoreModal = false)}
+	on:close={() => greScoreModal.set(false)}
 />
 
 <FormModal
-	open={greScoreDeleteModal}
+	open={$greScoreDeleteModal}
 	superform={deleteForm}
 	fields={DeleteForm}
 	action={`/student/${student.id}?/deleteGreScore`}
-	entity={activeGreScore}
+	entity={$activeGreScore}
 	title="Delete GRE score"
-	on:close={() => (greScoreDeleteModal = false)}
+	on:close={() => greScoreDeleteModal.set(false)}
 >
 	<DeleteMessage slot="preface" name="this GRE score" />
 </FormModal>
 
 <FormModal
-	open={gmatScoreModal}
+	open={$gmatScoreModal}
 	superform={scoreForms.gamt}
 	fields={GmatScoreForm}
 	action={`/student/${student.id}?/createOrUpdateGmatScore`}
-	entity={activeGmatScore}
+	entity={$activeGmatScore}
 	extra={[{ name: 'student', type: 'number', value: student.id }]}
 	title={`${activeGmatScore ? 'Update' : 'Add a'} GMAT score`}
-	on:close={() => (gmatScoreModal = false)}
+	on:close={() => gmatScoreModal.set(false)}
 />
 
 <FormModal
-	open={gmatScoreDeleteModal}
+	open={$gmatScoreDeleteModal}
 	superform={deleteForm}
 	fields={DeleteForm}
 	action={`/student/${student.id}?/deleteGmatScore`}
-	entity={activeGmatScore}
+	entity={$activeGmatScore}
 	title="Delete GMAT score"
-	on:close={() => (gmatScoreDeleteModal = false)}
+	on:close={() => gmatScoreDeleteModal.set(false)}
 >
 	<DeleteMessage slot="preface" name="this GMAT score" />
 </FormModal>
 
 <FormModal
-	open={lsatScoreModal}
+	open={$lsatScoreModal}
 	superform={scoreForms.lsat}
 	fields={LsatScoreForm}
 	action={`/student/${student.id}?/createOrUpdateLsatScore`}
-	entity={activeLsatScore}
+	entity={$activeLsatScore}
 	extra={[{ name: 'student', type: 'number', value: student.id }]}
 	title={`${activeLsatScore ? 'Update' : 'Add a'} LSAT score`}
-	on:close={() => (lsatScoreModal = false)}
+	on:close={() => lsatScoreModal.set(false)}
 />
 
 <FormModal
-	open={lsatScoreDeleteModal}
+	open={$lsatScoreDeleteModal}
 	superform={deleteForm}
 	fields={DeleteForm}
 	action={`/student/${student.id}?/deleteLsatScore`}
-	entity={activeLsatScore}
+	entity={$activeLsatScore}
 	title="Delete LSAT score"
-	on:close={() => (lsatScoreDeleteModal = false)}
+	on:close={() => lsatScoreDeleteModal.set(false)}
 >
 	<DeleteMessage slot="preface" name="this LSAT score" />
 </FormModal>
