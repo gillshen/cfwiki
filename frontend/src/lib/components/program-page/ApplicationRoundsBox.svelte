@@ -1,13 +1,21 @@
 <script lang="ts">
+	import type { SuperValidated } from 'sveltekit-superforms';
 	import { Table, TableBody, TableBodyRow, TableBodyCell } from 'flowbite-svelte';
 	import { CalendarMonthOutline } from 'flowbite-svelte-icons';
 
 	import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
 	import ApplicationRoundPopover from '$lib/components/program-page/ApplicationRoundPopover.svelte';
+	import FormModal from '$lib/components/form-modal/FormModal.svelte';
+	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
+	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { groupByYearTerm } from '$lib/utils/applicationRoundUtils';
 	import { toShortDate } from '$lib/utils/dateUtils';
 
 	export let applRounds: ApplicationRoundListItem[];
+	export let deleteForm: SuperValidated<any>;
+
+	let activeRound: ApplicationRoundListItem | null = null;
+	let deleteModal = false;
 </script>
 
 <Table divClass="mt-4">
@@ -22,7 +30,13 @@
 					<div class="flex flex-col gap-3 w-fit">
 						{#each rounds as applRound}
 							<div class="text-primary-600 hover:underline cursor-pointer">{applRound.name}</div>
-							<ApplicationRoundPopover {applRound} />
+							<ApplicationRoundPopover
+								{applRound}
+								onDelete={() => {
+									activeRound = applRound;
+									deleteModal = true;
+								}}
+							/>
 						{/each}
 					</div>
 				</TableBodyCell>
@@ -41,3 +55,15 @@
 		{/each}
 	</TableBody>
 </Table>
+
+<FormModal
+	open={deleteModal}
+	superform={deleteForm}
+	fields={DeleteForm}
+	entity={activeRound}
+	action={'?/deleteApplicationRound'}
+	title="Delete admission plan"
+	on:close={() => (deleteModal = false)}
+>
+	<DeleteMessage slot="preface" name={`this admission plan (${activeRound?.name})`} />
+</FormModal>

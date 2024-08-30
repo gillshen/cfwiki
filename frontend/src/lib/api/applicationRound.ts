@@ -1,4 +1,4 @@
-import { get, post, patch, buildQuery } from '$lib/api/api';
+import { get, post, patch, destroy, buildQuery } from '$lib/api/api';
 
 export type ApplicationRoundListItem = {
 	id: number;
@@ -13,6 +13,7 @@ export type ApplicationRoundListItem = {
 	due_time: string | null;
 	timezone: string;
 	decision_date: string | null;
+	applications_count: number;
 };
 
 export type ApplicationRoundDetail = ApplicationRoundListItem;
@@ -33,4 +34,8 @@ export async function createApplicationRound(data: any) {
 
 export async function updateApplicationRound(data: any) {
 	return await patch(`application-rounds/${data.id}/update/`, data);
+}
+
+export async function deleteApplicationRound(data: any) {
+	return await destroy(`application-rounds/${data.id}/update/`);
 }

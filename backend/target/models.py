@@ -171,11 +171,30 @@ class ApplicationRound(models.Model):
         return f"{self.program_iteration} | {self.name}"
 
     @classmethod
-    def filter(cls, program: int = None, year: int = None, term: str = None):
+    def filter(
+        cls,
+        program_type: str = None,
+        program: int = None,
+        year: int = None,
+        term: str = None,
+    ):
         q = cls.objects.all().prefetch_related(
             "program_iteration",
             "program_iteration__program",
         )
+
+        if program_type == "undergraduate":
+            q = q.filter(
+                program_iteration__program__type__in=["UG Freshman", "UG Transfer"]
+            )
+        elif program_type == "freshman":
+            q = q.filter(program_iteration__program__type="UG Freshman")
+        elif program_type == "transfer":
+            q = q.filter(program_iteration__program__type="UG Transfer")
+        elif program_type == "graduate":
+            q = q.filter(program_iteration__program__type__in=["Master's", "Doctorate"])
+        elif program_type == "nondegree":
+            q = q.filter(program_iteration__program__type="Non-degree")
 
         if program is not None:
             q = q.filter(program_iteration__program__id=program)
@@ -185,3 +204,7 @@ class ApplicationRound(models.Model):
             q = q.filter(program_iteration__term=term)
 
         return q
+
+    @property
+    def applications_count(self):
+        return self.applications.count()

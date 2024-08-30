@@ -1,13 +1,26 @@
 <script lang="ts">
-	import { Popover, Heading, P, A } from 'flowbite-svelte';
+	import { Popover, Heading, P, A, Tooltip } from 'flowbite-svelte';
 
 	import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
 	import { formatDueDateTime, toLongDate } from '$lib/utils/dateUtils';
 
 	export let applRound: ApplicationRoundListItem;
+	export let onDelete: () => void = () => {};
 
-	const { id, program_iteration, name, due_date, due_time, timezone, decision_date } = applRound;
+	const {
+		id,
+		program_iteration,
+		name,
+		due_date,
+		due_time,
+		timezone,
+		decision_date,
+		applications_count
+	} = applRound;
+
 	const { program, year, term } = program_iteration;
+
+	let deleteModal = false;
 </script>
 
 <Popover class="w-[360px]" defaultClass="p-0 m-0">
@@ -28,7 +41,14 @@
 
 		<div class="mt-8 flex gap-4">
 			<A href={`/program/${program}/plan/${id}`}>Update</A>
-			<A on:click={() => alert('TODO delete')}>Delete</A>
+			{#if !applications_count}
+				<A on:click={onDelete}>Delete</A>
+			{:else}
+				<div class="text-gray-400 font-medium cursor-default">Delete</div>
+				<Tooltip class="font-normal" placement="right-end"
+					>You cannot delete this admission plan because it has applications attached it.</Tooltip
+				>
+			{/if}
 		</div>
 	</div>
 </Popover>

@@ -58,7 +58,7 @@ export async function load(event: PageServerLoadEvent) {
 			term,
 			schools: programType === 'nondegree' ? fetchSchools() : fetchSchools({ type: 'university' }),
 			programs: fetchPrograms({ type: programType }),
-			applicationRounds: fetchApplicationRounds({ year, term }),
+			applicationRounds: fetchApplicationRounds({ program_type: programType, year, term }),
 			newProgramForm: await superValidate(zod(newProgramSchema)),
 			batchNewApplicationForm: await superValidate(zod(batchNewApplicationSchema)),
 			newApplicationRoundForm: await superValidate(zod(roundSchema))

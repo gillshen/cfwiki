@@ -92,6 +92,7 @@ class ApplicationRoundListView(ListAPIView):
         query_params = self.request.query_params
 
         return ApplicationRound.filter(
+            program_type=query_params.get("program_type"),
             program=query_params.get("program"),
             year=query_params.get("year"),
             term=query_params.get("term"),

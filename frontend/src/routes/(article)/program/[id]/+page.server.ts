@@ -5,7 +5,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 import { deleteProgram, fetchProgram, updateProgram, type ProgramDetail } from '$lib/api/program';
 import { fetchApplications } from '$lib/api/application';
-import { fetchApplicationRounds } from '$lib/api/applicationRound';
+import { deleteApplicationRound, fetchApplicationRounds } from '$lib/api/applicationRound';
 import { programUpdateSchema } from '$lib/schemas/program';
 import { deleteSchema } from '$lib/schemas/delete';
 import { formAction } from '$lib/abstract/formAction';
@@ -37,5 +37,7 @@ export const actions = {
 
 	deleteProgram: formAction(deleteSchema, deleteProgram, () => {
 		throw redirect(303, '/home');
-	})
+	}),
+
+	deleteApplicationRound: formAction(deleteSchema, deleteApplicationRound)
 };

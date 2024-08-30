@@ -191,7 +191,10 @@
 		{/if}
 
 		{#if programTypes === 'UG Freshman' || programTypes === 'UG Transfer'}
-			<Button outline color="light" type="button" on:click={stageUC}>
+			<div class="mt-4 font-medium text-sm text-blue-700">
+				You can add the top 6 UC programs with one click:
+			</div>
+			<Button outline color="blue" type="button" on:click={stageUC}>
 				Add UC programs<ChevronDoubleRightOutline class="ms-2" />
 			</Button>
 		{/if}

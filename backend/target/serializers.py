@@ -99,6 +99,7 @@ class ApplicationRoundSerializer(serializers.ModelSerializer):
             fields = "__all__"
 
     program_iteration = ProgramIterationSerializer()
+    applications_count = serializers.IntegerField()
 
 
 class ApplicationRoundCreateSerializer(serializers.ModelSerializer):
