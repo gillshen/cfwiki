@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { writable } from 'svelte/store';
 	import { Heading } from 'flowbite-svelte';
 
 	import {
@@ -18,13 +19,16 @@
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import RowCountBadge from '$lib/components/grid-pages/RowCountBadge.svelte';
-	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
+	import ControlButton from '$lib/components/grid-pages/ControlButton.svelte';
+	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
+	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
 
 	import {
 		localeComparator,
 		calcSuccessRate,
 		noZeroValueFormatter,
-		percentageValueFormatter
+		percentageValueFormatter,
+		showColumn
 	} from '$lib/utils/gridUtils';
 
 	export let data: {
@@ -89,8 +93,7 @@
 		{
 			headerName: 'UG pending',
 			field: 'application_stats.ug.pending',
-			type: ['rightAligned', 'stats'],
-			hide: true
+			type: ['rightAligned', 'stats']
 		},
 		{
 			headerName: 'UG accepted',
@@ -113,8 +116,7 @@
 			headerName: 'UG cancelled, etc.',
 			field: 'application_stats.ug.neutral',
 			flex: 1.2,
-			type: ['rightAligned', 'stats'],
-			hide: true
+			type: ['rightAligned', 'stats']
 		},
 		{
 			headerName: 'Grad applied',
@@ -124,8 +126,7 @@
 		{
 			headerName: 'Grad pending',
 			field: 'application_stats.grad.pending',
-			type: ['rightAligned', 'stats'],
-			hide: true
+			type: ['rightAligned', 'stats']
 		},
 		{
 			headerName: 'Grad accepted',
@@ -148,28 +149,48 @@
 			headerName: 'Grad cancelled, etc.',
 			field: 'application_stats.grad.neutral',
 			flex: 1.2,
-			type: ['rightAligned', 'stats'],
-			hide: true
+			type: ['rightAligned', 'stats']
 		}
 	];
+
+	const columnVisibility: Record<string, boolean> = {
+		Name: true,
+		'Alt. name': true,
+		Country: true
+	};
+
+	const statsColumnVisibility: Record<string, boolean> = {
+		'UG applied': true,
+		'UG pending': false,
+		'UG accepted': true,
+		'UG denied': false,
+		'UG acceptance rate': true,
+		'UG cancelled, etc.': false,
+		'Grad applied': true,
+		'Grad pending': false,
+		'Grad accepted': true,
+		'Grad denied': false,
+		'Grad acceptance rate': true,
+		'Grad cancelled, etc.': false
+	};
 
 	if (data.schoolType !== 'Secondary Schools') {
 		for (const column of statsColumnDefs) {
 			columnDefs.push(column);
 		}
+		for (const headerName in statsColumnVisibility) {
+			columnVisibility[headerName] = statsColumnVisibility[headerName];
+		}
 	}
 
 	let gridApi: GridApi;
 	let rowCount: number;
+	const hideControl = writable(true);
 
 	const showDisplayedRowCount = () => {
 		if (gridApi) {
 			rowCount = gridApi.getDisplayedRowCount();
 		}
-	};
-
-	const exportAsCsv = () => {
-		gridApi!.exportDataAsCsv({ fileName: 'cf_schools' });
 	};
 
 	onMount(async () => {
@@ -195,6 +216,10 @@
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		gridApi = createGrid(gridElement, gridOptions);
+
+		for (const headerName in columnVisibility) {
+			showColumn(gridApi, headerName, columnVisibility[headerName]);
+		}
 	});
 </script>
 
@@ -202,10 +227,11 @@
 	<div class="flex gap-4 items-center">
 		{data.schoolType}
 		<RowCountBadge promisedData={data.schools} {rowCount} />
+		<ControlButton {hideControl} />
 	</div>
 
 	{#await data.schools then _}
-		<GridButtons onDownload={exportAsCsv} onConfig={() => alert('config')} />
+		<DownloadButton {gridApi} fileName="cf_schools" />
 	{/await}
 </Heading>
 
@@ -218,3 +244,5 @@
 		<NoDataSign text="No schools in this category" />
 	{/if}
 {/await}
+
+<ControlDrawer {gridApi} {columnVisibility} {hideControl} />

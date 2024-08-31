@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { writable } from 'svelte/store';
 	import { Heading } from 'flowbite-svelte';
 
 	import {
@@ -16,13 +17,15 @@
 	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
 	import { formatApplicationType } from '$lib/utils/applicationUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
-	import { localeComparator } from '$lib/utils/gridUtils';
+	import { localeComparator, showColumn } from '$lib/utils/gridUtils';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
 	import ApplicationStatus from '$lib/components/grid-cells/ApplicationStatus.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import RowCountBadge from '$lib/components/grid-pages/RowCountBadge.svelte';
-	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
+	import ControlButton from '$lib/components/grid-pages/ControlButton.svelte';
+	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
+	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
 
 	export let data: {
 		applications: Promise<ApplicationListItem[]>;
@@ -84,26 +87,16 @@
 			filter: false,
 			cellRenderer: IdRenderer
 		},
-		{
-			headerName: 'Year',
-			field: 'program_iteration.year',
-			filter: NumberFilter,
-			hide: data.year !== undefined
-		},
-		{ headerName: 'Term', field: 'program_iteration.term', hide: true },
+		{ headerName: 'Year', field: 'program_iteration.year', filter: NumberFilter },
+		{ headerName: 'Term', field: 'program_iteration.term' },
 		{ headerName: 'Student', field: 'student.fullname', flex: 1.5, comparator: localeComparator },
-		{ headerName: '战略', valueGetter: stratPeopleValueGetter },
+		{ headerName: '战略顾问', valueGetter: stratPeopleValueGetter },
 		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
 		{ headerName: '文案', valueGetter: workPeopleValueGetter, flex: 1.2 },
-		{ headerName: '服务', valueGetter: salesAssistantsValueGetter },
-		{ headerName: '流程', valueGetter: workAssistantsValueGetter, hide: true },
+		{ headerName: '服务顾问', valueGetter: salesAssistantsValueGetter },
+		{ headerName: '流程顾问', valueGetter: workAssistantsValueGetter },
 		{ headerName: 'School', valueGetter: schoolValueGetter, flex: 3 },
-		{
-			headerName: 'Program',
-			field: 'program.display_name',
-			flex: 3,
-			hide: data.applicationType === 'freshman' || data.applicationType === 'transfer'
-		},
+		{ headerName: 'Program', field: 'program.display_name', flex: 3 },
 		{ headerName: 'Major/Track', field: 'majors_or_track', flex: 2 },
 		{ headerName: 'Adm. plan', field: 'round.name' },
 		{ headerName: 'Due', field: 'round.due_date', flex: 1.5 },
@@ -111,17 +104,32 @@
 		{ headerName: 'Last update', field: 'latest_log.date', flex: 1.5 }
 	];
 
+	const columnVisibility: Record<string, boolean> = {
+		Year: !data.year,
+		Term: false,
+		Student: true,
+		战略顾问: false,
+		顾问: true,
+		文案: true,
+		服务顾问: false,
+		流程顾问: false,
+		School: true,
+		Program: data.applicationType !== 'freshman' && data.applicationType !== 'transfer',
+		'Major/Track': data.applicationType !== 'graduate' && data.applicationType !== 'other',
+		'Adm. plan': true,
+		Due: true,
+		Status: true,
+		'Last update': false
+	};
+
 	let gridApi: GridApi;
 	let rowCount: number;
+	const hideControl = writable(true);
 
 	const showDisplayedRowCount = () => {
 		if (gridApi) {
 			rowCount = gridApi.getDisplayedRowCount();
 		}
-	};
-
-	const exportAsCsv = () => {
-		gridApi!.exportDataAsCsv({ fileName: 'cf_applications' });
 	};
 
 	onMount(async () => {
@@ -145,6 +153,10 @@
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		gridApi = createGrid(gridElement, gridOptions);
+
+		for (const headerName in columnVisibility) {
+			showColumn(gridApi, headerName, columnVisibility[headerName]);
+		}
 	});
 </script>
 
@@ -158,12 +170,12 @@
 		{:else}
 			All
 		{/if}
-
 		<RowCountBadge promisedData={data.applications} {rowCount} />
+		<ControlButton {hideControl} />
 	</div>
 
 	{#await data.applications then _}
-		<GridButtons onDownload={exportAsCsv} onConfig={() => alert('config')} />
+		<DownloadButton {gridApi} fileName="cf_applications" />
 	{/await}
 </Heading>
 
@@ -176,3 +188,5 @@
 		<NoDataSign text="No applications in this category" />
 	{/if}
 {/await}
+
+<ControlDrawer {gridApi} {columnVisibility} {hideControl} />

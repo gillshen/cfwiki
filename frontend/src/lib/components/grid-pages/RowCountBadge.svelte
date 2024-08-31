@@ -5,10 +5,12 @@
 	export let rowCount: number | null;
 </script>
 
-{#await promisedData then data}
-	{#if data.length && rowCount !== data.length}
-		<Badge>{rowCount}/{data.length}</Badge>
-	{:else if data.length}
-		<Badge>{data.length}</Badge>
-	{/if}
-{/await}
+<div class="relative -top-3 -left-2 -z-10">
+	{#await promisedData then data}
+		{#if data.length && rowCount !== data.length}
+			<Badge>{rowCount}/{data.length}</Badge>
+		{:else if data.length}
+			<Badge>{data.length}</Badge>
+		{/if}
+	{/await}
+</div>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { writable } from 'svelte/store';
 	import { Heading } from 'flowbite-svelte';
 
 	import {
@@ -15,15 +16,18 @@
 	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
-	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
 	import RowCountBadge from '$lib/components/grid-pages/RowCountBadge.svelte';
+	import ControlButton from '$lib/components/grid-pages/ControlButton.svelte';
+	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
+	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
 	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
 	import { formatSchoolNames } from '$lib/utils/programUtils';
 
 	import {
 		calcSuccessRate,
 		noZeroValueFormatter,
-		percentageValueFormatter
+		percentageValueFormatter,
+		showColumn
 	} from '$lib/utils/gridUtils';
 
 	export let data: {
@@ -76,9 +80,8 @@
 		},
 		{ headerName: 'Type', field: 'type', valueGetter: programTypeValueGetter },
 		{ headerName: 'School', field: 'schools', flex: 2.5, valueGetter: schoolsGetter },
-		{ headerName: 'Name', field: 'name', flex: 2.5, hide: data.programType === 'Undergraduate' },
-		{ headerName: 'Degree', field: 'degree', hide: data.programType === 'Undergraduate' },
-
+		{ headerName: 'Name', field: 'name', flex: 2.5 },
+		{ headerName: 'Degree', field: 'degree' },
 		{ headerName: 'Applied', field: 'application_stats.applied', type: ['rightAligned', 'stats'] },
 		{ headerName: 'Pending', field: 'application_stats.pending', type: ['rightAligned', 'stats'] },
 		{
@@ -87,7 +90,6 @@
 			type: ['rightAligned', 'stats']
 		},
 		{ headerName: 'Denied', field: 'application_stats.denied', type: ['rightAligned', 'stats'] },
-
 		{
 			headerName: 'Acceptance rate',
 			flex: 1.2,
@@ -103,16 +105,27 @@
 		}
 	];
 
+	const columnVisibility: Record<string, boolean> = {
+		Type: true,
+		School: true,
+		Name: data.programType !== 'Undergraduate',
+		Degree: data.programType !== 'Undergraduate',
+		Applied: true,
+		Pending: true,
+		Accepted: true,
+		Denied: true,
+		'Acceptance rate': true,
+		'Cancelled, etc.': false
+	};
+
 	let gridApi: GridApi;
 	let rowCount: number;
+	const hideControl = writable(true);
 
 	const showDisplayedRowCount = () => {
 		if (gridApi) {
 			rowCount = gridApi.getDisplayedRowCount();
 		}
-	};
-	const exportAsCsv = () => {
-		gridApi!.exportDataAsCsv({ fileName: 'cf_programs' });
 	};
 
 	onMount(async () => {
@@ -138,6 +151,10 @@
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		gridApi = createGrid(gridElement, gridOptions);
+
+		for (const headerName in columnVisibility) {
+			showColumn(gridApi, headerName, columnVisibility[headerName]);
+		}
 	});
 </script>
 
@@ -145,10 +162,11 @@
 	<div class="flex gap-4 items-center">
 		{`${data.programType} Programs`}
 		<RowCountBadge promisedData={data.programs} {rowCount} />
+		<ControlButton {hideControl} />
 	</div>
 
 	{#await data.programs then _}
-		<GridButtons onDownload={exportAsCsv} onConfig={() => alert('config')} />
+		<DownloadButton {gridApi} fileName="cf_programs" />
 	{/await}
 </Heading>
 
@@ -161,3 +179,5 @@
 		<NoDataSign text="No programs in this category" />
 	{/if}
 {/await}
+
+<ControlDrawer {gridApi} {columnVisibility} {hideControl} />

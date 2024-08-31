@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { writable } from 'svelte/store';
 	import { Heading } from 'flowbite-svelte';
 
 	import {
@@ -18,13 +19,15 @@
 	import { formatLocation, orderByName } from '$lib/utils/studentUtils';
 	import { filterForActive, formatCfNames } from '$lib/utils/serviceUtils';
 	import { makeDate, toISODate } from '$lib/utils/dateUtils';
-	import { localeComparator } from '$lib/utils/gridUtils';
+	import { localeComparator, showColumn } from '$lib/utils/gridUtils';
 	import countryFlags from '$lib/constants/countryFlags';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
-	import Gender from '$lib/components/grid-cells/Gender.svelte';
 	import RowCountBadge from '$lib/components/grid-pages/RowCountBadge.svelte';
-	import GridButtons from '$lib/components/grid-pages/GridButtons.svelte';
+	import ControlButton from '$lib/components/grid-pages/ControlButton.svelte';
+	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
+	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
+	import Gender from '$lib/components/grid-cells/Gender.svelte';
 
 	export let data: {
 		students: Promise<StudentListItem[]>;
@@ -143,15 +146,10 @@
 		{
 			headerName: 'Target year',
 			filter: 'agNumberColumnFilter',
-			valueGetter: lastestTargetYearValueGetter,
-			hide: !!data.targetYear
+			valueGetter: lastestTargetYearValueGetter
 		},
-		{
-			headerName: 'Contract type',
-			valueGetter: latestContractTypeValueGetter,
-			hide: !!data.contractType
-		},
-		{ headerName: 'Contract status', valueGetter: contractStatusValueGetter, hide: !!data.current },
+		{ headerName: 'Contract type', valueGetter: latestContractTypeValueGetter },
+		{ headerName: 'Contract status', valueGetter: contractStatusValueGetter },
 		{ headerName: 'Gender', field: 'gender', cellRenderer: GenderRenderer },
 		{
 			headerName: 'Citizenship',
@@ -173,24 +171,36 @@
 			valueFormatter: homeValueFormatter,
 			useValueFormatterForExport: false
 		},
+		{ headerName: '战略顾问', valueGetter: stratPeopleValueGetter },
 		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
 		{ headerName: '文案', valueGetter: workPeopleValueGetter, flex: 1.2 },
-		{ headerName: '战略', valueGetter: stratPeopleValueGetter },
-		{ headerName: '服务', valueGetter: salesAssistantsValueGetter },
-		{ headerName: '流程', valueGetter: workAssistantsValueGetter }
+		{ headerName: '服务顾问', valueGetter: salesAssistantsValueGetter },
+		{ headerName: '流程顾问', valueGetter: workAssistantsValueGetter }
 	];
+
+	const columnVisibility: Record<string, boolean> = {
+		'Target year': !data.targetYear,
+		'Contract type': !data.contractType,
+		'Contract status': !data.current,
+		Gender: true,
+		Citizenship: true,
+		'Date of birth': false,
+		Home: true,
+		战略顾问: false,
+		顾问: true,
+		文案: true,
+		服务顾问: false,
+		流程顾问: false
+	};
 
 	let gridApi: GridApi;
 	let rowCount: number;
+	const hideControl = writable(true);
 
 	const showDisplayedRowCount = () => {
 		if (gridApi) {
 			rowCount = gridApi.getDisplayedRowCount();
 		}
-	};
-
-	const exportAsCsv = () => {
-		gridApi!.exportDataAsCsv({ fileName: 'cf_students' });
 	};
 
 	onMount(async () => {
@@ -214,6 +224,10 @@
 		};
 		const gridElement: HTMLElement = document.querySelector('#grid')!;
 		gridApi = createGrid(gridElement, gridOptions);
+
+		for (const headerName in columnVisibility) {
+			showColumn(gridApi, headerName, columnVisibility[headerName]);
+		}
 	});
 </script>
 
@@ -227,12 +241,12 @@
 		{:else}
 			All
 		{/if}
-
 		<RowCountBadge promisedData={data.students} {rowCount} />
+		<ControlButton {hideControl} />
 	</div>
 
 	{#await data.students then _}
-		<GridButtons onDownload={exportAsCsv} onConfig={() => alert('config')} />
+		<DownloadButton {gridApi} fileName="cf_students" />
 	{/await}
 </Heading>
 
@@ -245,3 +259,5 @@
 		<NoDataSign text="No students in this category" />
 	{/if}
 {/await}
+
+<ControlDrawer {gridApi} {columnVisibility} {hideControl} />

@@ -1,4 +1,4 @@
-import type { ValueGetterParams, ValueFormatterParams } from 'ag-grid-community';
+import type { GridApi, ValueFormatterParams } from 'ag-grid-community';
 
 export const localeComparator = (
 	a: string,
@@ -29,4 +29,10 @@ export function calcSuccessRate(data: { accepted: number; denied: number }): num
 	} else {
 		return accepted / (accepted + denied);
 	}
+}
+
+export function showColumn(gridApi: GridApi, headerName: string, show: boolean) {
+	const columns = gridApi.getColumns();
+	const targetColumns = columns!.filter((col) => col.getColDef().headerName === headerName);
+	gridApi.setColumnsVisible(targetColumns, show);
 }
