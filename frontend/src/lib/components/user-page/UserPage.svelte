@@ -28,6 +28,7 @@
 	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import ApplicationsAccordian from '$lib/components/containers/ApplicationsAccordian.svelte';
+	import { defaultBanner } from '$lib/utils/userUtils';
 
 	import {
 		groupByYear,
@@ -46,12 +47,11 @@
 		applications: Promise<ApplicationListItem[]>;
 	};
 
-	const userIsHost = data.host.id === data.userId;
+	$: userIsHost = data.host.id === data.userId;
 </script>
 
 <Heading tag="h1" class="alt-page-title">
-	{(userIsHost ? data.host.private_banner : data.host.public_banner) ||
-		`${data.host.username}\u2019s Mojo Dojo Casa House`}
+	{data.host.public_banner || defaultBanner(data.host.username)}
 </Heading>
 
 <Tabs tabStyle="underline" class="mt-8">
@@ -78,7 +78,7 @@
 			</div>
 		{/await}
 
-		{#if data.userId === data.host.id}
+		{#if userIsHost}
 			<Button href="/student/new" class="mt-12" outline>Create a student profile</Button>
 		{/if}
 	</TabItem>

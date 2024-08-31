@@ -21,6 +21,25 @@ class CFUserSerializer(serializers.ModelSerializer):
         ]
 
 
+class CFUserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CFUser
+        fields = ["public_banner"]
+
+
+class CFUserPasswordResetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CFUser
+        fields = ["password"]
+
+    password = serializers.CharField(write_only=True, required=True)
+
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data["password"])
+        instance.save()
+        return instance
+
+
 # for nesting within student list and detail serializers
 class ContractByStudentSerializer(serializers.ModelSerializer):
     class Meta:

@@ -3,6 +3,8 @@ from django.urls import path
 from core.views import (
     CFUserListView,
     CFUserDetailView,
+    CFUserUpdateView,
+    CFUserPasswordUpdateView,
     StudentListView,
     StudentByUserListView,
     StudentDetailView,
@@ -74,6 +76,8 @@ urlpatterns = [
     # user
     path("users/", CFUserListView.as_view()),
     path("users/<str:username>/", CFUserDetailView.as_view()),
+    path("users/<int:pk>/update/", CFUserUpdateView.as_view()),
+    path("users/<int:pk>/password/", CFUserPasswordUpdateView.as_view()),
     # student
     path("students/", StudentListView.as_view()),
     path("students-by-user/", StudentByUserListView.as_view()),

@@ -15,7 +15,12 @@
 		Hr
 	} from 'flowbite-svelte';
 
-	import { ChevronDownOutline, ChevronRightOutline } from 'flowbite-svelte-icons';
+	import {
+		ChevronDownOutline,
+		ChevronRightOutline,
+		UserSettingsOutline,
+		ArrowRightToBracketOutline
+	} from 'flowbite-svelte-icons';
 
 	import { Departments } from '$lib/api/user';
 	import { quickAccessYears } from '$lib/utils/dateUtils';
@@ -50,14 +55,29 @@
 	<Navbar fluid>
 		<NavBrand href="/home">
 			<img src="/favicon.png" class="me-3 h-6" alt="CF Logo" />
-			<span class="self-center whitespace-nowrap text-lg font-semibold">The ChoiceFreezer</span>
+			<span class="self-center whitespace-nowrap text-lg font-semibold">ChoiceFreezer</span>
 		</NavBrand>
 
 		<div class="flex align-baseline md:order-2 w-[150px] justify-end">
 			<Avatar bordered size="sm" />
 			<Dropdown class="w-[8rem] z-20" placement="bottom-end">
-				<DropdownItem>Account</DropdownItem>
-				<DropdownItem on:click={() => goto('/logout')}>Log out</DropdownItem>
+				<div slot="header" class="px-4 py-2">
+					<span class="text-sm text-gray-900">{data.username}</span>
+				</div>
+				<DropdownItem
+					on:click={() => goto('/account')}
+					class="dropdown-link flex items-center gap-2 justify-between"
+				>
+					Account
+					<UserSettingsOutline />
+				</DropdownItem>
+				<DropdownItem
+					on:click={() => goto('/logout')}
+					class="dropdown-link flex items-center gap-2 justify-between"
+				>
+					Log out
+					<ArrowRightToBracketOutline />
+				</DropdownItem>
 			</Dropdown>
 			<NavHamburger />
 		</div>
@@ -173,6 +193,6 @@
 		<div>
 			<slot />
 		</div>
-		<Hr hrClass="mt-16" />
+		<Hr hrClass="mt-12" />
 	</div>
 </div>

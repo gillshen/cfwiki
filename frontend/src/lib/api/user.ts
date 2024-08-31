@@ -1,4 +1,4 @@
-import { get } from '$lib/api/api';
+import { get, patch } from '$lib/api/api';
 
 export enum Departments {
 	SALES = '咨询',
@@ -23,4 +23,12 @@ export async function fetchCfUsers(): Promise<CfUserListItem[]> {
 
 export async function fetchUser(username: string): Promise<CfUserDetail> {
 	return await get(`users/${username}/`);
+}
+
+export async function updateUser(data: any) {
+	return await patch(`users/${data.id}/update/`, data);
+}
+
+export async function updatePassword(data: any) {
+	return await patch(`users/${data.id}/password/`, data);
 }

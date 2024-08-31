@@ -12,7 +12,7 @@
 	import NewProgramForm from '$lib/components/program-form/NewProgramForm.svelte';
 	import RoundForm from '$lib/components/application-round-form/RoundForm.svelte';
 	import Toast from '$lib/components/misc/Toast.svelte';
-	import { enhanceDisplayName } from '$lib/utils/programUtils';
+	import { enhanceDisplayName, orderByName } from '$lib/utils/programUtils';
 	import { formatRound, orderByDueDate, orderByRoundName } from '$lib/utils/applicationRoundUtils';
 
 	export let form: any;
@@ -152,9 +152,9 @@
 
 	<Label for="program" class="form-label">Program</Label>
 	<Select id="program" bind:value={$programId} on:change={onProgramChange} required>
-		{#each programs.filter((p) => p.schools
-				.map((s) => s.id)
-				.includes($schoolId || 0)) as programOption}
+		{#each programs
+			.filter((p) => p.schools.map((s) => s.id).includes($schoolId || 0))
+			.sort(orderByName) as programOption}
 			<option value={programOption.id}>{enhanceDisplayName(programOption)}</option>
 		{/each}
 	</Select>

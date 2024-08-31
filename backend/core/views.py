@@ -2,6 +2,7 @@ from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView,
     CreateAPIView,
+    UpdateAPIView,
     RetrieveUpdateDestroyAPIView,
     get_object_or_404,
 )
@@ -12,6 +13,8 @@ from core.models import CFUser, Student, Service, Contract, Application, Applica
 
 from core.serializers import (
     CFUserSerializer,
+    CFUserUpdateSerializer,
+    CFUserPasswordResetSerializer,
     StudentListSerializer,
     StudentByUserSerializer,
     StudentDetailSerializer,
@@ -40,6 +43,16 @@ class CFUserDetailView(RetrieveAPIView):
         user = get_object_or_404(CFUser, username=username)
         self.check_object_permissions(self.request, user)
         return user
+
+
+class CFUserUpdateView(UpdateAPIView):
+    queryset = CFUser.objects.all()
+    serializer_class = CFUserUpdateSerializer
+
+
+class CFUserPasswordUpdateView(UpdateAPIView):
+    queryset = CFUser.objects.all()
+    serializer_class = CFUserPasswordResetSerializer
 
 
 class StudentListView(ListAPIView):
