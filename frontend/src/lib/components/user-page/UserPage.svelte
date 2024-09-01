@@ -18,6 +18,7 @@
 	import { categorize, groupByTargetYear } from '$lib/utils/studentUtils';
 	import UserCohortCard from '$lib/components/list-items/UserCohortCard.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
+	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
 	import ProgramType from '$lib/components/table-cells/ProgramType.svelte';
 	import Student from '$lib/components/table-cells/Student.svelte';
@@ -59,23 +60,27 @@
 		{#await data.students}
 			<FetchingDataSign />
 		{:then students}
-			<div class="flex flex-col gap-12">
-				{#each Object.entries(groupByTargetYear(data.host.username, students)) as [year, cohort]}
-					{@const cohorts = categorize(cohort)}
+			{#if students.length}
+				<div class="flex flex-col gap-12">
+					{#each Object.entries(groupByTargetYear(data.host.username, students)) as [year, cohort]}
+						{@const cohorts = categorize(cohort)}
 
-					<div class="flex flex-col">
-						<Heading tag="h2" class="text-xl tabular-nums">{year.trim()}</Heading>
+						<div class="flex flex-col">
+							<Heading tag="h2" class="text-xl tabular-nums">{year.trim()}</Heading>
 
-						<div class="grid grid-cols-3 gap-8 mt-4">
-							{#each Object.entries(cohorts) as [contractType, cohort]}
-								{#if cohort.length}
-									<UserCohortCard {contractType} {cohort} />
-								{/if}
-							{/each}
+							<div class="grid grid-cols-3 gap-8 mt-4">
+								{#each Object.entries(cohorts) as [contractType, cohort]}
+									{#if cohort.length}
+										<UserCohortCard {contractType} {cohort} />
+									{/if}
+								{/each}
+							</div>
 						</div>
-					</div>
-				{/each}
-			</div>
+					{/each}
+				</div>
+			{:else}
+				<NoDataSign text="None" divClass="mt-6" />
+			{/if}
 		{/await}
 
 		{#if userIsHost}

@@ -12,7 +12,8 @@
 		DropdownItem,
 		DropdownDivider,
 		Avatar,
-		Hr
+		Hr,
+		Heading
 	} from 'flowbite-svelte';
 
 	import {
@@ -51,7 +52,7 @@
 			: 'max-w-[1280px]';
 </script>
 
-<div class={`container ${pageWidth} mx-auto px-12 pb-8`}>
+<div class={`container ${pageWidth} mx-auto px-12 pb-8 flex-grow-0`}>
 	<Navbar fluid>
 		<NavBrand href="/home">
 			<img src="/favicon.png" class="me-1 h-6" alt="CF Logo" />
@@ -189,10 +190,110 @@
 		</NavUl>
 	</Navbar>
 
-	<div class="px-4 flex flex-col justify-between min-h-[calc(100vh-108px)]">
+	<div class="px-4 flex flex-col justify-between min-h-[calc(100vh-320px)] flex-grow">
 		<div>
 			<slot />
 		</div>
-		<Hr hrClass="mt-12" />
 	</div>
 </div>
+
+<Hr hrClass="mt-8" />
+
+<div class="footer bg-stone-100">
+	<div
+		class="container max-w-[1280px] mx-auto px-16 pt-8 pb-12 grid grid-cols-[2fr_3fr_2fr_2fr_2fr] gap-x-4"
+	>
+		<article>
+			<NavBrand href="/home">
+				<img src="/favicon.png" class="me-1 h-6" alt="CF Logo" />
+				<span class="self-center whitespace-nowrap text-lg font-semibold">ChoiceFreezer</span>
+			</NavBrand>
+
+			<div class="text-sm mt-4">&copy; just-a-test</div>
+		</article>
+
+		<article class="border-r-[1px] border-solid mr-6">
+			<Heading tag="h3" class="text-lg font-medium">CFers</Heading>
+			<div class="grid grid-cols-2 mt-2">
+				<ul>
+					{#each cfServicePeople as cfer}
+						<li><a href={`/cf/${cfer.username}`}>{cfer.username}</a></li>
+					{/each}
+				</ul>
+				<ul>
+					{#each cfSalesPeople as cfer}
+						<li><a href={`/cf/${cfer.username}`}>{cfer.username}</a></li>
+					{/each}
+					<li><a href="/excf" class="font-medium block mt-4">Ex-CFers</a></li>
+				</ul>
+			</div>
+		</article>
+
+		<article>
+			<Heading tag="h3" class="text-lg font-medium">Students</Heading>
+			{#each years as year}
+				<Heading tag="h4" class="mt-3 text-sm font-medium text-primary-900">{year}</Heading>
+				<ul>
+					{#each contractTypes as contractType}
+						<li>
+							<a href={`/data/students/${year}/${contractTypeToSlug(contractType)}`}>
+								{contractType}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			{/each}
+			<ul class="mt-3 flex flex-col gap-2">
+				<li><a href="/data/students/current" class="font-medium">Current Students</a></li>
+				<li><a href="/data/students/all" class="font-medium">All Students</a></li>
+				<li><a href="/student/new" class="font-medium text-primary-700">Create New</a></li>
+			</ul>
+		</article>
+
+		<article>
+			<Heading tag="h3" class="text-lg font-medium">Applications</Heading>
+			{#each years as year}
+				<Heading tag="h4" class="mt-3 text-sm font-medium text-primary-900">{year}</Heading>
+				<ul>
+					{#each applicationTypes as applicationType}
+						<li>
+							<a href={`/data/applications/${year}/${applicationType}`}>
+								{formatApplicationType(applicationType)}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			{/each}
+			<ul class="mt-3 flex flex-col gap-2">
+				<li><a href="/data/applications/pending" class="font-medium">Pending Applications</a></li>
+				<li><a href="/data/applications/all" class="font-medium">All Applications</a></li>
+			</ul>
+		</article>
+
+		<article>
+			<Heading tag="h3" class="text-lg font-medium">Schools</Heading>
+			<ul class="mt-2">
+				<li><a href="/data/schools/universities">Universities</a></li>
+				<li><a href="/data/schools/secondary-schools">Secondary Schools</a></li>
+				<li><a href="/data/schools/other-institutions">Other Institutions</a></li>
+				<li><a href="/school/new" class="font-medium text-primary-700">Create New</a></li>
+			</ul>
+
+			<Heading tag="h3" class="mt-8 text-lg font-medium">Programs</Heading>
+			<ul class="mt-2">
+				<li><a href="/data/programs/undergraduate">Undergraduate</a></li>
+				<li><a href="/data/programs/graduate">Graduate</a></li>
+				<li><a href="/data/programs/non-degree">Non-degree</a></li>
+			</ul>
+		</article>
+	</div>
+</div>
+
+<style lang="postcss">
+	.footer li a {
+		@apply text-sm;
+	}
+	.footer li a:hover {
+		@apply text-primary-700;
+	}
+</style>
