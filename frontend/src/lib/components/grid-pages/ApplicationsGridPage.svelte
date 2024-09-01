@@ -111,7 +111,12 @@
 			filter: false,
 			cellRenderer: IdRenderer
 		},
-		{ headerName: 'Year', field: 'program_iteration.year', type: 'numeric' },
+		{
+			headerName: 'Year',
+			field: 'program_iteration.year',
+			type: 'numeric',
+			headerTooltip: 'Year of admission'
+		},
 		{ headerName: 'Term', field: 'program_iteration.term' },
 		{ headerName: 'Student', field: 'student.fullname', flex: 1.2, comparator: localeComparator },
 		{ headerName: '战略顾问', valueGetter: stratPeopleValueGetter },
@@ -133,10 +138,20 @@
 		{ headerName: 'School', valueGetter: schoolValueGetter, flex: 3 },
 		{ headerName: 'Program', field: 'program.display_name', flex: 3 },
 		{ headerName: 'Major/Track', field: 'majors_or_track', flex: 2 },
-		{ headerName: 'Adm. Plan', field: 'round.name' },
+		{ headerName: 'Adm. Plan', field: 'round.name', headerTooltip: 'Admission plan' },
 		{ headerName: 'Due', field: 'round.due_date', flex: 1.5 },
-		{ headerName: 'Status', field: 'latest_log.status', cellRenderer: StatusRenderer },
-		{ headerName: 'Last Update', field: 'latest_log.date', flex: 1.5 }
+		{
+			headerName: 'Status',
+			field: 'latest_log.status',
+			cellRenderer: StatusRenderer,
+			headerTooltip: 'Latest status of the application'
+		},
+		{
+			headerName: 'Last Update',
+			field: 'latest_log.date',
+			flex: 1.5,
+			headerTooltip: 'The (approximate) date when the application assumed its latest status'
+		}
 	];
 
 	const columnVisibility: Record<string, boolean> = {

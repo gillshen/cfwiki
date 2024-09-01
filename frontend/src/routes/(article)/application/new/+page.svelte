@@ -63,8 +63,8 @@
 		<Alert color="blue" class="form-width flex gap-2">
 			<InfoCircleOutline />
 			<span>
-				Use the form below to add programs. The ones you&rsquo;ve added will appear on the right.
-				When done, click <strong>Create x application(s)</strong>.
+				Use the form below to select programs. The ones you&rsquo;ve selected will appear on the
+				right. When done, click <strong>Create</strong>.
 			</span>
 		</Alert>
 

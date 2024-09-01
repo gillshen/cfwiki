@@ -52,11 +52,11 @@
 		return `${flag}\xa0\xa0${params.value}`;
 	}
 
-	function ugSuccessRateValueGetter(params: ValueGetterParams): number | string {
+	function ugSuccessRateValueGetter(params: ValueGetterParams): number | null {
 		return calcSuccessRate(params.data.application_stats.ug);
 	}
 
-	function gradSuccessRateValueGetter(params: ValueGetterParams): number | string {
+	function gradSuccessRateValueGetter(params: ValueGetterParams): number | null {
 		return calcSuccessRate(params.data.application_stats.grad);
 	}
 
@@ -88,68 +88,78 @@
 		{
 			headerName: 'UG Applied',
 			field: 'application_stats.ug.applied',
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats'],
+			headerTooltip: 'Total number of UG freshman and transfer applications'
 		},
 		{
 			headerName: 'UG Pending',
 			field: 'application_stats.ug.pending',
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats']
 		},
 		{
 			headerName: 'UG Accepted',
 			field: 'application_stats.ug.accepted',
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats']
 		},
 		{
 			headerName: 'UG Denied',
 			field: 'application_stats.ug.denied',
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats'],
+			headerTooltip: 'Including presumed rejections and offer rescissions'
 		},
 		{
 			headerName: 'UG Acceptance Rate',
 			flex: 1.2,
 			valueGetter: ugSuccessRateValueGetter,
 			valueFormatter: percentageValueFormatter,
-			type: 'rightAligned'
+			type: 'numericColumn',
+			filter: 'agNumberColumnFilter',
+			headerTooltip: 'Applied / (Applied + Denied)'
 		},
 		{
 			headerName: 'UG Cancelled, etc.',
 			field: 'application_stats.ug.neutral',
 			flex: 1.2,
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats'],
+			headerTooltip: 'Cancelled, withdrawn, or untracked'
 		},
 		{
 			headerName: 'Grad Applied',
 			field: 'application_stats.grad.applied',
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats'],
+			headerTooltip: 'Total number of graduate applications'
 		},
 		{
 			headerName: 'Grad Pending',
 			field: 'application_stats.grad.pending',
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats']
 		},
 		{
 			headerName: 'Grad Accepted',
 			field: 'application_stats.grad.accepted',
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats']
 		},
 		{
 			headerName: 'Grad Denied',
 			field: 'application_stats.grad.denied',
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats'],
+			headerTooltip: 'Including presumed rejections and offer rescissions'
 		},
 		{
 			headerName: 'Grad Acceptance Rate',
 			flex: 1.2,
 			valueGetter: gradSuccessRateValueGetter,
 			valueFormatter: percentageValueFormatter,
-			type: 'rightAligned'
+			type: 'numericColumn',
+			filter: 'agNumberColumnFilter',
+			headerTooltip: 'Applied / (Applied + Denied)'
 		},
 		{
 			headerName: 'Grad Cancelled, etc.',
 			field: 'application_stats.grad.neutral',
 			flex: 1.2,
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats'],
+			headerTooltip: 'Cancelled, withdrawn, or untracked'
 		}
 	];
 

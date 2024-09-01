@@ -22,10 +22,10 @@ export function percentageValueFormatter(params: ValueFormatterParams): string {
 	}
 }
 
-export function calcSuccessRate(data: { accepted: number; denied: number }): number | string {
+export function calcSuccessRate(data: { accepted: number; denied: number }): number | null {
 	const { accepted, denied } = data;
 	if (accepted + denied === 0) {
-		return '';
+		return null;
 	} else {
 		return accepted / (accepted + denied);
 	}

@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { Card } from 'flowbite-svelte';
-	import { CloseOutline } from 'flowbite-svelte-icons';
+	import { Card, CloseButton } from 'flowbite-svelte';
 
 	import type { StagedApplication } from '$lib/schemas/application';
 	import { enhanceDisplayName } from '$lib/utils/programUtils';
@@ -20,12 +19,8 @@
 			<div class="text-sm text-primary-500">{formatRound(round)}</div>
 		</div>
 
-		<button
-			type="button"
-			on:click={onRemove}
-			class="border-none size-4 text-primary-500 hover:text-primary-700"
-		>
-			<CloseOutline />
-		</button>
+		<div class="-mt-2">
+			<CloseButton on:click={onRemove} />
+		</div>
 	</div>
 </Card>

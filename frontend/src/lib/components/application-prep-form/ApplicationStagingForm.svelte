@@ -181,7 +181,7 @@
 
 	<div class="flex flex-col gap-4 mt-8">
 		<Button outline type="submit" class="min-w-24" on:click={stageRound}>
-			Add<ChevronDoubleRightOutline class="ms-2" />
+			Select<ChevronDoubleRightOutline class="ms-2" />
 		</Button>
 
 		{#if prepError}
@@ -192,10 +192,10 @@
 
 		{#if programTypes === 'UG Freshman' || programTypes === 'UG Transfer'}
 			<div class="mt-4 font-medium text-sm text-blue-700">
-				You can add the top 6 UC programs with one click:
+				You can select the top 6 UC programs with one click:
 			</div>
 			<Button outline color="blue" type="button" on:click={stageUC}>
-				Add UC programs<ChevronDoubleRightOutline class="ms-2" />
+				Select UC programs<ChevronDoubleRightOutline class="ms-2" />
 			</Button>
 		{/if}
 	</div>

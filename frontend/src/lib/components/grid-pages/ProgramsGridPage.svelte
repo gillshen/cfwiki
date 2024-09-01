@@ -58,7 +58,7 @@
 		return formatSchoolNames(params.data);
 	}
 
-	function successRateValueGetter(params: ValueGetterParams): number | string {
+	function successRateValueGetter(params: ValueGetterParams): number | null {
 		return calcSuccessRate(params.data.application_stats);
 	}
 
@@ -82,26 +82,39 @@
 		{ headerName: 'School', field: 'schools', flex: 2.5, valueGetter: schoolsGetter },
 		{ headerName: 'Name', field: 'name', flex: 2.5 },
 		{ headerName: 'Degree', field: 'degree' },
-		{ headerName: 'Applied', field: 'application_stats.applied', type: ['rightAligned', 'stats'] },
-		{ headerName: 'Pending', field: 'application_stats.pending', type: ['rightAligned', 'stats'] },
+		{
+			headerName: 'Applied',
+			field: 'application_stats.applied',
+			type: ['numericColumn', 'stats'],
+			headerTooltip: 'Total number of applications'
+		},
+		{ headerName: 'Pending', field: 'application_stats.pending', type: ['numericColumn', 'stats'] },
 		{
 			headerName: 'Accepted',
 			field: 'application_stats.accepted',
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats']
 		},
-		{ headerName: 'Denied', field: 'application_stats.denied', type: ['rightAligned', 'stats'] },
+		{
+			headerName: 'Denied',
+			field: 'application_stats.denied',
+			type: ['numericColumn', 'stats'],
+			headerTooltip: 'Including presumed rejections and offer rescissions'
+		},
 		{
 			headerName: 'Acceptance Rate',
 			flex: 1.2,
 			valueGetter: successRateValueGetter,
 			valueFormatter: percentageValueFormatter,
-			type: 'rightAligned'
+			type: 'numericColumn',
+			filter: 'agNumberColumnFilter',
+			headerTooltip: 'Applied / (Applied + Denied)'
 		},
 		{
 			headerName: 'Cancelled, etc.',
 			field: 'application_stats.neutral',
 			flex: 1.2,
-			type: ['rightAligned', 'stats']
+			type: ['numericColumn', 'stats'],
+			headerTooltip: 'Cancelled, withdrawn, or untracked'
 		}
 	];
 

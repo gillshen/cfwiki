@@ -46,7 +46,7 @@ export async function fetchPrograms(params?: {
 }
 
 export async function fetchProgramsWithStats(params?: {
-	type: 'undergraduate' | 'graduate' | 'non-degree';
+	type: 'undergraduate' | 'graduate' | 'nondegree';
 }): Promise<ProgramDetail[]> {
 	return await get(`programs/stats/${buildQuery(params)}`);
 }
