@@ -91,7 +91,7 @@
 		},
 		{ headerName: 'Denied', field: 'application_stats.denied', type: ['rightAligned', 'stats'] },
 		{
-			headerName: 'Acceptance rate',
+			headerName: 'Acceptance Rate',
 			flex: 1.2,
 			valueGetter: successRateValueGetter,
 			valueFormatter: percentageValueFormatter,
@@ -106,6 +106,7 @@
 	];
 
 	const columnVisibility: Record<string, boolean> = {
+		Link: true,
 		Type: true,
 		School: true,
 		Name: data.programType !== 'Undergraduate',
@@ -114,7 +115,7 @@
 		Pending: true,
 		Accepted: true,
 		Denied: true,
-		'Acceptance rate': true,
+		'Acceptance Rate': true,
 		'Cancelled, etc.': false
 	};
 

@@ -1,5 +1,7 @@
+from decimal import Decimal
+
 from django.db import models
-from django.db.models import Case, When, Value, OuterRef, Subquery, Q
+from django.db.models import Case, When, Value, OuterRef, Subquery, Q, F, Max
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
@@ -60,6 +62,14 @@ class Student(models.Model):
         q = cls.objects.all().prefetch_related(
             "contracts",
             "contracts__services__cfer",
+            "toefl",
+            "ielts",
+            "duolingo",
+            "sat",
+            "act",
+            "gre",
+            "gmat",
+            "lsat",
         )
 
         if cfer is not None:
@@ -122,6 +132,70 @@ class Student(models.Model):
     @property
     def latest_contract(self):
         return self.contracts_sorted.first()
+
+    @staticmethod
+    def _find_best_score(*, q, total_exp):
+        if not q.exists():
+            return
+        values = q.annotate(v=total_exp).order_by("-v").values("v").first()
+        return values["v"]
+
+    @property
+    def best_toefl(self):
+        return self._find_best_score(
+            q=self.toefl,
+            total_exp=F("reading") + F("listening") + F("speaking") + F("writing"),
+        )
+
+    @property
+    def best_ielts(self):
+        total = self._find_best_score(
+            q=self.ielts,
+            total_exp=F("reading") + F("listening") + F("speaking") + F("writing"),
+        )
+        if total is not None:
+            return Decimal(int(total / 2 + Decimal(0.5)) / 2)
+
+    @property
+    def best_duolingo(self):
+        return self._find_best_score(q=self.duolingo, total_exp=F("overall"))
+
+    @property
+    def best_gre(self):
+        return self._find_best_score(q=self.gre, total_exp=F("verbal") + F("quant"))
+
+    @property
+    def best_gmat(self):
+        return self._find_best_score(q=self.gmat, total_exp=F("total"))
+
+    @property
+    def best_lsat(self):
+        return self._find_best_score(q=self.lsat, total_exp=F("score"))
+
+    @property
+    def super_sat(self):
+        aggreg: dict = self.sat.aggregate(
+            max_ebrw=Max("ebrw"),
+            max_math=Max("math"),
+        )
+        try:
+            return sum(aggreg.values())
+        except TypeError:
+            return
+
+    @property
+    def super_act(self):
+        aggreg: dict = self.act.aggregate(
+            max_math=Max("math"),
+            max_science=Max("science"),
+            max_english=Max("english"),
+            max_reading=Max("reading"),
+        )
+        try:
+            total = sum(aggreg.values())
+            return round(Decimal(total / 4) + Decimal(0.1))
+        except TypeError:
+            return
 
 
 class Contract(models.Model):
@@ -281,6 +355,14 @@ class Application(models.Model):
             )
             .prefetch_related(
                 "contract__services__cfer",
+                "contract__student__toefl",
+                "contract__student__ielts",
+                "contract__student__duolingo",
+                "contract__student__sat",
+                "contract__student__act",
+                "contract__student__gre",
+                "contract__student__gmat",
+                "contract__student__lsat",
                 "round__program_iteration__program__schools",
                 "logs",
             )

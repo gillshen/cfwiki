@@ -45,6 +45,14 @@ export type Contract = {
 
 export type StudentListItem = BaseStudent & {
 	latest_contract: Contract;
+	best_toefl: number | null;
+	best_ielts: number | null;
+	best_duolingo: number | null;
+	super_sat: number | null;
+	super_act: number | null;
+	best_gre: number | null;
+	best_gmat: number | null;
+	best_lsat: number | null;
 };
 
 export type StudentByUserListItem = BaseStudent & {

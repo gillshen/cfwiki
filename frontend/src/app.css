@@ -52,6 +52,10 @@ form.modal {
 	@apply px-12 pb-12;
 }
 
+.tooltip {
+	@apply text-sm font-normal text-gray-100 bg-stone-700;
+}
+
 .page-title {
 	@apply text-3xl font-bold pt-4;
 }

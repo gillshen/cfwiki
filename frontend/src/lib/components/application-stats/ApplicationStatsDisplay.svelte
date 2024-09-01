@@ -103,7 +103,7 @@
 			<div class="flex items-center">
 				<P size="sm">acceptance rate</P>
 				<QuestionCircleOutline size="sm" class="ms-1" />
-				<Tooltip class="font-normal" placement="right">accepted / (accepted + denied)</Tooltip>
+				<Tooltip class="tooltip" placement="right">accepted / (accepted + denied)</Tooltip>
 			</div>
 		</Card>
 

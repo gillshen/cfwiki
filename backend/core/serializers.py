@@ -64,6 +64,14 @@ class StudentListSerializer(serializers.ModelSerializer):
 
     fullname = serializers.CharField()
     latest_contract = ContractByStudentSerializer()
+    best_toefl = serializers.IntegerField()
+    best_ielts = serializers.FloatField()
+    best_duolingo = serializers.IntegerField()
+    super_sat = serializers.IntegerField()
+    super_act = serializers.IntegerField()
+    best_gre = serializers.IntegerField()
+    best_gmat = serializers.IntegerField()
+    best_lsat = serializers.IntegerField()
 
 
 class StudentByUserSerializer(serializers.ModelSerializer):
@@ -153,7 +161,29 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     class StudentSerializer(serializers.ModelSerializer):
         class Meta:
             model = Student
-            fields = ["id", "fullname", "gender", "citizenship"]
+            fields = [
+                "id",
+                "fullname",
+                "gender",
+                "citizenship",
+                "best_toefl",
+                "best_ielts",
+                "best_duolingo",
+                "super_sat",
+                "super_act",
+                "best_gre",
+                "best_gmat",
+                "best_lsat",
+            ]
+
+        best_toefl = serializers.IntegerField()
+        best_ielts = serializers.FloatField()
+        best_duolingo = serializers.IntegerField()
+        super_sat = serializers.IntegerField()
+        super_act = serializers.IntegerField()
+        best_gre = serializers.IntegerField()
+        best_gmat = serializers.IntegerField()
+        best_lsat = serializers.IntegerField()
 
     student = StudentSerializer()
 

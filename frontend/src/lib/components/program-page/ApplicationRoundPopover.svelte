@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition';
 	import { Popover, Heading, P, A, Tooltip } from 'flowbite-svelte';
 
 	import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
@@ -19,11 +20,9 @@
 	} = applRound;
 
 	const { program, year, term } = program_iteration;
-
-	let deleteModal = false;
 </script>
 
-<Popover class="w-[360px]" defaultClass="p-0 m-0">
+<Popover class="w-[360px]" defaultClass="p-0 m-0" transition={fade} params={{ duration: 200 }}>
 	<Heading tag="h3" class="text-lg font-medium bg-stone-100 px-6 py-2">
 		{`${term} ${year} | ${name}`}
 	</Heading>
@@ -45,9 +44,9 @@
 				<A on:click={onDelete}>Delete</A>
 			{:else}
 				<div class="text-gray-400 font-medium cursor-default">Delete</div>
-				<Tooltip class="font-normal" placement="right-end"
-					>You cannot delete this admission plan because it has applications attached it.</Tooltip
-				>
+				<Tooltip class="tooltip" placement="right-end">
+					You cannot delete this admission plan because it has applications attached it.
+				</Tooltip>
 			{/if}
 		</div>
 	</div>

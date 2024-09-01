@@ -90,7 +90,7 @@ export function toeflSubToPercentage(score: number | null): number {
 	return toPercentage(score, 0, 30);
 }
 
-export function ieltsSubToPercentage(score: number | null): number {
+export function ieltsToPercentage(score: number | null): number {
 	return toPercentage(score, 0, 9, 1.2);
 }
 
@@ -106,7 +106,7 @@ export function satEssayToPercentage(score: number | null): number {
 	return toPercentage(score, 2, 8, 1.2);
 }
 
-export function actSubToPercentage(score: number | null): number {
+export function actToPercentage(score: number | null): number {
 	return toPercentage(score, 1, 36);
 }
 

@@ -19,7 +19,7 @@
 
 <Drawer transitionType="fly" {transitionParams} bind:hidden={$hideControl}>
 	<div class="flex items-center pl-2">
-		<Heading tag="h3" class="text-lg font-semibold">Show or hide columns</Heading>
+		<Heading tag="h3" class="text-lg font-semibold">Show or Hide Columns</Heading>
 		<CloseButton on:click={() => hideControl.set(true)} />
 	</div>
 

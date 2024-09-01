@@ -5,7 +5,6 @@
 
 	import {
 		createGrid,
-		NumberFilter,
 		type GridApi,
 		type GridOptions,
 		type ICellRendererParams,
@@ -15,9 +14,6 @@
 	import type { ApplicationListItem } from '$lib/api/application';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
-	import { formatApplicationType } from '$lib/utils/applicationUtils';
-	import { formatCfNames } from '$lib/utils/serviceUtils';
-	import { localeComparator, showColumn } from '$lib/utils/gridUtils';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
 	import ApplicationStatus from '$lib/components/grid-cells/ApplicationStatus.svelte';
@@ -26,6 +22,16 @@
 	import ControlButton from '$lib/components/grid-pages/ControlButton.svelte';
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
+	import { formatApplicationType } from '$lib/utils/applicationUtils';
+	import { formatCfNames } from '$lib/utils/serviceUtils';
+
+	import {
+		getEnglishProficiency,
+		getGreOrGmat,
+		getSatOrAct,
+		localeComparator,
+		showColumn
+	} from '$lib/utils/gridUtils';
 
 	export let data: {
 		applications: Promise<ApplicationListItem[]>;
@@ -77,6 +83,24 @@
 		return formatCfNames(params.data.services, '流程顾问');
 	}
 
+	function satOrActValueGetter(params: ValueGetterParams): string {
+		return getSatOrAct(params.data.student);
+	}
+
+	function greOrGmatValueGetter(params: ValueGetterParams): string {
+		return getGreOrGmat(params.data.student);
+	}
+
+	function englishValueGetter(params: ValueGetterParams): string {
+		return getEnglishProficiency(params.data.student);
+	}
+
+	const columnTypes = {
+		numeric: {
+			filter: 'agNumberColumnFilter'
+		}
+	};
+
 	const columnDefs = [
 		{
 			headerName: 'Link',
@@ -87,24 +111,36 @@
 			filter: false,
 			cellRenderer: IdRenderer
 		},
-		{ headerName: 'Year', field: 'program_iteration.year', filter: NumberFilter },
+		{ headerName: 'Year', field: 'program_iteration.year', type: 'numeric' },
 		{ headerName: 'Term', field: 'program_iteration.term' },
-		{ headerName: 'Student', field: 'student.fullname', flex: 1.5, comparator: localeComparator },
+		{ headerName: 'Student', field: 'student.fullname', flex: 1.2, comparator: localeComparator },
 		{ headerName: '战略顾问', valueGetter: stratPeopleValueGetter },
 		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
 		{ headerName: '文案', valueGetter: workPeopleValueGetter, flex: 1.2 },
 		{ headerName: '服务顾问', valueGetter: salesAssistantsValueGetter },
 		{ headerName: '流程顾问', valueGetter: workAssistantsValueGetter },
+		{ headerName: 'SAT/ACT', valueGetter: satOrActValueGetter },
+		{ headerName: 'SAT', field: 'student.super_sat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'ACT', field: 'student.super_act', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'GRE/GMAT', valueGetter: greOrGmatValueGetter },
+		{ headerName: 'GRE', field: 'student.best_gre', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'GMAT', field: 'student.best_gmat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'LSAT', field: 'student.best_lsat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'Eng. Proficiency', valueGetter: englishValueGetter },
+		{ headerName: 'TOEFL', field: 'student.best_toefl', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'IELTS', field: 'student.best_ielts', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'Duolingo', field: 'student.best_duolingo', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'School', valueGetter: schoolValueGetter, flex: 3 },
 		{ headerName: 'Program', field: 'program.display_name', flex: 3 },
 		{ headerName: 'Major/Track', field: 'majors_or_track', flex: 2 },
-		{ headerName: 'Adm. plan', field: 'round.name' },
+		{ headerName: 'Adm. Plan', field: 'round.name' },
 		{ headerName: 'Due', field: 'round.due_date', flex: 1.5 },
 		{ headerName: 'Status', field: 'latest_log.status', cellRenderer: StatusRenderer },
-		{ headerName: 'Last update', field: 'latest_log.date', flex: 1.5 }
+		{ headerName: 'Last Update', field: 'latest_log.date', flex: 1.5 }
 	];
 
 	const columnVisibility: Record<string, boolean> = {
+		Link: true,
 		Year: !data.year,
 		Term: false,
 		Student: true,
@@ -113,13 +149,24 @@
 		文案: true,
 		服务顾问: false,
 		流程顾问: false,
+		'SAT/ACT': false,
+		SAT: false,
+		ACT: false,
+		'GRE/GMAT': false,
+		GRE: false,
+		GMAT: false,
+		LSAT: false,
+		'Eng. Proficiency': false,
+		TOEFL: false,
+		IELTS: false,
+		Duolingo: false,
 		School: true,
 		Program: data.applicationType !== 'freshman' && data.applicationType !== 'transfer',
 		'Major/Track': data.applicationType !== 'graduate' && data.applicationType !== 'other',
-		'Adm. plan': true,
+		'Adm. Plan': true,
 		Due: true,
 		Status: true,
-		'Last update': false
+		'Last Update': false
 	};
 
 	let gridApi: GridApi;
@@ -145,6 +192,7 @@
 				flex: 1,
 				minWidth: 100
 			},
+			columnTypes,
 			columnDefs,
 			rowData: applications,
 			onFilterChanged: showDisplayedRowCount,

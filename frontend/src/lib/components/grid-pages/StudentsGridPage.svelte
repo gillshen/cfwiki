@@ -16,10 +16,6 @@
 	import type { ContractType } from '$lib/api/contract';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { AgCellRenderer, SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
-	import { formatLocation, orderByName } from '$lib/utils/studentUtils';
-	import { filterForActive, formatCfNames } from '$lib/utils/serviceUtils';
-	import { makeDate, toISODate } from '$lib/utils/dateUtils';
-	import { localeComparator, showColumn } from '$lib/utils/gridUtils';
 	import countryFlags from '$lib/constants/countryFlags';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
@@ -28,6 +24,17 @@
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
 	import Gender from '$lib/components/grid-cells/Gender.svelte';
+	import { formatLocation, orderByName } from '$lib/utils/studentUtils';
+	import { filterForActive, formatCfNames } from '$lib/utils/serviceUtils';
+	import { makeDate, toISODate } from '$lib/utils/dateUtils';
+
+	import {
+		getEnglishProficiency,
+		getGreOrGmat,
+		getSatOrAct,
+		localeComparator,
+		showColumn
+	} from '$lib/utils/gridUtils';
 
 	export let data: {
 		students: Promise<StudentListItem[]>;
@@ -135,22 +142,47 @@
 		return _getLatestServices(params.data, '流程顾问');
 	}
 
+	function satOrActValueGetter(params: ValueGetterParams): string {
+		return getSatOrAct(params.data);
+	}
+
+	function greOrGmatValueGetter(params: ValueGetterParams): string {
+		return getGreOrGmat(params.data);
+	}
+
+	function englishValueGetter(params: ValueGetterParams): string {
+		return getEnglishProficiency(params.data);
+	}
+
+	const columnTypes = {
+		numeric: {
+			filter: 'agNumberColumnFilter'
+		}
+	};
+
 	const columnDefs = [
 		{
 			headerName: 'Name',
-			flex: 1.5,
+			flex: 1.2,
 			valueGetter: nameValueGetter,
 			comparator: localeComparator,
-			cellRenderer: NameRenderer
+			cellRenderer: NameRenderer,
+			pinned: true
 		},
 		{
-			headerName: 'Target year',
-			filter: 'agNumberColumnFilter',
-			valueGetter: lastestTargetYearValueGetter
+			headerName: 'Target Year',
+			valueGetter: lastestTargetYearValueGetter,
+			type: 'numeric',
+			flex: 0.8
 		},
-		{ headerName: 'Contract type', valueGetter: latestContractTypeValueGetter },
-		{ headerName: 'Contract status', valueGetter: contractStatusValueGetter },
-		{ headerName: 'Gender', field: 'gender', cellRenderer: GenderRenderer },
+		{ headerName: 'Contract Type', valueGetter: latestContractTypeValueGetter },
+		{ headerName: 'Contract Status', valueGetter: contractStatusValueGetter },
+		{ headerName: '战略顾问', valueGetter: stratPeopleValueGetter },
+		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
+		{ headerName: '文案', valueGetter: workPeopleValueGetter, flex: 1.2 },
+		{ headerName: '服务顾问', valueGetter: salesAssistantsValueGetter },
+		{ headerName: '流程顾问', valueGetter: workAssistantsValueGetter },
+		{ headerName: 'Gender', field: 'gender', cellRenderer: GenderRenderer, flex: 0.8 },
 		{
 			headerName: 'Citizenship',
 			field: 'citizenship',
@@ -158,39 +190,56 @@
 			useValueFormatterForExport: false
 		},
 		{
-			headerName: 'Date of birth',
+			headerName: 'Date of Birth',
 			filter: 'agDateColumnFilter',
 			valueGetter: dateOfBirthValueGetter,
 			valueFormatter: dateOfBirthValueFormatter
 		},
 		{
 			headerName: 'Home',
-			flex: 1.5,
 			valueGetter: homeValueGetter,
 			comparator: localeComparator,
 			valueFormatter: homeValueFormatter,
 			useValueFormatterForExport: false
 		},
-		{ headerName: '战略顾问', valueGetter: stratPeopleValueGetter },
-		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
-		{ headerName: '文案', valueGetter: workPeopleValueGetter, flex: 1.2 },
-		{ headerName: '服务顾问', valueGetter: salesAssistantsValueGetter },
-		{ headerName: '流程顾问', valueGetter: workAssistantsValueGetter }
+		{ headerName: 'SAT/ACT', valueGetter: satOrActValueGetter },
+		{ headerName: 'SAT', field: 'super_sat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'ACT', field: 'super_act', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'GRE/GMAT', valueGetter: greOrGmatValueGetter },
+		{ headerName: 'GRE', field: 'best_gre', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'GMAT', field: 'best_gmat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'LSAT', field: 'best_lsat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'Eng. Proficiency', valueGetter: englishValueGetter },
+		{ headerName: 'TOEFL', field: 'best_toefl', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'IELTS', field: 'best_ielts', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'Duolingo', field: 'best_duolingo', type: ['numeric', 'rightAligned'] }
 	];
 
 	const columnVisibility: Record<string, boolean> = {
-		'Target year': !data.targetYear,
-		'Contract type': !data.contractType,
-		'Contract status': !data.current,
-		Gender: true,
-		Citizenship: true,
-		'Date of birth': false,
-		Home: true,
+		Name: true,
+		'Target Year': !data.targetYear,
+		'Contract Type': !data.contractType,
+		'Contract Status': !data.current,
 		战略顾问: false,
 		顾问: true,
 		文案: true,
 		服务顾问: false,
-		流程顾问: false
+		流程顾问: false,
+		Gender: true,
+		Citizenship: true,
+		'Date of Birth': false,
+		Home: false,
+		'SAT/ACT': data.contractType !== 'Graduate',
+		SAT: false,
+		ACT: false,
+		'GRE/GMAT': data.contractType !== 'UG Freshman' && data.contractType !== 'UG Transfer',
+		GRE: false,
+		GMAT: false,
+		LSAT: false,
+		'Eng. Proficiency': true,
+		TOEFL: false,
+		IELTS: false,
+		Duolingo: false
 	};
 
 	let gridApi: GridApi;
@@ -216,6 +265,7 @@
 				flex: 1,
 				minWidth: 100
 			},
+			columnTypes,
 			columnDefs,
 			rowData: students.sort(orderByName),
 			onFilterChanged: showDisplayedRowCount,

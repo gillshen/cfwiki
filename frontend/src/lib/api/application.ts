@@ -17,6 +17,14 @@ export type ApplicationListItem = {
 		fullname: string;
 		gender: 'female' | 'male' | 'other';
 		citizenship: string;
+		best_toefl: number | null;
+		best_ielts: number | null;
+		best_duolingo: number | null;
+		super_sat: number | null;
+		super_act: number | null;
+		best_gre: number | null;
+		best_gmat: number | null;
+		best_lsat: number | null;
 	};
 	services: Service[];
 	schools: { name: string; country: string }[];

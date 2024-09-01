@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type IeltsScore } from '$lib/api/scores';
-	import { ieltsOverall, ieltsSubToPercentage } from '$lib/utils/scoresUtils';
+	import { ieltsOverall, ieltsToPercentage } from '$lib/utils/scoresUtils';
 
 	import ScoreContainer from '$lib/components/containers/ScoreContainer.svelte';
 	import ScoreItem from '$lib/components/list-items/ScoreItem.svelte';
@@ -10,13 +10,15 @@
 	export let canEdit: boolean = false;
 	export let updateAction: () => any = () => {};
 	export let deleteAction: () => any = () => {};
+
+	$: overall = ieltsOverall(score);
 </script>
 
 <ScoreContainer>
 	<ScoreItem
 		size="lg"
 		subject="IELTS"
-		score={ieltsOverall(score)}
+		score={overall !== null ? overall.toFixed(1) : null}
 		date={score.date}
 		{canEdit}
 		{updateAction}
@@ -25,28 +27,20 @@
 	/>
 
 	<svelte:fragment slot="body">
-		<ScoreBar
-			label="Reading"
-			percentage={ieltsSubToPercentage(score.reading)}
-			value={score.reading}
-		/>
+		<ScoreBar label="Reading" percentage={ieltsToPercentage(score.reading)} value={score.reading} />
 
 		<ScoreBar
 			label="Listening"
-			percentage={ieltsSubToPercentage(score.listening)}
+			percentage={ieltsToPercentage(score.listening)}
 			value={score.listening}
 		/>
 
 		<ScoreBar
 			label="Speaking"
-			percentage={ieltsSubToPercentage(score.speaking)}
+			percentage={ieltsToPercentage(score.speaking)}
 			value={score.speaking}
 		/>
 
-		<ScoreBar
-			label="Writing"
-			percentage={ieltsSubToPercentage(score.writing)}
-			value={score.writing}
-		/>
+		<ScoreBar label="Writing" percentage={ieltsToPercentage(score.writing)} value={score.writing} />
 	</svelte:fragment>
 </ScoreContainer>

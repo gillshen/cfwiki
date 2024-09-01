@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type ActScore } from '$lib/api/scores';
-	import { actOverall, actSubToPercentage, actWritingToPercentage } from '$lib/utils/scoresUtils';
+	import { actOverall, actToPercentage, actWritingToPercentage } from '$lib/utils/scoresUtils';
 
 	import ScoreContainer from '$lib/components/containers/ScoreContainer.svelte';
 	import ScoreItem from '$lib/components/list-items/ScoreItem.svelte';
@@ -25,25 +25,10 @@
 	/>
 
 	<svelte:fragment slot="body">
-		<ScoreBar label="Math" percentage={actSubToPercentage(score.math)} value={score.math} />
-
-		<ScoreBar
-			label="Science"
-			percentage={actSubToPercentage(score.science)}
-			value={score.science}
-		/>
-
-		<ScoreBar
-			label="English"
-			percentage={actSubToPercentage(score.english)}
-			value={score.english}
-		/>
-
-		<ScoreBar
-			label="Reading"
-			percentage={actSubToPercentage(score.reading)}
-			value={score.reading}
-		/>
+		<ScoreBar label="Math" percentage={actToPercentage(score.math)} value={score.math} />
+		<ScoreBar label="Science" percentage={actToPercentage(score.science)} value={score.science} />
+		<ScoreBar label="English" percentage={actToPercentage(score.english)} value={score.english} />
+		<ScoreBar label="Reading" percentage={actToPercentage(score.reading)} value={score.reading} />
 
 		{#if score.writing !== null}
 			<ScoreBar

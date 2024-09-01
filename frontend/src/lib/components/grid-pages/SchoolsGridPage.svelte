@@ -75,7 +75,7 @@
 			cellRenderer: NameRenderer,
 			comparator: localeComparator
 		},
-		{ headerName: 'Alt. name', field: 'alt_name', flex: 1.5 },
+		{ headerName: 'Alt. Name', field: 'alt_name', flex: 1.2 },
 		{
 			headerName: 'Country',
 			field: 'country',
@@ -86,67 +86,67 @@
 
 	const statsColumnDefs = [
 		{
-			headerName: 'UG applied',
+			headerName: 'UG Applied',
 			field: 'application_stats.ug.applied',
 			type: ['rightAligned', 'stats']
 		},
 		{
-			headerName: 'UG pending',
+			headerName: 'UG Pending',
 			field: 'application_stats.ug.pending',
 			type: ['rightAligned', 'stats']
 		},
 		{
-			headerName: 'UG accepted',
+			headerName: 'UG Accepted',
 			field: 'application_stats.ug.accepted',
 			type: ['rightAligned', 'stats']
 		},
 		{
-			headerName: 'UG denied',
+			headerName: 'UG Denied',
 			field: 'application_stats.ug.denied',
 			type: ['rightAligned', 'stats']
 		},
 		{
-			headerName: 'UG acceptance rate',
+			headerName: 'UG Acceptance Rate',
 			flex: 1.2,
 			valueGetter: ugSuccessRateValueGetter,
 			valueFormatter: percentageValueFormatter,
 			type: 'rightAligned'
 		},
 		{
-			headerName: 'UG cancelled, etc.',
+			headerName: 'UG Cancelled, etc.',
 			field: 'application_stats.ug.neutral',
 			flex: 1.2,
 			type: ['rightAligned', 'stats']
 		},
 		{
-			headerName: 'Grad applied',
+			headerName: 'Grad Applied',
 			field: 'application_stats.grad.applied',
 			type: ['rightAligned', 'stats']
 		},
 		{
-			headerName: 'Grad pending',
+			headerName: 'Grad Pending',
 			field: 'application_stats.grad.pending',
 			type: ['rightAligned', 'stats']
 		},
 		{
-			headerName: 'Grad accepted',
+			headerName: 'Grad Accepted',
 			field: 'application_stats.grad.accepted',
 			type: ['rightAligned', 'stats']
 		},
 		{
-			headerName: 'Grad denied',
+			headerName: 'Grad Denied',
 			field: 'application_stats.grad.denied',
 			type: ['rightAligned', 'stats']
 		},
 		{
-			headerName: 'Grad acceptance rate',
+			headerName: 'Grad Acceptance Rate',
 			flex: 1.2,
 			valueGetter: gradSuccessRateValueGetter,
 			valueFormatter: percentageValueFormatter,
 			type: 'rightAligned'
 		},
 		{
-			headerName: 'Grad cancelled, etc.',
+			headerName: 'Grad Cancelled, etc.',
 			field: 'application_stats.grad.neutral',
 			flex: 1.2,
 			type: ['rightAligned', 'stats']
@@ -155,23 +155,23 @@
 
 	const columnVisibility: Record<string, boolean> = {
 		Name: true,
-		'Alt. name': true,
+		'Alt. Name': true,
 		Country: true
 	};
 
 	const statsColumnVisibility: Record<string, boolean> = {
-		'UG applied': true,
-		'UG pending': false,
-		'UG accepted': true,
-		'UG denied': false,
-		'UG acceptance rate': true,
-		'UG cancelled, etc.': false,
-		'Grad applied': true,
-		'Grad pending': false,
-		'Grad accepted': true,
-		'Grad denied': false,
-		'Grad acceptance rate': true,
-		'Grad cancelled, etc.': false
+		'UG Applied': true,
+		'UG Pending': false,
+		'UG Accepted': true,
+		'UG Denied': false,
+		'UG Acceptance Rate': true,
+		'UG Cancelled, etc.': false,
+		'Grad Applied': true,
+		'Grad Pending': false,
+		'Grad Accepted': true,
+		'Grad Denied': false,
+		'Grad Acceptance Rate': true,
+		'Grad Cancelled, etc.': false
 	};
 
 	if (data.schoolType !== 'Secondary Schools') {
