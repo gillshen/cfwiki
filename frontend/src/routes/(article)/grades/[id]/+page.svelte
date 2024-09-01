@@ -26,7 +26,7 @@
 
 	export let data;
 
-	$: canEdit = true;
+	$: canEdit = data.staffList.includes(data.username);
 	$: groupedGrades = groupByProgressionTerm(data.enrollment.grades);
 
 	let gradeModal = false;

@@ -54,7 +54,7 @@
 <div class={`container ${pageWidth} mx-auto px-12 pb-8`}>
 	<Navbar fluid>
 		<NavBrand href="/home">
-			<img src="/favicon.png" class="me-3 h-6" alt="CF Logo" />
+			<img src="/favicon.png" class="me-1 h-6" alt="CF Logo" />
 			<span class="self-center whitespace-nowrap text-lg font-semibold">ChoiceFreezer</span>
 		</NavBrand>
 

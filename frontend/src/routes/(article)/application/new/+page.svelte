@@ -83,6 +83,7 @@
 				{programTypes}
 				year={data.year}
 				term={data.term}
+				newSchoolForm={data.newSchoolForm}
 				newProgramForm={data.newProgramForm}
 				newApplicationRoundForm={data.newApplicationRoundForm}
 			/>

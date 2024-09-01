@@ -4,6 +4,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { fetchEnrollment } from '$lib/api/enrollment';
+import { fetchStaffList } from '$lib/api/student';
 import { gradeSchema } from '$lib/schemas/grade';
 import { deleteSchema } from '$lib/schemas/delete';
 import { createOrUpdateGrade, deleteGrade } from '$lib/api/grade';
@@ -22,8 +23,11 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Educational experience not found');
 	}
 
+	const staffList = (await fetchStaffList(enrollment.student.id)).staff_names;
+
 	return {
 		enrollment,
+		staffList,
 		gradeForm: await superValidate(zod(gradeSchema)),
 		deleteForm: await superValidate(zod(deleteSchema))
 	};

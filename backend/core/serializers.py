@@ -106,6 +106,14 @@ class StudentDetailSerializer(serializers.ModelSerializer):
     lsat = academics.serializers.LSATScoreCRUDSerializer(many=True)
 
 
+class StudentStaffListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ["staff_names"]
+
+    staff_names = serializers.ListField()
+
+
 class StudentCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student

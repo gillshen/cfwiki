@@ -9,6 +9,7 @@
 	import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
 	import type { StagedApplication } from '$lib/schemas/application';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
+	import SchoolForm from '$lib/components/school-form/SchoolForm.svelte';
 	import NewProgramForm from '$lib/components/program-form/NewProgramForm.svelte';
 	import RoundForm from '$lib/components/application-round-form/RoundForm.svelte';
 	import Toast from '$lib/components/misc/Toast.svelte';
@@ -26,6 +27,7 @@
 	export let programTypes: string | string[];
 	export let year: number;
 	export let term: string;
+	export let newSchoolForm: SuperValidated<any>;
 	export let newProgramForm: SuperValidated<any>;
 	export let newApplicationRoundForm: SuperValidated<any>;
 
@@ -33,6 +35,7 @@
 	$: $form.rounds = $staged.map((item) => item.round.id);
 
 	let roundId: number | '';
+	let schoolModal = false;
 	let programModal = false;
 	let programWarningModal = false;
 	let roundModal = false;
@@ -48,6 +51,10 @@
 
 	const onProgramChange = () => {
 		roundId = '';
+	};
+
+	const handleCreateSchool = () => {
+		schoolModal = true;
 	};
 
 	const handleCreateProgram = () => {
@@ -149,6 +156,11 @@
 			<option value={schoolOption.id}>{schoolOption.name}</option>
 		{/each}
 	</Select>
+	<Helper class="mt-2 form-helper"
+		>If your desired school is not listed, you can create it by <A on:click={handleCreateSchool}
+			>clicking here</A
+		>.</Helper
+	>
 
 	<Label for="program" class="form-label">Program</Label>
 	<Select id="program" bind:value={$programId} on:change={onProgramChange} required>
@@ -200,6 +212,15 @@
 		{/if}
 	</div>
 </form>
+
+<FormModal
+	open={schoolModal}
+	superform={newSchoolForm}
+	fields={SchoolForm}
+	action="?/createSchool"
+	title="Create a school"
+	on:close={() => (schoolModal = false)}
+/>
 
 <FormModal
 	open={programModal}

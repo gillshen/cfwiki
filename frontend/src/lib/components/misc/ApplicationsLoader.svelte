@@ -18,7 +18,9 @@
 		{heading}
 		{#await applications then applications}
 			{#if applications.length}
-				<Badge>{applications.length}</Badge>
+				<div class="relative -top-2 -left-1">
+					<Badge class="h-5">{applications.length}</Badge>
+				</div>
 			{/if}
 		{/await}
 	</Heading>

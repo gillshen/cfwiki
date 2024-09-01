@@ -75,7 +75,7 @@
 					text="Add an admission plan"
 					action={() => goto(`/program/${data.program.id}/plan/new`)}
 				>
-					<PlusOutline slot="icon" />
+					<PlusOutline slot="icon" class="-ml-0.5" />
 				</LinkButton>
 			</div>
 		</div>

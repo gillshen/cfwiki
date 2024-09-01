@@ -74,8 +74,11 @@
 		</Table>
 	{/if}
 
-	<div class="mt-8 flex gap-4">
+	<div class="mt-8 flex gap-8">
 		<slot />
-		<A href={`/grades/${enrollment.id}`}><ArrowRightOutline class="ms-1" /></A>
+		<A href={`/grades/${enrollment.id}`}>
+			<span class="text-sm font-medium">Details</span>
+			<ArrowRightOutline class="ms-0.5" />
+		</A>
 	</div>
 </TimelineItem>

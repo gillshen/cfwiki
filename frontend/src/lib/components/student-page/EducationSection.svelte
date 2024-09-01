@@ -61,7 +61,7 @@
 	{#if canEdit}
 		<div class="mt-8">
 			<LinkButton text="Add an educational experience" action={enrollmentModalOpener()}>
-				<PlusOutline slot="icon" />
+				<PlusOutline slot="icon" class="-ml-0.5" />
 			</LinkButton>
 		</div>
 	{/if}

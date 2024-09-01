@@ -7,9 +7,10 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '$env/static/private';
 
 import { fetchContract, type ContractDetail } from '$lib/api/contract';
-import { fetchSchools } from '$lib/api/school';
+import { createSchool, fetchSchools } from '$lib/api/school';
 import { createProgram, fetchPrograms } from '$lib/api/program';
 import { createApplicationRound, fetchApplicationRounds } from '$lib/api/applicationRound';
+import { schoolSchema } from '$lib/schemas/school';
 import { batchNewApplicationSchema } from '$lib/schemas/application';
 import { newProgramSchema } from '$lib/schemas/program';
 import { roundSchema } from '$lib/schemas/applicationRound';
@@ -59,6 +60,7 @@ export async function load(event: PageServerLoadEvent) {
 			schools: programType === 'nondegree' ? fetchSchools() : fetchSchools({ type: 'university' }),
 			programs: fetchPrograms({ type: programType }),
 			applicationRounds: fetchApplicationRounds({ program_type: programType, year, term }),
+			newSchoolForm: await superValidate(zod(schoolSchema)),
 			newProgramForm: await superValidate(zod(newProgramSchema)),
 			batchNewApplicationForm: await superValidate(zod(batchNewApplicationSchema)),
 			newApplicationRoundForm: await superValidate(zod(roundSchema))
@@ -69,6 +71,8 @@ export async function load(event: PageServerLoadEvent) {
 }
 
 export const actions = {
+	createSchool: formAction(schoolSchema, createSchool),
+
 	createProgram: formAction(newProgramSchema, createProgram),
 
 	createApplicationRound: formAction(roundSchema, createApplicationRound),

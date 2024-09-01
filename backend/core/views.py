@@ -18,6 +18,7 @@ from core.serializers import (
     StudentListSerializer,
     StudentByUserSerializer,
     StudentDetailSerializer,
+    StudentStaffListSerializer,
     StudentCRUDSerializer,
     ContractDetailSerializer,
     ContractCRUDSerializer,
@@ -101,6 +102,14 @@ class StudentDetailView(RetrieveAPIView):
         "enrollments__grades",
     )
     serializer_class = StudentDetailSerializer
+
+
+class StudentStaffListView(RetrieveAPIView):
+    queryset = Student.objects.all().prefetch_related(
+        "contracts",
+        "contracts__services",
+    )
+    serializer_class = StudentStaffListSerializer
 
 
 class StudentCreateView(CreateAPIView):

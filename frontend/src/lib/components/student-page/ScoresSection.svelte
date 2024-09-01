@@ -47,8 +47,8 @@
 	import IeltsSection from '$lib/components/student-page/score-sections/IeltsSection.svelte';
 	import DuolingoSection from '$lib/components/student-page/score-sections/DuolingoSection.svelte';
 	import GreSection from '$lib/components/student-page/score-sections/GreSection.svelte';
-	import GmatSection from './score-sections/GmatSection.svelte';
-	import LsatSection from './score-sections/LsatSection.svelte';
+	import GmatSection from '$lib/components/student-page/score-sections/GmatSection.svelte';
+	import LsatSection from '$lib/components/student-page/score-sections/LsatSection.svelte';
 
 	export let student: StudentDetail;
 	export let canEdit: boolean = false;

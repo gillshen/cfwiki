@@ -2,7 +2,7 @@
 	import { Tabs, TabItem } from 'flowbite-svelte';
 
 	import type { BaseScore } from '$lib/api/scores';
-	import ScoreSectionHeading from './ScoreSectionHeading.svelte';
+	import ScoreSectionHeading from '$lib/components/student-page/ScoreSectionHeading.svelte';
 
 	export let scores: BaseScore[];
 	export let heading: string;

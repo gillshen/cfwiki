@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Heading, Hr } from 'flowbite-svelte';
 
+	import { canEditStudent } from '$lib/utils/userUtils';
 	import Main from '$lib/components/containers/Main.svelte';
 	import BioSection from '$lib/components/student-page/BioSection.svelte';
 	import ContractsSection from '$lib/components/student-page/ContractsSection.svelte';
@@ -10,7 +11,7 @@
 
 	export let data;
 
-	$: canEdit = true;
+	$: canEdit = canEditStudent(data.username, data.student);
 </script>
 
 <Heading tag="h1" class="alt-page-title">{data.student.fullname}</Heading>

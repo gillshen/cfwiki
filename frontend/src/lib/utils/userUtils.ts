@@ -1,4 +1,5 @@
 import type { Cookies } from '@sveltejs/kit';
+import type { StudentDetail, Contract } from '$lib/api/student';
 
 export function defaultBanner(username: string): string {
 	return `${username}\u2019s Mojo Dojo Casa House`;
@@ -30,4 +31,36 @@ export function logout(cookies: Cookies) {
 	cookies.delete('username', opts);
 	cookies.delete('access', opts);
 	cookies.delete('refresh', opts);
+}
+
+export function canEditStudent(username: string, student: StudentDetail): boolean {
+	// Returns true if the user has ever served the student or if no one has
+	if (!username) {
+		return false;
+	}
+
+	if (!student.contracts_sorted.length) {
+		return true;
+	}
+
+	for (const contract of student.contracts_sorted) {
+		if (canEditContract(username, contract)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+export function canEditContract(username: string, contract: Contract): boolean {
+	// Returns true if the user has ever served for the contract
+	if (!username) {
+		return false;
+	}
+
+	for (const service of contract.services) {
+		if (service.cf_username === username) {
+			return true;
+		}
+	}
+	return false;
 }

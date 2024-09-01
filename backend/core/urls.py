@@ -8,6 +8,7 @@ from core.views import (
     StudentListView,
     StudentByUserListView,
     StudentDetailView,
+    StudentStaffListView,
     StudentCreateView,
     StudentRUDView,
     ContractDetailView,
@@ -82,6 +83,7 @@ urlpatterns = [
     path("students/", StudentListView.as_view()),
     path("students-by-user/", StudentByUserListView.as_view()),
     path("students/<int:pk>/", StudentDetailView.as_view()),
+    path("students/<int:pk>/staff/", StudentStaffListView.as_view()),
     path("students/new/", StudentCreateView.as_view()),
     path("students/<int:pk>/update/", StudentRUDView.as_view()),
     # contract

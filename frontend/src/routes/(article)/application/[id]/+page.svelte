@@ -20,7 +20,7 @@
 
 	export let data;
 
-	$: canEdit = true;
+	$: canEdit = data.staffList.includes(data.username);
 
 	let roundChangeModal = false;
 	let roundUpdateModal = false;

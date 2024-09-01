@@ -86,7 +86,7 @@
 	<TabItem title="Applications">
 		<ApplicationsLoader applications={data.applications} showHeading={false}>
 			<svelte:fragment let:applications>
-				<ApplicationsAccordian groupedApplications={groupByYear(applications)} divClass="mt-4">
+				<ApplicationsAccordian groupedApplications={groupByYear(applications)} divClass="-mt-4">
 					<svelte:fragment let:subsetOfApplications>
 						<Table hoverable={subsetOfApplications.length > 1}>
 							<TableHead>

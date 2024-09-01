@@ -2,6 +2,7 @@
 	import { A, Button, Heading, Hr } from 'flowbite-svelte';
 
 	import type { Service } from '$lib/api/contract';
+	import { canEditContract } from '$lib/utils/userUtils';
 	import { orderByEndDateRole } from '$lib/utils/serviceUtils';
 	import ServiceItem from '$lib/components/list-items/ServiceItem.svelte';
 	import ServiceForm from '$lib/components/service-form/ServiceForm.svelte';
@@ -13,7 +14,7 @@
 
 	export let data;
 
-	$: canEdit = true;
+	$: canEdit = canEditContract(data.username, data.contract);
 
 	let serviceModal = false;
 	let serviceDeleteModal = false;
@@ -57,7 +58,9 @@
 	</section>
 {/if}
 
-<Button outline on:click={modalOpener()}>Add staff</Button>
+{#if canEdit}
+	<Button outline on:click={modalOpener()}>Add staff</Button>
+{/if}
 
 <FormModal
 	open={serviceModal}

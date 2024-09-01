@@ -92,10 +92,10 @@
 		{/if}
 	</div>
 
-	<div class="mt-8 flex gap-4">
+	<div class="mt-8 flex gap-4 justify-between">
 		<slot />
 		<A href={`/contract/${contract.id}`}>
-			<ArrowRightOutline class="ms-1" />
+			<ArrowRightOutline />
 		</A>
 	</div>
 </Card>

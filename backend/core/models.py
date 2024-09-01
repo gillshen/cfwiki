@@ -197,6 +197,12 @@ class Student(models.Model):
         except TypeError:
             return
 
+    @property
+    def staff_names(self) -> list[str]:
+        q = Service.objects.filter(contract__student=self)
+        names = q.values_list("cfer_id__username").distinct()
+        return [item[0] for item in names]
+
 
 class Contract(models.Model):
 

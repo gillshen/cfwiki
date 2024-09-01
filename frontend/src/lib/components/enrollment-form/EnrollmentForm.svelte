@@ -76,7 +76,8 @@
 		{/each}
 	</Select>
 	<Helper class="mt-2 form-helper">
-		If your desired school is not listed, <A href="/school/new">go to this page</A> and create it.
+		If your desired school is not listed, <A href="/school/new">create it here</A> and then come back
+		to this page.
 	</Helper>
 {:else}
 	<input name="school" type="number" class="hidden" bind:value={entity.school.id} />

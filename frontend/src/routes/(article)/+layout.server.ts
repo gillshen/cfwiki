@@ -11,6 +11,10 @@ export async function load(event) {
 	const userId = parseInt(userIdString, 10);
 	const username = event.cookies.get('username');
 
+	if (isNaN(userId) || !username) {
+		throw redirect(302, '/login');
+	}
+
 	return {
 		userId,
 		username,

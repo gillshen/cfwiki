@@ -11,7 +11,7 @@
 	<TableBody>
 		<TableBodyRow>
 			<TableBodyCell tdClass="w-40 font-medium py-4">Alt. name</TableBodyCell>
-			<TableBodyCell tdClass="font-normal py-4">{school.alt_name}</TableBodyCell>
+			<TableBodyCell tdClass="font-normal py-4">{school.alt_name || '-'}</TableBodyCell>
 		</TableBodyRow>
 
 		<TableBodyRow>

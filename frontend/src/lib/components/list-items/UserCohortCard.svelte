@@ -18,12 +18,14 @@
 >
 	<Heading tag="h3" class="flex items-center gap-2 ml-6 w-fit text-xl font-bold  tracking-wide">
 		{contractType}
-		{#if currentStudents.length}
-			<Badge>{currentStudents.length}</Badge>
-		{/if}
-		{#if pastStudents.length}
-			<Badge color="dark">{pastStudents.length}</Badge>
-		{/if}
+		<div class="relative -top-1 flex gap-1">
+			{#if currentStudents.length}
+				<Badge class="h-4">{currentStudents.length}</Badge>
+			{/if}
+			{#if pastStudents.length}
+				<Badge class="h-4" color="dark">{pastStudents.length}</Badge>
+			{/if}
+		</div>
 	</Heading>
 
 	<hr class="mx-6 mt-2 mb-4" />
