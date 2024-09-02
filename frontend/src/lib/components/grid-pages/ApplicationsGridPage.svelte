@@ -22,6 +22,7 @@
 	import ControlButton from '$lib/components/grid-pages/ControlButton.svelte';
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
+	import { formatAlevelSummary, formatApSummary, formatIbSummary } from '$lib/utils/studentUtils';
 	import { formatApplicationType } from '$lib/utils/applicationUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 
@@ -87,6 +88,18 @@
 		return getSatOrAct(params.data.student);
 	}
 
+	function apValueGetter(params: ValueGetterParams): string {
+		return formatApSummary(params.data.student.ap_summary);
+	}
+
+	function ibValueGetter(params: ValueGetterParams): string {
+		return formatIbSummary(params.data.student.ib_summary);
+	}
+
+	function alevelValueGetter(params: ValueGetterParams): string {
+		return formatAlevelSummary(params.data.student.alevel_summary);
+	}
+
 	function greOrGmatValueGetter(params: ValueGetterParams): string {
 		return getGreOrGmat(params.data.student);
 	}
@@ -127,6 +140,9 @@
 		{ headerName: 'SAT/ACT', valueGetter: satOrActValueGetter },
 		{ headerName: 'SAT', field: 'student.super_sat', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'ACT', field: 'student.super_act', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'AP', valueGetter: apValueGetter },
+		{ headerName: 'IB', valueGetter: ibValueGetter },
+		{ headerName: 'A-level', valueGetter: alevelValueGetter },
 		{ headerName: 'GRE/GMAT', valueGetter: greOrGmatValueGetter },
 		{ headerName: 'GRE', field: 'student.best_gre', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'GMAT', field: 'student.best_gmat', type: ['numeric', 'rightAligned'] },
@@ -167,6 +183,9 @@
 		'SAT/ACT': false,
 		SAT: false,
 		ACT: false,
+		AP: false,
+		IB: false,
+		'A-level': false,
 		'GRE/GMAT': false,
 		GRE: false,
 		GMAT: false,

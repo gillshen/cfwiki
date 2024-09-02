@@ -43,6 +43,28 @@ export type Contract = {
 	services: Service[];
 };
 
+export type ApCount = {
+	score: 1 | 2 | 3 | 4 | 5;
+	count: number;
+};
+
+export type IbSummary = {
+	predicted: {
+		total: number;
+		scale: number;
+	};
+	final: {
+		total: number;
+		scale: number;
+	};
+};
+
+export type AlevelCount = {
+	type: 'predicted' | 'final';
+	grade: 'A*' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
+	count: number;
+};
+
 export type StudentListItem = BaseStudent & {
 	latest_contract: Contract;
 	best_toefl: number | null;
@@ -53,6 +75,9 @@ export type StudentListItem = BaseStudent & {
 	best_gre: number | null;
 	best_gmat: number | null;
 	best_lsat: number | null;
+	ap_summary: ApCount[];
+	ib_summary: IbSummary[];
+	alevel_summary: AlevelCount[];
 };
 
 export type StudentByUserListItem = BaseStudent & {

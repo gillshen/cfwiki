@@ -2,7 +2,7 @@
 	import { Avatar } from 'flowbite-svelte';
 
 	export let label: string;
-	export let score: number | null;
+	export let score: number | string | null;
 </script>
 
 {#if score !== null}

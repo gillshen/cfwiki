@@ -158,7 +158,7 @@
 				{/each}
 				<DropdownDivider />
 				<DropdownItem href="/data/applications/pending" class="dropdown-link">Pending</DropdownItem>
-				<DropdownItem href="/data/applications/all" class="dropdown-link">All</DropdownItem>
+				<DropdownItem href="/data/applications/all" class="dropdown-link">All (slow!)</DropdownItem>
 			</Dropdown>
 
 			<NavLi class="cursor-pointer">

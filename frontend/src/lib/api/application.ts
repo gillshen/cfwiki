@@ -1,5 +1,6 @@
 import { get, post, patch, buildQuery, destroy } from '$lib/api/api';
 import type { ApplicationStatus, ApplicationLog } from '$lib/api/applicationLog';
+import type { ApCount, IbSummary, AlevelCount } from '$lib/api/student';
 
 export const applicationTypes = ['freshman', 'transfer', 'graduate', 'other'] as const;
 
@@ -25,6 +26,9 @@ export type ApplicationListItem = {
 		best_gre: number | null;
 		best_gmat: number | null;
 		best_lsat: number | null;
+		ap_summary: ApCount[];
+		ib_summary: IbSummary;
+		alevel_summary: AlevelCount[];
 	};
 	services: Service[];
 	schools: { name: string; country: string }[];

@@ -49,6 +49,7 @@
 	import GreSection from '$lib/components/student-page/score-sections/GreSection.svelte';
 	import GmatSection from '$lib/components/student-page/score-sections/GmatSection.svelte';
 	import LsatSection from '$lib/components/student-page/score-sections/LsatSection.svelte';
+	import { orderByPredictedOrFinal, orderBySubject } from '$lib/utils/scoresUtils';
 
 	export let student: StudentDetail;
 	export let canEdit: boolean = false;
@@ -339,7 +340,7 @@
 	{#if student.ap.length}
 		<ScoreSectionHeading title="AP" />
 		<div class="mt-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
-			{#each student.ap as score}
+			{#each student.ap.sort(orderBySubject) as score}
 				<ApScoreItem
 					{score}
 					{canEdit}
@@ -356,7 +357,7 @@
 	{#if student.ib.length}
 		<ScoreSectionHeading title="IB" />
 		<div class="my-4 mb-8">
-			{#each student.ib as grade}
+			{#each student.ib.sort(orderBySubject).sort(orderByPredictedOrFinal) as grade}
 				<IbAlevelGradeItem
 					{grade}
 					{canEdit}
@@ -373,7 +374,7 @@
 	{#if student.alevel.length}
 		<ScoreSectionHeading title="A-level" />
 		<div class="my-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
-			{#each student.alevel as grade}
+			{#each student.alevel.sort(orderBySubject).sort(orderByPredictedOrFinal) as grade}
 				<IbAlevelGradeItem
 					{grade}
 					{canEdit}

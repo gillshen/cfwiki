@@ -20,7 +20,7 @@
 			inactiveClasses="p-2 m-0 text-primary-500 hover:text-primary-700"
 		>
 			<TabItem open>
-				<span slot="title">{scores.length > 1 ? firstTitle : 'One shot only'}</span>
+				<span slot="title">{scores.length > 1 ? firstTitle : 'Just one shot'}</span>
 				<slot name="first" />
 			</TabItem>
 

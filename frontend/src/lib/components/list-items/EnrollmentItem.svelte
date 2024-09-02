@@ -77,7 +77,7 @@
 	<div class="mt-8 flex gap-8">
 		<slot />
 		<A href={`/grades/${enrollment.id}`}>
-			<span class="text-sm font-medium">Details</span>
+			<span class="text-sm font-medium">Manage Grades</span>
 			<ArrowRightOutline class="ms-0.5" />
 		</A>
 	</div>

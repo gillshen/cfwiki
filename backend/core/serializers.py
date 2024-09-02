@@ -15,6 +15,7 @@ class CFUserSerializer(serializers.ModelSerializer):
             "username",
             "email",
             "is_active",
+            "is_staff",
             "department",
             "public_banner",
             "private_banner",
@@ -72,6 +73,18 @@ class StudentListSerializer(serializers.ModelSerializer):
     best_gre = serializers.IntegerField()
     best_gmat = serializers.IntegerField()
     best_lsat = serializers.IntegerField()
+    ap_summary = serializers.SerializerMethodField()
+    ib_summary = serializers.SerializerMethodField()
+    alevel_summary = serializers.SerializerMethodField()
+
+    def get_ap_summary(self, instance):
+        return instance.ap_summary
+
+    def get_ib_summary(self, instance):
+        return instance.ib_summary
+
+    def get_alevel_summary(self, instance):
+        return instance.alevel_summary
 
 
 class StudentByUserSerializer(serializers.ModelSerializer):
@@ -182,6 +195,9 @@ class ApplicationListSerializer(serializers.ModelSerializer):
                 "best_gre",
                 "best_gmat",
                 "best_lsat",
+                "ap_summary",
+                "ib_summary",
+                "alevel_summary",
             ]
 
         best_toefl = serializers.IntegerField()
@@ -192,6 +208,18 @@ class ApplicationListSerializer(serializers.ModelSerializer):
         best_gre = serializers.IntegerField()
         best_gmat = serializers.IntegerField()
         best_lsat = serializers.IntegerField()
+        ap_summary = serializers.SerializerMethodField()
+        ib_summary = serializers.SerializerMethodField()
+        alevel_summary = serializers.SerializerMethodField()
+
+        def get_ap_summary(self, instance):
+            return instance.ap_summary
+
+        def get_ib_summary(self, instance):
+            return instance.ib_summary
+
+        def get_alevel_summary(self, instance):
+            return instance.alevel_summary
 
     student = StudentSerializer()
 

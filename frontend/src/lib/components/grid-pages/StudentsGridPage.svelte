@@ -24,9 +24,16 @@
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
 	import Gender from '$lib/components/grid-cells/Gender.svelte';
-	import { formatLocation, orderByName } from '$lib/utils/studentUtils';
 	import { filterForActive, formatCfNames } from '$lib/utils/serviceUtils';
 	import { makeDate, toISODate } from '$lib/utils/dateUtils';
+
+	import {
+		formatAlevelSummary,
+		formatApSummary,
+		formatIbSummary,
+		formatLocation,
+		orderByName
+	} from '$lib/utils/studentUtils';
 
 	import {
 		getEnglishProficiency,
@@ -146,6 +153,18 @@
 		return getSatOrAct(params.data);
 	}
 
+	function apValueGetter(params: ValueGetterParams): string {
+		return formatApSummary(params.data.ap_summary);
+	}
+
+	function ibValueGetter(params: ValueGetterParams): string {
+		return formatIbSummary(params.data.ib_summary);
+	}
+
+	function alevelValueGetter(params: ValueGetterParams): string {
+		return formatAlevelSummary(params.data.alevel_summary);
+	}
+
 	function greOrGmatValueGetter(params: ValueGetterParams): string {
 		return getGreOrGmat(params.data);
 	}
@@ -205,6 +224,9 @@
 		{ headerName: 'SAT/ACT', valueGetter: satOrActValueGetter },
 		{ headerName: 'SAT', field: 'super_sat', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'ACT', field: 'super_act', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'AP', valueGetter: apValueGetter },
+		{ headerName: 'IB', valueGetter: ibValueGetter },
+		{ headerName: 'A-level', valueGetter: alevelValueGetter },
 		{ headerName: 'GRE/GMAT', valueGetter: greOrGmatValueGetter },
 		{ headerName: 'GRE', field: 'best_gre', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'GMAT', field: 'best_gmat', type: ['numeric', 'rightAligned'] },
@@ -232,6 +254,9 @@
 		'SAT/ACT': data.contractType !== 'Graduate',
 		SAT: false,
 		ACT: false,
+		AP: false,
+		IB: false,
+		'A-level': false,
 		'GRE/GMAT': data.contractType !== 'UG Freshman' && data.contractType !== 'UG Transfer',
 		GRE: false,
 		GMAT: false,

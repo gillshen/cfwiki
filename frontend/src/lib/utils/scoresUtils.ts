@@ -7,7 +7,9 @@ import type {
 	GreScore,
 	DuolingoScore,
 	GmatScore,
-	LsatScore
+	LsatScore,
+	IbGrade,
+	AlevelGrade
 } from '$lib/api/scores';
 
 export function toeflOverall(score: ToeflScore): number | null {
@@ -183,4 +185,29 @@ export const bestLsat = (scores: LsatScore[]): LsatScore =>
 
 export function orderByDateDesc(a: BaseScore, b: BaseScore): number {
 	return (b.date ?? '').localeCompare(a.date ?? '');
+}
+
+export function orderBySubject(a: { subject: string }, b: { subject: string }): number {
+	return a.subject.localeCompare(b.subject);
+}
+
+export function orderByPredictedOrFinal(
+	a: IbGrade | AlevelGrade,
+	b: IbGrade | AlevelGrade
+): number {
+	if (a.type === b.type) {
+		return 0;
+	} else {
+		return a.type === 'final' ? -1 : 1;
+	}
+}
+
+export function compareAlevelGrade(a: string, b: string): number {
+	if (a === 'A*') {
+		return -1;
+	}
+	if (b === 'A*') {
+		return 1;
+	}
+	return a.localeCompare(b);
 }

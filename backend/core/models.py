@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from django.db import models
-from django.db.models import Case, When, Value, OuterRef, Subquery, Q, F, Max
+from django.db.models import Case, When, Value, OuterRef, Subquery, Q, F, Max, Count
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
@@ -196,6 +196,45 @@ class Student(models.Model):
             return round(Decimal(total / 4) + Decimal(0.1))
         except TypeError:
             return
+
+    @property
+    def ap_summary(self):
+        return (
+            self.ap.filter(score__isnull=False)
+            .values("score")
+            .annotate(count=Count("score"))
+        )
+
+    @property
+    def ib_summary(self):
+        summary = {
+            "predicted": {
+                "total": 0,
+                "scale": 0,
+            },
+            "final": {
+                "total": 0,
+                "scale": 0,
+            },
+        }
+
+        for ib in self.ib.filter(grade__isnull=False):
+            if ib.subject in {"Extended Essay", "Theory of Knowledge"}:
+                scale = 3
+            else:
+                scale = 7
+            summary[ib.type]["total"] += ib.grade
+            summary[ib.type]["scale"] += scale
+
+        return summary
+
+    @property
+    def alevel_summary(self):
+        return (
+            self.alevel.filter(grade__isnull=False)
+            .values("type", "grade")
+            .annotate(count=Count("grade"))
+        )
 
     @property
     def staff_names(self) -> list[str]:

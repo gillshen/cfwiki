@@ -6,6 +6,8 @@
 	export let canEdit: boolean = false;
 	export let updateAction: () => any = () => {};
 	export let deleteAction: () => any = () => {};
+
+	$: isFinal = grade.type === 'final';
 </script>
 
 <ScoreItem
@@ -17,6 +19,8 @@
 	{deleteAction}
 >
 	<svelte:fragment slot="note">
-		<span>|</span><span>{grade.type === 'predicted' ? 'Predicted' : 'Final'}</span>
+		<span>|</span><span class={isFinal ? '' : 'text-primary-500'}
+			>{isFinal ? 'Final' : 'Predicted'}</span
+		>
 	</svelte:fragment>
 </ScoreItem>

@@ -1,7 +1,17 @@
-import type { BaseStudent, StudentByUserListItem, Contract, CohortMember } from '$lib/api/student';
+import type {
+	BaseStudent,
+	StudentByUserListItem,
+	Contract,
+	CohortMember,
+	ApCount,
+	IbSummary,
+	AlevelCount
+} from '$lib/api/student';
+
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
 import { isActive } from '$lib/utils/serviceUtils';
+import { compareAlevelGrade } from '$lib/utils/scoresUtils';
 
 export function formatGender(student: BaseStudent): string {
 	switch (student.gender) {
@@ -41,6 +51,44 @@ export function formatLocation(student: BaseStudent): string {
 			subnationalAbbr = '';
 	}
 	return `${base_city}, ${subnationalAbbr}`;
+}
+
+export function formatApSummary(summary: ApCount[]): string {
+	return summary
+		.sort((a, b) => b.score - a.score)
+		.map((item) => `${item.score} (\u00d7${item.count})`)
+		.join(', ');
+}
+
+export function formatIbSummary(summary: IbSummary): string {
+	let final = '';
+	if (summary.final.scale) {
+		final = `Final: ${summary.final.total}/${summary.final.scale}`;
+	}
+	let predicted = '';
+	if (summary.predicted.scale) {
+		predicted = `Predicted: ${summary.predicted.total}/${summary.predicted.scale}`;
+	}
+	return [final, predicted].filter(Boolean).join('; ');
+}
+
+export function formatAlevelSummary(summary: AlevelCount[]): string {
+	const final = _formatAlevelSubSummary(summary, 'final');
+	const predicted = _formatAlevelSubSummary(summary, 'predicted');
+	return [final, predicted].filter(Boolean).join('; ');
+}
+
+function _formatAlevelSubSummary(summary: AlevelCount[], type: 'predicted' | 'final'): string {
+	const filtered = summary.filter((item) => item.type === type);
+	if (!filtered.length) {
+		return '';
+	}
+	const tag = type === 'final' ? 'Final' : 'Predicted';
+	const formattedFiltered = filtered
+		.sort((a, b) => compareAlevelGrade(a.grade, b.grade))
+		.map((item) => `${item.grade} (\u00d7${item.count})`)
+		.join(', ');
+	return `${tag}: ${formattedFiltered}`;
 }
 
 export function groupByTargetYear(
