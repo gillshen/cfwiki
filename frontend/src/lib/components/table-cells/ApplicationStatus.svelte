@@ -4,8 +4,8 @@
 	import { statusToClass } from '$lib/utils/applicationUtils';
 
 	export let application: ApplicationListItem;
-
-	const status = application.latest_log?.status;
 </script>
 
-<TableBodyCell class={`status-${statusToClass(status)}`}>{status || '-'}</TableBodyCell>
+<TableBodyCell class={`status-${statusToClass(application.l_status)}`}>
+	{application.l_status || '-'}
+</TableBodyCell>

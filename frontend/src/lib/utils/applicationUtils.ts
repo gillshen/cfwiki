@@ -28,12 +28,12 @@ export function formatApplicationType(applicationType: ApplicationType | string)
 }
 
 export function orderByRoundName(a: ApplicationListItem, b: ApplicationListItem) {
-	return _orderByRoundName(a.round.name, b.round.name);
+	return _orderByRoundName(a.round_name, b.round_name);
 }
 
 export function orderByStatus(a: ApplicationListItem, b: ApplicationListItem) {
-	const aStatusOrder: number = applicationStatusOrder[a.latest_log?.status ?? ''] ?? -1;
-	const bStatusOrder: number = applicationStatusOrder[b.latest_log?.status ?? ''] ?? -1;
+	const aStatusOrder: number = applicationStatusOrder[a.l_status ?? ''] ?? -1;
+	const bStatusOrder: number = applicationStatusOrder[b.l_status ?? ''] ?? -1;
 	return aStatusOrder - bStatusOrder;
 }
 
@@ -42,11 +42,11 @@ export function orderByType(a: ApplicationListItem, b: ApplicationListItem) {
 }
 
 export function orderByYearDesc(a: ApplicationListItem, b: ApplicationListItem) {
-	return b.program_iteration.year - a.program_iteration.year;
+	return b.year - a.year;
 }
 
 export function orderByDueDate(a: ApplicationListItem, b: ApplicationListItem) {
-	return (a.round.due_date ?? '').localeCompare(b.round.due_date ?? '');
+	return (a.due_date ?? '').localeCompare(b.due_date ?? '');
 }
 
 export function orderBySchoolName(a: ApplicationListItem, b: ApplicationListItem) {
@@ -71,7 +71,7 @@ export function groupByYear(
 	const grouped: Record<string, ApplicationListItem[]> = {};
 
 	for (const appl of applications) {
-		const key = appl.program_iteration.year.toString();
+		const key = appl.year.toString();
 		if (!grouped[key]) {
 			grouped[key] = [];
 		}
@@ -113,7 +113,7 @@ export function groupByType(
 	return sortedGroups;
 }
 
-export function statusToClass(status: ApplicationStatus | undefined): string {
+export function statusToClass(status: ApplicationStatus | null | undefined): string {
 	if (!status) {
 		return '';
 	} else {

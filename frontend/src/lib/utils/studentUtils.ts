@@ -62,11 +62,11 @@ export function formatApSummary(summary: ApCount[]): string {
 
 export function formatIbSummary(summary: IbSummary): string {
 	let final = '';
-	if (summary.final.scale) {
+	if (summary.final?.scale) {
 		final = `Final: ${summary.final.total}/${summary.final.scale}`;
 	}
 	let predicted = '';
-	if (summary.predicted.scale) {
+	if (summary.predicted?.scale) {
 		predicted = `Predicted: ${summary.predicted.total}/${summary.predicted.scale}`;
 	}
 	return [final, predicted].filter(Boolean).join('; ');

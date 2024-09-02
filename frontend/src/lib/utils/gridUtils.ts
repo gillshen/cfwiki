@@ -31,29 +31,29 @@ export function calcSuccessRate(data: { accepted: number; denied: number }): num
 	}
 }
 
-export function getSatOrAct(data: { super_sat: number | null; super_act: number | null }): string {
+export function getSatOrAct(data: { super_sat?: number; super_act?: number }): string {
 	const { super_sat, super_act } = data;
-	const satString = super_sat !== null ? `SAT ${super_sat}` : '';
-	const actString = super_act !== null ? `ACT ${super_act}` : '';
+	const satString = super_sat !== undefined ? `SAT ${super_sat}` : '';
+	const actString = super_act !== undefined ? `ACT ${super_act}` : '';
 	return [satString, actString].filter(Boolean).join(', ');
 }
 
-export function getGreOrGmat(data: { best_gre: number | null; best_gmat: number | null }): string {
+export function getGreOrGmat(data: { best_gre?: number; best_gmat?: number }): string {
 	const { best_gre, best_gmat } = data;
-	const greString = best_gre !== null ? `GRE ${best_gre}` : '';
-	const gmatString = best_gmat !== null ? `GMAT ${best_gmat}` : '';
+	const greString = best_gre !== undefined ? `GRE ${best_gre}` : '';
+	const gmatString = best_gmat !== undefined ? `GMAT ${best_gmat}` : '';
 	return [greString, gmatString].filter(Boolean).join('/');
 }
 
 export function getEnglishProficiency(data: {
-	best_toefl: number | null;
-	best_ielts: number | null;
-	best_duolingo: number | null;
+	best_toefl?: number;
+	best_ielts?: number;
+	best_duolingo?: number;
 }): string {
 	const { best_toefl, best_ielts, best_duolingo } = data;
-	const toeflString = best_toefl !== null ? `TOEFL ${best_toefl}` : '';
-	const ieltsString = best_ielts !== null ? `IELTS ${best_ielts.toFixed(1)}` : '';
-	const duolingoString = best_duolingo !== null ? `Duolingo ${best_duolingo}` : '';
+	const toeflString = best_toefl !== undefined ? `TOEFL ${best_toefl}` : '';
+	const ieltsString = best_ielts !== undefined ? `IELTS ${best_ielts.toFixed(1)}` : '';
+	const duolingoString = best_duolingo !== undefined ? `Duolingo ${best_duolingo}` : '';
 	return [toeflString, ieltsString, duolingoString].filter(Boolean).join('/');
 }
 

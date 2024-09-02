@@ -85,7 +85,7 @@
 	}
 
 	function satOrActValueGetter(params: ValueGetterParams): string {
-		return getSatOrAct(params.data.student);
+		return getSatOrAct(params.data.student.scores);
 	}
 
 	function apValueGetter(params: ValueGetterParams): string {
@@ -101,11 +101,11 @@
 	}
 
 	function greOrGmatValueGetter(params: ValueGetterParams): string {
-		return getGreOrGmat(params.data.student);
+		return getGreOrGmat(params.data.student.scores);
 	}
 
 	function englishValueGetter(params: ValueGetterParams): string {
-		return getEnglishProficiency(params.data.student);
+		return getEnglishProficiency(params.data.student.scores);
 	}
 
 	const columnTypes = {
@@ -124,13 +124,8 @@
 			filter: false,
 			cellRenderer: IdRenderer
 		},
-		{
-			headerName: 'Year',
-			field: 'program_iteration.year',
-			type: 'numeric',
-			headerTooltip: 'Year of admission'
-		},
-		{ headerName: 'Term', field: 'program_iteration.term' },
+		{ headerName: 'Year', field: 'year', type: 'numeric', headerTooltip: 'Year of admission' },
+		{ headerName: 'Term', field: 'term' },
 		{ headerName: 'Student', field: 'student.fullname', flex: 1.2, comparator: localeComparator },
 		{ headerName: '战略顾问', valueGetter: stratPeopleValueGetter },
 		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
@@ -138,33 +133,37 @@
 		{ headerName: '服务顾问', valueGetter: salesAssistantsValueGetter },
 		{ headerName: '流程顾问', valueGetter: workAssistantsValueGetter },
 		{ headerName: 'SAT/ACT', valueGetter: satOrActValueGetter },
-		{ headerName: 'SAT', field: 'student.super_sat', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'ACT', field: 'student.super_act', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'SAT', field: 'student.scores.super_sat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'ACT', field: 'student.scores.super_act', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'AP', valueGetter: apValueGetter },
 		{ headerName: 'IB', valueGetter: ibValueGetter },
 		{ headerName: 'A-level', valueGetter: alevelValueGetter },
 		{ headerName: 'GRE/GMAT', valueGetter: greOrGmatValueGetter },
-		{ headerName: 'GRE', field: 'student.best_gre', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'GMAT', field: 'student.best_gmat', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'LSAT', field: 'student.best_lsat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'GRE', field: 'student.scores.best_gre', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'GMAT', field: 'student.scores.best_gmat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'LSAT', field: 'student.scores.best_lsat', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'Eng. Proficiency', valueGetter: englishValueGetter },
-		{ headerName: 'TOEFL', field: 'student.best_toefl', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'IELTS', field: 'student.best_ielts', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'Duolingo', field: 'student.best_duolingo', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'TOEFL', field: 'student.scores.best_toefl', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'IELTS', field: 'student.scores.best_ielts', type: ['numeric', 'rightAligned'] },
+		{
+			headerName: 'Duolingo',
+			field: 'student.scores.best_duolingo',
+			type: ['numeric', 'rightAligned']
+		},
 		{ headerName: 'School', valueGetter: schoolValueGetter, flex: 3 },
 		{ headerName: 'Program', field: 'program.display_name', flex: 3 },
 		{ headerName: 'Major/Track', field: 'majors_or_track', flex: 2 },
-		{ headerName: 'Adm. Plan', field: 'round.name', headerTooltip: 'Admission plan' },
-		{ headerName: 'Due', field: 'round.due_date', flex: 1.5 },
+		{ headerName: 'Adm. Plan', field: 'round_name', headerTooltip: 'Admission plan' },
+		{ headerName: 'Due', field: 'due_date', flex: 1.5 },
 		{
 			headerName: 'Status',
-			field: 'latest_log.status',
+			field: 'l_status',
 			cellRenderer: StatusRenderer,
 			headerTooltip: 'Latest status of the application'
 		},
 		{
 			headerName: 'Last Update',
-			field: 'latest_log.date',
+			field: 'l_status_date',
 			flex: 1.5,
 			headerTooltip: 'The (approximate) date when the application assumed its latest status'
 		}

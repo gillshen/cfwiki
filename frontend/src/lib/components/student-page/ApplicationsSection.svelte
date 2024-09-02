@@ -70,7 +70,7 @@
 									<Schools {application} />
 									<ProgramOrMajors {application} />
 									<ApplicationRound {application} />
-									<ShortDate date={application.round.due_date} />
+									<ShortDate date={application.due_date} />
 								</TableBodyRow>
 							{/each}
 						</TableBody>

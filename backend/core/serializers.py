@@ -65,17 +65,13 @@ class StudentListSerializer(serializers.ModelSerializer):
 
     fullname = serializers.CharField()
     latest_contract = ContractByStudentSerializer()
-    best_toefl = serializers.IntegerField()
-    best_ielts = serializers.FloatField()
-    best_duolingo = serializers.IntegerField()
-    super_sat = serializers.IntegerField()
-    super_act = serializers.IntegerField()
-    best_gre = serializers.IntegerField()
-    best_gmat = serializers.IntegerField()
-    best_lsat = serializers.IntegerField()
+    scores = serializers.SerializerMethodField()
     ap_summary = serializers.SerializerMethodField()
     ib_summary = serializers.SerializerMethodField()
     alevel_summary = serializers.SerializerMethodField()
+
+    def get_scores(self, instance):
+        return instance.scores
 
     def get_ap_summary(self, instance):
         return instance.ap_summary
@@ -177,7 +173,7 @@ class ContractCRUDSerializer(serializers.ModelSerializer):
 class ApplicationListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        exclude = ["major_1", "major_2", "major_3", "track"]
+        exclude = ["major_1", "major_2", "major_3", "track", "comments"]
 
     class StudentSerializer(serializers.ModelSerializer):
         class Meta:
@@ -187,30 +183,19 @@ class ApplicationListSerializer(serializers.ModelSerializer):
                 "fullname",
                 "gender",
                 "citizenship",
-                "best_toefl",
-                "best_ielts",
-                "best_duolingo",
-                "super_sat",
-                "super_act",
-                "best_gre",
-                "best_gmat",
-                "best_lsat",
+                "scores",
                 "ap_summary",
                 "ib_summary",
                 "alevel_summary",
             ]
 
-        best_toefl = serializers.IntegerField()
-        best_ielts = serializers.FloatField()
-        best_duolingo = serializers.IntegerField()
-        super_sat = serializers.IntegerField()
-        super_act = serializers.IntegerField()
-        best_gre = serializers.IntegerField()
-        best_gmat = serializers.IntegerField()
-        best_lsat = serializers.IntegerField()
+        scores = serializers.SerializerMethodField()
         ap_summary = serializers.SerializerMethodField()
         ib_summary = serializers.SerializerMethodField()
         alevel_summary = serializers.SerializerMethodField()
+
+        def get_scores(self, instance):
+            return instance.scores
 
         def get_ap_summary(self, instance):
             return instance.ap_summary
@@ -243,27 +228,12 @@ class ApplicationListSerializer(serializers.ModelSerializer):
             fields = ["type", "display_name"]
 
     program = ProgramSerializer()
-
-    class ProgramIterationSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = ProgramIteration
-            fields = ["year", "term"]
-
-    program_iteration = ProgramIterationSerializer()
-
-    class ApplicationRoundSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = ApplicationRound
-            fields = ["name", "due_date"]
-
-    round = ApplicationRoundSerializer()
-
-    class ApplicationLogSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = ApplicationLog
-            fields = ["status", "date"]
-
-    latest_log = ApplicationLogSerializer()
+    year = serializers.IntegerField()
+    term = serializers.CharField()
+    round_name = serializers.CharField()
+    due_date = serializers.DateField()
+    l_status = serializers.CharField()
+    l_status_date = serializers.DateField()
     majors_or_track = serializers.CharField()
 
 

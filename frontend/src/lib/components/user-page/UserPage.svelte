@@ -115,10 +115,10 @@
 									<TableBodyRow>
 										<ApplicationLink application={appl} />
 										<ProgramType application={appl} />
-										{#if appl.latest_log?.status && appl.latest_log.status !== 'Started'}
+										{#if appl.l_status && appl.l_status !== 'Started'}
 											<ApplicationStatus application={appl} />
 										{:else}
-											<ShortDate date={appl.round.due_date} />
+											<ShortDate date={appl.due_date} />
 										{/if}
 										<Student application={appl} />
 										<Schools application={appl} />

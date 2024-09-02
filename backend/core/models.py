@@ -1,4 +1,5 @@
 from decimal import Decimal
+from collections import defaultdict
 
 from django.db import models
 from django.db.models import Case, When, Value, OuterRef, Subquery, Q, F, Max, Count
@@ -198,6 +199,27 @@ class Student(models.Model):
             return
 
     @property
+    def scores(self):
+        scores = {}
+        if self.best_toefl:
+            scores["best_toefl"] = self.best_toefl
+        if self.best_ielts:
+            scores["best_ielts"] = self.best_ielts
+        if self.best_duolingo:
+            scores["best_duolingo"] = self.best_duolingo
+        if self.super_sat:
+            scores["super_sat"] = self.super_sat
+        if self.super_act:
+            scores["super_act"] = self.super_act
+        if self.best_gre:
+            scores["best_gre"] = self.best_gre
+        if self.best_gmat:
+            scores["best_gmat"] = self.best_gmat
+        if self.best_lsat:
+            scores["best_lsat"] = self.best_lsat
+        return scores
+
+    @property
     def ap_summary(self):
         return (
             self.ap.filter(score__isnull=False)
@@ -207,16 +229,7 @@ class Student(models.Model):
 
     @property
     def ib_summary(self):
-        summary = {
-            "predicted": {
-                "total": 0,
-                "scale": 0,
-            },
-            "final": {
-                "total": 0,
-                "scale": 0,
-            },
-        }
+        summary = defaultdict(lambda: defaultdict(int))
 
         for ib in self.ib.filter(grade__isnull=False):
             if ib.subject in {"Extended Essay", "Theory of Knowledge"}:
@@ -568,8 +581,6 @@ class Application(models.Model):
     def majors_or_track(self):
         return self.track or self.majors
 
-    # For admin display
-
     @property
     def year(self):
         return self.program_iteration.year
@@ -581,6 +592,18 @@ class Application(models.Model):
     @property
     def round_name(self):
         return self.round.name
+
+    @property
+    def due_date(self):
+        return self.round.due_date
+
+    @property
+    def l_status(self):
+        return getattr(self.latest_log, "status", None)
+
+    @property
+    def l_status_date(self):
+        return getattr(self.latest_log, "date", None)
 
 
 class ApplicationLog(models.Model):

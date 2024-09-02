@@ -150,7 +150,7 @@
 	}
 
 	function satOrActValueGetter(params: ValueGetterParams): string {
-		return getSatOrAct(params.data);
+		return getSatOrAct(params.data.scores);
 	}
 
 	function apValueGetter(params: ValueGetterParams): string {
@@ -166,11 +166,11 @@
 	}
 
 	function greOrGmatValueGetter(params: ValueGetterParams): string {
-		return getGreOrGmat(params.data);
+		return getGreOrGmat(params.data.scores);
 	}
 
 	function englishValueGetter(params: ValueGetterParams): string {
-		return getEnglishProficiency(params.data);
+		return getEnglishProficiency(params.data.scores);
 	}
 
 	const columnTypes = {
@@ -222,19 +222,19 @@
 			useValueFormatterForExport: false
 		},
 		{ headerName: 'SAT/ACT', valueGetter: satOrActValueGetter },
-		{ headerName: 'SAT', field: 'super_sat', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'ACT', field: 'super_act', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'SAT', field: 'scores.super_sat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'ACT', field: 'scores.super_act', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'AP', valueGetter: apValueGetter },
 		{ headerName: 'IB', valueGetter: ibValueGetter },
 		{ headerName: 'A-level', valueGetter: alevelValueGetter },
 		{ headerName: 'GRE/GMAT', valueGetter: greOrGmatValueGetter },
-		{ headerName: 'GRE', field: 'best_gre', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'GMAT', field: 'best_gmat', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'LSAT', field: 'best_lsat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'GRE', field: 'scores.best_gre', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'GMAT', field: 'scores.best_gmat', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'LSAT', field: 'scores.best_lsat', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'Eng. Proficiency', valueGetter: englishValueGetter },
-		{ headerName: 'TOEFL', field: 'best_toefl', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'IELTS', field: 'best_ielts', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'Duolingo', field: 'best_duolingo', type: ['numeric', 'rightAligned'] }
+		{ headerName: 'TOEFL', field: 'scores.best_toefl', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'IELTS', field: 'scores.best_ielts', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'Duolingo', field: 'scores.best_duolingo', type: ['numeric', 'rightAligned'] }
 	];
 
 	const columnVisibility: Record<string, boolean> = {

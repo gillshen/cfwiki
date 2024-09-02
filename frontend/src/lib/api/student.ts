@@ -49,11 +49,11 @@ export type ApCount = {
 };
 
 export type IbSummary = {
-	predicted: {
+	predicted?: {
 		total: number;
 		scale: number;
 	};
-	final: {
+	final?: {
 		total: number;
 		scale: number;
 	};
@@ -67,14 +67,16 @@ export type AlevelCount = {
 
 export type StudentListItem = BaseStudent & {
 	latest_contract: Contract;
-	best_toefl: number | null;
-	best_ielts: number | null;
-	best_duolingo: number | null;
-	super_sat: number | null;
-	super_act: number | null;
-	best_gre: number | null;
-	best_gmat: number | null;
-	best_lsat: number | null;
+	scores: {
+		best_toefl?: number;
+		best_ielts?: number;
+		best_duolingo?: number;
+		super_sat?: number;
+		super_act?: number;
+		best_gre?: number;
+		best_gmat?: number;
+		best_lsat?: number;
+	};
 	ap_summary: ApCount[];
 	ib_summary: IbSummary[];
 	alevel_summary: AlevelCount[];

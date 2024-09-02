@@ -5,4 +5,4 @@
 	export let application: ApplicationListItem;
 </script>
 
-<TableBodyCell class="font-normal max-w-16">{application.round.name}</TableBodyCell>
+<TableBodyCell class="font-normal max-w-16">{application.round_name}</TableBodyCell>

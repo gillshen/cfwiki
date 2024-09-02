@@ -3,9 +3,10 @@
 	import { statusToClass } from '$lib/utils/applicationUtils';
 
 	export let application: ApplicationListItem;
-	const status = application.latest_log?.status;
 </script>
 
-{#if status}
-	<span class={`font-medium status-${statusToClass(status)}`}>{status}</span>
+{#if application.l_status}
+	<span class={`font-medium status-${statusToClass(application.l_status)}`}>
+		{application.l_status}
+	</span>
 {/if}

@@ -18,14 +18,16 @@ export type ApplicationListItem = {
 		fullname: string;
 		gender: 'female' | 'male' | 'other';
 		citizenship: string;
-		best_toefl: number | null;
-		best_ielts: number | null;
-		best_duolingo: number | null;
-		super_sat: number | null;
-		super_act: number | null;
-		best_gre: number | null;
-		best_gmat: number | null;
-		best_lsat: number | null;
+		scores: {
+			best_toefl?: number;
+			best_ielts?: number;
+			best_duolingo?: number;
+			super_sat?: number;
+			super_act?: number;
+			best_gre?: number;
+			best_gmat?: number;
+			best_lsat?: number;
+		};
 		ap_summary: ApCount[];
 		ib_summary: IbSummary;
 		alevel_summary: AlevelCount[];
@@ -33,11 +35,13 @@ export type ApplicationListItem = {
 	services: Service[];
 	schools: { name: string; country: string }[];
 	program: { type: string; display_name: string };
-	program_iteration: { year: number; term: string };
-	round: { name: string; due_date: string | null };
+	year: number;
+	term: string;
+	round_name: string;
+	due_date: string | null;
 	majors_or_track: string;
-	comments: string;
-	latest_log: { status: ApplicationStatus; date: string } | null;
+	l_status: ApplicationStatus | null;
+	l_status_date: string | null;
 };
 
 export type ApplicationDetail = {

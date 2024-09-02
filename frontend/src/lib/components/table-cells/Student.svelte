@@ -11,34 +11,12 @@
 
 	export let application: ApplicationListItem;
 
-	const {
-		id,
-		fullname,
-		best_toefl,
-		best_ielts,
-		best_duolingo,
-		super_sat,
-		super_act,
-		best_gre,
-		best_gmat,
-		best_lsat,
-		ap_summary,
-		ib_summary,
-		alevel_summary
-	} = application.student;
+	const { id, fullname, scores, ap_summary, ib_summary, alevel_summary } = application.student;
 
 	$: noScore =
-		best_toefl === null &&
-		best_ielts === null &&
-		best_duolingo === null &&
-		super_sat === null &&
-		super_act === null &&
-		best_gre === null &&
-		best_gmat === null &&
-		best_lsat === null &&
+		!Object.keys(scores).length &&
 		!ap_summary.length &&
-		!ib_summary.final.scale &&
-		!ib_summary.predicted.scale &&
+		!Object.keys(ib_summary).length &&
 		!alevel_summary.length;
 </script>
 
@@ -56,23 +34,23 @@
 		<div class="text-xl text-gray-900 font-medium px-6 py-3">{fullname}</div>
 
 		<div class="px-6 pt-2 pb-6 flex items-start gap-6 flex-wrap">
-			<PopoverScoreItem label="GRE" score={best_gre} />
-			<PopoverScoreItem label="GMAT" score={best_gmat} />
-			<PopoverScoreItem label="LSAT" score={best_lsat} />
-			<PopoverScoreItem label="SAT" score={super_sat} />
-			<PopoverScoreItem label="ACT" score={super_act} />
-			<PopoverScoreItem label="TOEFL" score={best_toefl} />
-			<PopoverScoreItem label="IELTS" score={best_ielts} />
-			<PopoverScoreItem label="Duolingo" score={best_duolingo} />
+			<PopoverScoreItem label="GRE" score={scores?.best_gre} />
+			<PopoverScoreItem label="GMAT" score={scores?.best_gmat} />
+			<PopoverScoreItem label="LSAT" score={scores?.best_lsat} />
+			<PopoverScoreItem label="SAT" score={scores?.super_sat} />
+			<PopoverScoreItem label="ACT" score={scores?.super_act} />
+			<PopoverScoreItem label="TOEFL" score={scores?.best_toefl} />
+			<PopoverScoreItem label="IELTS" score={scores?.best_ielts} />
+			<PopoverScoreItem label="Duolingo" score={scores?.best_duolingo} />
 
-			{#if ib_summary.final.scale}
+			{#if ib_summary.final?.scale}
 				<PopoverScoreItem
 					label="IB final"
 					score={`${ib_summary.final.total}/${ib_summary.final.scale}`}
 				/>
 			{/if}
 
-			{#if ib_summary.predicted.scale}
+			{#if ib_summary.predicted?.scale}
 				<PopoverScoreItem
 					label="IB pred."
 					score={`${ib_summary.predicted.total}/${ib_summary.predicted.scale}`}
