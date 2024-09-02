@@ -13,7 +13,7 @@
 
 	import type { CfUserListItem } from '$lib/api/user';
 	import type { StudentByUserListItem } from '$lib/api/student';
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
 
 	import { categorize, groupByTargetYear } from '$lib/utils/studentUtils';
 	import UserCohortCard from '$lib/components/list-items/UserCohortCard.svelte';
@@ -46,6 +46,7 @@
 		host: CfUserListItem;
 		students: Promise<StudentByUserListItem[]>;
 		applications: Promise<ApplicationListItem[]>;
+		applicants: Promise<ApplicantListItem[]>;
 	};
 
 	$: userIsHost = data.host.id === data.userId;
@@ -89,7 +90,11 @@
 	</TabItem>
 
 	<TabItem title="Applications">
-		<ApplicationsLoader applications={data.applications} showHeading={false}>
+		<ApplicationsLoader
+			applications={data.applications}
+			applicants={data.applicants}
+			showHeading={false}
+		>
 			<svelte:fragment let:applications>
 				<ApplicationsAccordian groupedApplications={groupByYear(applications)} divClass="-mt-4">
 					<svelte:fragment let:subsetOfApplications>
@@ -115,7 +120,7 @@
 									<TableBodyRow>
 										<ApplicationLink application={appl} />
 										<ProgramType application={appl} />
-										{#if appl.l_status && appl.l_status !== 'Started'}
+										{#if appl.latest_log && appl.latest_log.status !== 'Started'}
 											<ApplicationStatus application={appl} />
 										{:else}
 											<ShortDate date={appl.due_date} />

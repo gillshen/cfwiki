@@ -1,7 +1,23 @@
-import type { ApplicationListItem, ApplicationType } from '$lib/api/application';
+import type {
+	ApplicantListItem,
+	ApplicationListItem,
+	ComposedApplicationListItem,
+	ApplicationType
+} from '$lib/api/application';
+
 import { applicationStatusOrder, type ApplicationStatus } from '$lib/api/applicationLog';
 import { sortedSchoolNames } from '$lib/api/school';
 import { orderByRoundName as _orderByRoundName } from '$lib/utils/applicationRoundUtils';
+
+export function compose(
+	applications: ApplicationListItem[],
+	applicants: ApplicantListItem[]
+): ComposedApplicationListItem[] {
+	return applications.map((application) => {
+		const student = applicants.find((a) => a.id === application.student.id)!;
+		return { ...application, student };
+	});
+}
 
 const _typeOrdering: Record<string, number> = {
 	'UG Freshman': 0,
@@ -32,8 +48,8 @@ export function orderByRoundName(a: ApplicationListItem, b: ApplicationListItem)
 }
 
 export function orderByStatus(a: ApplicationListItem, b: ApplicationListItem) {
-	const aStatusOrder: number = applicationStatusOrder[a.l_status ?? ''] ?? -1;
-	const bStatusOrder: number = applicationStatusOrder[b.l_status ?? ''] ?? -1;
+	const aStatusOrder: number = applicationStatusOrder[a.latest_log?.status ?? ''] ?? -1;
+	const bStatusOrder: number = applicationStatusOrder[b.latest_log?.status ?? ''] ?? -1;
 	return aStatusOrder - bStatusOrder;
 }
 
@@ -61,14 +77,14 @@ export function orderBySchoolName(a: ApplicationListItem, b: ApplicationListItem
 	}
 }
 
-export function orderByStudentName(a: ApplicationListItem, b: ApplicationListItem) {
+export function orderByStudentName(a: ComposedApplicationListItem, b: ComposedApplicationListItem) {
 	return a.student.fullname.localeCompare(b.student.fullname, 'zh-CN');
 }
 
 export function groupByYear(
-	applications: ApplicationListItem[]
-): Record<string, ApplicationListItem[]> {
-	const grouped: Record<string, ApplicationListItem[]> = {};
+	applications: ComposedApplicationListItem[]
+): Record<string, ComposedApplicationListItem[]> {
+	const grouped: Record<string, ComposedApplicationListItem[]> = {};
 
 	for (const appl of applications) {
 		const key = appl.year.toString();
@@ -78,7 +94,7 @@ export function groupByYear(
 		grouped[key].push(appl);
 	}
 
-	const sortedGroups: Record<string, ApplicationListItem[]> = {};
+	const sortedGroups: Record<string, ComposedApplicationListItem[]> = {};
 	const sortedKeys = Object.keys(grouped).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
 
 	for (const key of sortedKeys) {

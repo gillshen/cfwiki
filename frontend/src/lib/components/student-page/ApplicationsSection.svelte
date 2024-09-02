@@ -12,7 +12,7 @@
 	} from 'flowbite-svelte';
 
 	import type { StudentDetail } from '$lib/api/student';
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import ApplicationsAccordian from '$lib/components/containers/ApplicationsAccordian.svelte';
 	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
@@ -35,6 +35,7 @@
 
 	export let student: StudentDetail;
 	export let applications: Promise<ApplicationListItem[]>;
+	export let applicants: Promise<ApplicantListItem[]>;
 	export let form: SuperValidated<any>;
 	export let canEdit: boolean = false;
 
@@ -42,7 +43,7 @@
 </script>
 
 <article class="mt-16 col-span-2">
-	<ApplicationsLoader {applications}>
+	<ApplicationsLoader {applications} {applicants}>
 		<svelte:fragment let:applications>
 			<ApplicationsAccordian groupedApplications={groupByYear(applications)} divClass="mt-4">
 				<svelte:fragment let:subsetOfApplications>

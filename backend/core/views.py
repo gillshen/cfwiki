@@ -24,6 +24,7 @@ from core.serializers import (
     ContractCRUDSerializer,
     ServiceCRUDSerializer,
     ApplicationListSerializer,
+    ApplicantListSerializer,
     ApplicationDetailSerializer,
     ApplicationCRUDSerializer,
     ApplicationLogCRUDSerializer,
@@ -64,6 +65,7 @@ class StudentListView(ListAPIView):
         query_params = self.request.query_params
 
         return Student.filter(
+            Student.q_related(),
             target_year=query_params.get("target_year"),
             contract_type=query_params.get("contract_type"),
             contract_status=query_params.get("contract_status"),
@@ -77,6 +79,7 @@ class StudentByUserListView(ListAPIView):
         query_params = self.request.query_params
 
         return Student.filter(
+            Student.q_related(),
             cfer=query_params.get("cfer"),
             contract_type=query_params.get("contract_type"),
             target_year=query_params.get("target_year"),
@@ -154,6 +157,7 @@ class ApplicationListView(ListAPIView):
         query_params = self.request.query_params
 
         return Application.filter(
+            Application.q_related(),
             student=query_params.get("student"),
             cfer=query_params.get("cfer"),
             school=query_params.get("school"),
@@ -165,6 +169,29 @@ class ApplicationListView(ListAPIView):
             application_type=query_params.get("application_type"),
             status=query_params.get("status"),
         )
+
+
+class ApplicantListView(ListAPIView):
+    serializer_class = ApplicantListSerializer
+
+    def get_queryset(self):
+        q = Student.objects.prefetch_related(
+            "toefl",
+            "ielts",
+            "duolingo",
+            "sat",
+            "act",
+            "gre",
+            "gmat",
+            "lsat",
+            "ap",
+            "ib",
+            "alevel",
+        )
+        student_id = self.request.query_params.get("id")
+        if student_id is not None:
+            q = q.filter(id=student_id)
+        return q
 
 
 class ApplicationDetailView(RetrieveAPIView):

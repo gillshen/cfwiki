@@ -53,14 +53,8 @@ class Student(models.Model):
         return self.fullname
 
     @classmethod
-    def filter(
-        cls,
-        cfer: int = None,
-        contract_type: str = None,
-        target_year: int = None,
-        contract_status: str = None,
-    ):
-        q = cls.objects.all().prefetch_related(
+    def q_related(cls):
+        return cls.objects.prefetch_related(
             "contracts",
             "contracts__services__cfer",
             "toefl",
@@ -68,11 +62,22 @@ class Student(models.Model):
             "duolingo",
             "sat",
             "act",
+            "ap",
+            "ib",
+            "alevel",
             "gre",
             "gmat",
             "lsat",
         )
 
+    @staticmethod
+    def filter(
+        q,
+        cfer: int = None,
+        contract_type: str = None,
+        target_year: int = None,
+        contract_status: str = None,
+    ):
         if cfer is not None:
             q = q.filter(contracts__services__cfer=cfer)
 
@@ -364,8 +369,19 @@ class Application(models.Model):
         return f"{self.contract} > {self.round}"
 
     @classmethod
+    def q_related(cls):
+        return cls.objects.select_related(
+            "contract__student",
+            "round__program_iteration__program",
+        ).prefetch_related(
+            "contract__services__cfer",
+            "round__program_iteration__program__schools",
+            "logs",
+        )
+
+    @classmethod
     def get_stats(cls, **kwargs):
-        q = cls.filter(**kwargs)
+        q = cls.filter(cls.q_related(), **kwargs)
 
         stats = {
             "applied": q.count(),
@@ -391,6 +407,7 @@ class Application(models.Model):
     @classmethod
     def filter(
         cls,
+        q,
         student: int = None,
         cfer: int = None,
         school: int = None,
@@ -402,30 +419,6 @@ class Application(models.Model):
         application_type: str = None,
         status: str = None,
     ):
-        q = (
-            cls.objects.all()
-            .select_related(
-                "contract",
-                "contract__student",
-                "round",
-                "round__program_iteration",
-                "round__program_iteration__program",
-            )
-            .prefetch_related(
-                "contract__services__cfer",
-                "contract__student__toefl",
-                "contract__student__ielts",
-                "contract__student__duolingo",
-                "contract__student__sat",
-                "contract__student__act",
-                "contract__student__gre",
-                "contract__student__gmat",
-                "contract__student__lsat",
-                "round__program_iteration__program__schools",
-                "logs",
-            )
-        )
-
         if student is not None:
             q = q.filter(contract__student=student)
         if cfer is not None:
@@ -456,12 +449,8 @@ class Application(models.Model):
         if application_type == "transfer":
             return q.filter(round__program_iteration__program__type="UG Transfer")
         if application_type == "undergraduate":
-            return q.filter(
-                round__program_iteration__program__type__in=[
-                    "UG Freshman",
-                    "UG Transfer",
-                ]
-            )
+            ug_types = ["UG Freshman", "UG Transfer"]
+            return q.filter(round__program_iteration__program__type__in=ug_types)
         if application_type == "masters":
             return q.filter(round__program_iteration__program__type="Master's")
         if application_type == "doctorate":
@@ -471,14 +460,8 @@ class Application(models.Model):
                 round__program_iteration__program__type__in=["Master's", "Doctorate"]
             )
         if application_type == "other":
-            return q.exclude(
-                round__program_iteration__program__type__in=[
-                    "UG Freshman",
-                    "UG Transfer",
-                    "Master's",
-                    "Doctorate",
-                ]
-            )
+            return q.exclude(round__program_iteration__program__type__in="Non-degree")
+
         return q
 
     @classmethod
@@ -596,14 +579,6 @@ class Application(models.Model):
     @property
     def due_date(self):
         return self.round.due_date
-
-    @property
-    def l_status(self):
-        return getattr(self.latest_log, "status", None)
-
-    @property
-    def l_status_date(self):
-        return getattr(self.latest_log, "date", None)
 
 
 class ApplicationLog(models.Model):

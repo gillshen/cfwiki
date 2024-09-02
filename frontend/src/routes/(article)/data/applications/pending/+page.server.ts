@@ -1,8 +1,9 @@
-import { fetchApplications } from '$lib/api/application';
+import { fetchApplicants, fetchApplications } from '$lib/api/application';
 
 export async function load(_) {
 	return {
 		pending: true,
-		applications: fetchApplications({ status: 'pending' })
+		applications: fetchApplications({ status: 'pending' }),
+		applicants: fetchApplicants()
 	};
 }

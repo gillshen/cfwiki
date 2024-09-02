@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Table, TableHead, TableBody, TableBodyRow, TableHeadCell } from 'flowbite-svelte';
 
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
 	import Student from '$lib/components/table-cells/Student.svelte';
@@ -14,11 +14,13 @@
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 
 	export let coApplications: Promise<ApplicationListItem[]>;
+	export let applicants: Promise<ApplicantListItem[]>;
 </script>
 
 <article class="col-span-2 mt-16">
 	<ApplicationsLoader
 		applications={coApplications}
+		{applicants}
 		heading="Other applicants"
 		noDataText="No other applicants this year and term"
 	>

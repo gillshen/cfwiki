@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { Heading, Badge } from 'flowbite-svelte';
 
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
+	import { compose } from '$lib/utils/applicationUtils';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import FetchingDataErrorSign from '$lib/components/misc/FetchingDataErrorSign.svelte';
 
 	export let applications: Promise<ApplicationListItem[]>;
+	export let applicants: Promise<ApplicantListItem[]>;
 	export let heading: string = 'Applications';
 	export let noDataText: string = 'None';
 	export let errorText: string = '';
@@ -26,13 +28,13 @@
 	</Heading>
 {/if}
 
-{#await applications}
+{#await Promise.all([applications, applicants])}
 	<FetchingDataSign divClass="mt-8" />
-{:then applications}
+{:then [applications, applicants]}
 	{#if !applications.length}
 		<NoDataSign text={noDataText} divClass="mt-6" />
 	{:else}
-		<slot {applications} />
+		<slot applications={compose(applications, applicants)} />
 	{/if}
 {:catch}
 	<FetchingDataErrorSign text={errorText} divClass="mt-6" />

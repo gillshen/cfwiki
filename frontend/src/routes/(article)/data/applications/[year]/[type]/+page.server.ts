@@ -1,7 +1,12 @@
 import type { PageServerLoadEvent } from './$types';
 import { error } from '@sveltejs/kit';
 
-import { applicationTypes, fetchApplications, type ApplicationType } from '$lib/api/application';
+import {
+	applicationTypes,
+	fetchApplicants,
+	fetchApplications,
+	type ApplicationType
+} from '$lib/api/application';
 
 export async function load(event: PageServerLoadEvent) {
 	const year = parseInt(event.params.year, 10);
@@ -19,6 +24,7 @@ export async function load(event: PageServerLoadEvent) {
 	return {
 		year,
 		applicationType,
-		applications: fetchApplications({ year, application_type: applicationType })
+		applications: fetchApplications({ year, application_type: applicationType }),
+		applicants: fetchApplicants()
 	};
 }

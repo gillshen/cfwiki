@@ -7,6 +7,7 @@ import {
 	type ApplicationDetail,
 	fetchApplication,
 	fetchCoApplications,
+	fetchApplicants,
 	updateApplication,
 	deleteApplication
 } from '$lib/api/application';
@@ -45,6 +46,7 @@ export async function load(event: PageServerLoadEvent) {
 		staffList,
 		promisedRounds: fetchApplicationRounds({ program: application.program.id }),
 		coApplications: fetchCoApplications(application),
+		applicants: fetchApplicants(),
 		roundChangeForm: await superValidate(zod(roundChangeSchema)),
 		majorsUpdateForm: await superValidate(zod(majorsUpdateSchema)),
 		trackUpdateForm: await superValidate(zod(trackUpdateSchema)),

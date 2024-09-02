@@ -78,7 +78,7 @@
 		{canEdit}
 	/>
 
-	<CoApplicationsSection coApplications={data.coApplications} />
+	<CoApplicationsSection coApplications={data.coApplications} applicants={data.applicants} />
 </Main>
 
 <FormModal

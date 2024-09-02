@@ -17,6 +17,7 @@ from core.views import (
     ServiceCreateView,
     ServiceRUDView,
     ApplicationListView,
+    ApplicantListView,
     ApplicationDetailView,
     ApplicationCreateView,
     ApplicationRUDView,
@@ -114,6 +115,7 @@ urlpatterns = [
     path("application-rounds/<int:pk>/update/", ApplicationRoundRUDView.as_view()),
     # application
     path("applications/", ApplicationListView.as_view()),
+    path("applicants/", ApplicantListView.as_view()),
     path("applications/<int:pk>/", ApplicationDetailView.as_view()),
     path("applications/new/", ApplicationCreateView.as_view()),
     path("applications/<int:pk>/update/", ApplicationRUDView.as_view()),

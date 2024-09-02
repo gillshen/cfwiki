@@ -41,7 +41,7 @@ class CFUserPasswordResetSerializer(serializers.ModelSerializer):
         return instance
 
 
-# for nesting within student list and detail serializers
+# for nesting within student detail serializers
 class ContractByStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
@@ -64,7 +64,21 @@ class StudentListSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     fullname = serializers.CharField()
-    latest_contract = ContractByStudentSerializer()
+
+    class ContractSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Contract
+            fields = ["type", "target_year", "status", "services"]
+
+        class ServiceSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Service
+                fields = ["cf_username", "role"]
+
+        services = ServiceSerializer(many=True)
+
+    latest_contract = ContractSerializer()
+
     scores = serializers.SerializerMethodField()
     ap_summary = serializers.SerializerMethodField()
     ib_summary = serializers.SerializerMethodField()
@@ -173,38 +187,21 @@ class ContractCRUDSerializer(serializers.ModelSerializer):
 class ApplicationListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        exclude = ["major_1", "major_2", "major_3", "track", "comments"]
+        exclude = [
+            "contract",
+            "round",
+            "major_1",
+            "major_2",
+            "major_3",
+            "track",
+            "double_application",
+            "comments",
+        ]
 
     class StudentSerializer(serializers.ModelSerializer):
         class Meta:
             model = Student
-            fields = [
-                "id",
-                "fullname",
-                "gender",
-                "citizenship",
-                "scores",
-                "ap_summary",
-                "ib_summary",
-                "alevel_summary",
-            ]
-
-        scores = serializers.SerializerMethodField()
-        ap_summary = serializers.SerializerMethodField()
-        ib_summary = serializers.SerializerMethodField()
-        alevel_summary = serializers.SerializerMethodField()
-
-        def get_scores(self, instance):
-            return instance.scores
-
-        def get_ap_summary(self, instance):
-            return instance.ap_summary
-
-        def get_ib_summary(self, instance):
-            return instance.ib_summary
-
-        def get_alevel_summary(self, instance):
-            return instance.alevel_summary
+            fields = ["id"]
 
     student = StudentSerializer()
 
@@ -232,9 +229,48 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     term = serializers.CharField()
     round_name = serializers.CharField()
     due_date = serializers.DateField()
-    l_status = serializers.CharField()
-    l_status_date = serializers.DateField()
+
+    class ApplicationLogSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = ApplicationLog
+            fields = ["status", "date"]
+
+    latest_log = ApplicationLogSerializer()
+
     majors_or_track = serializers.CharField()
+
+
+# for use in conjunction with ApplicationListSerializer
+class ApplicantListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = [
+            "id",
+            "fullname",
+            "gender",
+            "citizenship",
+            "scores",
+            "ap_summary",
+            "ib_summary",
+            "alevel_summary",
+        ]
+
+    scores = serializers.SerializerMethodField()
+    ap_summary = serializers.SerializerMethodField()
+    ib_summary = serializers.SerializerMethodField()
+    alevel_summary = serializers.SerializerMethodField()
+
+    def get_scores(self, instance):
+        return instance.scores
+
+    def get_ap_summary(self, instance):
+        return instance.ap_summary
+
+    def get_ib_summary(self, instance):
+        return instance.ib_summary
+
+    def get_alevel_summary(self, instance):
+        return instance.alevel_summary
 
 
 class ApplicationDetailSerializer(serializers.ModelSerializer):

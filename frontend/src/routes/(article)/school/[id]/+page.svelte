@@ -81,7 +81,7 @@
 
 	{#if isNotSecondary}
 		<article class="col-span-2 mt-16">
-			<ApplicationsLoader applications={data.applications}>
+			<ApplicationsLoader applications={data.applications} applicants={data.applicants}>
 				<svelte:fragment let:applications>
 					<ApplicationsAccordian groupedApplications={groupByYear(applications)} divClass="mt-4">
 						<svelte:fragment let:subsetOfApplications>

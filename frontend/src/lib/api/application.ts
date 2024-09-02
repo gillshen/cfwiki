@@ -13,25 +13,7 @@ type Service = {
 
 export type ApplicationListItem = {
 	id: number;
-	student: {
-		id: number;
-		fullname: string;
-		gender: 'female' | 'male' | 'other';
-		citizenship: string;
-		scores: {
-			best_toefl?: number;
-			best_ielts?: number;
-			best_duolingo?: number;
-			super_sat?: number;
-			super_act?: number;
-			best_gre?: number;
-			best_gmat?: number;
-			best_lsat?: number;
-		};
-		ap_summary: ApCount[];
-		ib_summary: IbSummary;
-		alevel_summary: AlevelCount[];
-	};
+	student: { id: number };
 	services: Service[];
 	schools: { name: string; country: string }[];
 	program: { type: string; display_name: string };
@@ -40,8 +22,41 @@ export type ApplicationListItem = {
 	round_name: string;
 	due_date: string | null;
 	majors_or_track: string;
-	l_status: ApplicationStatus | null;
-	l_status_date: string | null;
+	latest_log: { status: ApplicationStatus; date: string } | null;
+};
+
+export type ApplicantListItem = {
+	id: number;
+	fullname: string;
+	gender: 'female' | 'male' | 'other';
+	citizenship: string;
+	scores: {
+		best_toefl?: number;
+		best_ielts?: number;
+		best_duolingo?: number;
+		super_sat?: number;
+		super_act?: number;
+		best_gre?: number;
+		best_gmat?: number;
+		best_lsat?: number;
+	};
+	ap_summary: ApCount[];
+	ib_summary: IbSummary;
+	alevel_summary: AlevelCount[];
+};
+
+export type ComposedApplicationListItem = {
+	id: number;
+	student: ApplicantListItem;
+	services: Service[];
+	schools: { name: string; country: string }[];
+	program: { type: string; display_name: string };
+	year: number;
+	term: string;
+	round_name: string;
+	due_date: string | null;
+	majors_or_track: string;
+	latest_log: { status: ApplicationStatus; date: string } | null;
 };
 
 export type ApplicationDetail = {
@@ -70,8 +85,11 @@ export type ApplicationDetail = {
 export async function fetchApplications(
 	params?: Record<string, any>
 ): Promise<ApplicationListItem[]> {
-	const queryString = buildQuery(params);
-	return await get(`applications/${queryString}`);
+	return await get(`applications/${buildQuery(params)}`);
+}
+
+export async function fetchApplicants(params?: { id: number }): Promise<ApplicantListItem[]> {
+	return await get(`applicants/${buildQuery(params)}`);
 }
 
 export async function fetchApplication(id: number): Promise<ApplicationDetail> {

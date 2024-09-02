@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Table, TableBody, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
 
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplicationListItem } from '$lib/api/application';
 	import { orderByStudentName, orderByStatus, orderByRoundName } from '$lib/utils/applicationUtils';
 
 	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
@@ -11,7 +11,7 @@
 	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
 	import ShortDate from '$lib/components/table-cells/ShortDate.svelte';
 
-	export let applications: ApplicationListItem[];
+	export let applications: ComposedApplicationListItem[];
 	export let isUndergraduate: boolean;
 </script>
 

@@ -4,7 +4,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { deleteProgram, fetchProgram, updateProgram, type ProgramDetail } from '$lib/api/program';
-import { fetchApplications } from '$lib/api/application';
+import { fetchApplicants, fetchApplications } from '$lib/api/application';
 import { deleteApplicationRound, fetchApplicationRounds } from '$lib/api/applicationRound';
 import { programUpdateSchema } from '$lib/schemas/program';
 import { deleteSchema } from '$lib/schemas/delete';
@@ -28,7 +28,8 @@ export async function load(event: PageServerLoadEvent) {
 		programForm: await superValidate(program, zod(programUpdateSchema)),
 		deleteForm: await superValidate(zod(deleteSchema)),
 		applicationRounds: fetchApplicationRounds({ program: program.id }),
-		applications: fetchApplications({ program: program.id })
+		applications: fetchApplications({ program: program.id }),
+		applicants: fetchApplicants()
 	};
 }
 

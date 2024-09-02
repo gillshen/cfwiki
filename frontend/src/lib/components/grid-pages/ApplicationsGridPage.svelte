@@ -11,7 +11,7 @@
 		type ValueGetterParams
 	} from 'ag-grid-community';
 
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
@@ -23,7 +23,7 @@
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
 	import { formatAlevelSummary, formatApSummary, formatIbSummary } from '$lib/utils/studentUtils';
-	import { formatApplicationType } from '$lib/utils/applicationUtils';
+	import { compose, formatApplicationType } from '$lib/utils/applicationUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 
 	import {
@@ -36,6 +36,7 @@
 
 	export let data: {
 		applications: Promise<ApplicationListItem[]>;
+		applicants: Promise<ApplicantListItem[]>;
 		year?: number;
 		applicationType?: string;
 		pending?: boolean;
@@ -157,13 +158,13 @@
 		{ headerName: 'Due', field: 'due_date', flex: 1.5 },
 		{
 			headerName: 'Status',
-			field: 'l_status',
+			field: 'latest_log.status',
 			cellRenderer: StatusRenderer,
 			headerTooltip: 'Latest status of the application'
 		},
 		{
 			headerName: 'Last Update',
-			field: 'l_status_date',
+			field: 'latest_log.date',
 			flex: 1.5,
 			headerTooltip: 'The (approximate) date when the application assumed its latest status'
 		}
@@ -213,11 +214,13 @@
 	};
 
 	onMount(async () => {
-		const applications = await data.applications;
+		const [applications, applicants] = await Promise.all([data.applications, data.applicants]);
 
 		if (!applications.length) {
 			return;
 		}
+
+		const rowData = compose(applications, applicants);
 
 		const gridOptions: GridOptions = {
 			defaultColDef: {
@@ -227,7 +230,7 @@
 			},
 			columnTypes,
 			columnDefs,
-			rowData: applications,
+			rowData,
 			onFilterChanged: showDisplayedRowCount,
 			onModelUpdated: showDisplayedRowCount,
 			...agGridOptions

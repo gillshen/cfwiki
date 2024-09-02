@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Accordion, AccordionItem, Badge } from 'flowbite-svelte';
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplicationListItem } from '$lib/api/application';
 
-	export let groupedApplications: Record<string | number, ApplicationListItem[]>;
+	export let groupedApplications: Record<string | number, ComposedApplicationListItem[]>;
 	export let divClass: string = '';
 	export let openFirst: boolean = true;
 </script>

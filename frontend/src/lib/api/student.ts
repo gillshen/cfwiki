@@ -32,15 +32,18 @@ export type BaseStudent = {
 	fullname: string;
 };
 
-export type Contract = {
-	id: number;
-	student: number;
+export type ContractSummary = {
 	type: string;
 	target_year: number;
-	date: string | null;
 	status: 'In effect' | 'Fulfilled' | 'Terminated';
-	student_progression_when_signed: string;
 	services: Service[];
+};
+
+export type Contract = ContractSummary & {
+	id: number;
+	student: number;
+	date: string | null;
+	student_progression_when_signed: string;
 };
 
 export type ApCount = {
@@ -66,7 +69,7 @@ export type AlevelCount = {
 };
 
 export type StudentListItem = BaseStudent & {
-	latest_contract: Contract;
+	latest_contract: ContractSummary;
 	scores: {
 		best_toefl?: number;
 		best_ielts?: number;
