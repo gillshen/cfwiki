@@ -15,6 +15,7 @@
 	import type { SchoolWithStats } from '$lib/api/school';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { AgCellRenderer } from '$lib/abstract/agCellRenderer';
+	import { lexicalChineseLast } from '$lib/utils/stringUtils';
 	import countryFlags from '$lib/constants/countryFlags';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
@@ -219,7 +220,7 @@
 			},
 			columnTypes,
 			columnDefs,
-			rowData: schools.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')),
+			rowData: schools.sort((a, b) => lexicalChineseLast(a.name, b.name)),
 			onFilterChanged: showDisplayedRowCount,
 			onModelUpdated: showDisplayedRowCount,
 			...agGridOptions
@@ -236,7 +237,7 @@
 <Heading tag="h1" class="grid-title flex gap-8 items-center justify-between">
 	<div class="flex gap-4 items-center">
 		{data.schoolType}
-		<RowCountBadge promisedData={data.schools} {rowCount} />
+		<RowCountBadge rows={data.schools} {rowCount} />
 		<ControlButton {hideControl} />
 	</div>
 

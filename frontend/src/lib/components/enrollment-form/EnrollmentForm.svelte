@@ -4,6 +4,7 @@
 
 	import type { EnrollmentByStudent } from '$lib/api/enrollment';
 	import type { School } from '$lib/api/school';
+	import { lexicalChineseLast } from '$lib/utils/stringUtils';
 
 	export let form: any;
 	export let message: any;
@@ -25,7 +26,7 @@
 
 	$: filteredSchools = schools
 		.filter((s) => s.type === schoolType)
-		.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'));
+		.sort((a, b) => lexicalChineseLast(a.name, b.name));
 
 	let progressions: string[] = [];
 

@@ -204,7 +204,7 @@
 	};
 
 	let gridApi: GridApi;
-	let rowCount: number;
+	let rowCount: number | undefined;
 	const hideControl = writable(true);
 
 	const showDisplayedRowCount = () => {
@@ -254,18 +254,18 @@
 		{:else}
 			All
 		{/if}
-		<RowCountBadge promisedData={data.applications} {rowCount} />
+		<RowCountBadge rows={data.applications} {rowCount} />
 		<ControlButton {hideControl} />
 	</div>
 
-	{#await data.applications then _}
+	{#await Promise.all([data.applications, data.applicants]) then _}
 		<DownloadButton {gridApi} fileName="cf_applications" />
 	{/await}
 </Heading>
 
-{#await data.applications}
+{#await Promise.all([data.applications, data.applicants])}
 	<FetchingDataSign />
-{:then applications}
+{:then [applications, _]}
 	{#if applications.length}
 		<div id="grid" class="data-grid ag-theme-alpine full-page" />
 	{:else}

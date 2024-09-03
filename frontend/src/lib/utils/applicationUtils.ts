@@ -8,6 +8,7 @@ import type {
 import { applicationStatusOrder, type ApplicationStatus } from '$lib/api/applicationLog';
 import { sortedSchoolNames } from '$lib/api/school';
 import { orderByRoundName as _orderByRoundName } from '$lib/utils/applicationRoundUtils';
+import { lexicalChineseLast } from '$lib/utils/stringUtils';
 
 export function compose(
 	applications: ApplicationListItem[],
@@ -69,11 +70,11 @@ export function orderBySchoolName(a: ApplicationListItem, b: ApplicationListItem
 	const aNames = sortedSchoolNames(a.schools);
 	const bNames = sortedSchoolNames(b.schools);
 
-	// It's known that each application is associated with at most two schools
+	// since each application is associated with at most two schools
 	if (aNames[0] !== bNames[0]) {
-		return aNames[0].localeCompare(bNames[0]);
+		return lexicalChineseLast(aNames[0], bNames[0]);
 	} else {
-		return (aNames[1] ?? '').localeCompare(bNames[1] ?? '');
+		return lexicalChineseLast(aNames[1] ?? '', bNames[0] ?? '');
 	}
 }
 

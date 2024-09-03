@@ -175,7 +175,7 @@
 <Heading tag="h1" class="grid-title flex gap-8 items-center justify-between">
 	<div class="flex gap-4 items-center">
 		{`${data.programType} Programs`}
-		<RowCountBadge promisedData={data.programs} {rowCount} />
+		<RowCountBadge rows={data.programs} {rowCount} />
 		<ControlButton {hideControl} />
 	</div>
 

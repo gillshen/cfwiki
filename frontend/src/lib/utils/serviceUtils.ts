@@ -13,15 +13,16 @@ export function filterForActive(services: Service[]): Service[] {
 
 export function orderByEndDateRole(a: Service, b: Service) {
 	if (a.end_date !== b.end_date) {
-		return a.end_date === null
-			? -1
-			: b.end_date === null
-				? 1
-				: a.end_date.localeCompare(b.end_date);
+		if (a.end_date === null) {
+			return -1;
+		}
+		if (b.end_date === null) {
+			return 1;
+		}
+		return a.end_date.localeCompare(b.end_date);
 	}
 
 	const roles = Array.from(cfRoles) as string[];
-
 	let indexA = roles.indexOf(a.role) ?? 99;
 	let indexB = roles.indexOf(b.role) ?? 99;
 

@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { Badge } from 'flowbite-svelte';
 
-	export let promisedData: Promise<any[]>;
-	export let rowCount: number | null;
+	export let rows: Promise<any[]>;
+	export let rowCount: number | null | undefined;
 </script>
 
 <div class="relative -top-3 -left-2 -z-10">
-	{#await promisedData then data}
-		{#if data.length && rowCount !== data.length}
-			<Badge>{rowCount}/{data.length}</Badge>
-		{:else if data.length}
-			<Badge>{data.length}</Badge>
+	{#await rows then rows}
+		{#if rows.length && rowCount !== undefined && rowCount !== rows.length}
+			<Badge>{rowCount}/{rows.length}</Badge>
+		{:else if rows.length}
+			<Badge>{rows.length}</Badge>
 		{/if}
 	{/await}
 </div>

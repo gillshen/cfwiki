@@ -316,7 +316,7 @@
 		{:else}
 			All
 		{/if}
-		<RowCountBadge promisedData={data.students} {rowCount} />
+		<RowCountBadge rows={data.students} {rowCount} />
 		<ControlButton {hideControl} />
 	</div>
 

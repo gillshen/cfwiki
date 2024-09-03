@@ -13,7 +13,8 @@
 		DropdownDivider,
 		Avatar,
 		Hr,
-		Heading
+		Heading,
+		Button
 	} from 'flowbite-svelte';
 
 	import {
@@ -29,6 +30,7 @@
 	import { contractTypeToSlug } from '$lib/utils/contractUtils';
 	import { applicationTypes } from '$lib/api/application';
 	import { formatApplicationType } from '$lib/utils/applicationUtils';
+	import FooterYearGroupItem from '$lib/components/list-items/FooterYearGroupItem.svelte';
 
 	export let data;
 
@@ -224,49 +226,27 @@
 					{#each cfSalesPeople as cfer}
 						<li><a href={`/cf/${cfer.username}`}>{cfer.username}</a></li>
 					{/each}
-					<li><a href="/excf" class="font-medium block mt-4">Ex-CFers</a></li>
+					<li><a href="/excf" class="block mt-3">Ex-CFers</a></li>
 				</ul>
 			</div>
 		</article>
 
 		<article>
 			<Heading tag="h3" class="text-lg font-medium">Students</Heading>
-			{#each years as year}
-				<Heading tag="h4" class="mt-3 text-sm font-medium text-primary-900">{year}</Heading>
-				<ul>
-					{#each contractTypes as contractType}
-						<li>
-							<a href={`/data/students/${year}/${contractTypeToSlug(contractType)}`}>
-								{contractType}
-							</a>
-						</li>
-					{/each}
-				</ul>
-			{/each}
-			<ul class="mt-3 flex flex-col gap-2">
-				<li><a href="/data/students/current" class="font-medium">Current Students</a></li>
-				<li><a href="/data/students/all" class="font-medium">All Students</a></li>
-				<li><a href="/student/new" class="font-medium text-primary-700">Create New</a></li>
+			<FooterYearGroupItem {years} domain="students" />
+			<ul class="mt-3">
+				<li><a href="/data/students/current">Current Students</a></li>
+				<li><a href="/data/students/all">All Students</a></li>
+				<li><Button href="/student/new" outline class="px-2 py-1 mt-2">Create New</Button></li>
 			</ul>
 		</article>
 
 		<article>
 			<Heading tag="h3" class="text-lg font-medium">Applications</Heading>
-			{#each years as year}
-				<Heading tag="h4" class="mt-3 text-sm font-medium text-primary-900">{year}</Heading>
-				<ul>
-					{#each applicationTypes as applicationType}
-						<li>
-							<a href={`/data/applications/${year}/${applicationType}`}>
-								{formatApplicationType(applicationType)}
-							</a>
-						</li>
-					{/each}
-				</ul>
-			{/each}
-			<ul class="mt-3 flex flex-col gap-2">
-				<li><a href="/data/applications/pending" class="font-medium">Pending Applications</a></li>
-				<li><a href="/data/applications/all" class="font-medium">All Applications</a></li>
+			<FooterYearGroupItem {years} domain="applications" />
+			<ul class="mt-3">
+				<li><a href="/data/applications/pending">Pending Applications</a></li>
+				<li><a href="/data/applications/all">All Applications</a></li>
 			</ul>
 		</article>
 
@@ -276,7 +256,7 @@
 				<li><a href="/data/schools/universities">Universities</a></li>
 				<li><a href="/data/schools/secondary-schools">Secondary Schools</a></li>
 				<li><a href="/data/schools/other-institutions">Other Institutions</a></li>
-				<li><a href="/school/new" class="font-medium text-primary-700">Create New</a></li>
+				<li><Button href="/school/new" outline class="px-2 py-1 mt-2">Create New</Button></li>
 			</ul>
 
 			<Heading tag="h3" class="mt-8 text-lg font-medium">Programs</Heading>
@@ -288,12 +268,3 @@
 		</article>
 	</div>
 </div>
-
-<style lang="postcss">
-	.footer li a {
-		@apply text-sm;
-	}
-	.footer li a:hover {
-		@apply text-primary-700;
-	}
-</style>

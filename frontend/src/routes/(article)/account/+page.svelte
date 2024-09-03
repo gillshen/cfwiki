@@ -106,7 +106,7 @@
 			<Helper class="form-helper mt-2">
 				<ul class="flex flex-col gap-1">
 					<ChecklistItem
-						checkedText="Does not contain your username"
+						checkedText="Must not contain your username"
 						checked={!passwordHasUsername($passwordForm.password, data.user.username)}
 					/>
 					<ChecklistItem
@@ -128,7 +128,7 @@
 				</ul>
 			</Helper>
 
-			<Label for="repeat-password" class="form-label">Repeat password</Label>
+			<Label for="repeat-password" class="form-label">Repeat the password</Label>
 			<Input
 				id="repeat-password"
 				type="password"
@@ -140,7 +140,7 @@
 			<Helper class="form-helper mt-2">
 				<ChecklistItem
 					checkedText="Passwords matched"
-					unCheckedText="Does not match"
+					unCheckedText="Passwords do not match"
 					checked={$passwordForm.password === $passwordForm.repeat_password}
 				/>
 			</Helper>

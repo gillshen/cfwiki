@@ -19,6 +19,13 @@ h2 {
 	font-family: 'Merriweather', serif;
 }
 
+.footer li a {
+	@apply text-sm;
+}
+.footer li a:hover {
+	@apply text-primary-700;
+}
+
 .form-width {
 	@apply w-[30rem];
 }

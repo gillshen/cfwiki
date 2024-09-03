@@ -15,6 +15,7 @@
 	import Toast from '$lib/components/misc/Toast.svelte';
 	import { enhanceDisplayName, orderByName } from '$lib/utils/programUtils';
 	import { formatRound, orderByDueDate, orderByRoundName } from '$lib/utils/applicationRoundUtils';
+	import { lexicalChineseLast } from '$lib/utils/stringUtils';
 
 	export let form: any;
 	export let contract: Writable<number>;
@@ -152,7 +153,7 @@
 <form class="form-width">
 	<Label for="school" class="form-label">School</Label>
 	<Select id="school" bind:value={$schoolId} on:change={onSchoolChange} required>
-		{#each schools.sort((a, b) => a.name.localeCompare(b.name)) as schoolOption}
+		{#each schools.sort((a, b) => lexicalChineseLast(a.name, b.name)) as schoolOption}
 			<option value={schoolOption.id}>{schoolOption.name}</option>
 		{/each}
 	</Select>

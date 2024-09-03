@@ -3,6 +3,7 @@
 
 	import type { ProgramDetail } from '$lib/api/program';
 	import { isUndergraduate } from '$lib/utils/programUtils';
+	import { lexicalChineseLast } from '$lib/utils/stringUtils';
 	import LinkWithIcon from '$lib/components/infobox/LinkWithIcon.svelte';
 
 	export let program: ProgramDetail;
@@ -23,7 +24,7 @@
 			</TableBodyCell>
 			<TableBodyCell tdClass="font-normal py-4">
 				<div class="flex flex-col gap-2">
-					{#each program.schools.sort((a, b) => a.name.localeCompare(b.name)) as school}
+					{#each program.schools.sort((a, b) => lexicalChineseLast(a.name, b.name)) as school}
 						<LinkWithIcon href={`/school/${school.id}`} text={school.name} />
 					{/each}
 				</div>
