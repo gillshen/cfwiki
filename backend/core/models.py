@@ -55,19 +55,18 @@ class Student(models.Model):
     @classmethod
     def q_related(cls):
         return cls.objects.prefetch_related(
-            "contracts",
             "contracts__services__cfer",
             "toefl",
             "ielts",
             "duolingo",
             "sat",
             "act",
-            "ap",
-            "ib",
-            "alevel",
             "gre",
             "gmat",
             "lsat",
+            "ap",
+            "ib",
+            "alevel",
         )
 
     @staticmethod
@@ -104,157 +103,6 @@ class Student(models.Model):
             return f"{self.given_name} {self.surname}"
 
     @property
-    def contracts_sorted(self):
-        """
-        Return related contracts sorted by
-
-            - `status_code` (effective ones first),
-            - `target_year` (descending), and
-            - `date` (descending, null last)
-
-        so that the first in the sorted QuerySet will be the latest of
-        the effective contract if there are effective contracts, or else
-        the latest of the non-effective contracts.
-        """
-        contracts = self.contracts.annotate(
-            status_code=Case(
-                When(status=Contract.Status.IN_EFFECT, then=Value(0)),
-                default=Value(1),
-                output_field=models.IntegerField(),
-            ),
-            date_code=Case(
-                When(date__isnull=True, then=Value(1)),
-                default=Value(0),
-                output_field=models.IntegerField(),
-            ),
-        )
-        return contracts.order_by(
-            "status_code",
-            "-target_year",
-            "date_code",
-            "-date",
-        )
-
-    @property
-    def latest_contract(self):
-        return self.contracts_sorted.first()
-
-    @staticmethod
-    def _find_best_score(*, q, total_exp):
-        if not q.exists():
-            return
-        values = q.annotate(v=total_exp).order_by("-v").values("v").first()
-        return values["v"]
-
-    @property
-    def best_toefl(self):
-        return self._find_best_score(
-            q=self.toefl,
-            total_exp=F("reading") + F("listening") + F("speaking") + F("writing"),
-        )
-
-    @property
-    def best_ielts(self):
-        total = self._find_best_score(
-            q=self.ielts,
-            total_exp=F("reading") + F("listening") + F("speaking") + F("writing"),
-        )
-        if total is not None:
-            return Decimal(int(total / 2 + Decimal(0.5)) / 2)
-
-    @property
-    def best_duolingo(self):
-        return self._find_best_score(q=self.duolingo, total_exp=F("overall"))
-
-    @property
-    def best_gre(self):
-        return self._find_best_score(q=self.gre, total_exp=F("verbal") + F("quant"))
-
-    @property
-    def best_gmat(self):
-        return self._find_best_score(q=self.gmat, total_exp=F("total"))
-
-    @property
-    def best_lsat(self):
-        return self._find_best_score(q=self.lsat, total_exp=F("score"))
-
-    @property
-    def super_sat(self):
-        aggreg: dict = self.sat.aggregate(
-            max_ebrw=Max("ebrw"),
-            max_math=Max("math"),
-        )
-        try:
-            return sum(aggreg.values())
-        except TypeError:
-            return
-
-    @property
-    def super_act(self):
-        aggreg: dict = self.act.aggregate(
-            max_math=Max("math"),
-            max_science=Max("science"),
-            max_english=Max("english"),
-            max_reading=Max("reading"),
-        )
-        try:
-            total = sum(aggreg.values())
-            return round(Decimal(total / 4) + Decimal(0.1))
-        except TypeError:
-            return
-
-    @property
-    def scores(self):
-        scores = {}
-        if self.best_toefl:
-            scores["best_toefl"] = self.best_toefl
-        if self.best_ielts:
-            scores["best_ielts"] = self.best_ielts
-        if self.best_duolingo:
-            scores["best_duolingo"] = self.best_duolingo
-        if self.super_sat:
-            scores["super_sat"] = self.super_sat
-        if self.super_act:
-            scores["super_act"] = self.super_act
-        if self.best_gre:
-            scores["best_gre"] = self.best_gre
-        if self.best_gmat:
-            scores["best_gmat"] = self.best_gmat
-        if self.best_lsat:
-            scores["best_lsat"] = self.best_lsat
-        return scores
-
-    @property
-    def ap_summary(self):
-        return (
-            self.ap.filter(score__isnull=False)
-            .values("score")
-            .annotate(count=Count("score"))
-        )
-
-    @property
-    def ib_summary(self):
-        summary = defaultdict(lambda: defaultdict(int))
-
-        for ib in self.ib.filter(grade__isnull=False):
-            if ib.subject in {"Extended Essay", "Theory of Knowledge"}:
-                scale = 3
-            else:
-                scale = 7
-            summary[ib.type]["total"] += ib.grade
-            summary[ib.type]["scale"] += scale
-
-        return summary
-
-    @property
-    def alevel_summary(self):
-        return (
-            self.alevel.filter(grade__isnull=False)
-            .values("type", "grade")
-            .annotate(count=Count("grade"))
-        )
-
-    @property
     def staff_names(self) -> list[str]:
         q = Service.objects.filter(contract__student=self)
         names = q.values_list("cfer_id__username").distinct()
@@ -280,6 +128,24 @@ class Contract(models.Model):
     student_progression_when_signed = models.CharField(max_length=50, blank=True)
 
     class Meta:
+        ordering = [
+            # Contracts in effect before those not in effect
+            # Otherwise order by target year desc, then by date desc
+            # Order null dates as prior to non-null dates
+            Case(
+                When(status="In effect", then=Value(0)),
+                default=Value(1),
+                output_field=models.IntegerField(),
+            ),
+            "-target_year",
+            Case(
+                When(date__isnull=True, then=Value(1)),
+                default=Value(0),
+                output_field=models.IntegerField(),
+            ),
+            "-date",
+        ]
+
         constraints = [
             models.UniqueConstraint(
                 "student",
@@ -414,8 +280,6 @@ class Application(models.Model):
         program: int = None,
         program_iteration: int = None,
         year: int = None,
-        term: str = None,
-        application_round: int = None,
         application_type: str = None,
         status: str = None,
     ):
@@ -431,10 +295,6 @@ class Application(models.Model):
             q = q.filter(round__program_iteration=program_iteration)
         if year is not None:
             q = q.filter(round__program_iteration__year=year)
-        if term is not None:
-            q = q.filter(round__program_iteration__term=term)
-        if application_round is not None:
-            q = q.filter(round=application_round)
         if application_type is not None:
             q = cls.filter_by_type(q, application_type)
         if status is not None:
@@ -539,10 +399,6 @@ class Application(models.Model):
     @property
     def services(self) -> list[Service]:
         return self.contract.services
-
-    @property
-    def latest_log(self):
-        return self.logs.order_by("-date", "-updated").first()
 
     @property
     def schools(self):

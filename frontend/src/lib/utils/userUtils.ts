@@ -39,11 +39,11 @@ export function canEditStudent(username: string, student: StudentDetail): boolea
 		return false;
 	}
 
-	if (!student.contracts_sorted.length) {
+	if (!student.contracts.length) {
 		return true;
 	}
 
-	for (const contract of student.contracts_sorted) {
+	for (const contract of student.contracts) {
 		if (canEditContract(username, contract)) {
 			return true;
 		}

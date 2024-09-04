@@ -2,22 +2,22 @@
 	import { fade } from 'svelte/transition';
 	import { Popover, TableBodyCell } from 'flowbite-svelte';
 
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplicationListItem } from '$lib/api/application';
 	import LinkWithIcon from '$lib/components/infobox/LinkWithIcon.svelte';
 	import PopoverScoreItem from '$lib/components/table-cells/PopoverScoreItem.svelte';
 	import PopoverAlevelItem from '$lib/components/table-cells/PopoverAlevelItem.svelte';
 	import PopoverMultiContainer from '$lib/components/table-cells/PopoverMultiContainer.svelte';
 	import ScoreCount from '$lib/components/table-cells/ScoreCount.svelte';
 
-	export let application: ApplicationListItem;
+	export let application: ComposedApplicationListItem;
 
 	const { id, fullname, scores, ap_summary, ib_summary, alevel_summary } = application.student;
 
 	$: noScore =
 		!Object.keys(scores).length &&
-		!ap_summary.length &&
+		!Object.keys(ap_summary).length &&
 		!Object.keys(ib_summary).length &&
-		!alevel_summary.length;
+		!Object.keys(alevel_summary).length;
 </script>
 
 <TableBodyCell class="max-w-20 font-normal">
@@ -57,16 +57,20 @@
 				/>
 			{/if}
 
-			{#if ap_summary.length}
+			{#if Object.keys(ap_summary).length}
 				<PopoverMultiContainer label="AP">
-					{#each ap_summary.sort((a, b) => b.score - a.score) as item}
-						<ScoreCount score={item.score} count={item.count} />
+					{#each Object.entries(ap_summary).sort( (a, b) => b[0].localeCompare(a[0]) ) as [score, count]}
+						<ScoreCount {score} {count} />
 					{/each}
 				</PopoverMultiContainer>
 			{/if}
 
-			<PopoverAlevelItem items={alevel_summary} type="final" />
-			<PopoverAlevelItem items={alevel_summary} type="predicted" />
+			{#if alevel_summary.final}
+				<PopoverAlevelItem items={alevel_summary.final} label="A-level final" />
+			{/if}
+			{#if alevel_summary.predicted}
+				<PopoverAlevelItem items={alevel_summary.predicted} label="A-level pred." />
+			{/if}
 
 			{#if noScore}
 				<div>No test scores</div>

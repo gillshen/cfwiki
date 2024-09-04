@@ -81,8 +81,7 @@
 		</svelte:fragment>
 	</ApplicationsLoader>
 
-	{#if canEdit && student.contracts_sorted.length}
-		<!-- <Button outline href={`/student/${student.id}/dream`} class="mt-8"> -->
+	{#if canEdit && student.contracts.length}
 		<Button outline on:click={() => (newApplicationModal = true)} class="mt-8">
 			Create applications
 		</Button>

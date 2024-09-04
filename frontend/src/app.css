@@ -20,7 +20,7 @@ h2 {
 }
 
 .footer li a {
-	@apply text-sm;
+	@apply text-sm text-gray-700;
 }
 .footer li a:hover {
 	@apply text-primary-700;

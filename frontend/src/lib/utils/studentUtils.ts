@@ -3,9 +3,9 @@ import type {
 	StudentByUserListItem,
 	Contract,
 	CohortMember,
-	ApCount,
+	ApSummary,
 	IbSummary,
-	AlevelCount
+	AlevelSummary
 } from '$lib/api/student';
 
 import americanStates from '$lib/constants/americanStates';
@@ -53,11 +53,8 @@ export function formatLocation(student: BaseStudent): string {
 	return `${base_city}, ${subnationalAbbr}`;
 }
 
-export function formatApSummary(summary: ApCount[]): string {
-	return summary
-		.sort((a, b) => b.score - a.score)
-		.map((item) => `${item.score} (\u00d7${item.count})`)
-		.join(', ');
+export function formatApSummary(summary: ApSummary): string {
+	return _formatScoreDistribution(summary, (a, b) => b[0].localeCompare(a[0]));
 }
 
 export function formatIbSummary(summary: IbSummary): string {
@@ -72,23 +69,26 @@ export function formatIbSummary(summary: IbSummary): string {
 	return [final, predicted].filter(Boolean).join('; ');
 }
 
-export function formatAlevelSummary(summary: AlevelCount[]): string {
-	const final = _formatAlevelSubSummary(summary, 'final');
-	const predicted = _formatAlevelSubSummary(summary, 'predicted');
+export function formatAlevelSummary(summary: AlevelSummary): string {
+	const comparator = (a: [string, number], b: [string, number]) => compareAlevelGrade(a[0], b[0]);
+	const final = _formatScoreDistribution(summary.final, comparator, 'Final: ');
+	const predicted = _formatScoreDistribution(summary.predicted, comparator, 'Predicted: ');
 	return [final, predicted].filter(Boolean).join('; ');
 }
 
-function _formatAlevelSubSummary(summary: AlevelCount[], type: 'predicted' | 'final'): string {
-	const filtered = summary.filter((item) => item.type === type);
-	if (!filtered.length) {
+function _formatScoreDistribution(
+	dist: Record<string, number> | undefined,
+	comparator: (a: [string, number], b: [string, number]) => number,
+	prefix: string = ''
+): string {
+	if (dist === undefined) {
 		return '';
 	}
-	const tag = type === 'final' ? 'Final' : 'Predicted';
-	const formattedFiltered = filtered
-		.sort((a, b) => compareAlevelGrade(a.grade, b.grade))
-		.map((item) => `${item.grade} (\u00d7${item.count})`)
+	const formatted = Object.entries(dist)
+		.sort(comparator)
+		.map(([score, count]) => `${score} (\u00d7${count})`)
 		.join(', ');
-	return `${tag}: ${formattedFiltered}`;
+	return `${prefix}${formatted}`;
 }
 
 export function groupByTargetYear(
@@ -98,7 +98,7 @@ export function groupByTargetYear(
 	const groupedStudents: Record<string, CohortMember[]> = {};
 
 	for (const student of students) {
-		for (const contract of student.contracts_sorted) {
+		for (const contract of student.contracts) {
 			const status = _getServiceStatus(username, contract);
 
 			if (status !== 'never') {

@@ -28,7 +28,7 @@
 
 <Label for="contract" class="form-label">Contract</Label>
 <Select id="contract" name="contract" bind:value={$form.contractId} required>
-	{#each entity.contracts_sorted as contract}
+	{#each entity.contracts as contract}
 		<option value={contract.id}>{contract.type} {contract.target_year}</option>
 	{/each}
 </Select>

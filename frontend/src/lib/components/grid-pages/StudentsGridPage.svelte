@@ -12,7 +12,7 @@
 		type ICellRendererParams
 	} from 'ag-grid-community';
 
-	import type { StudentListItem } from '$lib/api/student';
+	import type { ContractSummary, StudentListItem } from '$lib/api/student';
 	import type { ContractType } from '$lib/api/contract';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { AgCellRenderer, SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
@@ -47,7 +47,7 @@
 		students: Promise<StudentListItem[]>;
 		targetYear?: number | undefined;
 		contractType?: ContractType | undefined;
-		current?: boolean;
+		current?: true;
 	};
 
 	function _getName(student: StudentListItem): string {
@@ -109,44 +109,59 @@
 		return `${flag}\xa0\xa0${home}`;
 	}
 
+	function _getRelevantContract(student: StudentListItem): ContractSummary | undefined {
+		let contracts = [...student.contracts];
+		if (data.targetYear !== undefined) {
+			contracts = contracts.filter((c) => c.target_year === data.targetYear);
+		}
+		if (data.contractType !== undefined) {
+			contracts = contracts.filter((c) => c.type === data.contractType);
+		}
+		if (data.current !== undefined) {
+			contracts = contracts.filter((c) => c.status === 'In effect');
+		}
+		return contracts[0];
+	}
+
 	function latestContractTypeValueGetter(params: ValueGetterParams): string {
-		return params.data.latest_contract?.type ?? '';
+		return _getRelevantContract(params.data)?.type ?? '';
 	}
 
 	function lastestTargetYearValueGetter(params: ValueGetterParams): number | null {
-		return params.data.latest_contract?.target_year ?? null;
+		return _getRelevantContract(params.data)?.target_year ?? null;
 	}
 
 	function contractStatusValueGetter(params: ValueGetterParams): string {
-		return params.data.latest_contract?.status ?? '';
+		return _getRelevantContract(params.data)?.status ?? '';
 	}
 
-	function _getLatestServices(student: StudentListItem, role: string): string {
-		if (!student.latest_contract) {
+	function _getRelevantServices(student: StudentListItem, role: string): string {
+		const latestContract = _getRelevantContract(student);
+		if (latestContract === undefined) {
 			return '';
 		}
-		const services = filterForActive(student.latest_contract.services);
+		const services = filterForActive(latestContract.services);
 		return formatCfNames(services, role);
 	}
 
 	function stratPeopleValueGetter(params: ValueGetterParams): string {
-		return _getLatestServices(params.data, '战略顾问');
+		return _getRelevantServices(params.data, '战略顾问');
 	}
 
 	function salesPeopleValueGetter(params: ValueGetterParams): string {
-		return _getLatestServices(params.data, '顾问');
+		return _getRelevantServices(params.data, '顾问');
 	}
 
 	function workPeopleValueGetter(params: ValueGetterParams): string {
-		return _getLatestServices(params.data, '文案');
+		return _getRelevantServices(params.data, '文案');
 	}
 
 	function salesAssistantsValueGetter(params: ValueGetterParams): string {
-		return _getLatestServices(params.data, '服务顾问');
+		return _getRelevantServices(params.data, '服务顾问');
 	}
 
 	function workAssistantsValueGetter(params: ValueGetterParams): string {
-		return _getLatestServices(params.data, '流程顾问');
+		return _getRelevantServices(params.data, '流程顾问');
 	}
 
 	function satOrActValueGetter(params: ValueGetterParams): string {

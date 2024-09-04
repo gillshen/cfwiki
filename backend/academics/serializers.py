@@ -30,7 +30,7 @@ class EnrollmentListSerializer(serializers.ModelSerializer):
     class StudentSerializer(serializers.ModelSerializer):
         class Meta:
             model = Student
-            fields = ["id", "fullname", "gender", "citizenship", "latest_contract"]
+            fields = ["id", "fullname", "gender", "citizenship", "contracts"]
 
         fullname = serializers.CharField()
 
@@ -39,7 +39,7 @@ class EnrollmentListSerializer(serializers.ModelSerializer):
                 model = Contract
                 fields = ["status"]
 
-        latest_contract = ContractByStudentSerializer()
+        contracts = ContractByStudentSerializer(many=True)
 
     student = StudentSerializer()
 

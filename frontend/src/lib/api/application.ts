@@ -1,6 +1,6 @@
 import { get, post, patch, buildQuery, destroy } from '$lib/api/api';
 import type { ApplicationStatus, ApplicationLog } from '$lib/api/applicationLog';
-import type { ApCount, IbSummary, AlevelCount } from '$lib/api/student';
+import type { ApSummary, IbSummary, AlevelSummary } from '$lib/api/student';
 
 export const applicationTypes = ['freshman', 'transfer', 'graduate', 'other'] as const;
 
@@ -40,9 +40,9 @@ export type ApplicantListItem = {
 		best_gmat?: number;
 		best_lsat?: number;
 	};
-	ap_summary: ApCount[];
+	ap_summary: ApSummary;
 	ib_summary: IbSummary;
-	alevel_summary: AlevelCount[];
+	alevel_summary: AlevelSummary;
 };
 
 export type ComposedApplicationListItem = {

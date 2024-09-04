@@ -20,7 +20,7 @@ export type EnrollmentListItem = BaseEnrollment & {
 		fullname: string;
 		gender: string;
 		citizenship: string;
-		latest_contract: { status: ContractStatus };
+		contracts: { status: ContractStatus }[];
 	};
 };
 

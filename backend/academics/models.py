@@ -99,10 +99,10 @@ class TOEFLScore(models.Model):
         verbose_name_plural = "TOEFL scores"
 
     def __str__(self) -> str:
-        return f"{self.student} | TOEFL: {self.overall}"
+        return f"{self.student} | TOEFL: {self.total}"
 
     @property
-    def overall(self) -> int | None:
+    def total(self) -> int | None:
         with suppress(TypeError):
             return sum([self.reading, self.listening, self.speaking, self.writing])
 

@@ -31,9 +31,9 @@
 </script>
 
 <article class="bg-stone-50 rounded-xl w-full h-fit p-6">
-	{#if student.contracts_sorted.length}
+	{#if student.contracts.length}
 		<div class="grid grid-cols-2 gap-6 mb-6">
-			{#each student.contracts_sorted as contract}
+			{#each student.contracts as contract}
 				<ContractItem {contract}>
 					{#if canEdit || !contract.services.length}
 						<UpdateDeleteButton

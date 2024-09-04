@@ -46,10 +46,7 @@ export type Contract = ContractSummary & {
 	student_progression_when_signed: string;
 };
 
-export type ApCount = {
-	score: 1 | 2 | 3 | 4 | 5;
-	count: number;
-};
+export type ApSummary = Record<1 | 2 | 3 | 4 | 5, number>;
 
 export type IbSummary = {
 	predicted?: {
@@ -62,14 +59,13 @@ export type IbSummary = {
 	};
 };
 
-export type AlevelCount = {
-	type: 'predicted' | 'final';
-	grade: 'A*' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
-	count: number;
+export type AlevelSummary = {
+	predicted?: Record<'A*' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F', number>;
+	final?: Record<'A*' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F', number>;
 };
 
 export type StudentListItem = BaseStudent & {
-	latest_contract: ContractSummary;
+	contracts: ContractSummary[];
 	scores: {
 		best_toefl?: number;
 		best_ielts?: number;
@@ -80,17 +76,17 @@ export type StudentListItem = BaseStudent & {
 		best_gmat?: number;
 		best_lsat?: number;
 	};
-	ap_summary: ApCount[];
-	ib_summary: IbSummary[];
-	alevel_summary: AlevelCount[];
+	ap_summary: ApSummary;
+	ib_summary: IbSummary;
+	alevel_summary: AlevelSummary;
 };
 
 export type StudentByUserListItem = BaseStudent & {
-	contracts_sorted: Contract[];
+	contracts: Contract[];
 };
 
 export type StudentDetail = BaseStudent & {
-	contracts_sorted: Contract[];
+	contracts: Contract[];
 	enrollments: EnrollmentByStudent[];
 	toefl: ToeflScore[];
 	ielts: IeltsScore[];

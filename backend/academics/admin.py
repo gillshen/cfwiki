@@ -39,7 +39,7 @@ class GradeAdmin(admin.ModelAdmin):
 
 @admin.register(TOEFLScore)
 class TOEFLScoreAdmin(admin.ModelAdmin):
-    list_display = "id", "student", "overall", "date"
+    list_display = "id", "student", "total", "date"
 
 
 @admin.register(IELTSScore)

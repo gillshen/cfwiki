@@ -89,7 +89,6 @@ class StudentByUserListView(ListAPIView):
 class StudentDetailView(RetrieveAPIView):
     queryset = Student.objects.all().prefetch_related(
         "contracts",
-        "enrollments",
         "toefl",
         "ielts",
         "duolingo",
@@ -164,8 +163,6 @@ class ApplicationListView(ListAPIView):
             program=query_params.get("program"),
             program_iteration=query_params.get("program_iteration"),
             year=query_params.get("year"),
-            term=query_params.get("term"),
-            application_round=query_params.get("application_round"),
             application_type=query_params.get("application_type"),
             status=query_params.get("status"),
         )

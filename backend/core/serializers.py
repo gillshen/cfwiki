@@ -1,9 +1,12 @@
+from collections import defaultdict
+
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.db import IntegrityError
 from core.models import CFUser, Student, Contract, Service, Application, ApplicationLog
 
 from target.models import School, Program, ProgramIteration, ApplicationRound
+import academics.models
 import academics.serializers
 
 
@@ -58,7 +61,6 @@ class ContractByStudentSerializer(serializers.ModelSerializer):
 
 
 class StudentListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Student
         fields = "__all__"
@@ -77,24 +79,77 @@ class StudentListSerializer(serializers.ModelSerializer):
 
         services = ServiceSerializer(many=True)
 
-    latest_contract = ContractSerializer()
+    contracts = ContractSerializer(many=True)
 
     scores = serializers.SerializerMethodField()
     ap_summary = serializers.SerializerMethodField()
     ib_summary = serializers.SerializerMethodField()
     alevel_summary = serializers.SerializerMethodField()
 
-    def get_scores(self, instance):
-        return instance.scores
+    def get_scores(self, student):
+        scores = {}
 
-    def get_ap_summary(self, instance):
-        return instance.ap_summary
+        def get_max(lst):
+            return max(filter(None, lst), default=None)
 
-    def get_ib_summary(self, instance):
-        return instance.ib_summary
+        scores["best_toefl"] = get_max([s.total for s in student.toefl.all()])
+        scores["best_ielts"] = get_max([s.overall for s in student.ielts.all()])
+        scores["best_duolingo"] = get_max([s.overall for s in student.duolingo.all()])
 
-    def get_alevel_summary(self, instance):
-        return instance.alevel_summary
+        best_sat_subscores = [
+            get_max([s.ebrw for s in student.sat.all()]),
+            get_max([s.math for s in student.sat.all()]),
+        ]
+        try:
+            scores["super_sat"] = sum(best_sat_subscores)
+        except TypeError:
+            pass
+
+        best_act_subscores = [
+            get_max([s.math for s in student.act.all()]),
+            get_max([s.science for s in student.act.all()]),
+            get_max([s.english for s in student.act.all()]),
+            get_max([s.reading for s in student.act.all()]),
+        ]
+        try:
+            act_total = sum(best_act_subscores)
+            scores["super_act"] = round((act_total / 4) + 0.1)
+        except TypeError:
+            pass
+
+        scores["best_gre"] = get_max([s.total for s in student.gre.all()])
+        scores["best_gmat"] = get_max([s.total for s in student.gmat.all()])
+        scores["best_lsat"] = get_max([s.score for s in student.lsat.all()])
+
+        scores = {k: v for (k, v) in scores.items() if v is not None}
+        return scores
+
+    def get_ap_summary(self, student):
+        summary = defaultdict(int)
+        for score in filter(None, [s.score for s in student.ap.all()]):
+            summary[score] += 1
+        return summary
+
+    def get_ib_summary(self, student):
+        summary = defaultdict(lambda: defaultdict(int))
+
+        for ib in student.ib.all():
+            if ib.grade is None:
+                continue
+            if ib.subject in {"Extended Essay", "Theory of Knowledge"}:
+                scale = 3
+            else:
+                scale = 7
+            summary[ib.type]["total"] += ib.grade
+            summary[ib.type]["scale"] += scale
+
+        return summary
+
+    def get_alevel_summary(self, student):
+        summary = defaultdict(lambda: defaultdict(int))
+        for alevel in [a for a in student.alevel.all() if a.grade is not None]:
+            summary[alevel.type][alevel.grade] += 1
+        return summary
 
 
 class StudentByUserSerializer(serializers.ModelSerializer):
@@ -103,7 +158,7 @@ class StudentByUserSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     fullname = serializers.CharField()
-    contracts_sorted = ContractByStudentSerializer(many=True)
+    contracts = ContractByStudentSerializer(many=True)
 
 
 class StudentDetailSerializer(serializers.ModelSerializer):
@@ -113,7 +168,7 @@ class StudentDetailSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     fullname = serializers.CharField()
-    contracts_sorted = ContractByStudentSerializer(many=True)
+    contracts = ContractByStudentSerializer(many=True)
 
     enrollments = academics.serializers.EnrollmentByStudentSerializer(many=True)
     toefl = academics.serializers.TOEFLScoreCRUDSerializer(many=True)
@@ -229,19 +284,23 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     term = serializers.CharField()
     round_name = serializers.CharField()
     due_date = serializers.DateField()
-
-    class ApplicationLogSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = ApplicationLog
-            fields = ["status", "date"]
-
-    latest_log = ApplicationLogSerializer()
-
+    latest_log = serializers.SerializerMethodField()
     majors_or_track = serializers.CharField()
+
+    def get_latest_log(self, application):
+        logs = list(application.logs.all())
+        if not logs:
+            return
+        ordered = sorted(logs, key=lambda log: (log.date, log.updated), reverse=True)
+        latest_log = ordered[0]
+        return {
+            "status": latest_log.status,
+            "date": latest_log.date,
+        }
 
 
 # for use in conjunction with ApplicationListSerializer
-class ApplicantListSerializer(serializers.ModelSerializer):
+class ApplicantListSerializer(StudentListSerializer):
     class Meta:
         model = Student
         fields = [
@@ -254,23 +313,6 @@ class ApplicantListSerializer(serializers.ModelSerializer):
             "ib_summary",
             "alevel_summary",
         ]
-
-    scores = serializers.SerializerMethodField()
-    ap_summary = serializers.SerializerMethodField()
-    ib_summary = serializers.SerializerMethodField()
-    alevel_summary = serializers.SerializerMethodField()
-
-    def get_scores(self, instance):
-        return instance.scores
-
-    def get_ap_summary(self, instance):
-        return instance.ap_summary
-
-    def get_ib_summary(self, instance):
-        return instance.ib_summary
-
-    def get_alevel_summary(self, instance):
-        return instance.alevel_summary
 
 
 class ApplicationDetailSerializer(serializers.ModelSerializer):

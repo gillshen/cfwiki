@@ -21,7 +21,7 @@
 </script>
 
 <article>
-	{#if !student.contracts_sorted.length}
+	{#if !student.contracts.length}
 		<Alert color="yellow" class="mb-4 flex gap-2">
 			<InfoCircleSolid />
 			<span>
@@ -30,12 +30,12 @@
 				adding yourself to the staff.
 			</span>
 		</Alert>
-	{:else if !student.contracts_sorted.filter((c) => !!c.services.length).length}
+	{:else if !student.contracts.filter((c) => !!c.services.length).length}
 		<Alert color="yellow" class="mb-4 flex gap-2">
 			<InfoCircleSolid />
 			<span>
 				This student has not been &ldquo;claimed&rdquo; by any CFer. If this is your student, please
-				claim {pronoun} as yours by adding yourself to the staff of a contract.
+				claim {pronoun} by adding yourself to the staff of the appropriate contract(s).
 			</span>
 		</Alert>
 	{/if}

@@ -39,7 +39,7 @@
 				<ShortYearMonth date={enrollment.end_date} />
 				<PlainCell text={enrollment.curriculum} />
 				<TableBodyCell>
-					{#if enrollment.student.latest_contract.status === 'In effect'}
+					{#if enrollment.student.contracts[0].status === 'In effect'}
 						<span class="text-green-500">Yes</span>
 					{:else}
 						<span class="text-gray-500">No</span>
