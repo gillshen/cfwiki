@@ -9,11 +9,23 @@ export type School = {
 	country: string;
 };
 
-export type SchoolWithStats = School & {
-	application_stats: {
-		ug: ApplicationStats;
-		grad: ApplicationStats;
-	};
+export type SchoolStats = {
+	school_id: number;
+	ug_applied: number;
+	ug_pending: number;
+	ug_accepted: number;
+	ug_denied: number;
+	ug_neutral: number;
+	grad_applied: number;
+	grad_pending: number;
+	grad_accepted: number;
+	grad_denied: number;
+	grad_neutral: number;
+};
+
+export type ComposedSchoolListItem = School & {
+	ug_stats: ApplicationStats;
+	grad_stats: ApplicationStats;
 };
 
 export async function fetchSchools(params?: {
@@ -22,13 +34,14 @@ export async function fetchSchools(params?: {
 	return await get(`schools/${buildQuery(params)}`);
 }
 
-export async function fetchSchoolsWithStats(params?: {
-	type: 'university' | 'secondary-school' | 'other';
-}): Promise<SchoolWithStats[]> {
-	return await get(`schools/stats/${buildQuery(params)}`);
+export async function fetchApplicationStats(params?: {
+	school_id?: number;
+	school_type?: 'university' | 'secondary-school' | 'other';
+}): Promise<SchoolStats[]> {
+	return await get(`applications/stats/schools/${buildQuery(params)}`);
 }
 
-export async function fetchSchool(id: number): Promise<SchoolWithStats> {
+export async function fetchSchool(id: number): Promise<School> {
 	return await get(`schools/${id}/`);
 }
 

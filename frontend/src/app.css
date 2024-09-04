@@ -22,8 +22,14 @@ h2 {
 .footer li a {
 	@apply text-sm text-gray-700;
 }
-.footer li a:hover {
+.footer li > a:hover {
 	@apply text-primary-700;
+}
+.footer .footer-button {
+	@apply px-3 py-2 -translate-x-[1px];
+}
+.footer .footer-button:hover {
+	@apply text-white;
 }
 
 .form-width {
@@ -71,7 +77,7 @@ form.modal {
 }
 
 .grid-title {
-	@apply text-3xl font-bold pt-4 pb-6 tracking-wide;
+	@apply text-2xl font-bold py-4 tracking-wide;
 }
 .ag-theme-alpine {
 	--ag-borders: none;

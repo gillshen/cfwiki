@@ -36,7 +36,7 @@ export async function load(event: PageServerLoadEvent) {
 		} = jwt.verify(token, JWT_SECRET_KEY) as {
 			student: string;
 			contract: string;
-			type: 'freshman' | 'transfer' | 'graduate' | 'nondegree';
+			type: 'freshman' | 'transfer' | 'graduate' | 'other';
 			year: string;
 			term: string;
 		};
@@ -57,7 +57,7 @@ export async function load(event: PageServerLoadEvent) {
 			programType,
 			year,
 			term,
-			schools: programType === 'nondegree' ? fetchSchools() : fetchSchools({ type: 'university' }),
+			schools: programType === 'other' ? fetchSchools() : fetchSchools({ type: 'university' }),
 			programs: fetchPrograms({ type: programType }),
 			applicationRounds: fetchApplicationRounds({ program_type: programType, year, term }),
 			newSchoolForm: await superValidate(zod(schoolSchema)),

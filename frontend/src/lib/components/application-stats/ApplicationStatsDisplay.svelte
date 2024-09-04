@@ -16,14 +16,9 @@
 	import Chart from 'chart.js/auto';
 
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
+	import type { ApplicationStats } from '$lib/api/stats';
 
-	export let stats: {
-		applied: number;
-		pending: number;
-		accepted: number;
-		denied: number;
-		neutral: number;
-	};
+	export let stats: ApplicationStats;
 	export let title: string = 'Application statistics';
 
 	let statsChart: any;

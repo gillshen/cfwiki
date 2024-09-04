@@ -34,12 +34,12 @@ class EnrollmentListSerializer(serializers.ModelSerializer):
 
         fullname = serializers.CharField()
 
-        class ContractByStudentSerializer(serializers.ModelSerializer):
+        class ContractPerStudentSerializer(serializers.ModelSerializer):
             class Meta:
                 model = Contract
                 fields = ["status"]
 
-        contracts = ContractByStudentSerializer(many=True)
+        contracts = ContractPerStudentSerializer(many=True)
 
     student = StudentSerializer()
 

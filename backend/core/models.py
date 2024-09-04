@@ -316,12 +316,10 @@ class Application(models.Model):
         if application_type == "doctorate":
             return q.filter(round__program_iteration__program__type="Doctorate")
         if application_type == "graduate":
-            return q.filter(
-                round__program_iteration__program__type__in=["Master's", "Doctorate"]
-            )
-        if application_type == "other":
-            return q.exclude(round__program_iteration__program__type__in="Non-degree")
-
+            grad_types = ["Master's", "Doctorate"]
+            return q.filter(round__program_iteration__program__type__in=grad_types)
+        if application_type in {"nondegree", "other"}:
+            return q.filter(round__program_iteration__program__type="Non-degree")
         return q
 
     @classmethod

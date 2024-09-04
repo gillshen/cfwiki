@@ -3,7 +3,14 @@ import { error, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-import { deleteSchool, fetchSchool, updateSchool, type SchoolWithStats } from '$lib/api/school';
+import {
+	deleteSchool,
+	fetchApplicationStats,
+	fetchSchool,
+	updateSchool,
+	type School
+} from '$lib/api/school';
+
 import { fetchPrograms } from '$lib/api/program';
 import { fetchApplicants, fetchApplications } from '$lib/api/application';
 import { schoolSchema } from '$lib/schemas/school';
@@ -18,7 +25,7 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Invalid id');
 	}
 
-	const school: SchoolWithStats = await fetchSchool(id);
+	const school: School = await fetchSchool(id);
 
 	if (school?.id === undefined) {
 		throw error(404, 'School not found');
@@ -27,6 +34,7 @@ export async function load(event: PageServerLoadEvent) {
 	return {
 		school,
 		programs: fetchPrograms({ school: school.id }),
+		stats: fetchApplicationStats({ school_id: school.id }),
 		schoolForm: await superValidate(school, zod(schoolSchema)),
 		deleteForm: await superValidate(zod(deleteSchema)),
 		applications: fetchApplications({ school: school.id }),

@@ -44,8 +44,8 @@ class CFUserPasswordResetSerializer(serializers.ModelSerializer):
         return instance
 
 
-# for nesting within student detail serializers
-class ContractByStudentSerializer(serializers.ModelSerializer):
+# for nesting within StudentPerUserSerializer and StudentDetailSerializer
+class ContractPerStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
         fields = "__all__"
@@ -152,13 +152,13 @@ class StudentListSerializer(serializers.ModelSerializer):
         return summary
 
 
-class StudentByUserSerializer(serializers.ModelSerializer):
+class StudentPerUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = "__all__"
 
     fullname = serializers.CharField()
-    contracts = ContractByStudentSerializer(many=True)
+    contracts = ContractPerStudentSerializer(many=True)
 
 
 class StudentDetailSerializer(serializers.ModelSerializer):
@@ -168,7 +168,7 @@ class StudentDetailSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     fullname = serializers.CharField()
-    contracts = ContractByStudentSerializer(many=True)
+    contracts = ContractPerStudentSerializer(many=True)
 
     enrollments = academics.serializers.EnrollmentByStudentSerializer(many=True)
     toefl = academics.serializers.TOEFLScoreCRUDSerializer(many=True)
@@ -374,6 +374,51 @@ class ApplicationCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = "__all__"
+
+
+class ApplicationPerProgramSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = ["program_id", "applied", "pending", "accepted", "denied", "neutral"]
+
+    program_id = serializers.IntegerField()
+    applied = serializers.IntegerField()
+    pending = serializers.IntegerField()
+    accepted = serializers.IntegerField()
+    denied = serializers.IntegerField()
+    neutral = serializers.IntegerField()
+
+
+class ApplicationPerSchoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = [
+            "school_id",
+            "ug_applied",
+            "ug_pending",
+            "ug_accepted",
+            "ug_denied",
+            "ug_neutral",
+            "grad_applied",
+            "grad_pending",
+            "grad_accepted",
+            "grad_denied",
+            "grad_neutral",
+        ]
+
+    school_id = serializers.IntegerField()
+
+    ug_applied = serializers.IntegerField()
+    ug_pending = serializers.IntegerField()
+    ug_accepted = serializers.IntegerField()
+    ug_denied = serializers.IntegerField()
+    ug_neutral = serializers.IntegerField()
+
+    grad_applied = serializers.IntegerField()
+    grad_pending = serializers.IntegerField()
+    grad_accepted = serializers.IntegerField()
+    grad_denied = serializers.IntegerField()
+    grad_neutral = serializers.IntegerField()
 
 
 class ApplicationLogCRUDSerializer(serializers.ModelSerializer):

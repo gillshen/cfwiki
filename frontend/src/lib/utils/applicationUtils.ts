@@ -106,9 +106,9 @@ export function groupByYear(
 }
 
 export function groupByType(
-	applications: ApplicationListItem[]
-): Record<string, ApplicationListItem[]> {
-	const grouped: Record<string, ApplicationListItem[]> = {};
+	applications: ComposedApplicationListItem[]
+): Record<string, ComposedApplicationListItem[]> {
+	const grouped: Record<string, ComposedApplicationListItem[]> = {};
 
 	for (const appl of applications) {
 		let key = appl.program.type;
@@ -121,7 +121,7 @@ export function groupByType(
 		grouped[key].push(appl);
 	}
 
-	const sortedGroups: Record<string, ApplicationListItem[]> = {};
+	const sortedGroups: Record<string, ComposedApplicationListItem[]> = {};
 	const sortedKeys = Object.keys(grouped).sort((a, b) => _typeOrdering[a] - _typeOrdering[b]);
 
 	for (const key of sortedKeys) {

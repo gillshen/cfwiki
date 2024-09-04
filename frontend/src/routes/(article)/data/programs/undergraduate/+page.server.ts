@@ -1,8 +1,9 @@
-import { fetchProgramsWithStats } from '$lib/api/program';
+import { fetchApplicationStats, fetchPrograms } from '$lib/api/program';
 
 export async function load(_) {
 	return {
 		programType: 'Undergraduate',
-		programs: fetchProgramsWithStats({ type: 'undergraduate' })
+		programs: fetchPrograms({ type: 'undergraduate' }),
+		stats: fetchApplicationStats({ application_type: 'undergraduate' })
 	};
 }

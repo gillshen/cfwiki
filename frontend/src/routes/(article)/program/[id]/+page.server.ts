@@ -3,7 +3,14 @@ import { error, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-import { deleteProgram, fetchProgram, updateProgram, type ProgramDetail } from '$lib/api/program';
+import {
+	deleteProgram,
+	fetchApplicationStats,
+	fetchProgram,
+	updateProgram,
+	type ProgramDetail
+} from '$lib/api/program';
+
 import { fetchApplicants, fetchApplications } from '$lib/api/application';
 import { deleteApplicationRound, fetchApplicationRounds } from '$lib/api/applicationRound';
 import { programUpdateSchema } from '$lib/schemas/program';
@@ -25,6 +32,7 @@ export async function load(event: PageServerLoadEvent) {
 
 	return {
 		program,
+		statsItems: fetchApplicationStats({ program_id: program.id }),
 		programForm: await superValidate(program, zod(programUpdateSchema)),
 		deleteForm: await superValidate(zod(deleteSchema)),
 		applicationRounds: fetchApplicationRounds({ program: program.id }),

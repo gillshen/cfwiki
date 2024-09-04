@@ -81,7 +81,7 @@ export type StudentListItem = BaseStudent & {
 	alevel_summary: AlevelSummary;
 };
 
-export type StudentByUserListItem = BaseStudent & {
+export type StudentOfCferListItem = BaseStudent & {
 	contracts: Contract[];
 };
 
@@ -107,8 +107,8 @@ export async function fetchStudents(params?: Record<string, any>): Promise<Stude
 
 export async function fetchStudentsByUser(
 	params?: Record<string, any>
-): Promise<StudentByUserListItem[]> {
-	return await get(`students-by-user/${buildQuery(params)}`);
+): Promise<StudentOfCferListItem[]> {
+	return await get(`students/per-user/${buildQuery(params)}`);
 }
 
 export async function fetchStudent(id: number): Promise<StudentDetail> {
@@ -132,7 +132,7 @@ export async function deleteStudent(data: any) {
 }
 
 export type CohortMember = {
-	student: StudentByUserListItem;
+	student: StudentOfCferListItem;
 	contract: Contract;
 	current: boolean;
 };

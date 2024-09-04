@@ -1,6 +1,6 @@
 import type {
 	BaseStudent,
-	StudentByUserListItem,
+	StudentOfCferListItem,
 	Contract,
 	CohortMember,
 	ApSummary,
@@ -93,7 +93,7 @@ function _formatScoreDistribution(
 
 export function groupByTargetYear(
 	username: string,
-	students: StudentByUserListItem[]
+	students: StudentOfCferListItem[]
 ): Record<string, CohortMember[]> {
 	const groupedStudents: Record<string, CohortMember[]> = {};
 

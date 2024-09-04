@@ -32,23 +32,28 @@ export type ProgramListItem = Program & {
 	display_name: string;
 };
 
-export type ProgramWithStats = ProgramListItem & {
-	application_stats: ApplicationStats;
+export type ProgramStats = ApplicationStats & {
+	program_id: number;
 };
 
-export type ProgramDetail = ProgramWithStats;
+export type ComposedProgramListItem = ProgramListItem & {
+	stats: ApplicationStats;
+};
+
+export type ProgramDetail = ProgramListItem;
 
 export async function fetchPrograms(params?: {
 	school?: number;
-	type?: 'undergraduate' | 'freshman' | 'transfer' | 'graduate' | 'nondegree';
+	type?: 'undergraduate' | 'freshman' | 'transfer' | 'graduate' | 'other';
 }): Promise<ProgramListItem[]> {
 	return await get(`programs/${buildQuery(params)}`);
 }
 
-export async function fetchProgramsWithStats(params?: {
-	type: 'undergraduate' | 'graduate' | 'nondegree';
-}): Promise<ProgramDetail[]> {
-	return await get(`programs/stats/${buildQuery(params)}`);
+export async function fetchApplicationStats(params?: {
+	program_id?: number;
+	application_type?: 'undergraduate' | 'freshman' | 'transfer' | 'graduate' | 'other';
+}): Promise<ApplicationStats[]> {
+	return await get(`applications/stats/programs/${buildQuery(params)}`);
 }
 
 export async function fetchProgram(id: number): Promise<ProgramDetail> {

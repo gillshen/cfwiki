@@ -6,7 +6,7 @@ from core.views import (
     CFUserUpdateView,
     CFUserPasswordUpdateView,
     StudentListView,
-    StudentByUserListView,
+    StudentPerUserListView,
     StudentDetailView,
     StudentStaffListView,
     StudentCreateView,
@@ -21,18 +21,18 @@ from core.views import (
     ApplicationDetailView,
     ApplicationCreateView,
     ApplicationRUDView,
+    ApplicationPerProgramListView,
+    ApplicationPerSchoolListView,
     ApplicationLogCreateView,
     ApplicationLogRUDView,
 )
 
 from target.views import (
     SchoolListView,
-    SchoolStatsListView,
     SchoolDetailView,
     SchoolCreateView,
     SchoolRUDView,
     ProgramListView,
-    ProgramStatsListView,
     ProgramDetailView,
     ProgramCreateView,
     ProgramRUDView,
@@ -82,7 +82,7 @@ urlpatterns = [
     path("users/<int:pk>/password/", CFUserPasswordUpdateView.as_view()),
     # student
     path("students/", StudentListView.as_view()),
-    path("students-by-user/", StudentByUserListView.as_view()),
+    path("students/per-user/", StudentPerUserListView.as_view()),
     path("students/<int:pk>/", StudentDetailView.as_view()),
     path("students/<int:pk>/staff/", StudentStaffListView.as_view()),
     path("students/new/", StudentCreateView.as_view()),
@@ -96,13 +96,11 @@ urlpatterns = [
     path("services/<int:pk>/update/", ServiceRUDView.as_view()),
     # school
     path("schools/", SchoolListView.as_view()),
-    path("schools/stats/", SchoolStatsListView.as_view()),
     path("schools/<int:pk>/", SchoolDetailView.as_view()),
     path("schools/new/", SchoolCreateView.as_view()),
     path("schools/<int:pk>/update/", SchoolRUDView.as_view()),
     # program
     path("programs/", ProgramListView.as_view()),
-    path("programs/stats/", ProgramStatsListView.as_view()),
     path("programs/<int:pk>/", ProgramDetailView.as_view()),
     path("programs/new/", ProgramCreateView.as_view()),
     path("programs/<int:pk>/update/", ProgramRUDView.as_view()),
@@ -119,6 +117,8 @@ urlpatterns = [
     path("applications/<int:pk>/", ApplicationDetailView.as_view()),
     path("applications/new/", ApplicationCreateView.as_view()),
     path("applications/<int:pk>/update/", ApplicationRUDView.as_view()),
+    path("applications/stats/programs/", ApplicationPerProgramListView.as_view()),
+    path("applications/stats/schools/", ApplicationPerSchoolListView.as_view()),
     # application log
     path("application-logs/new/", ApplicationLogCreateView.as_view()),
     path("application-logs/<int:pk>/update/", ApplicationLogRUDView.as_view()),

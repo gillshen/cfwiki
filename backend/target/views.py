@@ -9,10 +9,8 @@ from target.models import School, Program, ProgramGroup, ApplicationRound
 
 from target.serializers import (
     SchoolSerializer,
-    SchoolStatsSerializer,
     SchoolCRUDSerializer,
     ProgramSerializer,
-    ProgramStatsSerializer,
     ProgramCreateSerializer,
     ProgramCRUDSerializer,
     ProgramGroupSerializer,
@@ -27,16 +25,12 @@ class SchoolListView(ListAPIView):
 
     def get_queryset(self):
         query_params = self.request.query_params
-        return School.filter(school_type=query_params.get("type"))
-
-
-class SchoolStatsListView(SchoolListView):
-    serializer_class = SchoolStatsSerializer
+        return School.filter(School.objects.all(), school_type=query_params.get("type"))
 
 
 class SchoolDetailView(RetrieveAPIView):
     queryset = School.objects.all()
-    serializer_class = SchoolStatsSerializer
+    serializer_class = SchoolSerializer
 
 
 class SchoolCreateView(CreateAPIView):
@@ -56,18 +50,15 @@ class ProgramListView(ListAPIView):
         query_params = self.request.query_params
 
         return Program.filter(
+            Program.objects.prefetch_related("schools"),
             school=query_params.get("school"),
             program_type=query_params.get("type"),
         )
 
 
-class ProgramStatsListView(ProgramListView):
-    serializer_class = ProgramStatsSerializer
-
-
 class ProgramDetailView(RetrieveAPIView):
     queryset = Program.objects.all()
-    serializer_class = ProgramStatsSerializer
+    serializer_class = ProgramSerializer
 
 
 class ProgramCreateView(CreateAPIView):

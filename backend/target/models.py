@@ -32,34 +32,14 @@ class School(models.Model):
         return self.name
 
     @classmethod
-    def filter(cls, school_type: str = None):
-        q = cls.objects.all()
-
+    def filter(cls, q, school_type: str = None):
         if school_type == "university":
             q = q.filter(type=School.Type.UNIVERSITY)
         elif school_type == "secondary-school":
             q = q.filter(type=School.Type.SECONDARY)
         elif school_type == "other":
             q = q.filter(type=School.Type.OTHER)
-
         return q
-
-    @property
-    def application_stats(self):
-        from core.models import Application
-
-        ug_stats = Application.get_stats(
-            school=self.id,
-            application_type="undergraduate",
-        )
-        grad_stats = Application.get_stats(
-            school=self.id,
-            application_type="graduate",
-        )
-        return {
-            "ug": ug_stats,
-            "grad": grad_stats,
-        }
 
 
 class ProgramGroup(models.Model):
@@ -91,9 +71,7 @@ class Program(models.Model):
         return f"{school_names} | {self.display_name}".strip()
 
     @classmethod
-    def filter(cls, school: int = None, program_type: str = None):
-        q = cls.objects.all().prefetch_related("schools")
-
+    def filter(cls, q, school: int = None, program_type: str = None):
         if school is not None:
             q = q.filter(schools=school)
 
@@ -105,16 +83,10 @@ class Program(models.Model):
             q = q.filter(type="UG Transfer")
         elif program_type == "graduate":
             q = q.filter(type__in=["Master's", "Doctorate"])
-        elif program_type == "nondegree":
+        elif program_type in {"nondegree", "other"}:
             q = q.filter(type="Non-degree")
 
         return q
-
-    @property
-    def application_stats(self):
-        from core.models import Application
-
-        return Application.get_stats(program=self.id)
 
     @property
     def display_name(self) -> str:
@@ -178,10 +150,7 @@ class ApplicationRound(models.Model):
         year: int = None,
         term: str = None,
     ):
-        q = cls.objects.all().prefetch_related(
-            "program_iteration",
-            "program_iteration__program",
-        )
+        q = cls.objects.all().prefetch_related("program_iteration__program")
 
         if program_type == "undergraduate":
             q = q.filter(
@@ -193,7 +162,7 @@ class ApplicationRound(models.Model):
             q = q.filter(program_iteration__program__type="UG Transfer")
         elif program_type == "graduate":
             q = q.filter(program_iteration__program__type__in=["Master's", "Doctorate"])
-        elif program_type == "nondegree":
+        elif program_type in {"nondegree", "other"}:
             q = q.filter(program_iteration__program__type="Non-degree")
 
         if program is not None:

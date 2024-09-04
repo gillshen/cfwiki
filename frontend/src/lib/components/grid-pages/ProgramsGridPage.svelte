@@ -11,7 +11,7 @@
 		type ValueGetterParams
 	} from 'ag-grid-community';
 
-	import type { ProgramWithStats } from '$lib/api/program';
+	import type { ProgramListItem, ProgramStats } from '$lib/api/program';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
@@ -21,7 +21,8 @@
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
 	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
-	import { formatSchoolNames } from '$lib/utils/programUtils';
+	import { compose, formatSchoolNames } from '$lib/utils/programUtils';
+	import { lexicalChineseLast } from '$lib/utils/stringUtils';
 
 	import {
 		calcSuccessRate,
@@ -31,7 +32,8 @@
 	} from '$lib/utils/gridUtils';
 
 	export let data: {
-		programs: Promise<ProgramWithStats[]>;
+		programs: Promise<ProgramListItem[]>;
+		stats: Promise<ProgramStats[]>;
 		programType: string;
 	};
 
@@ -59,7 +61,7 @@
 	}
 
 	function successRateValueGetter(params: ValueGetterParams): number | null {
-		return calcSuccessRate(params.data.application_stats);
+		return calcSuccessRate(params.data.stats);
 	}
 
 	const columnTypes = {
@@ -84,19 +86,19 @@
 		{ headerName: 'Degree', field: 'degree' },
 		{
 			headerName: 'Applied',
-			field: 'application_stats.applied',
+			field: 'stats.applied',
 			type: ['numericColumn', 'stats'],
 			headerTooltip: 'Total number of applications'
 		},
-		{ headerName: 'Pending', field: 'application_stats.pending', type: ['numericColumn', 'stats'] },
+		{ headerName: 'Pending', field: 'stats.pending', type: ['numericColumn', 'stats'] },
 		{
 			headerName: 'Accepted',
-			field: 'application_stats.accepted',
+			field: 'stats.accepted',
 			type: ['numericColumn', 'stats']
 		},
 		{
 			headerName: 'Denied',
-			field: 'application_stats.denied',
+			field: 'stats.denied',
 			type: ['numericColumn', 'stats'],
 			headerTooltip: 'Including presumed rejections and offer rescissions'
 		},
@@ -111,7 +113,7 @@
 		},
 		{
 			headerName: 'Cancelled, etc.',
-			field: 'application_stats.neutral',
+			field: 'stats.neutral',
 			flex: 1.2,
 			type: ['numericColumn', 'stats'],
 			headerTooltip: 'Cancelled, withdrawn, or untracked'
@@ -143,11 +145,15 @@
 	};
 
 	onMount(async () => {
-		const programs = await data.programs;
+		const [programs, stats] = await Promise.all([data.programs, data.stats]);
 
 		if (!programs.length) {
 			return;
 		}
+
+		const rowData = compose(programs, stats).sort((a, b) =>
+			lexicalChineseLast(a.display_name, b.display_name)
+		);
 
 		const gridOptions: GridOptions = {
 			defaultColDef: {
@@ -158,7 +164,7 @@
 			},
 			columnTypes,
 			columnDefs,
-			rowData: programs.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')),
+			rowData,
 			onFilterChanged: showDisplayedRowCount,
 			onModelUpdated: showDisplayedRowCount,
 			...agGridOptions
@@ -179,14 +185,14 @@
 		<ControlButton {hideControl} />
 	</div>
 
-	{#await data.programs then _}
+	{#await Promise.all([data.programs, data.stats]) then _}
 		<DownloadButton {gridApi} fileName="cf_programs" />
 	{/await}
 </Heading>
 
-{#await data.programs}
+{#await Promise.all([data.programs, data.stats])}
 	<FetchingDataSign />
-{:then programs}
+{:then [programs, _]}
 	{#if programs.length}
 		<div id="grid" class="data-grid ag-theme-alpine full-page" />
 	{:else}

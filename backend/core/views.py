@@ -9,14 +9,17 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 from rest_framework import status
 
+from django.db.models import OuterRef, Subquery, Count, F, Q
+
 from core.models import CFUser, Student, Service, Contract, Application, ApplicationLog
+from target.models import School
 
 from core.serializers import (
     CFUserSerializer,
     CFUserUpdateSerializer,
     CFUserPasswordResetSerializer,
     StudentListSerializer,
-    StudentByUserSerializer,
+    StudentPerUserSerializer,
     StudentDetailSerializer,
     StudentStaffListSerializer,
     StudentCRUDSerializer,
@@ -27,8 +30,15 @@ from core.serializers import (
     ApplicantListSerializer,
     ApplicationDetailSerializer,
     ApplicationCRUDSerializer,
+    ApplicationPerProgramSerializer,
+    ApplicationPerSchoolSerializer,
     ApplicationLogCRUDSerializer,
 )
+
+_PENDING = ["Started", "Submitted", "Under Review", "Deferred", "On Waitlist"]
+_ACCEPTED = ["Accepted", "Enrolled"]
+_DENIED = ["Rejected", "Pres. Rejected", "Offer Rescinded"]
+_NEUTRAL = ["Cancelled", "Withdrawn", "Untracked"]
 
 
 class CFUserListView(ListAPIView):
@@ -72,14 +82,14 @@ class StudentListView(ListAPIView):
         )
 
 
-class StudentByUserListView(ListAPIView):
-    serializer_class = StudentByUserSerializer
+class StudentPerUserListView(ListAPIView):
+    serializer_class = StudentPerUserSerializer
 
     def get_queryset(self):
         query_params = self.request.query_params
 
         return Student.filter(
-            Student.q_related(),
+            Student.objects.all().prefetch_related("contracts__services__cfer"),
             cfer=query_params.get("cfer"),
             contract_type=query_params.get("contract_type"),
             target_year=query_params.get("target_year"),
@@ -107,10 +117,7 @@ class StudentDetailView(RetrieveAPIView):
 
 
 class StudentStaffListView(RetrieveAPIView):
-    queryset = Student.objects.all().prefetch_related(
-        "contracts",
-        "contracts__services",
-    )
+    queryset = Student.objects.all().prefetch_related("contracts__services")
     serializer_class = StudentStaffListSerializer
 
 
@@ -225,6 +232,102 @@ class ApplicationRUDView(RetrieveUpdateDestroyAPIView):
         instance.delete()
         student_serializer = StudentCRUDSerializer(student)
         return Response(student_serializer.data, status=status.HTTP_200_OK)
+
+
+class ApplicationPerProgramListView(ListAPIView):
+    serializer_class = ApplicationPerProgramSerializer
+
+    def get_queryset(self):
+        params = self.request.query_params
+        program_id = params.get("program_id")
+        application_type = params.get("application_type")
+
+        q = Application.objects.select_related("round__program_iteration__program")
+        if program_id is not None:
+            q = q.filter(round__program_iteration__program=program_id)
+        if application_type is not None:
+            q = Application.filter_by_type(q, application_type)
+
+        status_subquery = (
+            ApplicationLog.objects.filter(application=OuterRef("pk"))
+            .order_by("-date", "-updated")
+            .values("status")[:1]
+        )
+
+        return (
+            q.prefetch_related("logs")
+            .annotate(latest_status=Subquery(status_subquery))
+            .values("round__program_iteration__program")
+            .annotate(
+                program_id=F("round__program_iteration__program"),
+                applied=Count("id"),
+                pending=Count(
+                    "id",
+                    filter=Q(latest_status__isnull=True)
+                    | Q(latest_status__in=_PENDING),
+                ),
+                accepted=Count("id", filter=Q(latest_status__in=_ACCEPTED)),
+                denied=Count("id", filter=Q(latest_status__in=_DENIED)),
+                neutral=Count("id", filter=Q(latest_status__in=_NEUTRAL)),
+            )
+        )
+
+
+class ApplicationPerSchoolListView(ListAPIView):
+    serializer_class = ApplicationPerSchoolSerializer
+
+    def get_queryset(self):
+        school_id = self.request.query_params.get("school_id")
+
+        q = (
+            Application.objects.select_related("round__program_iteration__program")
+            .prefetch_related("round__program_iteration__program__schools")
+            .filter(
+                round__program_iteration__program__schools__type__in=[
+                    School.Type.UNIVERSITY,
+                    School.Type.OTHER,
+                ]
+            )
+        )
+        if school_id is not None:
+            q = q.filter(round__program_iteration__program__schools=school_id)
+
+        status_subquery = (
+            ApplicationLog.objects.filter(application=OuterRef("pk"))
+            .order_by("-date", "-updated")
+            .values("status")[:1]
+        )
+
+        is_ug = Q(
+            round__program_iteration__program__type__in=["UG Freshman", "UG Transfer"]
+        )
+        is_grad = Q(
+            round__program_iteration__program__type__in=["Master's", "Doctorate"]
+        )
+        no_status = Q(latest_status__isnull=True)
+        pending = Q(latest_status__in=_PENDING)
+        accepted = Q(latest_status__in=_ACCEPTED)
+        denied = Q(latest_status__in=_DENIED)
+        neutral = Q(latest_status__in=_NEUTRAL)
+
+        return (
+            q.prefetch_related("logs")
+            .annotate(latest_status=Subquery(status_subquery))
+            .values("round__program_iteration__program__schools")
+            .annotate(
+                school_id=F("round__program_iteration__program__schools"),
+                ug_applied=Count("id", filter=is_ug),
+                ug_pending=Count("id", filter=is_ug & (no_status | pending)),
+                ug_accepted=Count("id", filter=is_ug & accepted),
+                ug_denied=Count("id", filter=is_ug & denied),
+                ug_neutral=Count("id", filter=is_ug & neutral),
+                grad_applied=Count("id", filter=is_grad),
+                grad_pending=Count("id", filter=is_grad & (no_status | pending)),
+                grad_accepted=Count("id", filter=is_grad & accepted),
+                grad_denied=Count("id", filter=is_grad & denied),
+                grad_neutral=Count("id", filter=is_grad & neutral),
+            )
+        )
 
 
 class ApplicationLogCreateView(CreateAPIView):

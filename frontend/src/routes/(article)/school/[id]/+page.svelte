@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Heading, Hr, Timeline, TimelineItem } from 'flowbite-svelte';
+	import { Heading, Hr, Timeline, TimelineItem, WidgetPlaceholder } from 'flowbite-svelte';
 
 	import Main from '$lib/components/containers/Main.svelte';
 	import SchoolForm from '$lib/components/school-form/SchoolForm.svelte';
@@ -64,17 +64,37 @@
 	{#if isNotSecondary}
 		<article class="flex flex-col gap-8">
 			<div class="bg-stone-50 rounded-xl w-full p-8">
-				<ApplicationStatsDisplay
-					stats={data.school.application_stats.ug}
-					title="Undergraduate statistics"
-				/>
+				{#await data.stats}
+					<WidgetPlaceholder />
+				{:then stats}
+					<ApplicationStatsDisplay
+						stats={{
+							applied: stats[0].ug_applied,
+							pending: stats[0].ug_pending,
+							accepted: stats[0].ug_accepted,
+							denied: stats[0].ug_denied,
+							neutral: stats[0].ug_neutral
+						}}
+						title="Undergraduate statistics"
+					/>
+				{/await}
 			</div>
 
 			<div class="bg-stone-50 rounded-xl w-full p-8">
-				<ApplicationStatsDisplay
-					stats={data.school.application_stats.grad}
-					title="Graduate statistics"
-				/>
+				{#await data.stats}
+					<WidgetPlaceholder />
+				{:then stats}
+					<ApplicationStatsDisplay
+						stats={{
+							applied: stats[0].grad_applied,
+							pending: stats[0].grad_pending,
+							accepted: stats[0].grad_accepted,
+							denied: stats[0].grad_denied,
+							neutral: stats[0].grad_neutral
+						}}
+						title="Graduate statistics"
+					/>
+				{/await}
 			</div>
 		</article>
 	{/if}

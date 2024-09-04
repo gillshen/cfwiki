@@ -1,7 +1,24 @@
 import type { ColorVariant } from 'flowbite-svelte';
 
-import type { ProgramListItem, ProgramType } from '$lib/api/program';
+import type {
+	ComposedProgramListItem,
+	ProgramListItem,
+	ProgramStats,
+	ProgramType
+} from '$lib/api/program';
+
 import { orderByName as _orderByName } from '$lib/api/school';
+import { lackOfStats } from '$lib/api/stats';
+
+export function compose(
+	programs: ProgramListItem[],
+	stats: ProgramStats[]
+): ComposedProgramListItem[] {
+	return programs.map((program) => {
+		const statsItem = stats.find((s) => s.program_id === program.id) ?? lackOfStats;
+		return { ...program, stats: statsItem };
+	});
+}
 
 export function enhanceDisplayName(program: ProgramListItem): string {
 	const defunctNote = program.is_defunct ? ' (defunct)' : '';

@@ -16,13 +16,6 @@ class SchoolSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class SchoolStatsSerializer(SchoolSerializer):
-    application_stats = serializers.SerializerMethodField()
-
-    def get_application_stats(self, obj):
-        return obj.application_stats
-
-
 class SchoolCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
@@ -38,7 +31,7 @@ class SchoolCRUDSerializer(serializers.ModelSerializer):
 class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
-        fields = "__all__"
+        exclude = ["groups"]
 
     class SchoolSerializer(serializers.ModelSerializer):
         class Meta:
@@ -47,13 +40,6 @@ class ProgramSerializer(serializers.ModelSerializer):
 
     schools = SchoolSerializer(many=True)
     display_name = serializers.CharField()
-
-
-class ProgramStatsSerializer(ProgramSerializer):
-    application_stats = serializers.SerializerMethodField()
-
-    def get_application_stats(self, obj):
-        return obj.application_stats
 
 
 class ProgramCreateSerializer(serializers.ModelSerializer):

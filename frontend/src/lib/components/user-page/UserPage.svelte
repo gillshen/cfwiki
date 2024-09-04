@@ -12,7 +12,7 @@
 	} from 'flowbite-svelte';
 
 	import type { CfUserListItem } from '$lib/api/user';
-	import type { StudentByUserListItem } from '$lib/api/student';
+	import type { StudentOfCferListItem } from '$lib/api/student';
 	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
 
 	import { categorize, groupByTargetYear } from '$lib/utils/studentUtils';
@@ -44,7 +44,7 @@
 	export let data: {
 		userId: number;
 		host: CfUserListItem;
-		students: Promise<StudentByUserListItem[]>;
+		students: Promise<StudentOfCferListItem[]>;
 		applications: Promise<ApplicationListItem[]>;
 		applicants: Promise<ApplicantListItem[]>;
 	};

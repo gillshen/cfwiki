@@ -211,7 +211,7 @@
 				<span class="self-center whitespace-nowrap text-lg font-semibold">ChoiceFreezer</span>
 			</NavBrand>
 
-			<div class="text-sm mt-4">&copy; just-a-test</div>
+			<div class="text-sm mt-4 translate-x-1">&copy; just-a-test</div>
 		</article>
 
 		<article class="border-r-[1px] border-solid mr-6">
@@ -237,7 +237,9 @@
 			<ul class="mt-3">
 				<li><a href="/data/students/current">Current Students</a></li>
 				<li><a href="/data/students/all">All Students</a></li>
-				<li><Button href="/student/new" outline class="px-2 py-1 mt-2">Create New</Button></li>
+				<li>
+					<Button href="/student/new" outline class="footer-button mt-2">Create New</Button>
+				</li>
 			</ul>
 		</article>
 
@@ -256,7 +258,9 @@
 				<li><a href="/data/schools/universities">Universities</a></li>
 				<li><a href="/data/schools/secondary-schools">Secondary Schools</a></li>
 				<li><a href="/data/schools/other-institutions">Other Institutions</a></li>
-				<li><Button href="/school/new" outline class="px-2 py-1 mt-2">Create New</Button></li>
+				<li>
+					<Button href="/school/new" outline class="footer-button mt-2">Create New</Button>
+				</li>
 			</ul>
 
 			<Heading tag="h3" class="mt-8 text-lg font-medium">Programs</Heading>

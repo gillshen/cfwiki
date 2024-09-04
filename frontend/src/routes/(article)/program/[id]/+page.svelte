@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Heading, Hr, Alert } from 'flowbite-svelte';
+	import { Heading, Hr, Alert, WidgetPlaceholder } from 'flowbite-svelte';
 	import { PlusOutline, InfoCircleSolid } from 'flowbite-svelte-icons';
 
 	import Main from '$lib/components/containers/Main.svelte';
@@ -21,6 +21,7 @@
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { formatSchoolNamesShort, isUndergraduate } from '$lib/utils/programUtils';
 	import { groupByYear } from '$lib/utils/applicationUtils';
+	import { lackOfStats } from '$lib/api/stats';
 
 	export let data;
 
@@ -82,7 +83,11 @@
 	</article>
 
 	<article class="bg-stone-50 rounded-xl w-full p-8 h-fit">
-		<ApplicationStatsDisplay stats={data.program.application_stats} />
+		{#await data.statsItems}
+			<WidgetPlaceholder />
+		{:then statsItems}
+			<ApplicationStatsDisplay stats={statsItems[0] ?? lackOfStats} />
+		{/await}
 	</article>
 
 	<article class="col-span-2 mt-16">

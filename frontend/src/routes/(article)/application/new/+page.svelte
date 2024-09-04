@@ -45,7 +45,7 @@
 		case 'graduate':
 			programTypes = ["Master's", 'Doctorate'];
 			break;
-		case 'nondegree':
+		case 'other':
 			programTypes = 'Non-degree';
 	}
 

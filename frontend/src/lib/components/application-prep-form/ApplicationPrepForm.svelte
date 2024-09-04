@@ -20,7 +20,7 @@
 		freshman: 'UG Freshman',
 		transfer: 'UG Transfer',
 		graduate: 'Graduate',
-		nondegree: 'Non-degree'
+		other: 'Non-degree'
 	};
 </script>
 

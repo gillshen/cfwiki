@@ -12,10 +12,9 @@
 		type ValueGetterParams
 	} from 'ag-grid-community';
 
-	import type { SchoolWithStats } from '$lib/api/school';
+	import type { School, SchoolStats } from '$lib/api/school';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { AgCellRenderer } from '$lib/abstract/agCellRenderer';
-	import { lexicalChineseLast } from '$lib/utils/stringUtils';
 	import countryFlags from '$lib/constants/countryFlags';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
@@ -23,6 +22,8 @@
 	import ControlButton from '$lib/components/grid-pages/ControlButton.svelte';
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
+	import { compose } from '$lib/utils/schoolUtils';
+	import { lexicalChineseLast } from '$lib/utils/stringUtils';
 
 	import {
 		localeComparator,
@@ -33,7 +34,8 @@
 	} from '$lib/utils/gridUtils';
 
 	export let data: {
-		schools: Promise<SchoolWithStats[]>;
+		schools: Promise<School[]>;
+		stats: Promise<SchoolStats[]>;
 		schoolType: string;
 	};
 
@@ -42,7 +44,7 @@
 
 		init(params: ICellRendererParams<any, any, any>): void {
 			this.eGui = document.createElement('a');
-			const school: SchoolWithStats = params.data;
+			const school: School = params.data;
 			this.eGui.href = `/school/${school.id}/`;
 			this.eGui.innerHTML = school.name;
 		}
@@ -54,11 +56,11 @@
 	}
 
 	function ugSuccessRateValueGetter(params: ValueGetterParams): number | null {
-		return calcSuccessRate(params.data.application_stats.ug);
+		return calcSuccessRate(params.data.ug_stats);
 	}
 
 	function gradSuccessRateValueGetter(params: ValueGetterParams): number | null {
-		return calcSuccessRate(params.data.application_stats.grad);
+		return calcSuccessRate(params.data.grad_stats);
 	}
 
 	const columnTypes = {
@@ -88,23 +90,15 @@
 	const statsColumnDefs = [
 		{
 			headerName: 'UG Applied',
-			field: 'application_stats.ug.applied',
+			field: 'ug_stats.applied',
 			type: ['numericColumn', 'stats'],
 			headerTooltip: 'Total number of UG freshman and transfer applications'
 		},
-		{
-			headerName: 'UG Pending',
-			field: 'application_stats.ug.pending',
-			type: ['numericColumn', 'stats']
-		},
-		{
-			headerName: 'UG Accepted',
-			field: 'application_stats.ug.accepted',
-			type: ['numericColumn', 'stats']
-		},
+		{ headerName: 'UG Pending', field: 'ug_stats.pending', type: ['numericColumn', 'stats'] },
+		{ headerName: 'UG Accepted', field: 'ug_stats.accepted', type: ['numericColumn', 'stats'] },
 		{
 			headerName: 'UG Denied',
-			field: 'application_stats.ug.denied',
+			field: 'ug_stats.denied',
 			type: ['numericColumn', 'stats'],
 			headerTooltip: 'Including presumed rejections and offer rescissions'
 		},
@@ -119,30 +113,22 @@
 		},
 		{
 			headerName: 'UG Cancelled, etc.',
-			field: 'application_stats.ug.neutral',
+			field: 'ug_stats.neutral',
 			flex: 1.2,
 			type: ['numericColumn', 'stats'],
 			headerTooltip: 'Cancelled, withdrawn, or untracked'
 		},
 		{
 			headerName: 'Grad Applied',
-			field: 'application_stats.grad.applied',
+			field: 'grad_stats.applied',
 			type: ['numericColumn', 'stats'],
 			headerTooltip: 'Total number of graduate applications'
 		},
-		{
-			headerName: 'Grad Pending',
-			field: 'application_stats.grad.pending',
-			type: ['numericColumn', 'stats']
-		},
-		{
-			headerName: 'Grad Accepted',
-			field: 'application_stats.grad.accepted',
-			type: ['numericColumn', 'stats']
-		},
+		{ headerName: 'Grad Pending', field: 'grad_stats.pending', type: ['numericColumn', 'stats'] },
+		{ headerName: 'Grad Accepted', field: 'grad_stats.accepted', type: ['numericColumn', 'stats'] },
 		{
 			headerName: 'Grad Denied',
-			field: 'application_stats.grad.denied',
+			field: 'grad_stats.denied',
 			type: ['numericColumn', 'stats'],
 			headerTooltip: 'Including presumed rejections and offer rescissions'
 		},
@@ -157,7 +143,7 @@
 		},
 		{
 			headerName: 'Grad Cancelled, etc.',
-			field: 'application_stats.grad.neutral',
+			field: 'grad_stats.neutral',
 			flex: 1.2,
 			type: ['numericColumn', 'stats'],
 			headerTooltip: 'Cancelled, withdrawn, or untracked'
@@ -205,11 +191,13 @@
 	};
 
 	onMount(async () => {
-		const schools = await data.schools;
+		const [schools, stats] = await Promise.all([data.schools, data.stats]);
 
 		if (!schools.length) {
 			return;
 		}
+
+		const rowData = compose(schools, stats).sort((a, b) => lexicalChineseLast(a.name, b.name));
 
 		const gridOptions: GridOptions = {
 			defaultColDef: {
@@ -220,7 +208,7 @@
 			},
 			columnTypes,
 			columnDefs,
-			rowData: schools.sort((a, b) => lexicalChineseLast(a.name, b.name)),
+			rowData,
 			onFilterChanged: showDisplayedRowCount,
 			onModelUpdated: showDisplayedRowCount,
 			...agGridOptions
@@ -241,14 +229,14 @@
 		<ControlButton {hideControl} />
 	</div>
 
-	{#await data.schools then _}
+	{#await Promise.all([data.schools, data.stats]) then _}
 		<DownloadButton {gridApi} fileName="cf_schools" />
 	{/await}
 </Heading>
 
-{#await data.schools}
+{#await Promise.all([data.schools, data.stats])}
 	<FetchingDataSign />
-{:then schools}
+{:then [schools, _]}
 	{#if schools.length}
 		<div id="grid" class="data-grid ag-theme-alpine full-page" />
 	{:else}
