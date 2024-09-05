@@ -12,13 +12,12 @@
 	import type { EnrollmentListItem } from '$lib/api/enrollment';
 	import PlainCell from '$lib/components/table-cells/PlainCell.svelte';
 	import ShortYearMonth from '$lib/components/table-cells/ShortYearMonth.svelte';
-	import { orderByDateDesc } from '$lib/utils/enrollmentUtils';
 
 	export let enrollments: EnrollmentListItem[];
 	export let schoolType: string;
 </script>
 
-<Table divClass="mt-6" hoverable={enrollments.length > 1}>
+<Table divClass="mt-4" hoverable={enrollments.length > 1}>
 	<TableHead>
 		<TableHeadCell class="pl-2"></TableHeadCell>
 		<TableHeadCell>Start date</TableHeadCell>
@@ -30,7 +29,7 @@
 	</TableHead>
 
 	<TableBody>
-		{#each enrollments.sort(orderByDateDesc) as enrollment}
+		{#each enrollments as enrollment}
 			<TableBodyRow>
 				<TableBodyCell class="pl-2">
 					<A href={`/student/${enrollment.student.id}`}>{enrollment.student.fullname}</A>

@@ -1,15 +1,18 @@
 import { createOrUpdate, destroy } from '$lib/api/api';
 
-export type Grade = {
-	id: number;
-	enrollment: number;
+export type BaseGrade = {
 	progression: string;
 	term: string;
 	value: number;
 	scale: number;
-	is_weighted: boolean;
 	is_cumulative: boolean;
 	comments: string;
+};
+
+export type Grade = BaseGrade & {
+	id: number;
+	enrollment: number;
+	is_weighted: boolean;
 };
 
 export async function createOrUpdateGrade(data: any) {

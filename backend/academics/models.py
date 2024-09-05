@@ -2,6 +2,7 @@ from contextlib import suppress
 from decimal import Decimal
 
 from django.db import models
+from django.db.models import Case, When, F
 from django.db.models.functions import Lower
 
 from core.models import Student
@@ -43,20 +44,57 @@ class Enrollment(models.Model):
             )
         ]
 
+        ordering = [
+            # The most advanced program first; if tied, then
+            # the one with the latest end date first (null later than all dates);
+            # then the one with the latest end progression;
+            # and finally the one with the latest start progression
+            Case(
+                When(program_type="Master's", then=0),
+                When(program_type="UG Transfer", then=1),
+                When(program_type="UG Freshman", then=2),
+                When(program_type="Secondary School", then=3),
+                default=99,
+                output_field=models.IntegerField(),
+            ),
+            F("end_date").desc(nulls_first=True),
+            Case(
+                When(end_progression="Year 5", then=0),
+                When(end_progression="Year 4", then=1),
+                When(end_progression="Year 3", then=2),
+                When(end_progression="Year 2", then=3),
+                When(end_progression="Year 1", then=4),
+                When(end_progression="G12", then=5),
+                When(end_progression="G11", then=6),
+                When(end_progression="G10", then=7),
+                When(end_progression="G9", then=8),
+                When(end_progression="G8", then=9),
+                When(end_progression="G7", then=10),
+            ),
+            Case(
+                When(start_progression="Year 5", then=0),
+                When(start_progression="Year 4", then=1),
+                When(start_progression="Year 3", then=2),
+                When(start_progression="Year 2", then=3),
+                When(start_progression="Year 1", then=4),
+                When(start_progression="G12", then=5),
+                When(start_progression="G11", then=6),
+                When(start_progression="G10", then=7),
+                When(start_progression="G9", then=8),
+                When(start_progression="G8", then=9),
+                When(start_progression="G7", then=10),
+            ),
+        ]
+
     def __str__(self) -> str:
         return f"{self.student} @ {self.school}"
 
-    @classmethod
-    def filter(cls, school: int = None):
-        q = (
-            cls.objects.all()
-            .select_related("school", "student")
-            .prefetch_related("student__contracts")
-        )
-
+    @staticmethod
+    def filter(q, school: int = None, program_type: str = None):
         if school is not None:
             q = q.filter(school=school)
-
+        if program_type is not None:
+            q = q.filter(program_type=program_type)
         return q.distinct()
 
 
@@ -76,6 +114,36 @@ class Grade(models.Model):
     comments = models.TextField(max_length=500, blank=True)
 
     # No unique constraint because students might repeat a grade
+    class Meta:
+        ordering = [
+            # ordering mimicks natural progression
+            Case(
+                When(progression="G7", then=0),
+                When(progression="G8", then=1),
+                When(progression="G9", then=2),
+                When(progression="G10", then=3),
+                When(progression="G11", then=4),
+                When(progression="G12", then=5),
+                When(progression="Year 1", then=6),
+                When(progression="Year 2", then=7),
+                When(progression="Year 3", then=8),
+                When(progression="Year 4", then=9),
+                When(progression="Year 5", then=10),
+                default=99,
+                output_field=models.IntegerField(),
+            ),
+            Case(
+                When(term="Fall", then=0),
+                When(term="Winter", then=1),
+                When(term="Spring", then=2),
+                When(term="Summer", then=3),
+                When(term="Year", then=4),
+                default=99,
+                output_field=models.IntegerField(),
+            ),
+            # cumulative grades after non-cumulative ons
+            "is_cumulative",
+        ]
 
     def __str__(self) -> str:
         return f"{self.enrollment} | {self.progression} {self.term}: {self.value}"

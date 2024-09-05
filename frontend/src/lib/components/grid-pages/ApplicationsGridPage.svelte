@@ -12,6 +12,7 @@
 	} from 'ag-grid-community';
 
 	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
+	import type { BaseGrade } from '$lib/api/grade';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
@@ -25,6 +26,9 @@
 	import { formatAlevelSummary, formatApSummary, formatIbSummary } from '$lib/utils/studentUtils';
 	import { compose, formatApplicationType } from '$lib/utils/applicationUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
+	import { formatEnrollments } from '$lib/utils/enrollmentUtils';
+	import { formatGradeValue } from '$lib/utils/gradesUtils';
+	import { parseNum } from '$lib/utils/numUtils';
 
 	import {
 		getEnglishProficiency,
@@ -85,6 +89,31 @@
 		return formatCfNames(params.data.services, '流程顾问');
 	}
 
+	function enrollmentsValueGetter(params: ValueGetterParams): string {
+		return formatEnrollments(params.data.student.enrollments);
+	}
+
+	function gradeValueGetter(progression: string): (params: ValueGetterParams) => string {
+		return (params: ValueGetterParams) => {
+			for (const e of params.data.student.enrollments) {
+				// find grades of the right progression
+				const matchingGrades = e.grades.filter((g: BaseGrade) => g.progression === progression);
+				// if not found, continue with the next education experience
+				if (!matchingGrades.length) {
+					continue;
+				}
+				// if found, take the last grade and format it
+				const grade: BaseGrade = matchingGrades[matchingGrades.length - 1];
+				if (parseNum(grade.scale)) {
+					return `${formatGradeValue(grade.value, grade.scale)}/${formatGradeValue(grade.scale)}`;
+				} else {
+					return grade.comments;
+				}
+			}
+			return '';
+		};
+	}
+
 	function satOrActValueGetter(params: ValueGetterParams): string {
 		return getSatOrAct(params.data.student.scores);
 	}
@@ -115,6 +144,49 @@
 		}
 	};
 
+	const secondarySchoolGradeColumns = [
+		{ headerName: 'G9 GPA', valueGetter: gradeValueGetter('G9') },
+		{ headerName: 'G10 GPA', valueGetter: gradeValueGetter('G10') },
+		{ headerName: 'G11 GPA', valueGetter: gradeValueGetter('G11') },
+		{ headerName: 'G12 GPA', valueGetter: gradeValueGetter('G12') }
+	];
+	const secondarySchoolGradeColumnVisibility = {
+		'G9 GPA': false,
+		'G10 GPA': false,
+		'G11 GPA': false,
+		'G12 GPA': false
+	};
+
+	const universityGradeColumns = [
+		{ headerName: 'Year 1 GPA', valueGetter: gradeValueGetter('Year 1') },
+		{ headerName: 'Year 2 GPA', valueGetter: gradeValueGetter('Year 2') },
+		{ headerName: 'Year 3 GPA', valueGetter: gradeValueGetter('Year 3') },
+		{ headerName: 'Year 4 GPA', valueGetter: gradeValueGetter('Year 4') }
+	];
+	const universityGradeColumnVisibility = {
+		'Year 1 GPA': false,
+		'Year 2 GPA': false,
+		'Year 3 GPA': false,
+		'Year 4 GPA': false
+	};
+
+	let gradeColumns;
+	let gradeColumnVisibility;
+
+	if (data.applicationType === 'freshman') {
+		gradeColumns = secondarySchoolGradeColumns;
+		gradeColumnVisibility = secondarySchoolGradeColumnVisibility;
+	} else if (data.applicationType === 'graduate') {
+		gradeColumns = universityGradeColumns;
+		gradeColumnVisibility = universityGradeColumnVisibility;
+	} else {
+		gradeColumns = [...secondarySchoolGradeColumns, ...universityGradeColumns];
+		gradeColumnVisibility = {
+			...secondarySchoolGradeColumnVisibility,
+			...universityGradeColumnVisibility
+		};
+	}
+
 	const columnDefs = [
 		{
 			headerName: 'Link',
@@ -133,6 +205,8 @@
 		{ headerName: '文案', valueGetter: workPeopleValueGetter, flex: 1.2 },
 		{ headerName: '服务顾问', valueGetter: salesAssistantsValueGetter },
 		{ headerName: '流程顾问', valueGetter: workAssistantsValueGetter },
+		{ headerName: 'Edu. History', valueGetter: enrollmentsValueGetter, flex: 2 },
+		...gradeColumns,
 		{ headerName: 'SAT/ACT', valueGetter: satOrActValueGetter },
 		{ headerName: 'SAT', field: 'student.scores.super_sat', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'ACT', field: 'student.scores.super_act', type: ['numeric', 'rightAligned'] },
@@ -180,6 +254,8 @@
 		文案: true,
 		服务顾问: false,
 		流程顾问: false,
+		'Edu. History': true,
+		...gradeColumnVisibility,
 		'SAT/ACT': false,
 		SAT: false,
 		ACT: false,

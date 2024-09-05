@@ -81,6 +81,24 @@ class StudentListSerializer(serializers.ModelSerializer):
 
     contracts = ContractSerializer(many=True)
 
+    class EnrollmentSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = academics.models.Enrollment
+            fields = [
+                "school_name",
+                "program_type",
+                "start_progression",
+                "end_progression",
+                "curriculum",
+            ]
+
+        school_name = serializers.SerializerMethodField()
+
+        def get_school_name(self, enrollment):
+            return enrollment.school.name
+
+    enrollments = EnrollmentSerializer(many=True)
+
     scores = serializers.SerializerMethodField()
     ap_summary = serializers.SerializerMethodField()
     ib_summary = serializers.SerializerMethodField()
@@ -89,40 +107,46 @@ class StudentListSerializer(serializers.ModelSerializer):
     def get_scores(self, student):
         scores = {}
 
-        def get_max(lst):
-            return max(filter(None, lst), default=None)
+        scores["best_toefl"] = self._max([s.total for s in student.toefl.all()])
+        scores["best_ielts"] = self._max([s.overall for s in student.ielts.all()])
+        scores["best_duolingo"] = self._max([s.overall for s in student.duolingo.all()])
 
-        scores["best_toefl"] = get_max([s.total for s in student.toefl.all()])
-        scores["best_ielts"] = get_max([s.overall for s in student.ielts.all()])
-        scores["best_duolingo"] = get_max([s.overall for s in student.duolingo.all()])
+        scores["super_sat"] = self._get_super_sat(student.sat.all())
+        scores["super_act"] = self._get_super_act(student.act.all())
 
-        best_sat_subscores = [
-            get_max([s.ebrw for s in student.sat.all()]),
-            get_max([s.math for s in student.sat.all()]),
-        ]
-        try:
-            scores["super_sat"] = sum(best_sat_subscores)
-        except TypeError:
-            pass
-
-        best_act_subscores = [
-            get_max([s.math for s in student.act.all()]),
-            get_max([s.science for s in student.act.all()]),
-            get_max([s.english for s in student.act.all()]),
-            get_max([s.reading for s in student.act.all()]),
-        ]
-        try:
-            act_total = sum(best_act_subscores)
-            scores["super_act"] = round((act_total / 4) + 0.1)
-        except TypeError:
-            pass
-
-        scores["best_gre"] = get_max([s.total for s in student.gre.all()])
-        scores["best_gmat"] = get_max([s.total for s in student.gmat.all()])
-        scores["best_lsat"] = get_max([s.score for s in student.lsat.all()])
+        scores["best_gre"] = self._max([s.total for s in student.gre.all()])
+        scores["best_gmat"] = self._max([s.total for s in student.gmat.all()])
+        scores["best_lsat"] = self._max([s.score for s in student.lsat.all()])
 
         scores = {k: v for (k, v) in scores.items() if v is not None}
         return scores
+
+    @staticmethod
+    def _max(lst):
+        return max(filter(None, lst), default=None)
+
+    def _get_super_sat(self, scores):
+        best_sat_subscores = [
+            self._max([s.ebrw for s in scores]),
+            self._max([s.math for s in scores]),
+        ]
+        try:
+            return sum(best_sat_subscores)
+        except TypeError:
+            pass
+
+    def _get_super_act(self, scores):
+        best_act_subscores = [
+            self._max([s.math for s in scores]),
+            self._max([s.science for s in scores]),
+            self._max([s.english for s in scores]),
+            self._max([s.reading for s in scores]),
+        ]
+        try:
+            act_total = sum(best_act_subscores)
+            return round((act_total / 4) + 0.1)
+        except TypeError:
+            pass
 
     def get_ap_summary(self, student):
         summary = defaultdict(int)
@@ -170,7 +194,7 @@ class StudentDetailSerializer(serializers.ModelSerializer):
     fullname = serializers.CharField()
     contracts = ContractPerStudentSerializer(many=True)
 
-    enrollments = academics.serializers.EnrollmentByStudentSerializer(many=True)
+    enrollments = academics.serializers.EnrollmentPerStudentSerializer(many=True)
     toefl = academics.serializers.TOEFLScoreCRUDSerializer(many=True)
     ielts = academics.serializers.IELTSScoreCRUDSerializer(many=True)
     duolingo = academics.serializers.DuolingoScoreCRUDSerializer(many=True)
@@ -308,11 +332,45 @@ class ApplicantListSerializer(StudentListSerializer):
             "fullname",
             "gender",
             "citizenship",
+            "enrollments",
             "scores",
             "ap_summary",
             "ib_summary",
             "alevel_summary",
         ]
+
+    class EnrollmentSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = academics.models.Enrollment
+            fields = [
+                "school_name",
+                "program_type",
+                "start_progression",
+                "end_progression",
+                "curriculum",
+                "grades",
+            ]
+
+        school_name = serializers.SerializerMethodField()
+
+        def get_school_name(self, enrollment):
+            return enrollment.school.name
+
+        class GradeSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = academics.models.Grade
+                fields = [
+                    "progression",
+                    "term",
+                    "value",
+                    "scale",
+                    "is_cumulative",
+                    "comments",
+                ]
+
+        grades = GradeSerializer(many=True)
+
+    enrollments = EnrollmentSerializer(many=True)
 
 
 class ApplicationDetailSerializer(serializers.ModelSerializer):

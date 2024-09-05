@@ -65,7 +65,7 @@ export function formatRound(applRound: ApplicationRoundListItem): string {
 	}
 }
 
-const _joiner = '\u9999';
+const _joiner = '\uffff';
 
 export function groupByYearTerm(
 	applRounds: ApplicationRoundListItem[]

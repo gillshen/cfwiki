@@ -45,7 +45,13 @@ class EnrollmentListView(ListAPIView):
 
     def get_queryset(self):
         query_params = self.request.query_params
-        return Enrollment.filter(school=query_params.get("school"))
+        return Enrollment.filter(
+            Enrollment.objects.select_related(
+                "student",
+                "school",
+            ).prefetch_related("student__contracts"),
+            school=query_params.get("school"),
+        )
 
 
 class EnrollmentDetailView(RetrieveAPIView):

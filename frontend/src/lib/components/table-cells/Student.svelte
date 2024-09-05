@@ -8,10 +8,13 @@
 	import PopoverAlevelItem from '$lib/components/table-cells/PopoverAlevelItem.svelte';
 	import PopoverMultiContainer from '$lib/components/table-cells/PopoverMultiContainer.svelte';
 	import ScoreCount from '$lib/components/table-cells/ScoreCount.svelte';
+	import { formatGradeValue, summarizeByProgression } from '$lib/utils/gradesUtils';
+	import { parseNum } from '$lib/utils/numUtils';
 
 	export let application: ComposedApplicationListItem;
 
-	const { id, fullname, scores, ap_summary, ib_summary, alevel_summary } = application.student;
+	const { id, fullname, enrollments, scores, ap_summary, ib_summary, alevel_summary } =
+		application.student;
 
 	$: noScore =
 		!Object.keys(scores).length &&
@@ -31,9 +34,37 @@
 		transition={fade}
 		params={{ duration: 200 }}
 	>
-		<div class="text-xl text-gray-900 font-medium px-6 py-3">{fullname}</div>
+		<div class="text-xl text-gray-900 font-medium px-6 pt-3">{fullname}</div>
 
-		<div class="px-6 pt-2 pb-6 flex items-start gap-6 flex-wrap">
+		<!-- TODO? filter for the most relevant school/program type -->
+		{#each enrollments as e}
+			<div class="px-6 mt-4 mb-1 flex flex-col gap-1 text-gray-600">
+				<div class="font-medium mb-1">{e.school_name}</div>
+
+				{#if e.grades.length}
+					<div class="flex gap-x-3 gap-y-2 flex-wrap">
+						{#each summarizeByProgression(e.grades) as { progression, scale, value, comments }}
+							<div class="flex items-center gap-1">
+								<span>{progression}</span>
+
+								<div class="flex bg-stone-100 px-2 py-1 rounded-md max-w-40">
+									{#if parseNum(scale)}
+										<span class="text-gray-900 font-medium tabular-nums">
+											{formatGradeValue(value, scale)}
+										</span>
+										<span class="tabular-nums">/{formatGradeValue(scale)}</span>
+									{:else}
+										<span class="text-gray-900 truncate">{comments}</span>
+									{/if}
+								</div>
+							</div>
+						{/each}
+					</div>
+				{/if}
+			</div>
+		{/each}
+
+		<div class="px-6 pt-4 pb-6 flex items-start gap-6 flex-wrap">
 			<PopoverScoreItem label="GRE" score={scores?.best_gre} />
 			<PopoverScoreItem label="GMAT" score={scores?.best_gmat} />
 			<PopoverScoreItem label="LSAT" score={scores?.best_lsat} />

@@ -46,6 +46,14 @@ export type Contract = ContractSummary & {
 	student_progression_when_signed: string;
 };
 
+export type StudentEnrollmentItem = {
+	school_name: string;
+	program_type: string;
+	start_progression: string;
+	end_progression: string;
+	curriculum: string;
+};
+
 export type ApSummary = Record<1 | 2 | 3 | 4 | 5, number>;
 
 export type IbSummary = {
@@ -66,6 +74,7 @@ export type AlevelSummary = {
 
 export type StudentListItem = BaseStudent & {
 	contracts: ContractSummary[];
+	enrollments: StudentEnrollmentItem[];
 	scores: {
 		best_toefl?: number;
 		best_ielts?: number;

@@ -6,7 +6,6 @@
 	import type { StudentDetail } from '$lib/api/student';
 	import type { EnrollmentByStudent } from '$lib/api/enrollment';
 	import type { School } from '$lib/api/school';
-	import { orderByProgressionDesc, orderByDateDesc } from '$lib/utils/enrollmentUtils';
 
 	import EnrollmentItem from '$lib/components/list-items/EnrollmentItem.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
@@ -40,16 +39,18 @@
 
 	{#if student.enrollments.length}
 		<Timeline class="mt-8 flex flex-col gap-4">
-			{#each student.enrollments.sort(orderByDateDesc).sort(orderByProgressionDesc) as enrollment}
+			{#each student.enrollments as enrollment}
 				<EnrollmentItem {enrollment} {canEdit}>
 					{#if canEdit}
-						<UpdateDeleteButton
-							updateAction={enrollmentModalOpener(enrollment)}
-							deleteAction={() => {
-								activeEnrollment = enrollment;
-								enrollmentDeleteModal = true;
-							}}
-						/>
+						<div class="-translate-x-0.5">
+							<UpdateDeleteButton
+								updateAction={enrollmentModalOpener(enrollment)}
+								deleteAction={() => {
+									activeEnrollment = enrollment;
+									enrollmentDeleteModal = true;
+								}}
+							/>
+						</div>
 					{/if}
 				</EnrollmentItem>
 			{/each}

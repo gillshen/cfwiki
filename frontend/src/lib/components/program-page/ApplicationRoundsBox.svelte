@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import { CalendarMonthOutline } from 'flowbite-svelte-icons';
+	import { isPast } from 'date-fns';
 
 	import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
 	import ApplicationRoundPopover from '$lib/components/program-page/ApplicationRoundPopover.svelte';
@@ -24,27 +25,33 @@
 
 			<div class="grid grid-cols-3 gap-4">
 				{#each rounds as applRound}
-					<div class="min-w-32 rounded-lg flex items-center bg-stone-50 px-2 py-3">
-						<CalendarMonthOutline size="xl" class="me-2 text-gray-500" />
+					{@const isPastDue = !!applRound.due_date && isPast(applRound.due_date)}
 
-						<div>
-							<div class="text-sm font-medium text-primary-600 hover:underline cursor-pointer">
+					<div
+						class={`min-w-32 rounded-lg flex items-center px-2 py-3 ${isPastDue ? 'bg-stone-100' : 'bg-stone-50 shadow-md'}`}
+					>
+						<CalendarMonthOutline size="xl" class="me-2 text-gray-400" />
+
+						<div class="text-sm cursor-pointer">
+							<div class={`font-medium ${isPastDue ? 'text-gray-500' : 'text-primary-600'}`}>
 								{applRound.name}
 							</div>
-							<ApplicationRoundPopover
-								{applRound}
-								onDelete={() => {
-									activeRound = applRound;
-									deleteModal = true;
-								}}
-							/>
 
 							{#if applRound.due_date}
-								<div class="text-sm truncate">{toShortDate(applRound.due_date)}</div>
+								<div class={`text-sm truncate ${isPastDue ? 'text-gray-500' : 'text-gray-900'}`}>
+									{toShortDate(applRound.due_date)}
+								</div>
 							{:else}
 								<div class="text-sm text-gray-400">Date N/A</div>
 							{/if}
 						</div>
+						<ApplicationRoundPopover
+							{applRound}
+							onDelete={() => {
+								activeRound = applRound;
+								deleteModal = true;
+							}}
+						/>
 					</div>
 				{/each}
 			</div>

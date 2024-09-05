@@ -52,7 +52,7 @@ class EnrollmentListSerializer(serializers.ModelSerializer):
 
 
 # for nesting within the student detail serializer
-class EnrollmentByStudentSerializer(serializers.ModelSerializer):
+class EnrollmentPerStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
         fields = "__all__"
@@ -72,7 +72,7 @@ class EnrollmentByStudentSerializer(serializers.ModelSerializer):
     grades = GradeSerializer(many=True)
 
 
-class EnrollmentDetailSerializer(EnrollmentByStudentSerializer):
+class EnrollmentDetailSerializer(EnrollmentPerStudentSerializer):
     class StudentSerializer(serializers.ModelSerializer):
         class Meta:
             model = Student

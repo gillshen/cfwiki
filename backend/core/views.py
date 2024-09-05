@@ -9,10 +9,11 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 from rest_framework import status
 
-from django.db.models import OuterRef, Subquery, Count, F, Q
+from django.db.models import OuterRef, Subquery, Count, F, Q, Prefetch
 
 from core.models import CFUser, Student, Service, Contract, Application, ApplicationLog
 from target.models import School
+from academics.models import Enrollment
 
 from core.serializers import (
     CFUserSerializer,
@@ -74,8 +75,29 @@ class StudentListView(ListAPIView):
     def get_queryset(self):
         query_params = self.request.query_params
 
+        q = Student.objects.prefetch_related(
+            "contracts__services__cfer",
+            "toefl",
+            "ielts",
+            "duolingo",
+            "sat",
+            "act",
+            "gre",
+            "gmat",
+            "lsat",
+            "ap",
+            "ib",
+            "alevel",
+            Prefetch(
+                "enrollments",
+                queryset=Enrollment.objects.select_related("school").prefetch_related(
+                    "grades"
+                ),
+            ),
+        )
+
         return Student.filter(
-            Student.q_related(),
+            q,
             target_year=query_params.get("target_year"),
             contract_type=query_params.get("contract_type"),
             contract_status=query_params.get("contract_status"),
@@ -191,6 +213,12 @@ class ApplicantListView(ListAPIView):
             "ap",
             "ib",
             "alevel",
+            Prefetch(
+                "enrollments",
+                queryset=Enrollment.objects.select_related("school").prefetch_related(
+                    "grades"
+                ),
+            ),
         )
         student_id = self.request.query_params.get("id")
         if student_id is not None:

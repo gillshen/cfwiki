@@ -52,23 +52,6 @@ class Student(models.Model):
     def __str__(self) -> str:
         return self.fullname
 
-    @classmethod
-    def q_related(cls):
-        return cls.objects.prefetch_related(
-            "contracts__services__cfer",
-            "toefl",
-            "ielts",
-            "duolingo",
-            "sat",
-            "act",
-            "gre",
-            "gmat",
-            "lsat",
-            "ap",
-            "ib",
-            "alevel",
-        )
-
     @staticmethod
     def filter(
         q,

@@ -27,7 +27,7 @@
 		{`${term} ${year} | ${name}`}
 	</Heading>
 
-	<div class="px-6 py-4">
+	<div class="px-6 py-4 text-sm">
 		<div>
 			<P size="sm" weight="medium" class="mb-0.5">Due date</P>
 			<P size="sm" weight="light">{formatDueDateTime(due_date, due_time, timezone) || 'N/A'}</P>

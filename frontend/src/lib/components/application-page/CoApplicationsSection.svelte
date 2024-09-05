@@ -21,11 +21,11 @@
 	<ApplicationsLoader
 		applications={coApplications}
 		{applicants}
-		heading="Other applicants"
+		heading="Other Applicants"
 		noDataText="No other applicants this year and term"
 	>
 		<svelte:fragment let:applications>
-			<Table divClass="mt-6" hoverable={applications.length > 1}>
+			<Table divClass="mt-4" hoverable={applications.length > 1}>
 				<TableHead>
 					<TableHeadCell class="w-8"></TableHeadCell>
 					<TableHeadCell class="w-40">Status</TableHeadCell>

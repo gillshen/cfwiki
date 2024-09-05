@@ -1,6 +1,7 @@
 import { get, post, patch, buildQuery, destroy } from '$lib/api/api';
 import type { ApplicationStatus, ApplicationLog } from '$lib/api/applicationLog';
 import type { ApSummary, IbSummary, AlevelSummary } from '$lib/api/student';
+import type { BaseGrade } from '$lib/api/grade';
 
 export const applicationTypes = ['freshman', 'transfer', 'graduate', 'other'] as const;
 
@@ -25,11 +26,21 @@ export type ApplicationListItem = {
 	latest_log: { status: ApplicationStatus; date: string } | null;
 };
 
+export type ApplicantEnrollmentItem = {
+	school_name: string;
+	program_type: string;
+	start_progression: string;
+	end_progression: string;
+	curriculum: string;
+	grades: BaseGrade[];
+};
+
 export type ApplicantListItem = {
 	id: number;
 	fullname: string;
 	gender: 'female' | 'male' | 'other';
 	citizenship: string;
+	enrollments: ApplicantEnrollmentItem[];
 	scores: {
 		best_toefl?: number;
 		best_ielts?: number;

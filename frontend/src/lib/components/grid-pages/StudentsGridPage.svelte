@@ -25,6 +25,7 @@
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
 	import Gender from '$lib/components/grid-cells/Gender.svelte';
 	import { filterForActive, formatCfNames } from '$lib/utils/serviceUtils';
+	import { formatEnrollments } from '$lib/utils/enrollmentUtils';
 	import { makeDate, toISODate } from '$lib/utils/dateUtils';
 
 	import {
@@ -164,6 +165,10 @@
 		return _getRelevantServices(params.data, '流程顾问');
 	}
 
+	function enrollmentsValueGetter(params: ValueGetterParams): string {
+		return formatEnrollments(params.data.enrollments);
+	}
+
 	function satOrActValueGetter(params: ValueGetterParams): string {
 		return getSatOrAct(params.data.scores);
 	}
@@ -236,6 +241,7 @@
 			valueFormatter: homeValueFormatter,
 			useValueFormatterForExport: false
 		},
+		{ headerName: 'Edu. History', valueGetter: enrollmentsValueGetter, flex: 1.5 },
 		{ headerName: 'SAT/ACT', valueGetter: satOrActValueGetter },
 		{ headerName: 'SAT', field: 'scores.super_sat', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'ACT', field: 'scores.super_act', type: ['numeric', 'rightAligned'] },
@@ -266,6 +272,7 @@
 		Citizenship: true,
 		'Date of Birth': false,
 		Home: false,
+		'Edu. History': true,
 		'SAT/ACT': data.contractType !== 'Graduate',
 		SAT: false,
 		ACT: false,
