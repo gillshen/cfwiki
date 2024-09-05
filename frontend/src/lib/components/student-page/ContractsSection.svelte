@@ -12,8 +12,10 @@
 	import ContractForm from '$lib/components/contract-form/ContractForm.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
+	import { canEditContract } from '$lib/utils/userUtils';
 
 	export let student: StudentDetail;
+	export let username: string;
 	export let canEdit: boolean = false;
 	export let form: SuperValidated<any>;
 	export let deleteForm: SuperValidated<any>;
@@ -35,7 +37,7 @@
 		<div class="grid grid-cols-2 gap-6 mb-6">
 			{#each student.contracts as contract}
 				<ContractItem {contract}>
-					{#if canEdit || !contract.services.length}
+					{#if canEditContract(username, contract)}
 						<UpdateDeleteButton
 							updateAction={contractModalOpener(contract)}
 							deleteAction={() => {

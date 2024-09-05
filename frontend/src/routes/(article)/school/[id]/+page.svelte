@@ -24,7 +24,7 @@
 	let schoolUpdateModal = false;
 	let schoolDeleteModal = false;
 
-	$: isNotSecondary = data.school.type !== 'Secondary School';
+	$: isNotSecondarySchool = data.school.type !== 'Secondary School';
 </script>
 
 <Heading tag="h1" class="alt-page-title">{data.school.name}</Heading>
@@ -45,9 +45,9 @@
 			{/await}
 		</div>
 
-		{#if isNotSecondary}
-			<div>
-				<Heading tag="h2" class="text-2xl font-bold mt-16">Programs</Heading>
+		{#if isNotSecondarySchool}
+			<div class="mt-16">
+				<Heading tag="h2" class="section-title">Programs</Heading>
 				{#await data.programs}
 					<FetchingDataSign divClass="mt-8" />
 				{:then programs}
@@ -61,7 +61,7 @@
 		{/if}
 	</article>
 
-	{#if isNotSecondary}
+	{#if isNotSecondarySchool}
 		<article class="flex flex-col gap-8">
 			<div class="bg-stone-50 rounded-xl w-full p-8">
 				{#await data.stats}
@@ -75,7 +75,7 @@
 							denied: stats[0].ug_denied,
 							neutral: stats[0].ug_neutral
 						}}
-						title="Undergraduate statistics"
+						title="Undergraduate Statistics"
 					/>
 				{/await}
 			</div>
@@ -92,14 +92,14 @@
 							denied: stats[0].grad_denied,
 							neutral: stats[0].grad_neutral
 						}}
-						title="Graduate statistics"
+						title="Graduate Statistics"
 					/>
 				{/await}
 			</div>
 		</article>
 	{/if}
 
-	{#if isNotSecondary}
+	{#if isNotSecondarySchool}
 		<article class="col-span-2 mt-16">
 			<ApplicationsLoader applications={data.applications} applicants={data.applicants}>
 				<svelte:fragment let:applications>

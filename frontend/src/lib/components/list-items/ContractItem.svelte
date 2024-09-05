@@ -94,8 +94,10 @@
 
 	<div class="mt-8 flex gap-4 justify-between">
 		<slot />
-		<A href={`/contract/${contract.id}`}>
-			<ArrowRightOutline />
-		</A>
+		{#if contract.services.length}
+			<A href={`/contract/${contract.id}`}>
+				<ArrowRightOutline />
+			</A>
+		{/if}
 	</div>
 </Card>

@@ -20,9 +20,10 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'Student not found');
 	}
 
-	const studentForm = await superValidate(student, zod(studentSchema));
-
-	return { studentForm };
+	return {
+		student,
+		studentForm: await superValidate(student, zod(studentSchema))
+	};
 }
 
 export const actions = {

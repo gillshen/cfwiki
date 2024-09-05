@@ -12,7 +12,7 @@
 	const nonDegreePrograms = filterForType(programs, 'Non-degree');
 </script>
 
-<div class="mt-8 text-sm flex flex-col gap-6">
+<div class="mt-6 text-sm flex flex-col gap-6">
 	{#if freshmanPrograms.length || transferPrograms.length}
 		<div class="flex flex-col gap-2">
 			{#each freshmanPrograms.sort(orderByName) as program}

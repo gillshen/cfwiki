@@ -36,12 +36,12 @@
 </script>
 
 <article class="mt-16">
-	<Heading tag="h2" class="text-2xl font-bold">Educational Experiences</Heading>
+	<Heading tag="h2" class="section-title">Educational Experiences</Heading>
 
 	{#if student.enrollments.length}
 		<Timeline class="mt-8 flex flex-col gap-4">
 			{#each student.enrollments.sort(orderByDateDesc).sort(orderByProgressionDesc) as enrollment}
-				<EnrollmentItem {enrollment}>
+				<EnrollmentItem {enrollment} {canEdit}>
 					{#if canEdit}
 						<UpdateDeleteButton
 							updateAction={enrollmentModalOpener(enrollment)}
@@ -59,7 +59,7 @@
 	{/if}
 
 	{#if canEdit}
-		<div class="mt-8">
+		<div class="mt-6">
 			<LinkButton text="Add an educational experience" action={enrollmentModalOpener()}>
 				<PlusOutline slot="icon" class="-ml-0.5" />
 			</LinkButton>

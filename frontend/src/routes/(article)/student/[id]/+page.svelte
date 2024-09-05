@@ -24,6 +24,7 @@
 	<ContractsSection
 		student={data.student}
 		{canEdit}
+		username={data.username}
 		form={data.contractForm}
 		deleteForm={data.deleteForm}
 	/>

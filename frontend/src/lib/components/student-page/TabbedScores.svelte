@@ -6,7 +6,7 @@
 
 	export let scores: BaseScore[];
 	export let heading: string;
-	export let firstTitle: string = 'Best single';
+	export let firstTitle: string = 'Best score';
 </script>
 
 {#if scores.length}
@@ -20,7 +20,7 @@
 			inactiveClasses="p-2 m-0 text-primary-500 hover:text-primary-700"
 		>
 			<TabItem open>
-				<span slot="title">{scores.length > 1 ? firstTitle : 'Just one shot'}</span>
+				<span slot="title">{scores.length > 1 ? firstTitle : 'Best (and only) score'}</span>
 				<slot name="first" />
 			</TabItem>
 

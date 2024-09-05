@@ -57,7 +57,7 @@
 		</div>
 
 		<div class="mt-16">
-			<Heading tag="h2" class="text-2xl font-bold">Admission plans</Heading>
+			<Heading tag="h2" class="section-title">Admission Plans</Heading>
 
 			<div class="mt-4">
 				{#await data.applicationRounds}

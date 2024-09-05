@@ -15,8 +15,17 @@
 	font-family: 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial, sans-serif;
 }
 
-h2 {
-	font-family: 'Merriweather', serif;
+.page-title {
+	@apply text-3xl font-bold pt-4 -mb-1;
+}
+.alt-page-title {
+	@apply text-4xl font-normal pt-4 -mb-1;
+}
+h2.section-title {
+	@apply text-xl font-bold;
+}
+h2.flex-title {
+	@apply flex items-center gap-2;
 }
 
 .footer li a {
@@ -67,13 +76,6 @@ form.modal {
 
 .tooltip {
 	@apply text-sm font-normal text-gray-100 bg-stone-700;
-}
-
-.page-title {
-	@apply text-3xl font-bold pt-4;
-}
-.alt-page-title {
-	@apply text-4xl font-normal pt-4 -mb-1;
 }
 
 .grid-title {

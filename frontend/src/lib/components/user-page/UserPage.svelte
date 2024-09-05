@@ -52,7 +52,7 @@
 	$: userIsHost = data.host.id === data.userId;
 </script>
 
-<Heading tag="h1" class="alt-page-title">
+<Heading tag="h1" class="page-title">
 	{data.host.public_banner || defaultBanner(data.host.username)}
 </Heading>
 
@@ -67,7 +67,7 @@
 						{@const cohorts = categorize(cohort)}
 
 						<div class="flex flex-col">
-							<Heading tag="h2" class="text-xl tabular-nums">{year.trim()}</Heading>
+							<Heading tag="h2" class="section-title tabular-nums">{year.trim()}</Heading>
 
 							<div class="grid grid-cols-3 gap-8 mt-4">
 								{#each Object.entries(cohorts) as [contractType, cohort]}

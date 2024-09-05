@@ -35,7 +35,7 @@
 			<InfoCircleSolid />
 			<span>
 				This student has not been &ldquo;claimed&rdquo; by any CFer. If this is your student, please
-				claim {pronoun} by adding yourself to the staff of the appropriate contract(s).
+				add yourself to the staff of the appropriate contract(s).
 			</span>
 		</Alert>
 	{/if}

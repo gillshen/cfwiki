@@ -277,7 +277,7 @@
 </script>
 
 <article class="mt-16">
-	<Heading tag="h2" class="text-2xl font-bold">Test Scores</Heading>
+	<Heading tag="h2" class="section-title">Test Scores</Heading>
 
 	<div class="flex flex-col gap-6">
 		<GreSection
@@ -393,7 +393,7 @@
 	{/if}
 
 	{#if canEdit}
-		<div class="mt-8">
+		<div class="mt-6">
 			<MultiActionButton text="Add a score" actions={newScoreActions} placement="right-end">
 				<PlusOutline slot="icon" />
 			</MultiActionButton>

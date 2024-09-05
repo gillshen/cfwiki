@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { SuperValidated } from 'sveltekit-superforms';
-	import { Table, TableBody, TableBodyRow, TableBodyCell } from 'flowbite-svelte';
 	import { CalendarMonthOutline } from 'flowbite-svelte-icons';
 
 	import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
@@ -18,18 +17,20 @@
 	let deleteModal = false;
 </script>
 
-<Table divClass="mt-4">
-	<TableBody>
-		{#each Object.entries(groupByYearTerm(applRounds)) as [key, rounds]}
-			<TableBodyRow>
-				<TableBodyCell tdClass="font-medium pl-0 w-40 min-w-40 align-top py-4">
-					{key}
-				</TableBodyCell>
+<article class="flex flex-col gap-6">
+	{#each Object.entries(groupByYearTerm(applRounds)) as [key, rounds]}
+		<div>
+			<div class="text-sm font-medium mb-2">{key}</div>
 
-				<TableBodyCell tdClass="font-medium py-4 w-fit max-w-[80px] align-top">
-					<div class="flex flex-col gap-3 w-fit">
-						{#each rounds as applRound}
-							<div class="text-primary-600 hover:underline cursor-pointer">{applRound.name}</div>
+			<div class="grid grid-cols-3 gap-4">
+				{#each rounds as applRound}
+					<div class="min-w-32 rounded-lg flex items-center bg-stone-50 px-2 py-3">
+						<CalendarMonthOutline size="xl" class="me-2 text-gray-500" />
+
+						<div>
+							<div class="text-sm font-medium text-primary-600 hover:underline cursor-pointer">
+								{applRound.name}
+							</div>
 							<ApplicationRoundPopover
 								{applRound}
 								onDelete={() => {
@@ -37,24 +38,19 @@
 									deleteModal = true;
 								}}
 							/>
-						{/each}
-					</div>
-				</TableBodyCell>
 
-				<TableBodyCell tdClass="font-normal min-w-32 text-gray-500 py-4 align-top">
-					<div class="flex flex-col gap-3">
-						{#each rounds as applRound}
-							<div class="flex items-center">
-								<CalendarMonthOutline class="me-1 text-gray-400" />
-								{toShortDate(applRound.due_date) || '?'}
-							</div>
-						{/each}
+							{#if applRound.due_date}
+								<div class="text-sm truncate">{toShortDate(applRound.due_date)}</div>
+							{:else}
+								<div class="text-sm text-gray-400">Date N/A</div>
+							{/if}
+						</div>
 					</div>
-				</TableBodyCell>
-			</TableBodyRow>
-		{/each}
-	</TableBody>
-</Table>
+				{/each}
+			</div>
+		</div>
+	{/each}
+</article>
 
 <FormModal
 	open={deleteModal}

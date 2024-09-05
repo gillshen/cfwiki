@@ -18,6 +18,7 @@
 	import GradeValueItem from '$lib/components/list-items/GradeValueItem.svelte';
 
 	export let enrollment: EnrollmentByStudent;
+	export let canEdit: boolean;
 
 	const formatDateWithProgression = (date: string | null, progression: string): string => {
 		const formattedDate = toShortYearMonth(date);
@@ -77,7 +78,7 @@
 	<div class="mt-8 flex gap-8">
 		<slot />
 		<A href={`/grades/${enrollment.id}`}>
-			<span class="text-sm font-medium">Manage Grades</span>
+			<span class="text-sm font-medium">{canEdit ? 'Manage Grades' : 'Grade Details'}</span>
 			<ArrowRightOutline class="ms-0.5" />
 		</A>
 	</div>

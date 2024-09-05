@@ -16,7 +16,7 @@
 </script>
 
 {#if showHeading}
-	<Heading tag="h2" class="text-2xl font-bold flex items-center gap-2">
+	<Heading tag="h2" class="section-title flex-title">
 		{heading}
 		{#await applications then applications}
 			{#if applications.length}

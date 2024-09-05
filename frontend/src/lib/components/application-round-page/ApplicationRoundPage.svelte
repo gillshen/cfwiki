@@ -39,7 +39,10 @@
 
 <Hr />
 
-<P size="lg" weight="medium">{formatSchoolNames(program)} | {program.display_name}</P>
+<div class="max-w-prose mb-2">
+	<P size="xl" weight="medium" class="text-gray-500 mb-1">{formatSchoolNames(program)}</P>
+	<P size="base" weight="medium">{program.display_name}</P>
+</div>
 
 <div class="w-[30rem]">
 	<form method="post" {action} use:enhance>

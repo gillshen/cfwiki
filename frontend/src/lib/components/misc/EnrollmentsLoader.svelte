@@ -12,7 +12,7 @@
 	export let errorText: string = '';
 </script>
 
-<Heading tag="h2" class="text-2xl font-bold flex items-center gap-2">
+<Heading tag="h2" class="section-title flex-title">
 	{heading}
 	{#await enrollments then enrollments}
 		{#if enrollments.length}

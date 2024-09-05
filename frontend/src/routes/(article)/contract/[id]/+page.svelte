@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { A, Button, Heading, Hr } from 'flowbite-svelte';
+	import { A, Alert, Button, Heading, Hr } from 'flowbite-svelte';
+	import { InfoCircleSolid } from 'flowbite-svelte-icons';
 
 	import type { Service } from '$lib/api/contract';
 	import { canEditContract } from '$lib/utils/userUtils';
@@ -59,6 +60,16 @@
 {/if}
 
 {#if canEdit}
+	{#if !data.contract.services.length}
+		<Alert color="yellow" class="mb-4 max-w-prose flex gap-2">
+			<InfoCircleSolid />
+			<span>
+				You can manage staff members of this contract (including adding new members, updating and
+				removing existing members) only if you are yourself a staff member or if no one is. So, be
+				sure to add yourself first, or you&rsquo;ll have to ask someone else to add you.
+			</span>
+		</Alert>
+	{/if}
 	<Button outline on:click={modalOpener()}>Add staff</Button>
 {/if}
 

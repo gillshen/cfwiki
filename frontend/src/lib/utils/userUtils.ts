@@ -52,9 +52,13 @@ export function canEditStudent(username: string, student: StudentDetail): boolea
 }
 
 export function canEditContract(username: string, contract: Contract): boolean {
-	// Returns true if the user has ever served for the contract
+	// Return true if the user has ever served for the contract or if no one has
 	if (!username) {
 		return false;
+	}
+
+	if (!contract.services.length) {
+		return true;
 	}
 
 	for (const service of contract.services) {

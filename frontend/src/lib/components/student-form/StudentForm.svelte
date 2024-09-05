@@ -17,5 +17,5 @@
 <LocationFields {form} />
 <Hr />
 <CommentsField {form} />
-<Hr />
-<Button type="submit">{submitButtonText}</Button>
+
+<Button type="submit" class="mt-8">{submitButtonText}</Button>
