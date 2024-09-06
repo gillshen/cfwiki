@@ -38,7 +38,7 @@
 	<Heading tag="h2" class="section-title">Educational Experiences</Heading>
 
 	{#if student.enrollments.length}
-		<Timeline class="mt-8 flex flex-col gap-4">
+		<Timeline class="mt-6 flex flex-col gap-4">
 			{#each student.enrollments as enrollment}
 				<EnrollmentItem {enrollment} {canEdit}>
 					{#if canEdit}

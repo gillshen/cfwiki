@@ -30,7 +30,10 @@
 					<div
 						class={`min-w-32 rounded-lg flex items-center px-2 py-3 ${isPastDue ? 'bg-stone-100' : 'bg-stone-50 shadow-md'}`}
 					>
-						<CalendarMonthOutline size="xl" class="me-2 text-gray-400" />
+						<CalendarMonthOutline
+							size="xl"
+							class={`me-2 ${isPastDue ? 'text-gray-400' : 'text-primary-600'}`}
+						/>
 
 						<div class="text-sm cursor-pointer">
 							<div class={`font-medium ${isPastDue ? 'text-gray-500' : 'text-primary-600'}`}>

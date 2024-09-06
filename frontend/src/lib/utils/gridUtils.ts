@@ -62,3 +62,24 @@ export function showColumn(gridApi: GridApi, headerName: string, show: boolean) 
 	const targetColumns = columns!.filter((col) => col.getColDef().headerName === headerName);
 	gridApi.setColumnsVisible(targetColumns, show);
 }
+
+export function moveColumnVisibilityKey(
+	obj: Record<string, any>,
+	key: string,
+	to: number
+): Record<string, any> {
+	const entries = Object.entries(obj);
+	const currentIndex = entries.findIndex(([k]) => k === key);
+
+	if (currentIndex < 0) {
+		throw new Error(`Key not found: ${key}`);
+	}
+	if (to < 0 || to >= entries.length || to === currentIndex) {
+		return obj;
+	}
+
+	const [movedEntry] = entries.splice(currentIndex, 1);
+	entries.splice(to, 0, movedEntry);
+
+	return Object.fromEntries(entries);
+}

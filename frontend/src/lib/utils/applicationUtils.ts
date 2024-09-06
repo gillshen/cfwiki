@@ -54,6 +54,10 @@ export function orderByStatus(a: ApplicationListItem, b: ApplicationListItem) {
 	return aStatusOrder - bStatusOrder;
 }
 
+export function orderByStatusDateDesc(a: ApplicationListItem, b: ApplicationListItem) {
+	return (b.latest_log?.date ?? '').localeCompare(a.latest_log?.date ?? '');
+}
+
 export function orderByType(a: ApplicationListItem, b: ApplicationListItem) {
 	return _typeOrdering[a.program.type] - _typeOrdering[b.program.type];
 }

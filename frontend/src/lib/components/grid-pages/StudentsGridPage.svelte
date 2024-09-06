@@ -9,7 +9,9 @@
 		type GridOptions,
 		type ValueFormatterParams,
 		type ValueGetterParams,
-		type ICellRendererParams
+		type ICellRendererParams,
+		type ColumnMovedEvent,
+		type ColumnVisibleEvent
 	} from 'ag-grid-community';
 
 	import type { ContractSummary, StudentListItem } from '$lib/api/student';
@@ -41,6 +43,7 @@
 		getGreOrGmat,
 		getSatOrAct,
 		localeComparator,
+		moveColumnVisibilityKey,
 		showColumn
 	} from '$lib/utils/gridUtils';
 
@@ -258,7 +261,9 @@
 		{ headerName: 'Duolingo', field: 'scores.best_duolingo', type: ['numeric', 'rightAligned'] }
 	];
 
-	const columnVisibility: Record<string, boolean> = {
+	let columnVisibility: Record<string, boolean>;
+
+	columnVisibility = {
 		Name: true,
 		'Target Year': !data.targetYear,
 		'Contract Type': !data.contractType,
@@ -325,6 +330,20 @@
 		for (const headerName in columnVisibility) {
 			showColumn(gridApi, headerName, columnVisibility[headerName]);
 		}
+
+		gridApi.addEventListener('columnMoved', (event: ColumnMovedEvent) => {
+			if (event.finished) {
+				const key: string = event.column?.getColDef().headerName!;
+				const toIndex: number = event.toIndex!;
+				columnVisibility = { ...moveColumnVisibilityKey(columnVisibility, key, toIndex) };
+			}
+		});
+
+		gridApi.addEventListener('columnVisible', (event: ColumnVisibleEvent) => {
+			const key: string = event.column?.getColDef().headerName!;
+			columnVisibility[key] = event.visible!;
+			columnVisibility = { ...columnVisibility };
+		});
 	});
 </script>
 

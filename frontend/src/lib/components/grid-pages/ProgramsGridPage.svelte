@@ -5,6 +5,8 @@
 
 	import {
 		createGrid,
+		type ColumnMovedEvent,
+		type ColumnVisibleEvent,
 		type GridApi,
 		type GridOptions,
 		type ICellRendererParams,
@@ -28,6 +30,7 @@
 		calcSuccessRate,
 		noZeroValueFormatter,
 		percentageValueFormatter,
+		moveColumnVisibilityKey,
 		showColumn
 	} from '$lib/utils/gridUtils';
 
@@ -120,7 +123,9 @@
 		}
 	];
 
-	const columnVisibility: Record<string, boolean> = {
+	let columnVisibility: Record<string, boolean>;
+
+	columnVisibility = {
 		Link: true,
 		Type: true,
 		School: true,
@@ -175,6 +180,20 @@
 		for (const headerName in columnVisibility) {
 			showColumn(gridApi, headerName, columnVisibility[headerName]);
 		}
+
+		gridApi.addEventListener('columnMoved', (event: ColumnMovedEvent) => {
+			if (event.finished) {
+				const key: string = event.column?.getColDef().headerName!;
+				const toIndex: number = event.toIndex!;
+				columnVisibility = { ...moveColumnVisibilityKey(columnVisibility, key, toIndex) };
+			}
+		});
+
+		gridApi.addEventListener('columnVisible', (event: ColumnVisibleEvent) => {
+			const key: string = event.column?.getColDef().headerName!;
+			columnVisibility[key] = event.visible!;
+			columnVisibility = { ...columnVisibility };
+		});
 	});
 </script>
 

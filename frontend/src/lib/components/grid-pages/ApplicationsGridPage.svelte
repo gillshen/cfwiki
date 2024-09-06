@@ -5,6 +5,8 @@
 
 	import {
 		createGrid,
+		type ColumnMovedEvent,
+		type ColumnVisibleEvent,
 		type GridApi,
 		type GridOptions,
 		type ICellRendererParams,
@@ -24,17 +26,23 @@
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
 	import { formatAlevelSummary, formatApSummary, formatIbSummary } from '$lib/utils/studentUtils';
-	import { compose, formatApplicationType } from '$lib/utils/applicationUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 	import { formatEnrollments } from '$lib/utils/enrollmentUtils';
 	import { formatGradeValue } from '$lib/utils/gradesUtils';
 	import { parseNum } from '$lib/utils/numUtils';
 
 	import {
+		compose,
+		formatApplicationType,
+		orderByStatusDateDesc
+	} from '$lib/utils/applicationUtils';
+
+	import {
 		getEnglishProficiency,
 		getGreOrGmat,
 		getSatOrAct,
 		localeComparator,
+		moveColumnVisibilityKey,
 		showColumn
 	} from '$lib/utils/gridUtils';
 
@@ -244,7 +252,9 @@
 		}
 	];
 
-	const columnVisibility: Record<string, boolean> = {
+	let columnVisibility: Record<string, boolean>;
+
+	columnVisibility = {
 		Link: true,
 		Year: !data.year,
 		Term: false,
@@ -296,7 +306,7 @@
 			return;
 		}
 
-		const rowData = compose(applications, applicants);
+		const rowData = compose(applications, applicants).sort((a, b) => orderByStatusDateDesc(a, b));
 
 		const gridOptions: GridOptions = {
 			defaultColDef: {
@@ -317,6 +327,20 @@
 		for (const headerName in columnVisibility) {
 			showColumn(gridApi, headerName, columnVisibility[headerName]);
 		}
+
+		gridApi.addEventListener('columnMoved', (event: ColumnMovedEvent) => {
+			if (event.finished) {
+				const key: string = event.column?.getColDef().headerName!;
+				const toIndex: number = event.toIndex!;
+				columnVisibility = { ...moveColumnVisibilityKey(columnVisibility, key, toIndex) };
+			}
+		});
+
+		gridApi.addEventListener('columnVisible', (event: ColumnVisibleEvent) => {
+			const key: string = event.column?.getColDef().headerName!;
+			columnVisibility[key] = event.visible!;
+			columnVisibility = { ...columnVisibility };
+		});
 	});
 </script>
 
