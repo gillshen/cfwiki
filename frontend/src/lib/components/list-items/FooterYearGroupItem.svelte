@@ -6,14 +6,15 @@
 </script>
 
 {#each years as year}
+	{@const path = `/data/${domain}/${year}`}
 	<Heading tag="h4" class="mt-3 text-sm font-medium text-primary-900">{year}</Heading>
 	<ul>
-		<li><a href={`/data/${domain}/${year}/freshman`}>UG Freshman</a></li>
-		<li><a href={`/data/${domain}/${year}/transfer`}>UG Transfer</a></li>
+		<li><a href={`${path}/freshman`} target="_self">UG Freshman</a></li>
+		<li><a href={`${path}/transfer`} target="_self">UG Transfer</a></li>
 		<li class="flex gap-1 items-baseline">
-			<a href={`/data/${domain}/${year}/graduate`}>Graduate</a>
+			<a href={`${path}/graduate`} target="_self">Graduate</a>
 			<span>|</span>
-			<a href={`/data/${domain}/${year}/other`}>Other</a>
+			<a href={`${path}/other`} target="_self">Other</a>
 		</li>
 	</ul>
 {/each}
