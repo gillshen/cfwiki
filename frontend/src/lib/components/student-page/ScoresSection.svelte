@@ -279,7 +279,7 @@
 <article class="mt-16">
 	<Heading tag="h2" class="section-title">Test Scores</Heading>
 
-	<div class="flex flex-col gap-6 -mt-4">
+	<div class="flex flex-col gap-6">
 		<GreSection
 			{student}
 			{canEdit}

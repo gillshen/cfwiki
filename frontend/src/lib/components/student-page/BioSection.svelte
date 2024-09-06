@@ -25,9 +25,9 @@
 		<Alert color="yellow" class="mb-4 flex gap-2">
 			<InfoCircleSolid />
 			<span>
-				This student has no contract associated with {pronoun} and consequently does not appear on any
-				CFer&rsquo;s page. If this is your student, please claim {pronoun} by adding a contract and then
-				adding yourself to the staff.
+				This student does not have any contract associated with {pronoun} and consequently does not appear
+				on any CFer&rsquo;s page. If this is your student, please claim {pronoun} by adding a contract
+				and then adding yourself as a staff member.
 			</span>
 		</Alert>
 	{:else if !student.contracts.filter((c) => !!c.services.length).length}

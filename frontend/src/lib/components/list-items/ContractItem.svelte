@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		type IndicatorColorType,
 		Card,
 		P,
 		A,
@@ -9,21 +10,27 @@
 		TableBody,
 		TableBodyCell,
 		TableBodyRow,
-		type IndicatorColorType
+		Tooltip
 	} from 'flowbite-svelte';
 
-	import { ArrowRightOutline } from 'flowbite-svelte-icons';
+	import { ArrowRightOutline, UsersOutline } from 'flowbite-svelte-icons';
 
 	import type { Contract } from '$lib/api/student';
 	import { toShortDate } from '$lib/utils/dateUtils';
 	import { isActive, orderByEndDateRole } from '$lib/utils/serviceUtils';
 
 	export let contract: Contract;
+	export let canEdit: boolean;
 
-	$: dateString =
-		contract.date && contract.student_progression_when_signed
-			? `${toShortDate(contract.date)} (${contract.student_progression_when_signed})`
-			: toShortDate(contract.date) || contract.student_progression_when_signed;
+	let dateString: string;
+
+	$: {
+		if (contract.date && contract.student_progression_when_signed) {
+			dateString = `${toShortDate(contract.date)} (${contract.student_progression_when_signed})`;
+		} else {
+			dateString = toShortDate(contract.date) || contract.student_progression_when_signed;
+		}
+	}
 
 	const setColor = (contractStatus: string): IndicatorColorType => {
 		switch (contractStatus) {
@@ -85,7 +92,7 @@
 					{/each}
 				</TableBody>
 			</Table>
-		{:else}
+		{:else if canEdit}
 			<A class="mt-5 text-sm" href={`/contract/${contract.id}`}>
 				Add staff<ArrowRightOutline class="ms-1" />
 			</A>
@@ -95,9 +102,10 @@
 	<div class="mt-8 flex gap-4 justify-between">
 		<slot />
 		{#if contract.services.length}
-			<A href={`/contract/${contract.id}`}>
-				<ArrowRightOutline />
+			<A href={`/contract/${contract.id}`} class="flex items-center">
+				<UsersOutline /><ArrowRightOutline />
 			</A>
+			<Tooltip>{canEdit ? 'Manage staff' : 'Staff details'}</Tooltip>
 		{/if}
 	</div>
 </Card>

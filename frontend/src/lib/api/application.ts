@@ -1,5 +1,5 @@
 import { get, post, patch, buildQuery, destroy } from '$lib/api/api';
-import type { ApplicationStatus, ApplicationLog } from '$lib/api/applicationLog';
+import type { ApplicationLog, ApplicationLogBrief } from '$lib/api/applicationLog';
 import type { ApSummary, IbSummary, AlevelSummary } from '$lib/api/student';
 import type { BaseGrade } from '$lib/api/grade';
 
@@ -23,7 +23,7 @@ export type ApplicationListItem = {
 	round_name: string;
 	due_date: string | null;
 	majors_or_track: string;
-	latest_log: { status: ApplicationStatus; date: string } | null;
+	logs: ApplicationLogBrief[];
 };
 
 export type ApplicantEnrollmentItem = {
@@ -67,7 +67,7 @@ export type ComposedApplicationListItem = {
 	round_name: string;
 	due_date: string | null;
 	majors_or_track: string;
-	latest_log: { status: ApplicationStatus; date: string } | null;
+	logs: ApplicationLogBrief[];
 };
 
 export type ApplicationDetail = {

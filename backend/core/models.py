@@ -218,42 +218,6 @@ class Application(models.Model):
         return f"{self.contract} > {self.round}"
 
     @classmethod
-    def q_related(cls):
-        return cls.objects.select_related(
-            "contract__student",
-            "round__program_iteration__program",
-        ).prefetch_related(
-            "contract__services__cfer",
-            "round__program_iteration__program__schools",
-            "logs",
-        )
-
-    @classmethod
-    def get_stats(cls, **kwargs):
-        q = cls.filter(cls.q_related(), **kwargs)
-
-        stats = {
-            "applied": q.count(),
-            "pending": 0,
-            "accepted": 0,
-            "denied": 0,
-            "neutral": 0,
-        }
-
-        if not stats["applied"]:
-            return stats
-
-        stats["pending"] = cls.get_pending(q).count()
-        if stats["pending"] == stats["applied"]:
-            return stats
-
-        stats["accepted"] = cls.get_accepted(q).count()
-        stats["denied"] = cls.get_denied(q).count()
-        stats["neutral"] = cls.get_neutral(q).count()
-
-        return stats
-
-    @classmethod
     def filter(
         cls,
         q,
@@ -354,7 +318,7 @@ class Application(models.Model):
     @classmethod
     def get_accepted(cls, queryset):
         return cls._annotate_with_latest_status(queryset).filter(
-            Q(latest_status="Accepted") | Q(latest_status="Enrolled")
+            latest_status="Accepted"
         )
 
     @classmethod

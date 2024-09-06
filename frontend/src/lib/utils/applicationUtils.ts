@@ -5,7 +5,12 @@ import type {
 	ApplicationType
 } from '$lib/api/application';
 
-import { applicationStatusOrder, type ApplicationStatus } from '$lib/api/applicationLog';
+import {
+	applicationStatusOrder,
+	type ApplicationStatus,
+	type ApplicationLogBrief
+} from '$lib/api/applicationLog';
+
 import { sortedSchoolNames } from '$lib/api/school';
 import { orderByRoundName as _orderByRoundName } from '$lib/utils/applicationRoundUtils';
 import { lexicalChineseLast } from '$lib/utils/stringUtils';
@@ -44,18 +49,71 @@ export function formatApplicationType(applicationType: ApplicationType | string)
 	}
 }
 
+export function getLatestLog(
+	application: ApplicationListItem | ComposedApplicationListItem
+): ApplicationLogBrief | null {
+	const numberOfLogs = application.logs.length;
+	if (!numberOfLogs) {
+		return null;
+	}
+	return application.logs[numberOfLogs - 1];
+}
+
+export function getNotableStatuses(
+	application: ApplicationListItem | ComposedApplicationListItem
+): ApplicationStatus[] {
+	return application.logs
+		.map((log) => log.status)
+		.filter(
+			(status) =>
+				status === 'Deferred' ||
+				status === 'On Waitlist' ||
+				status === 'Accepted' ||
+				status === 'Rejected' ||
+				status === 'Pres. Rejected' ||
+				status === 'Offer Rescinded' ||
+				status === 'Cancelled' ||
+				status === 'Withdrawn' ||
+				status === 'Untracked'
+		);
+}
+
+export function formatNotableStatuses(statuses: ApplicationStatus[]): string {
+	return statuses
+		.map((status, index) => {
+			// if 'Deferred' or 'On Waitlist' is not the latest status, use abbreviation
+			if (status === 'Deferred' && index < statuses.length - 1) {
+				console.log(statuses, status, index, index < statuses.length - 1);
+				return 'D';
+			}
+			if (status === 'On Waitlist' && index < statuses.length - 1) {
+				console.log(statuses, status, index, index < statuses.length - 1);
+				return 'W';
+			}
+			// else return the status as is
+			return status;
+		})
+		.join(' - ');
+}
+
+export function getNotableStatusesAsString(
+	application: ApplicationListItem | ComposedApplicationListItem
+): string {
+	return formatNotableStatuses(getNotableStatuses(application));
+}
+
 export function orderByRoundName(a: ApplicationListItem, b: ApplicationListItem) {
 	return _orderByRoundName(a.round_name, b.round_name);
 }
 
 export function orderByStatus(a: ApplicationListItem, b: ApplicationListItem) {
-	const aStatusOrder: number = applicationStatusOrder[a.latest_log?.status ?? ''] ?? -1;
-	const bStatusOrder: number = applicationStatusOrder[b.latest_log?.status ?? ''] ?? -1;
+	const aStatusOrder: number = applicationStatusOrder[getLatestLog(a)?.status ?? ''] ?? -1;
+	const bStatusOrder: number = applicationStatusOrder[getLatestLog(b)?.status ?? ''] ?? -1;
 	return aStatusOrder - bStatusOrder;
 }
 
 export function orderByStatusDateDesc(a: ApplicationListItem, b: ApplicationListItem) {
-	return (b.latest_log?.date ?? '').localeCompare(a.latest_log?.date ?? '');
+	return (getLatestLog(b)?.date ?? '').localeCompare(getLatestLog(a)?.date ?? '');
 }
 
 export function orderByType(a: ApplicationListItem, b: ApplicationListItem) {

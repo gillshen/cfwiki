@@ -308,19 +308,14 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     term = serializers.CharField()
     round_name = serializers.CharField()
     due_date = serializers.DateField()
-    latest_log = serializers.SerializerMethodField()
-    majors_or_track = serializers.CharField()
 
-    def get_latest_log(self, application):
-        logs = list(application.logs.all())
-        if not logs:
-            return
-        ordered = sorted(logs, key=lambda log: (log.date, log.updated), reverse=True)
-        latest_log = ordered[0]
-        return {
-            "status": latest_log.status,
-            "date": latest_log.date,
-        }
+    class ApplicationLogSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = ApplicationLog
+            fields = ["status", "date", "updated"]
+
+    logs = ApplicationLogSerializer(many=True)
+    majors_or_track = serializers.CharField()
 
 
 # for use in conjunction with ApplicationListSerializer

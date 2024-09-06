@@ -7,7 +7,6 @@ export const applicationStatusOrder: Record<string, number> = {
 	Deferred: 3,
 	'On Waitlist': 4,
 	Accepted: 5,
-	Enrolled: 6,
 	Rejected: 7,
 	'Pres. Rejected': 8,
 	'Offer Rescinded': 9,
@@ -18,14 +17,17 @@ export const applicationStatusOrder: Record<string, number> = {
 
 export const applicationStatuses: string[] = Object.keys(applicationStatusOrder);
 
-export type ApplicationStatus = (typeof applicationStatuses)[number];
+export type ApplicationStatus = keyof typeof applicationStatusOrder;
 
-export type ApplicationLog = {
-	id: number;
-	date: string;
+export type ApplicationLogBrief = {
 	status: ApplicationStatus;
-	comments: string;
+	date: string;
 	updated: string;
+};
+
+export type ApplicationLog = ApplicationLogBrief & {
+	id: number;
+	comments: string;
 };
 
 export async function createOrUpdateApplicationLog(data: any) {

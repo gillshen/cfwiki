@@ -18,15 +18,13 @@
 </script>
 
 <Drawer transitionType="fly" {transitionParams} bind:hidden={$hideControl} class="m-0 p-0">
-	<div
-		class="fixed top-0 left-0 w-[320px] h-[60px] pl-6 pr-2 bg-white/70 backdrop-blur-md shadow-sm z-50 flex items-center"
-	>
+	<div class="fixed top-0 left-0 w-[320px] h-[60px] pl-6 pr-2 shadow-sm z-50 flex items-center">
 		<Heading tag="h3" class="text-base font-semibold">Show or Hide Columns</Heading>
 		<CloseButton on:click={() => hideControl.set(true)} />
 	</div>
 
 	<div
-		class="flex flex-col gap-3 translate-y-[60px] max-h-[calc(100vh-60px)] overflow-y-scroll py-4 px-6"
+		class="flex flex-col gap-3 translate-y-[60px] max-h-[calc(100vh-60px)] overflow-y-scroll pt-4 pb-6 px-6"
 	>
 		{#each Object.keys(columnVisibility) as headerName}
 			<Checkbox

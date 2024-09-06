@@ -12,11 +12,10 @@
 	import ContractForm from '$lib/components/contract-form/ContractForm.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
-	import { canEditContract } from '$lib/utils/userUtils';
+	import { canEditContract, canEditStudent } from '$lib/utils/userUtils';
 
 	export let student: StudentDetail;
 	export let username: string;
-	export let canEdit: boolean = false;
 	export let form: SuperValidated<any>;
 	export let deleteForm: SuperValidated<any>;
 
@@ -30,14 +29,17 @@
 			contractModal = true;
 		};
 	};
+
+	$: canAddContract = canEditStudent(username, student);
 </script>
 
 <article class="bg-stone-50 rounded-xl w-full h-fit p-6">
 	{#if student.contracts.length}
 		<div class="grid grid-cols-2 gap-6 mb-6">
 			{#each student.contracts as contract}
-				<ContractItem {contract}>
-					{#if canEditContract(username, contract)}
+				{@const canEdit = canEditContract(username, contract)}
+				<ContractItem {contract} {canEdit}>
+					{#if canEdit}
 						<UpdateDeleteButton
 							updateAction={contractModalOpener(contract)}
 							deleteAction={() => {
@@ -49,13 +51,13 @@
 				</ContractItem>
 			{/each}
 		</div>
-		{#if canEdit}
+		{#if canAddContract}
 			<LinkButton text="Add a contract" action={contractModalOpener()}>
 				<PlusOutline slot="icon" />
 			</LinkButton>
 		{/if}
 	{:else}
-		<Button on:click={contractModalOpener()} outline>Add a contract</Button>
+		<Button on:click={contractModalOpener()}>Add a contract</Button>
 	{/if}
 </article>
 

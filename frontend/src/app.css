@@ -134,8 +134,7 @@ div[role='tabpanel'] {
 .status-on-waitlist {
 	@apply text-purple-500;
 }
-.status-accepted,
-.status-enrolled {
+.status-accepted {
 	@apply text-green-500;
 }
 .status-rejected,

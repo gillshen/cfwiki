@@ -34,6 +34,8 @@
 	import {
 		compose,
 		formatApplicationType,
+		getLatestLog,
+		getNotableStatusesAsString,
 		orderByStatusDateDesc
 	} from '$lib/utils/applicationUtils';
 
@@ -146,6 +148,14 @@
 		return getEnglishProficiency(params.data.student.scores);
 	}
 
+	function statusValueGetter(params: ValueGetterParams): string {
+		return getNotableStatusesAsString(params.data);
+	}
+
+	function statusDateValueGetter(params: ValueGetterParams): string {
+		return getLatestLog(params.data)?.date ?? '';
+	}
+
 	const columnTypes = {
 		numeric: {
 			filter: 'agNumberColumnFilter'
@@ -240,15 +250,15 @@
 		{ headerName: 'Due', field: 'due_date', flex: 1.5 },
 		{
 			headerName: 'Status',
-			field: 'latest_log.status',
+			valueGetter: statusValueGetter,
 			cellRenderer: StatusRenderer,
 			headerTooltip: 'Latest status of the application'
 		},
 		{
-			headerName: 'Last Update',
-			field: 'latest_log.date',
+			headerName: 'Last Updated',
+			valueGetter: statusDateValueGetter,
 			flex: 1.5,
-			headerTooltip: 'The (approximate) date when the application assumed its latest status'
+			headerTooltip: 'Date of the latest status'
 		}
 	];
 
@@ -286,7 +296,7 @@
 		'Adm. Plan': true,
 		Due: true,
 		Status: true,
-		'Last Update': false
+		'Last Updated': false
 	};
 
 	let gridApi: GridApi;

@@ -38,7 +38,8 @@
 		orderByType,
 		orderByStudentName,
 		orderByRoundName,
-		orderBySchoolName
+		orderBySchoolName,
+		getLatestLog
 	} from '$lib/utils/applicationUtils';
 
 	export let data: {
@@ -117,10 +118,12 @@
 									.sort(orderByType)
 									.sort(orderByDueDate)
 									.sort(orderByStatus) as appl}
+									{@const latestStatus = getLatestLog(appl)?.status}
+
 									<TableBodyRow>
 										<ApplicationLink application={appl} />
 										<ProgramType application={appl} />
-										{#if appl.latest_log && appl.latest_log.status !== 'Started'}
+										{#if latestStatus && latestStatus !== 'Started'}
 											<ApplicationStatus application={appl} />
 										{:else}
 											<ShortDate date={appl.due_date} />

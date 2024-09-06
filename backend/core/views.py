@@ -37,7 +37,7 @@ from core.serializers import (
 )
 
 _PENDING = ["Started", "Submitted", "Under Review", "Deferred", "On Waitlist"]
-_ACCEPTED = ["Accepted", "Enrolled"]
+_ACCEPTED = ["Accepted"]
 _DENIED = ["Rejected", "Pres. Rejected", "Offer Rescinded"]
 _NEUTRAL = ["Cancelled", "Withdrawn", "Untracked"]
 
@@ -184,8 +184,17 @@ class ApplicationListView(ListAPIView):
     def get_queryset(self):
         query_params = self.request.query_params
 
+        q = Application.objects.select_related(
+            "contract__student",
+            "round__program_iteration__program",
+        ).prefetch_related(
+            "contract__services__cfer",
+            "round__program_iteration__program__schools",
+            "logs",
+        )
+
         return Application.filter(
-            Application.q_related(),
+            q,
             student=query_params.get("student"),
             cfer=query_params.get("cfer"),
             school=query_params.get("school"),
