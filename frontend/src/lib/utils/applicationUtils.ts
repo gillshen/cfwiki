@@ -62,23 +62,24 @@ export function getLatestLog(
 	return logsOrderedByDateDesc[0];
 }
 
+function isIgnorable(status: ApplicationStatus) {
+	return status === 'Started' || status === 'Submitted' || status === 'Under Review';
+}
+
 export function getNotableStatuses(
 	application: ApplicationListItem | ComposedApplicationListItem
 ): ApplicationStatus[] {
-	return application.logs
-		.map((log) => log.status)
-		.filter(
-			(status) =>
-				status === 'Deferred' ||
-				status === 'On Waitlist' ||
-				status === 'Accepted' ||
-				status === 'Rejected' ||
-				status === 'Pres. Rejected' ||
-				status === 'Offer Rescinded' ||
-				status === 'Cancelled' ||
-				status === 'Withdrawn' ||
-				status === 'Untracked'
-		);
+	const statuses = application.logs
+		.sort((a, b) => a.date.localeCompare(b.date) || a.updated.localeCompare(b.updated))
+		.map((log) => log.status);
+
+	const notableStatuses = statuses.filter((status) => !isIgnorable(status));
+
+	if (notableStatuses.length) {
+		return notableStatuses;
+	} else {
+		return statuses.slice(statuses.length - 1);
+	}
 }
 
 export function formatNotableStatuses(statuses: ApplicationStatus[]): string {
@@ -91,18 +92,12 @@ export function formatNotableStatuses(statuses: ApplicationStatus[]): string {
 			}
 			if (status === 'On Waitlist' && index < statuses.length - 1) {
 				console.log(statuses, status, index, index < statuses.length - 1);
-				return 'W';
+				return 'WL';
 			}
 			// else return the status as is
 			return status;
 		})
 		.join(' - ');
-}
-
-export function getNotableStatusesAsString(
-	application: ApplicationListItem | ComposedApplicationListItem
-): string {
-	return formatNotableStatuses(getNotableStatuses(application));
 }
 
 export function orderByRoundName(a: ApplicationListItem, b: ApplicationListItem) {

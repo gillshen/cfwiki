@@ -34,8 +34,9 @@
 	import {
 		compose,
 		formatApplicationType,
+		formatNotableStatuses,
 		getLatestLog,
-		getNotableStatusesAsString,
+		getNotableStatuses,
 		orderByStatusDateDesc
 	} from '$lib/utils/applicationUtils';
 
@@ -149,7 +150,7 @@
 	}
 
 	function statusValueGetter(params: ValueGetterParams): string {
-		return getNotableStatusesAsString(params.data);
+		return formatNotableStatuses(getNotableStatuses(params.data));
 	}
 
 	function statusDateValueGetter(params: ValueGetterParams): string {
@@ -252,6 +253,7 @@
 			headerName: 'Status',
 			valueGetter: statusValueGetter,
 			cellRenderer: StatusRenderer,
+			flex: 1.2,
 			headerTooltip: 'Latest status of the application'
 		},
 		{

@@ -28,6 +28,7 @@
 	const neutralData = labels.map((key) => aggregatedData[key].neutral);
 
 	let statsChart: any;
+	const chartWidth = Math.max(500, 200 * labels.length);
 
 	const stacked = false;
 	const barPercentage = 0.8;
@@ -108,9 +109,9 @@
 	{title}
 </Heading>
 
-<canvas bind:this={statsChart} width="600" height="360" />
+<canvas bind:this={statsChart} width={chartWidth} height="360" />
 
-<Table divClass="max-w-[600px] w-[360px] mt-6">
+<Table divClass="max-w-[600px] w-[360px] mt-4 ml-3">
 	<TableHead>
 		<TableHeadCell class="pl-0">Sub-group</TableHeadCell>
 		<TableHeadCell class="text-right">Total</TableHeadCell>
