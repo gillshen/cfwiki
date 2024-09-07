@@ -12,6 +12,7 @@ import {
 } from '$lib/api/applicationLog';
 
 import { sortedSchoolNames } from '$lib/api/school';
+import { blankStats, type ApplicationDataPoint, type ApplicationStats } from '$lib/api/stats';
 import { orderByRoundName as _orderByRoundName } from '$lib/utils/applicationRoundUtils';
 import { lexicalChineseLast } from '$lib/utils/stringUtils';
 
@@ -52,11 +53,13 @@ export function formatApplicationType(applicationType: ApplicationType | string)
 export function getLatestLog(
 	application: ApplicationListItem | ComposedApplicationListItem
 ): ApplicationLogBrief | null {
-	const numberOfLogs = application.logs.length;
-	if (!numberOfLogs) {
+	if (!application.logs.length) {
 		return null;
 	}
-	return application.logs[numberOfLogs - 1];
+	const logsOrderedByDateDesc = application.logs.sort(
+		(a, b) => b.date.localeCompare(a.date) || b.updated.localeCompare(a.updated)
+	);
+	return logsOrderedByDateDesc[0];
 }
 
 export function getNotableStatuses(
@@ -190,6 +193,116 @@ export function groupByType(
 		sortedGroups[key] = grouped[key];
 	}
 	return sortedGroups;
+}
+
+function toDataPoint(application: ComposedApplicationListItem): ApplicationDataPoint {
+	let status: 'pending' | 'accepted' | 'denied' | 'neutral';
+
+	const latestStatus = getLatestLog(application)?.status;
+
+	switch (latestStatus) {
+		case 'Accepted':
+			status = 'accepted';
+			break;
+		case 'Rejected':
+		case 'Pres. Rejected':
+		case 'Offer Rescinded':
+			status = 'denied';
+			break;
+		case 'Cancelled':
+		case 'Withdrawn':
+		case 'Untracked':
+			status = 'neutral';
+			break;
+		default:
+			status = 'pending';
+	}
+
+	return {
+		gender: application.student.gender,
+		year: application.year,
+		round_name: application.round_name,
+		status
+	};
+}
+
+function toDataPoints(applications: ComposedApplicationListItem[]): ApplicationDataPoint[] {
+	return applications.map((appl) => toDataPoint(appl));
+}
+
+function aggregateDataPointsByYear(
+	dataPoints: ApplicationDataPoint[]
+): Record<number, ApplicationStats> {
+	const statsByYear: Record<string, ApplicationStats> = {};
+
+	for (const dataPoint of dataPoints) {
+		const year = dataPoint.year.toString();
+
+		if (!(year in statsByYear)) {
+			statsByYear[year] = { ...blankStats };
+		}
+		statsByYear[year].applied++;
+		statsByYear[year][dataPoint.status]++;
+	}
+
+	return statsByYear;
+}
+
+function aggregateDataPointsByGender(
+	dataPoints: ApplicationDataPoint[]
+): Record<number, ApplicationStats> {
+	const statsByGender: Record<string, ApplicationStats> = {
+		female: { ...blankStats },
+		male: { ...blankStats }
+	};
+
+	for (const dataPoint of dataPoints) {
+		const { gender } = dataPoint;
+
+		if (!(gender in statsByGender)) {
+			statsByGender[gender] = { ...blankStats };
+		}
+		statsByGender[gender].applied++;
+		statsByGender[gender][dataPoint.status]++;
+	}
+
+	return statsByGender;
+}
+
+function aggregateDataPointsByApplicationRound(
+	dataPoints: ApplicationDataPoint[]
+): Record<number, ApplicationStats> {
+	const statsByGender: Record<string, ApplicationStats> = {};
+
+	for (const dataPoint of dataPoints) {
+		const round = dataPoint.round_name;
+
+		if (!(round in statsByGender)) {
+			statsByGender[round] = { ...blankStats };
+		}
+		statsByGender[round].applied++;
+		statsByGender[round][dataPoint.status]++;
+	}
+
+	return statsByGender;
+}
+
+export function getStatsByYear(
+	applications: ComposedApplicationListItem[]
+): Record<string, ApplicationStats> {
+	return aggregateDataPointsByYear(toDataPoints(applications));
+}
+
+export function getStatsByGender(
+	applications: ComposedApplicationListItem[]
+): Record<string, ApplicationStats> {
+	return aggregateDataPointsByGender(toDataPoints(applications));
+}
+
+export function getStatsByApplicationRound(
+	applications: ComposedApplicationListItem[]
+): Record<string, ApplicationStats> {
+	return aggregateDataPointsByApplicationRound(toDataPoints(applications));
 }
 
 export function statusToClass(status: ApplicationStatus | null | undefined): string {

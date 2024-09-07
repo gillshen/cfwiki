@@ -25,9 +25,9 @@
 	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
 	import { compose, formatSchoolNames } from '$lib/utils/programUtils';
 	import { lexicalChineseLast } from '$lib/utils/stringUtils';
+	import { calcSuccessRate } from '$lib/utils/numUtils';
 
 	import {
-		calcSuccessRate,
 		noZeroValueFormatter,
 		percentageValueFormatter,
 		moveColumnVisibilityKey,

@@ -26,10 +26,10 @@
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
 	import { compose } from '$lib/utils/schoolUtils';
 	import { lexicalChineseLast } from '$lib/utils/stringUtils';
+	import { calcSuccessRate } from '$lib/utils/numUtils';
 
 	import {
 		localeComparator,
-		calcSuccessRate,
 		noZeroValueFormatter,
 		percentageValueFormatter,
 		moveColumnVisibilityKey,

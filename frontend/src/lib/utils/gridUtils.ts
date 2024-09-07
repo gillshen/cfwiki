@@ -22,15 +22,6 @@ export function percentageValueFormatter(params: ValueFormatterParams): string {
 	}
 }
 
-export function calcSuccessRate(data: { accepted: number; denied: number }): number | null {
-	const { accepted, denied } = data;
-	if (accepted + denied === 0) {
-		return null;
-	} else {
-		return accepted / (accepted + denied);
-	}
-}
-
 export function getSatOrAct(data: { super_sat?: number; super_act?: number }): string {
 	const { super_sat, super_act } = data;
 	const satString = super_sat !== undefined ? `SAT ${super_sat}` : '';

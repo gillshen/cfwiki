@@ -1,12 +1,12 @@
 import type { ComposedSchoolListItem, School, SchoolStats } from '$lib/api/school';
-import { lackOfStats } from '$lib/api/stats';
+import { blankStats } from '$lib/api/stats';
 
 export function compose(schools: School[], stats: SchoolStats[]): ComposedSchoolListItem[] {
 	return schools.map((school) => {
 		const statsItem = stats.find((s) => s.school_id === school.id);
 
 		if (statsItem === undefined) {
-			return { ...school, ug_stats: lackOfStats, grad_stats: lackOfStats };
+			return { ...school, ug_stats: blankStats, grad_stats: blankStats };
 		}
 
 		const ug_stats = {

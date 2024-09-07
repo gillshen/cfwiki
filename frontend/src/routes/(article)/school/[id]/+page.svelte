@@ -6,7 +6,7 @@
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import SchoolInfobox from '$lib/components/infobox/SchoolInfobox.svelte';
 	import ProgramsListBox from '$lib/components/program-page/ProgramsListBox.svelte';
-	import ApplicationStatsDisplay from '$lib/components/application-stats/ApplicationStatsDisplay.svelte';
+	import ApplicationStatsDoughnut from '$lib/components/application-stats/ApplicationStatsDoughnut.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
@@ -67,7 +67,7 @@
 				{#await data.stats}
 					<WidgetPlaceholder />
 				{:then stats}
-					<ApplicationStatsDisplay
+					<ApplicationStatsDoughnut
 						stats={{
 							applied: stats[0].ug_applied,
 							pending: stats[0].ug_pending,
@@ -84,7 +84,7 @@
 				{#await data.stats}
 					<WidgetPlaceholder />
 				{:then stats}
-					<ApplicationStatsDisplay
+					<ApplicationStatsDoughnut
 						stats={{
 							applied: stats[0].grad_applied,
 							pending: stats[0].grad_pending,

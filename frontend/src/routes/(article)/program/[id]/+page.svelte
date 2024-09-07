@@ -6,7 +6,7 @@
 	import Main from '$lib/components/containers/Main.svelte';
 	import ProgramInfobox from '$lib/components/infobox/ProgramInfobox.svelte';
 	import ApplicationRoundsBox from '$lib/components/program-page/ApplicationRoundsBox.svelte';
-	import ApplicationStatsDisplay from '$lib/components/application-stats/ApplicationStatsDisplay.svelte';
+	import ApplicationStatsDoughnut from '$lib/components/application-stats/ApplicationStatsDoughnut.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import ApplicationsAccordian from '$lib/components/containers/ApplicationsAccordian.svelte';
 	import ApplicationsTable from '$lib/components/program-page/ApplicationsTable.svelte';
@@ -21,7 +21,7 @@
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { formatSchoolNamesShort, isUndergraduate } from '$lib/utils/programUtils';
 	import { groupByYear } from '$lib/utils/applicationUtils';
-	import { lackOfStats } from '$lib/api/stats';
+	import { blankStats } from '$lib/api/stats';
 
 	export let data;
 
@@ -86,7 +86,10 @@
 		{#await data.statsItems}
 			<WidgetPlaceholder />
 		{:then statsItems}
-			<ApplicationStatsDisplay stats={statsItems[0] ?? lackOfStats} />
+			<ApplicationStatsDoughnut
+				stats={statsItems[0] ?? blankStats}
+				href={`/program/${data.program.id}/stats`}
+			/>
 		{/await}
 	</article>
 

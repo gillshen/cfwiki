@@ -5,6 +5,7 @@
 		Card,
 		Heading,
 		P,
+		A,
 		Table,
 		TableBody,
 		TableBodyCell,
@@ -12,14 +13,16 @@
 		Tooltip
 	} from 'flowbite-svelte';
 
-	import { QuestionCircleOutline } from 'flowbite-svelte-icons';
+	import { QuestionCircleOutline, ArrowRightOutline } from 'flowbite-svelte-icons';
 	import Chart from 'chart.js/auto';
 
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import type { ApplicationStats } from '$lib/api/stats';
+	import { getSuccessRateAsPercentage } from '$lib/utils/numUtils';
 
 	export let stats: ApplicationStats;
-	export let title: string = 'Application statistics';
+	export let title: string = 'Application Statistics';
+	export let href: string = '';
 
 	let statsChart: any;
 
@@ -43,11 +46,6 @@
 
 	const chartOptions = {
 		responsive: false
-	};
-
-	const formatSuccessRate = () => {
-		const rate = (stats.accepted * 100) / (stats.accepted + stats.denied);
-		return rate.toFixed(1);
 	};
 
 	const tableRows = [
@@ -75,8 +73,11 @@
 	});
 </script>
 
-<Heading tag="h2" class="section-title flex-title">
-	{title}
+<Heading tag="h2" class="section-title flex-title flex items-center justify-between">
+	<span>{title}</span>
+	{#if href}
+		<A {href} class="text-sm font-medium">More stats<ArrowRightOutline class="ms-1" /></A>
+	{/if}
 </Heading>
 
 {#if stats.applied}
@@ -89,7 +90,7 @@
 			<hr class="mt-6 mb-4" />
 			<div class="flex items-baseline gap-1">
 				{#if stats.accepted + stats.denied}
-					<P size="4xl" weight="medium">{formatSuccessRate()}</P>
+					<P size="4xl" weight="medium">{getSuccessRateAsPercentage(stats)}</P>
 					<P size="xl" weight="medium">%</P>
 				{:else}
 					<P size="4xl" weight="medium" color="text-gray-400">N/A</P>

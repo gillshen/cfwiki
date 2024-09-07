@@ -16,3 +16,23 @@ export function parseNum(input: string | number): number {
 	}
 	return parsed;
 }
+
+export function calcSuccessRate(data: { accepted: number; denied: number }): number | null {
+	const { accepted, denied } = data;
+	if (accepted + denied === 0) {
+		return null;
+	} else {
+		return accepted / (accepted + denied);
+	}
+}
+
+export const getSuccessRateAsPercentage = (data: {
+	accepted: number;
+	denied: number;
+}): string | null => {
+	if (data.accepted + data.denied === 0) {
+		return null;
+	}
+	const rate = (data.accepted * 100) / (data.accepted + data.denied);
+	return rate.toFixed(1);
+};

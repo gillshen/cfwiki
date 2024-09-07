@@ -8,14 +8,14 @@ import type {
 } from '$lib/api/program';
 
 import { orderByName as _orderByName } from '$lib/api/school';
-import { lackOfStats } from '$lib/api/stats';
+import { blankStats } from '$lib/api/stats';
 
 export function compose(
 	programs: ProgramListItem[],
 	stats: ProgramStats[]
 ): ComposedProgramListItem[] {
 	return programs.map((program) => {
-		const statsItem = stats.find((s) => s.program_id === program.id) ?? lackOfStats;
+		const statsItem = stats.find((s) => s.program_id === program.id) ?? blankStats;
 		return { ...program, stats: statsItem };
 	});
 }
