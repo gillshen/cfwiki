@@ -37,6 +37,9 @@ from target.views import (
     ProgramCreateView,
     ProgramRUDView,
     ProgramCollectionListView,
+    ProgramCollectionDetailView,
+    ProgramCollectionCreateView,
+    ProgramCollectionRUDView,
     ApplicationRoundListView,
     ApplicationRoundDetailView,
     ApplicationRoundCreateView,
@@ -106,6 +109,9 @@ urlpatterns = [
     path("programs/<int:pk>/update/", ProgramRUDView.as_view()),
     # program collections
     path("collections/", ProgramCollectionListView.as_view()),
+    path("collections/<int:pk>/", ProgramCollectionDetailView.as_view()),
+    path("collections/new/", ProgramCollectionCreateView.as_view()),
+    path("collections/<int:pk>/update/", ProgramCollectionRUDView.as_view()),
     # application round
     path("application-rounds/", ApplicationRoundListView.as_view()),
     path("application-rounds/new/", ApplicationRoundCreateView.as_view()),

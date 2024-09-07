@@ -13,7 +13,8 @@ from target.serializers import (
     ProgramSerializer,
     ProgramCreateSerializer,
     ProgramCRUDSerializer,
-    ProgramGroupSerializer,
+    ProgramCollectionSerializer,
+    ProgramCollectionCRUDSerializer,
     ApplicationRoundSerializer,
     ApplicationRoundRUDSerializer,
     ApplicationRoundCreateSerializer,
@@ -72,8 +73,26 @@ class ProgramRUDView(RetrieveUpdateDestroyAPIView):
 
 
 class ProgramCollectionListView(ListAPIView):
-    queryset = ProgramCollection.objects.prefetch_related("programs").all()
-    serializer_class = ProgramGroupSerializer
+    queryset = ProgramCollection.objects.prefetch_related(
+        "created_by",
+        "programs__schools",
+    )
+    serializer_class = ProgramCollectionSerializer
+
+
+class ProgramCollectionDetailView(RetrieveAPIView):
+    queryset = ProgramCollection.objects.all()
+    serializer_class = ProgramCollectionSerializer
+
+
+class ProgramCollectionCreateView(CreateAPIView):
+    queryset = ProgramCollection.objects.all()
+    serializer_class = ProgramCollectionCRUDSerializer
+
+
+class ProgramCollectionRUDView(RetrieveUpdateDestroyAPIView):
+    queryset = ProgramCollection.objects.all()
+    serializer_class = ProgramCollectionCRUDSerializer
 
 
 class ApplicationRoundListView(ListAPIView):

@@ -225,6 +225,17 @@ function toDataPoints(applications: ComposedApplicationListItem[]): ApplicationD
 	return applications.map((appl) => toDataPoint(appl));
 }
 
+function aggregateDataPoints(dataPoints: ApplicationDataPoint[]): ApplicationStats {
+	const stats: ApplicationStats = blankStats;
+
+	for (const dataPoint of dataPoints) {
+		stats.applied++;
+		stats[dataPoint.status]++;
+	}
+
+	return stats;
+}
+
 function aggregateDataPointsByYear(
 	dataPoints: ApplicationDataPoint[]
 ): Record<number, ApplicationStats> {
@@ -280,6 +291,10 @@ function aggregateDataPointsByApplicationRound(
 	}
 
 	return statsByGender;
+}
+
+export function getStats(applications: ComposedApplicationListItem[]): ApplicationStats {
+	return aggregateDataPoints(toDataPoints(applications));
 }
 
 export function getStatsByYear(

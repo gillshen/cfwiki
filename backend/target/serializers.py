@@ -66,12 +66,22 @@ class ProgramCRUDSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ProgramGroupSerializer(serializers.ModelSerializer):
+class ProgramCollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProgramCollection
         fields = "__all__"
 
     programs = ProgramSerializer(many=True)
+    creator_name = serializers.SerializerMethodField()
+
+    def get_creator_name(self, obj):
+        return obj.created_by.username
+
+
+class ProgramCollectionCRUDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProgramCollection
+        fields = "__all__"
 
 
 class ApplicationRoundSerializer(serializers.ModelSerializer):

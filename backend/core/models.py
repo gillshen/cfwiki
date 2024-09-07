@@ -225,6 +225,7 @@ class Application(models.Model):
         cfer: int = None,
         school: int = None,
         program: int = None,
+        programs: list = None,
         program_iteration: int = None,
         year: int = None,
         application_type: str = None,
@@ -238,6 +239,9 @@ class Application(models.Model):
             q = q.filter(round__program_iteration__program__schools=school)
         if program is not None:
             q = q.filter(round__program_iteration__program=program)
+        if programs is not None:
+            programs_list = [int(pk) for pk in programs.split(",")]
+            q = q.filter(round__program_iteration__program__in=programs_list)
         if program_iteration is not None:
             q = q.filter(round__program_iteration=program_iteration)
         if year is not None:

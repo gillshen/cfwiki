@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Chart from 'chart.js/auto';
 
 	import {
 		Heading,
@@ -14,6 +13,7 @@
 	} from 'flowbite-svelte';
 
 	import { QuestionCircleOutline } from 'flowbite-svelte-icons';
+	import Chart from 'chart.js/auto';
 
 	import type { ApplicationStats } from '$lib/api/stats';
 	import { getSuccessRateAsPercentage } from '$lib/utils/numUtils';
@@ -85,11 +85,19 @@
 		responsive: false,
 
 		scales: {
-			x: { stacked },
+			x: {
+				stacked,
+				grid: {
+					display: false // remove grid lines on the x-axis
+				}
+			},
 			y: {
 				stacked,
 				beginAtZero: true,
-				grace: 2
+				grace: 2,
+				grid: {
+					display: false // remove grid lines on the y-axis
+				}
 			}
 		}
 	};

@@ -192,6 +192,12 @@
 					<DropdownItem href="/data/programs/non-degree" class="dropdown-link">
 						Non-degree Programs
 					</DropdownItem>
+
+					<DropdownDivider />
+
+					<DropdownItem href="/collection/index" class="dropdown-link">
+						Program Collections
+					</DropdownItem>
 				</Dropdown>
 			</NavUl>
 		</Navbar>
@@ -242,9 +248,7 @@
 			<ul class="mt-3">
 				<li><a href="/data/students/current">Current Students</a></li>
 				<li><a href="/data/students/all">All Students</a></li>
-				<li>
-					<Button href="/student/new" outline class="footer-button mt-2">Create New</Button>
-				</li>
+				<li class="mt-2"><a href="/student/new">Create New</a></li>
 			</ul>
 		</article>
 
@@ -263,9 +267,7 @@
 				<li><a href="/data/schools/universities">Universities</a></li>
 				<li><a href="/data/schools/secondary-schools">Secondary Schools</a></li>
 				<li><a href="/data/schools/other-institutions">Other Institutions</a></li>
-				<li>
-					<Button href="/school/new" outline class="footer-button mt-2">Create New</Button>
-				</li>
+				<li class="mt-2"><a href="/school/new">Create New</a></li>
 			</ul>
 
 			<Heading tag="h3" class="mt-8 text-lg font-medium">Programs</Heading>
@@ -273,6 +275,7 @@
 				<li><a href="/data/programs/undergraduate">Undergraduate</a></li>
 				<li><a href="/data/programs/graduate">Graduate</a></li>
 				<li><a href="/data/programs/non-degree">Non-degree</a></li>
+				<li class="mt-2"><a href="/collection/index">Program Collections</a></li>
 			</ul>
 		</article>
 	</div>

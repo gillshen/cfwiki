@@ -199,6 +199,7 @@ class ApplicationListView(ListAPIView):
             cfer=query_params.get("cfer"),
             school=query_params.get("school"),
             program=query_params.get("program"),
+            programs=query_params.get("programs"),
             program_iteration=query_params.get("program_iteration"),
             year=query_params.get("year"),
             application_type=query_params.get("application_type"),
