@@ -1,7 +1,7 @@
 from django.contrib import admin
 from target.models import (
     School,
-    ProgramGroup,
+    ProgramCollection,
     Program,
     ProgramIteration,
     ApplicationRound,
@@ -13,7 +13,7 @@ class SchoolAdmin(admin.ModelAdmin):
     list_display = "id", "type", "name", "alt_name", "country"
 
 
-@admin.register(ProgramGroup)
+@admin.register(ProgramCollection)
 class ProgramGroupAdmin(admin.ModelAdmin):
     list_display = "id", "name"
 

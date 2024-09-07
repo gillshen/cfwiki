@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 from django.db import IntegrityError
 from target.models import (
     School,
-    ProgramGroup,
+    ProgramCollection,
     Program,
     ProgramIteration,
     ApplicationRound,
@@ -31,7 +31,7 @@ class SchoolCRUDSerializer(serializers.ModelSerializer):
 class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
-        exclude = ["groups"]
+        exclude = ["collections"]
 
     class SchoolSerializer(serializers.ModelSerializer):
         class Meta:
@@ -68,7 +68,7 @@ class ProgramCRUDSerializer(serializers.ModelSerializer):
 
 class ProgramGroupSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProgramGroup
+        model = ProgramCollection
         fields = "__all__"
 
     programs = ProgramSerializer(many=True)

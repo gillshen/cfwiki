@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.db.models.functions import Lower
+from django.core.exceptions import ValidationError
 
 
 class School(models.Model):
@@ -42,15 +43,42 @@ class School(models.Model):
         return q
 
 
-class ProgramGroup(models.Model):
+class ProgramCollection(models.Model):
     name = models.CharField(max_length=100)
+    is_public = models.BooleanField(default=False)
+    created_by = models.ForeignKey(to="core.CFUser", on_delete=models.CASCADE)
 
-    constraints = [
-        models.UniqueConstraint(Lower("name"), name="programfamily_unique_name")
-    ]
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                Lower("name"),
+                condition=models.Q(is_public=True),
+                name="programcollection_public_unique_name",
+            ),
+            models.UniqueConstraint(
+                Lower("name"),
+                "created_by",
+                condition=models.Q(is_public=False),
+                name="programcollection_private_unique_name_createdby",
+            ),
+        ]
 
     def __str__(self) -> str:
         return self.name
+
+    def save(self, **kwargs):
+        self.full_clean()
+        super().save(**kwargs)
+
+    def clean(self) -> None:
+        super().clean()
+
+        # Prevent duplication of names already used by public collections
+        same_name_public = models.Q(name=self.name, is_public=True)
+        if ProgramCollection.objects.filter(same_name_public).exists():
+            raise ValidationError(
+                f"Name already used by a public collection: {self.name!r}"
+            )
 
 
 class Program(models.Model):
@@ -64,7 +92,9 @@ class Program(models.Model):
     degree = models.CharField(max_length=100, blank=True)
     is_defunct = models.BooleanField(default=False)
 
-    groups = models.ManyToManyField(ProgramGroup, related_name="programs", blank=True)
+    collections = models.ManyToManyField(
+        ProgramCollection, related_name="programs", blank=True
+    )
 
     def __str__(self) -> str:
         school_names = " + ".join(s.name for s in self.schools.all())
