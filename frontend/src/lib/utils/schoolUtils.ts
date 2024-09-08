@@ -6,7 +6,7 @@ export function compose(schools: School[], stats: SchoolStats[]): ComposedSchool
 		const statsItem = stats.find((s) => s.school_id === school.id);
 
 		if (statsItem === undefined) {
-			return { ...school, ug_stats: blankStats, grad_stats: blankStats };
+			return { ...school, ug_stats: blankStats(), grad_stats: blankStats() };
 		}
 
 		const ug_stats = {

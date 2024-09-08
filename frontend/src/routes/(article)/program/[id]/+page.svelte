@@ -87,7 +87,7 @@
 			<WidgetPlaceholder />
 		{:then statsItems}
 			<ApplicationStatsDoughnut
-				stats={statsItems[0] ?? blankStats}
+				stats={statsItems[0] ?? blankStats()}
 				href={`/program/${data.program.id}/stats`}
 			/>
 		{/await}
@@ -96,7 +96,7 @@
 	<article class="col-span-2 mt-16">
 		<ApplicationsLoader applications={data.applications} applicants={data.applicants}>
 			<svelte:fragment let:applications>
-				<ApplicationsAccordian groupedApplications={groupByYear(applications)} divClass="mt-4">
+				<ApplicationsAccordian groupedApplications={groupByYear(applications)}>
 					<svelte:fragment let:subsetOfApplications>
 						<ApplicationsTable
 							applications={subsetOfApplications}

@@ -91,7 +91,7 @@
 	</div>
 
 	<div class="h-fit min-h-[10rem] flex flex-col px-8 py-6 rounded-lg bg-stone-50">
-		<Heading tag="h2" class="section-title mb-4">Applying to ...</Heading>
+		<Heading tag="h2" class="section-title mb-4">Selected programs</Heading>
 
 		<form class="form-width" method="post" action="?/createApplications" use:enhance>
 			<Input type="number" name="contract" value={$form.contract} class="hidden" />
@@ -104,7 +104,7 @@
 			</div>
 
 			{#if !nAppls}
-				<NoDataSign text="You have not added any programs." divClass="mt-2" />
+				<NoDataSign text="You have not selected any program." divClass="mt-2" />
 			{/if}
 			<Button type="submit" class="w-fit mt-6 mb-2" disabled={!nAppls}>
 				Create {nAppls} application{nAppls !== 1 ? 's' : ''}

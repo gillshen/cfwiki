@@ -103,7 +103,7 @@
 		<article class="col-span-2 mt-16">
 			<ApplicationsLoader applications={data.applications} applicants={data.applicants}>
 				<svelte:fragment let:applications>
-					<ApplicationsAccordian groupedApplications={groupByYear(applications)} divClass="mt-4">
+					<ApplicationsAccordian groupedApplications={groupByYear(applications)}>
 						<svelte:fragment let:subsetOfApplications>
 							{#each Object.entries(groupByType(subsetOfApplications)) as [applType, subSubsetOfApplications]}
 								<!-- introduce a div to override the style of <li> -->

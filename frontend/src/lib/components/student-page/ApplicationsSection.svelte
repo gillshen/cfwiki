@@ -45,7 +45,7 @@
 <article class="mt-16 col-span-2">
 	<ApplicationsLoader {applications} {applicants}>
 		<svelte:fragment let:applications>
-			<ApplicationsAccordian groupedApplications={groupByYear(applications)} divClass="mt-4">
+			<ApplicationsAccordian groupedApplications={groupByYear(applications)}>
 				<svelte:fragment let:subsetOfApplications>
 					<Table hoverable={applications.length > 1}>
 						<TableHead>

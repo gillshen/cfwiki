@@ -87,11 +87,9 @@ export function formatNotableStatuses(statuses: ApplicationStatus[]): string {
 		.map((status, index) => {
 			// if 'Deferred' or 'On Waitlist' is not the latest status, use abbreviation
 			if (status === 'Deferred' && index < statuses.length - 1) {
-				console.log(statuses, status, index, index < statuses.length - 1);
 				return 'D';
 			}
 			if (status === 'On Waitlist' && index < statuses.length - 1) {
-				console.log(statuses, status, index, index < statuses.length - 1);
 				return 'WL';
 			}
 			// else return the status as is
@@ -226,7 +224,7 @@ function toDataPoints(applications: ComposedApplicationListItem[]): ApplicationD
 }
 
 function aggregateDataPoints(dataPoints: ApplicationDataPoint[]): ApplicationStats {
-	const stats: ApplicationStats = blankStats;
+	const stats: ApplicationStats = blankStats();
 
 	for (const dataPoint of dataPoints) {
 		stats.applied++;
@@ -245,7 +243,7 @@ function aggregateDataPointsByYear(
 		const year = dataPoint.year.toString();
 
 		if (!(year in statsByYear)) {
-			statsByYear[year] = { ...blankStats };
+			statsByYear[year] = blankStats();
 		}
 		statsByYear[year].applied++;
 		statsByYear[year][dataPoint.status]++;
@@ -258,15 +256,15 @@ function aggregateDataPointsByGender(
 	dataPoints: ApplicationDataPoint[]
 ): Record<number, ApplicationStats> {
 	const statsByGender: Record<string, ApplicationStats> = {
-		female: { ...blankStats },
-		male: { ...blankStats }
+		female: blankStats(),
+		male: blankStats()
 	};
 
 	for (const dataPoint of dataPoints) {
 		const { gender } = dataPoint;
 
 		if (!(gender in statsByGender)) {
-			statsByGender[gender] = { ...blankStats };
+			statsByGender[gender] = blankStats();
 		}
 		statsByGender[gender].applied++;
 		statsByGender[gender][dataPoint.status]++;
@@ -284,7 +282,7 @@ function aggregateDataPointsByApplicationRound(
 		const round = dataPoint.round_name;
 
 		if (!(round in statsByGender)) {
-			statsByGender[round] = { ...blankStats };
+			statsByGender[round] = blankStats();
 		}
 		statsByGender[round].applied++;
 		statsByGender[round][dataPoint.status]++;

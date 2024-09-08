@@ -15,7 +15,7 @@ export function compose(
 	stats: ProgramStats[]
 ): ComposedProgramListItem[] {
 	return programs.map((program) => {
-		const statsItem = stats.find((s) => s.program_id === program.id) ?? blankStats;
+		const statsItem = stats.find((s) => s.program_id === program.id) ?? blankStats();
 		return { ...program, stats: statsItem };
 	});
 }
@@ -51,6 +51,10 @@ export function filterForType(programs: ProgramListItem[], type: ProgramType): P
 
 export function orderByName(a: ProgramListItem, b: ProgramListItem): number {
 	return enhanceDisplayName(a).localeCompare(enhanceDisplayName(b));
+}
+
+export function orderBySchoolNames(a: ProgramListItem, b: ProgramListItem): number {
+	return formatSchoolNames(a).localeCompare(formatSchoolNames(b));
 }
 
 export function typeToBadgeColor(programType: string): ColorVariant {
