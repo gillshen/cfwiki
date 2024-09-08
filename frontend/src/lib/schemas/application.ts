@@ -52,7 +52,6 @@ export const commentsUpdateSchema = z.object({
 export type CommentsUpdateSchema = typeof commentsUpdateSchema;
 
 export type StagedApplication = {
-	school: School;
 	program: ProgramListItem;
 	round: ApplicationRoundListItem;
 };

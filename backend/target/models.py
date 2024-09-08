@@ -43,44 +43,6 @@ class School(models.Model):
         return q
 
 
-class ProgramCollection(models.Model):
-    name = models.CharField(max_length=100)
-    is_public = models.BooleanField(default=False)
-    created_by = models.ForeignKey(to="core.CFUser", on_delete=models.CASCADE)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                Lower("name"),
-                condition=models.Q(is_public=True),
-                name="programcollection_public_unique_name",
-            ),
-            models.UniqueConstraint(
-                Lower("name"),
-                "created_by",
-                condition=models.Q(is_public=False),
-                name="programcollection_private_unique_name_createdby",
-            ),
-        ]
-
-    def __str__(self) -> str:
-        return self.name
-
-    def save(self, **kwargs):
-        self.full_clean()
-        super().save(**kwargs)
-
-    def clean(self) -> None:
-        super().clean()
-
-        # Prevent duplication of names already used by public collections
-        same_name_public = models.Q(name=self.name, is_public=True)
-        if ProgramCollection.objects.filter(same_name_public).exists():
-            raise ValidationError(
-                f"Name already used by a public collection: {self.name!r}"
-            )
-
-
 class Program(models.Model):
     # It would be nice to have a unique constraint at the database level
     # but this is not possible because `schools` is a many-to-many field
@@ -91,10 +53,6 @@ class Program(models.Model):
     name = models.CharField(max_length=100, blank=True)
     degree = models.CharField(max_length=100, blank=True)
     is_defunct = models.BooleanField(default=False)
-
-    collections = models.ManyToManyField(
-        ProgramCollection, related_name="programs", blank=True
-    )
 
     def __str__(self) -> str:
         school_names = " + ".join(s.name for s in self.schools.all())
@@ -121,6 +79,31 @@ class Program(models.Model):
     @property
     def display_name(self) -> str:
         return f"{self.name or self.type}, {self.degree}".strip(", ")
+
+
+class ProgramCollection(models.Model):
+    name = models.CharField(max_length=100)
+    is_public = models.BooleanField(default=False)
+    created_by = models.ForeignKey(to="core.CFUser", on_delete=models.CASCADE)
+    programs = models.ManyToManyField(Program, related_name="collections", blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                Lower("name"),
+                condition=models.Q(is_public=True),
+                name="programcollection_public_unique_name",
+            ),
+            models.UniqueConstraint(
+                Lower("name"),
+                "created_by",
+                condition=models.Q(is_public=False),
+                name="programcollection_private_unique_name_createdby",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class ProgramIteration(models.Model):

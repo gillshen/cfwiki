@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const applicationLogSchema = z.object({
-	id: z.number(),
+	id: z.number().optional(),
 	application: z.number(),
 	date: z.string().nullable().default(null),
 	status: z.string(),

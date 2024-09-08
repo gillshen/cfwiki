@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.db import IntegrityError
+
 from target.models import (
     School,
     ProgramCollection,
@@ -31,7 +32,7 @@ class SchoolCRUDSerializer(serializers.ModelSerializer):
 class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
-        exclude = ["collections"]
+        fields = "__all__"
 
     class SchoolSerializer(serializers.ModelSerializer):
         class Meta:
@@ -82,6 +83,32 @@ class ProgramCollectionCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProgramCollection
         fields = "__all__"
+
+    def create(self, validated_data):
+        # Prevent duplication of names already used by public collections
+        name = self.validated_data.get("name")
+        if ProgramCollection.objects.filter(is_public=True, name=name).exists():
+            raise IntegrityError(f"Name already taken by a public collection: {name!r}")
+
+        programs = validated_data.pop("programs", [])
+        collection = ProgramCollection.objects.create(**validated_data)
+        collection.programs.set(programs)
+        return collection
+
+    def update(self, instance, validated_data):
+        # Prevent duplication of names already used by public collections
+        name = self.validated_data.get("name")
+        if (
+            ProgramCollection.objects.exclude(id=instance.id)
+            .filter(is_public=True, name=name)
+            .exists()
+        ):
+            raise IntegrityError(f"Name already taken by a public collection: {name!r}")
+
+        programs = validated_data.pop("programs", [])
+        super().update(instance, validated_data)
+        instance.programs.set(programs)
+        return instance
 
 
 class ApplicationRoundSerializer(serializers.ModelSerializer):

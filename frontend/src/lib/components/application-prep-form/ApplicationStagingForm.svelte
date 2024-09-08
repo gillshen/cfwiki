@@ -78,23 +78,10 @@
 	const stageRound = (event: any) => {
 		event.preventDefault();
 
-		if (!$schoolId) {
-			prepError = 'Please select a school.';
-			return;
-		}
-		if (!$programId) {
-			prepError = 'Please select a program.';
-			return;
-		}
-		if (typeof roundId !== 'number') {
-			prepError = 'Please select an admission plan.';
-			return;
-		}
-
 		const program = programs.filter((p) => p.id === $programId)[0];
 
 		if ($staged.map((item) => item.program).includes(program)) {
-			prepError = 'You have already added this program.';
+			prepError = 'You have already selected this program.';
 			return;
 		}
 
@@ -193,14 +180,14 @@
 	>
 
 	<div class="flex flex-col gap-4 mt-8">
-		<Button outline type="submit" class="min-w-24" on:click={stageRound}>
+		<Button outline type="submit" on:click={stageRound} disabled={!roundId}>
 			Select<ChevronDoubleRightOutline class="ms-2" />
 		</Button>
 
 		{#if prepError}
 			<Helper class="form-helper mb-4 flex items-center font-medium !text-red-500">
-				<InfoCircleOutline class="me-1" />{prepError}</Helper
-			>
+				{prepError}
+			</Helper>
 		{/if}
 
 		{#if programTypes === 'UG Freshman' || programTypes === 'UG Transfer'}
@@ -284,10 +271,9 @@
 {#if showToast}
 	<Toast type="error" onClose={() => (showToast = false)}>
 		<div>
-			{missedUC.length} program{missedUC.length > 1 ? 's' : ''} were not added because {missedUC.length >
-			1
-				? 'they lack admission plans'
-				: 'it lacks an admission plan'}:
+			{missedUC.length > 1
+				? `${missedUC.length} programs were not added because they lack admission plans`
+				: `1 program was not added because it lacks an admission plan`}:
 		</div>
 
 		<ul class="flex flex-col gap-2 mt-4">
