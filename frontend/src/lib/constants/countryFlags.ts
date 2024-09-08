@@ -189,6 +189,7 @@ const countryFlags: { [key: string]: string } = {
 	'United Arab Emirates': '🇦🇪',
 	'United Kingdom': '🇬🇧',
 	'United States': '🇺🇸',
+	'United States Green Card': '🇺🇸',
 	Uruguay: '🇺🇾',
 	Uzbekistan: '🇺🇿',
 	Vanuatu: '🇻🇺',
@@ -212,43 +213,30 @@ export function sortUnitedStatesFirst(a: string, b: string) {
 	}
 }
 
-export function sortChinaUnitedStatesFirst(a: string, b: string) {
-	if (a === 'China') {
-		return -1;
-	} else if (b === 'China') {
-		return 1;
-	} else if (a === 'United States') {
-		return -1;
-	} else if (b === 'United States') {
-		return 1;
-	} else {
-		return a.localeCompare(b);
-	}
+const _citizenshipOrder: Record<string, number> = {
+	China: 0,
+	'United States': 1,
+	'United States Green Card': 2
+};
+
+export function orderChinaUnitedStatesFirst(a: string, b: string) {
+	const indexA = _citizenshipOrder[a] ?? 99;
+	const indexB = _citizenshipOrder[b] ?? 99;
+	return indexA - indexB || a.localeCompare(b);
 }
 
-enum MostApplied {
-	'China',
-	'United States',
-	'United Kingdom',
-	'Australia',
-	'Canada',
-	'Hong Kong',
-	'Singapore'
-}
+const _orderMostApplied: Record<string, number> = {
+	China: 0,
+	'United States': 1,
+	'United Kingdom': 2,
+	Australia: 3,
+	Canada: 4,
+	'Hong Kong': 5,
+	Singapore: 6
+};
 
-export function sortMostAppliedFirst(a: string, b: string) {
-	const index = (country: string): number => {
-		if (country in MostApplied) {
-			return MostApplied[country as keyof typeof MostApplied];
-		} else {
-			return 99;
-		}
-	};
-
-	const indexDiff = index(a) - index(b);
-	if (indexDiff) {
-		return indexDiff;
-	} else {
-		return a.localeCompare(b);
-	}
+export function orderMostAppliedFirst(a: string, b: string) {
+	const indexA = _orderMostApplied[a] ?? 99;
+	const indexB = _orderMostApplied[b] ?? 99;
+	return indexA - indexB || a.localeCompare(b);
 }

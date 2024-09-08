@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Heading, A, Hr, Modal } from 'flowbite-svelte';
+	import { Heading, A, Hr, Modal, Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
 
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ApplicationInfobox from '$lib/components/infobox/ApplicationInfobox.svelte';
@@ -16,6 +16,7 @@
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import Toast from '$lib/components/misc/Toast.svelte';
+	import BreadcrumbLink from '$lib/components/misc/BreadcrumbLink.svelte';
 	import { isUndergraduate } from '$lib/utils/programUtils';
 
 	export let data;
@@ -52,14 +53,21 @@
 </script>
 
 <Heading tag="h1" class="alt-page-title">
-	<A href={`/student/${data.application.student.id}`}>{data.application.student.fullname}</A>
-	| Application {data.application.id}
+	{data.application.student.fullname} | Application {data.application.id}
 </Heading>
 
 <Hr />
 
 <Main>
 	<article>
+		<Breadcrumb class="mb-8">
+			<BreadcrumbLink
+				text={data.application.student.fullname}
+				href={`/student/${data.application.student.id}`}
+			/>
+			<BreadcrumbItem>Application {data.application.id}</BreadcrumbItem>
+		</Breadcrumb>
+
 		<ApplicationInfobox application={data.application} />
 
 		{#if canEdit}

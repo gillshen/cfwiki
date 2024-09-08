@@ -2,7 +2,7 @@
 	import { Button, Input, Label, Select, Radio } from 'flowbite-svelte';
 
 	import type { School } from '$lib/api/school';
-	import countryFlags, { sortMostAppliedFirst } from '$lib/constants/countryFlags';
+	import countryFlags, { orderMostAppliedFirst } from '$lib/constants/countryFlags';
 
 	export let form: any;
 	export let message: any;
@@ -20,7 +20,7 @@
 		//
 	}
 
-	const countries = Object.keys(countryFlags).sort(sortMostAppliedFirst);
+	const countries = Object.keys(countryFlags).sort(orderMostAppliedFirst);
 </script>
 
 <Label for="school-type" class="form-label">Type</Label>

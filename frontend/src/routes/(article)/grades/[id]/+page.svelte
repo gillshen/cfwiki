@@ -9,7 +9,9 @@
 		TableBodyRow,
 		TableBodyCell,
 		TableHead,
-		TableHeadCell
+		TableHeadCell,
+		Breadcrumb,
+		BreadcrumbItem
 	} from 'flowbite-svelte';
 
 	import type { Grade } from '$lib/api/grade';
@@ -23,6 +25,7 @@
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
+	import BreadcrumbLink from '$lib/components/misc/BreadcrumbLink.svelte';
 
 	export let data;
 
@@ -44,11 +47,18 @@
 </script>
 
 <Heading tag="h1" class="alt-page-title">
-	<A href={`/student/${data.enrollment.student.id}`}>{data.enrollment.student.fullname}</A>
-	@ {data.enrollment.school.name}
+	{data.enrollment.student.fullname} @ {data.enrollment.school.name}
 </Heading>
 
 <Hr />
+
+<Breadcrumb class="mb-8">
+	<BreadcrumbLink
+		text={data.enrollment.student.fullname}
+		href={`/student/${data.enrollment.student.id}`}
+	/>
+	<BreadcrumbItem>Education: {data.enrollment.school.name}</BreadcrumbItem>
+</Breadcrumb>
 
 {#if data.enrollment.grades.length}
 	<section class="flex flex-col">

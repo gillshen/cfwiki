@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { A, Alert, Button, Heading, Hr } from 'flowbite-svelte';
+	import { Alert, Breadcrumb, BreadcrumbItem, Button, Heading, Hr } from 'flowbite-svelte';
 	import { InfoCircleSolid } from 'flowbite-svelte-icons';
 
 	import type { Service } from '$lib/api/contract';
@@ -12,6 +12,7 @@
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import Toast from '$lib/components/misc/Toast.svelte';
+	import BreadcrumbLink from '$lib/components/misc/BreadcrumbLink.svelte';
 
 	export let data;
 
@@ -32,12 +33,16 @@
 </script>
 
 <Heading tag="h1" class="alt-page-title">
-	<A href={`/student/${data.contract.student}`}>{data.contract.student_name}</A>
-	| {data.contract.type}
+	{data.contract.student_name} | {data.contract.type}
 	{data.contract.target_year}
 </Heading>
 
 <Hr />
+
+<Breadcrumb class="mb-8">
+	<BreadcrumbLink text={data.contract.student_name} href={`/student/${data.contract.student}`} />
+	<BreadcrumbItem>Contract: {data.contract.type} {data.contract.target_year}</BreadcrumbItem>
+</Breadcrumb>
 
 {#if data.contract.services.length}
 	<section class="mb-8 w-fit flex flex-wrap gap-8">

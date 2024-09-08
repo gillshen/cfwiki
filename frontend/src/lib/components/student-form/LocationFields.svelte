@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { Label, Input, Select, P } from 'flowbite-svelte';
-	import countryFlags, { sortChinaUnitedStatesFirst } from '$lib/constants/countryFlags';
+	import countryFlags, { orderChinaUnitedStatesFirst } from '$lib/constants/countryFlags';
 	import chineseProvinces from '$lib/constants/chineseProvinces';
 	import canadianProvinces from '$lib/constants/canadianProvinces';
 	import americanStates from '$lib/constants/americanStates';
 
 	export let form: any;
 
-	const countries = Object.keys(countryFlags).sort(sortChinaUnitedStatesFirst);
+	const countries = Object.keys(countryFlags).sort(orderChinaUnitedStatesFirst);
 	const cityStates = ['Hong Kong', 'Macau', 'Monaco', 'Singapore', 'Vatican City'];
 	const chineseMunicipalities = ['北京', '上海', '天津', '重庆'];
 

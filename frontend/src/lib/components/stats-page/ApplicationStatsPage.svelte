@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { Breadcrumb, BreadcrumbItem, Heading, Hr } from 'flowbite-svelte';
+	import { Breadcrumb, Heading, Hr } from 'flowbite-svelte';
 	import { ChartLineUpOutline } from 'flowbite-svelte-icons';
 
 	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
 	import ApplicationStatsBars from '$lib/components/application-stats/ApplicationStatsBars.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
+	import BreadcrumbLink from '$lib/components/misc/BreadcrumbLink.svelte';
 
 	import {
 		compose,
@@ -28,9 +29,7 @@
 <Hr />
 
 <Breadcrumb class="mb-8">
-	<BreadcrumbItem href={backUrl}>
-		<span class="text-primary-700">{backUrlText}</span>
-	</BreadcrumbItem>
+	<BreadcrumbLink text={backUrlText} href={backUrl} />
 </Breadcrumb>
 
 {#await Promise.all([applications, applicants])}

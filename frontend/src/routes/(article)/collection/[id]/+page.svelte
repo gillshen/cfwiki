@@ -12,6 +12,7 @@
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
+	import BreadcrumbLink from '$lib/components/misc/BreadcrumbLink.svelte';
 	import { compose, getStats } from '$lib/utils/applicationUtils';
 	import { formatSchoolNames, orderByName, orderBySchoolNames } from '$lib/utils/programUtils';
 
@@ -29,14 +30,12 @@
 
 <Main>
 	<article>
-		<Breadcrumb>
-			<BreadcrumbItem href="/collection/index">
-				<span class="text-primary-700">Collections</span>
-			</BreadcrumbItem>
+		<Breadcrumb class="mb-8">
+			<BreadcrumbLink text="Collections" href="/collection/index" />
 			<BreadcrumbItem>{data.collection.name}</BreadcrumbItem>
 		</Breadcrumb>
 
-		<Heading tag="h2" class="section-title mt-8">Programs</Heading>
+		<Heading tag="h2" class="section-title">Programs</Heading>
 
 		{#if data.collection.programs.length}
 			<div class="flex flex-col gap-2 text-sm mt-6">
