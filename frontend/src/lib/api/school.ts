@@ -7,6 +7,8 @@ export type School = {
 	alt_name: string;
 	type: 'University' | 'Secondary School' | 'Other';
 	country: string;
+	region: string;
+	city: string;
 };
 
 export type SchoolStats = {

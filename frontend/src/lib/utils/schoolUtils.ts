@@ -1,5 +1,7 @@
 import type { ComposedSchoolListItem, School, SchoolStats } from '$lib/api/school';
 import { blankStats } from '$lib/api/stats';
+import americanStates from '$lib/constants/americanStates';
+import canadianProvinces from '$lib/constants/canadianProvinces';
 
 export function compose(schools: School[], stats: SchoolStats[]): ComposedSchoolListItem[] {
 	return schools.map((school) => {
@@ -25,4 +27,33 @@ export function compose(schools: School[], stats: SchoolStats[]): ComposedSchool
 		};
 		return { ...school, ug_stats, grad_stats };
 	});
+}
+
+export function formatLocation(student: School): string {
+	const { country, region, city } = student;
+	if (!country) {
+		return '';
+	}
+	if (!region && !city) {
+		return country;
+	}
+	if (!city) {
+		return region;
+	}
+	if (!region || country === 'China') {
+		return city;
+	}
+
+	let regionAbbr: string;
+	switch (country) {
+		case 'United States':
+			regionAbbr = americanStates[region];
+			break;
+		case 'Canada':
+			regionAbbr = canadianProvinces[region];
+			break;
+		default:
+			regionAbbr = '';
+	}
+	return `${city}, ${regionAbbr}`;
 }

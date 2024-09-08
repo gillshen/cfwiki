@@ -5,7 +5,9 @@ export const schoolSchema = z.object({
 	name: z.string().trim().min(1).max(100),
 	alt_name: z.string().trim().max(20),
 	type: z.string(),
-	country: z.string()
+	country: z.string(),
+	region: z.string().trim(),
+	city: z.string().trim()
 });
 
 export type SchoolSchema = typeof schoolSchema;

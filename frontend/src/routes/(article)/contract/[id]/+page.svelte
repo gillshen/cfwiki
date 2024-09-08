@@ -68,11 +68,14 @@
 	{#if !data.contract.services.length}
 		<Alert color="yellow" class="mb-4 max-w-prose flex gap-2">
 			<InfoCircleSolid />
-			<span>
-				You can manage staff members of this contract (including adding new members, updating and
-				removing existing members) only if you are yourself a staff member or if no one is. So, be
-				sure to add yourself first, or you&rsquo;ll have to ask someone else to add you.
-			</span>
+			<div class="flex flex-col gap-2">
+				<p><strong>Add yourself first!</strong></p>
+				<p>
+					You can add, update, and remove staff members of this contract only if you are yourself a
+					staff member (or if no one is). So, be sure to add yourself first, or you&rsquo;ll have to
+					ask someone else to add you.
+				</p>
+			</div>
 		</Alert>
 	{/if}
 	<Button outline on:click={modalOpener()}>Add staff</Button>

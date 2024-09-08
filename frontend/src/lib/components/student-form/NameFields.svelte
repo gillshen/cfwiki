@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { Label, Input, Checkbox } from 'flowbite-svelte';
+	import { names } from '$lib/constants/fake';
 
 	export let form: any;
+	const fakeName = names[Math.floor(Math.random() * names.length)];
 </script>
 
 <Label for="surname" class="form-label">Surname</Label>
@@ -11,6 +13,7 @@
 	name="surname"
 	maxlength="100"
 	bind:value={$form.surname}
+	placeholder={fakeName.surname ?? ''}
 	required
 />
 
@@ -21,6 +24,7 @@
 	name="given_name"
 	maxlength="100"
 	bind:value={$form.given_name}
+	placeholder={fakeName.givenName ?? ''}
 	required
 />
 

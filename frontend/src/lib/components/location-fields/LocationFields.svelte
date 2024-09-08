@@ -6,8 +6,14 @@
 	import americanStates from '$lib/constants/americanStates';
 
 	export let form: any;
+	export let countryFieldName: string = 'country';
+	export let regionFieldName: string = 'region';
+	export let cityFieldName: string = 'city';
 
-	const countries = Object.keys(countryFlags).sort(orderChinaUnitedStatesFirst);
+	const countries = Object.keys(countryFlags)
+		.filter((c) => c !== 'United States Green Card')
+		.sort(orderChinaUnitedStatesFirst);
+
 	const cityStates = ['Hong Kong', 'Macau', 'Monaco', 'Singapore', 'Vatican City'];
 	const chineseMunicipalities = ['北京', '上海', '天津', '重庆'];
 
@@ -16,30 +22,28 @@
 	countriesWithDivisions.set('Canada', Object.keys(canadianProvinces));
 	countriesWithDivisions.set('United States', Object.keys(americanStates));
 
-	let subnationalLabel = $form.base_country === 'United States' ? 'State' : 'Province';
+	let subnationalLabel = $form[countryFieldName] === 'United States' ? 'State' : 'Province';
 
 	const onCountryChange = () => {
-		$form.base_subnational = '';
-		$form.base_city = '';
-		subnationalLabel = $form.base_country === 'United States' ? 'State' : 'Province';
+		$form[regionFieldName] = '';
+		$form[cityFieldName] = '';
+		subnationalLabel = $form[countryFieldName] === 'United States' ? 'State' : 'Province';
 	};
 
 	const onSubnationalChange = () => {
-		if (chineseMunicipalities.includes($form.base_subnational)) {
-			$form.base_city = $form.base_subnational;
+		if (chineseMunicipalities.includes($form[regionFieldName])) {
+			$form[cityFieldName] = $form[regionFieldName];
 		} else {
-			$form.base_city = '';
+			$form[cityFieldName] = '';
 		}
 	};
 </script>
 
-<P size="sm" class="font-medium">Where is the student from?</P>
-
 <Label for="country" class="form-label">Country</Label>
 <Select
 	id="country"
-	name="base_country"
-	bind:value={$form.base_country}
+	name={countryFieldName}
+	bind:value={$form[countryFieldName]}
 	on:change={onCountryChange}
 	required
 >
@@ -48,15 +52,15 @@
 	{/each}
 </Select>
 
-{#if !!countriesWithDivisions.get($form.base_country)}
+{#if !!countriesWithDivisions.get($form[countryFieldName])}
 	<Label for="subnational" class="form-label optional">{subnationalLabel}</Label>
 	<Select
 		id="subnational"
-		name="base_subnational"
-		bind:value={$form.base_subnational}
+		name={regionFieldName}
+		bind:value={$form[regionFieldName]}
 		on:change={onSubnationalChange}
 	>
-		{#each countriesWithDivisions.get($form.base_country) as adminDivision}
+		{#each countriesWithDivisions.get($form[countryFieldName]) as adminDivision}
 			<option value={adminDivision}>{adminDivision}</option>
 		{/each}
 	</Select>
@@ -64,18 +68,24 @@
 
 <!-- Show the city field if the country is not one of Canada, China, and US,
  or if it is and a subnational division has been selected -->
-{#if $form.base_country && ($form.base_subnational || !countriesWithDivisions.get($form.base_country))}
-	{#if $form.base_country === 'China'}
+{#if $form[countryFieldName] && ($form[regionFieldName] || !countriesWithDivisions.get($form[countryFieldName]))}
+	{#if $form[countryFieldName] === 'China'}
 		<!-- If the country is China, let the user select a city -->
 		<Label for="city" class="form-label optional">City</Label>
-		<Select id="city" name="base_city" bind:value={$form.base_city}>
-			{#each chineseProvinces[$form.base_subnational] ?? [] as city}
+		<Select id="city" name={cityFieldName} bind:value={$form[cityFieldName]}>
+			{#each chineseProvinces[$form[regionFieldName]] ?? [] as city}
 				<option value={city}>{city}</option>
 			{/each}
 		</Select>
-	{:else if !cityStates.includes($form.base_country)}
+	{:else if !cityStates.includes($form[countryFieldName])}
 		<!-- Else if the country is not Hong Kong or Sinapore, let the user write in a city -->
 		<Label for="city" class="form-label optional">City</Label>
-		<Input type="text" id="city" name="base_city" maxlength="100" bind:value={$form.base_city} />
+		<Input
+			type="text"
+			id="city"
+			name={cityFieldName}
+			maxlength="100"
+			bind:value={$form[cityFieldName]}
+		/>
 	{/if}
 {/if}

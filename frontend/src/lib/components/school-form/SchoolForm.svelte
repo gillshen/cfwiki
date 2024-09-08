@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Button, Input, Label, Select, Radio } from 'flowbite-svelte';
+	import { Button, Input, Label, Radio } from 'flowbite-svelte';
 
 	import type { School } from '$lib/api/school';
-	import countryFlags, { orderMostAppliedFirst } from '$lib/constants/countryFlags';
+	import LocationFields from '$lib/components/location-fields/LocationFields.svelte';
 
 	export let form: any;
 	export let message: any;
@@ -14,13 +14,13 @@
 	$form.name = entity?.name;
 	$form.alt_name = entity?.alt_name;
 	$form.country = entity?.country;
+	$form.region = entity?.region;
+	$form.city = entity?.city;
 
 	// TODO
 	if ($message || $errors) {
 		//
 	}
-
-	const countries = Object.keys(countryFlags).sort(orderMostAppliedFirst);
 </script>
 
 <Label for="school-type" class="form-label">Type</Label>
@@ -44,11 +44,6 @@
 	bind:value={$form.alt_name}
 />
 
-<Label for="school-country" class="form-label">Country</Label>
-<Select id="school-country" name="country" bind:value={$form.country} required>
-	{#each countries as country}
-		<option value={country}>{countryFlags[country]}&nbsp;&nbsp;{country}</option>
-	{/each}
-</Select>
+<LocationFields {form} />
 
 <Button class="mt-8" type="submit">{entity ? 'Update' : 'Submit'}</Button>

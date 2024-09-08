@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.db.models.functions import Lower
-from django.core.exceptions import ValidationError
 
 
 class School(models.Model):
@@ -15,6 +14,8 @@ class School(models.Model):
     alt_name = models.CharField(max_length=20, blank=True)
     type = models.CharField(max_length=50, choices=Type.choices)
     country = models.CharField(max_length=100)
+    region = models.CharField(max_length=50, blank=True)
+    city = models.CharField(max_length=100, blank=True)
 
     class Meta:
         constraints = [
