@@ -1,19 +1,6 @@
 <script lang="ts">
-	import {
-		type IndicatorColorType,
-		Card,
-		P,
-		A,
-		Heading,
-		Indicator,
-		Table,
-		TableBody,
-		TableBodyCell,
-		TableBodyRow,
-		Tooltip
-	} from 'flowbite-svelte';
-
-	import { ArrowRightOutline, UsersOutline } from 'flowbite-svelte-icons';
+	import { type IndicatorColorType, Card, P, A, Heading, Indicator } from 'flowbite-svelte';
+	import { ArrowRightOutline } from 'flowbite-svelte-icons';
 
 	import type { Contract } from '$lib/api/student';
 	import { toShortDate } from '$lib/utils/dateUtils';
@@ -59,53 +46,45 @@
 	};
 </script>
 
-<Card class="min-h-[300px] min-w-[224px] hover:bg-white flex flex-col justify-between">
-	<div>
-		<div class="flex gap-2 items-center">
-			<Indicator color={setColor(contract.status)} />
-			<P size="sm" color="text-gray-500" class="font-medium">{contract.status}</P>
-		</div>
-
-		<Heading tag="h3" class="font-bold text-xl tracking-wide mt-3 mb-1">
+<Card class="hover:bg-white !px-8">
+	<div class="flex items-center gap-4">
+		<Heading tag="h3" class="font-bold text-xl w-fit">
 			{contract.type}
 			{contract.target_year}
 		</Heading>
 
-		{#if dateString}
-			<P size="sm" color="text-gray-500">{dateString}</P>
-		{/if}
-
-		{#if contract.services.length}
-			<Table noborder divClass="mt-5 w-fit">
-				<TableBody>
-					{#each contract.services.sort(orderByEndDateRole) as service}
-						<TableBodyRow class="bg-inherit">
-							<TableBodyCell tdClass="w-fit font-medium py-2 pr-8">
-								<span class="text-gray-500">{clipRole(service.role)}</span>
-							</TableBodyCell>
-							<TableBodyCell tdClass="font-normal py-2 pr-8">
-								<span class={isActive(service) ? '' : 'text-gray-500'}>
-									{service.cf_username}
-								</span>
-							</TableBodyCell>
-						</TableBodyRow>
-					{/each}
-				</TableBody>
-			</Table>
-		{:else if canEdit}
-			<A class="mt-5 text-sm" href={`/contract/${contract.id}`}>
-				Add staff<ArrowRightOutline class="ms-1" />
-			</A>
-		{/if}
+		<div class="flex gap-2 items-center">
+			<Indicator color={setColor(contract.status)} />
+			<P size="sm" color="text-gray-500" class="font-medium">{contract.status}</P>
+		</div>
 	</div>
 
-	<div class="mt-8 flex gap-4 justify-between">
+	{#if dateString}
+		<P size="sm" color="text-gray-500" class="mt-1">{dateString}</P>
+	{/if}
+
+	<div class="text-sm mt-6 flex flex-col gap-2">
+		{#each contract.services.sort(orderByEndDateRole) as service}
+			<div class="flex gap-4">
+				<div class="font-medium">{clipRole(service.role)}</div>
+				<div class={isActive(service) ? 'text-gray-900' : 'text-gray-400'}>
+					{service.cf_username}
+				</div>
+			</div>
+		{/each}
+	</div>
+
+	<div class="flex gap-8 mt-8">
 		<slot />
-		{#if contract.services.length}
-			<A href={`/contract/${contract.id}`} class="flex items-center">
-				<UsersOutline /><ArrowRightOutline />
-			</A>
-			<Tooltip>{canEdit ? 'Manage staff' : 'Staff details'}</Tooltip>
-		{/if}
+
+		<A href={`/contract/${contract.id}`}>
+			{#if canEdit}
+				<span class="text-sm font-medium">Manage Staff</span>
+				<ArrowRightOutline class="ms-0.5" />
+			{:else}
+				<span class="text-sm font-medium">Staff Details</span>
+				<ArrowRightOutline class="ms-0.5" />
+			{/if}
+		</A>
 	</div>
 </Card>

@@ -81,3 +81,11 @@ export function formatDueDateTime(
 	const zonedDate = toZonedTime(utcDate, timeZone);
 	return formatWithTimeZone(zonedDate, "MMMM d, y 'at' hh:mm aa z", { timeZone });
 }
+
+export function yearIsRelevant(applicationYear: number): boolean {
+	const today = new Date();
+	const currentYear = today.getFullYear();
+
+	// 2024, for example, is no longer relevant past May 2024
+	return applicationYear > currentYear || (applicationYear === currentYear && today.getMonth() < 5);
+}

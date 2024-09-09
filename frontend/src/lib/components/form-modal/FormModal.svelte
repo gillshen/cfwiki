@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { Modal } from 'flowbite-svelte';
 	import { superForm, type SuperValidated } from 'sveltekit-superforms';
+	import { Modal } from 'flowbite-svelte';
 
 	import Toast from '$lib/components/misc/Toast.svelte';
 
@@ -16,7 +16,7 @@
 	const dispatch = createEventDispatcher();
 
 	const { form, message, errors, enhance } = superForm(superform, {
-		id: `${action}-${new Date().toISOString()}`,
+		id: `${action}-${new Date().toISOString()}-${Math.random()}`,
 		onUpdated({ form }) {
 			if (form.valid) {
 				dispatch('close');

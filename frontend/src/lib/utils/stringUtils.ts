@@ -1,13 +1,9 @@
+const startsWithCjk = (s: string) => s.charCodeAt(0) >= 19968;
+
 export function lexicalChineseLast(a: string, b: string): number {
-	if (!a) {
-		return -1;
-	}
-	if (!b) {
-		return 1;
-	}
-	if (a.charCodeAt(0) < 19968 || b.charCodeAt(0) < 19968) {
-		return a.localeCompare(b);
-	} else {
+	if (startsWithCjk(a) && startsWithCjk(b)) {
 		return a.localeCompare(b, 'zh-CN');
+	} else {
+		return a.localeCompare(b, 'en-US-u-kf-upper');
 	}
 }

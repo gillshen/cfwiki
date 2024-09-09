@@ -33,9 +33,9 @@
 	$: canAddContract = canEditStudent(username, student);
 </script>
 
-<article class="bg-stone-50 rounded-xl w-full h-fit p-6">
+<article class="bg-stone-50 rounded-xl w-full h-fit pb-6 pt-8 px-12">
 	{#if student.contracts.length}
-		<div class="grid grid-cols-2 gap-6 mb-6">
+		<div class="flex flex-col gap-4 mb-6">
 			{#each student.contracts as contract}
 				{@const canEdit = canEditContract(username, contract)}
 				<ContractItem {contract} {canEdit}>

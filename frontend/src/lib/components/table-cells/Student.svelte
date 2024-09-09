@@ -34,20 +34,20 @@
 		transition={fade}
 		params={{ duration: 200 }}
 	>
-		<div class="text-xl text-gray-900 font-medium px-6 pt-3">{fullname}</div>
+		<div class="text-xl text-gray-900 font-medium px-6 pt-4">{fullname}</div>
 
 		<!-- TODO? filter for the most relevant school/program type -->
 		{#each enrollments as e}
-			<div class="px-6 mt-4 mb-1 flex flex-col gap-1 text-gray-600">
-				<div class="font-medium mb-1">{e.school_name}</div>
+			<div class="mx-6 mt-4 p-4 flex flex-col gap-1 border-[1px] border-solid rounded-lg">
+				<div class="font-medium mb-2 text-gray-700">{e.school_name}</div>
 
 				{#if e.grades.length}
-					<div class="flex gap-x-3 gap-y-2 flex-wrap">
+					<div class="flex flex-col gap-2">
 						{#each summarizeByProgression(e.grades) as { progression, scale, value, comments }}
-							<div class="flex items-center gap-1">
-								<span>{progression}</span>
+							<div class="flex items-center gap-4">
+								<div class="min-w-8 font-medium">{progression}</div>
 
-								<div class="flex bg-stone-100 px-2 py-1 rounded-md max-w-40">
+								<div class="flex">
 									{#if parseNum(scale)}
 										<span class="text-gray-900 font-medium tabular-nums">
 											{formatGradeValue(value, scale)}
@@ -60,6 +60,8 @@
 							</div>
 						{/each}
 					</div>
+				{:else}
+					<div class="text-gray-500">No grade info</div>
 				{/if}
 			</div>
 		{/each}
