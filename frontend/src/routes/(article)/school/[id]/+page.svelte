@@ -12,6 +12,7 @@
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import ApplicationsAccordian from '$lib/components/containers/ApplicationsAccordian.svelte';
 	import ApplicationsTable from '$lib/components/school-page/ApplicationsTable.svelte';
+	import AlumApplicationsTable from '$lib/components/school-page/AlumApplicationsTable.svelte';
 	import EnrollmentsLoader from '$lib/components/misc/EnrollmentsLoader.svelte';
 	import EnrollmentsTable from '$lib/components/school-page/EnrollmentsTable.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
@@ -99,38 +100,44 @@
 		</article>
 	{/if}
 
-	{#if isNotSecondarySchool}
-		<article class="col-span-2 mt-16">
-			<ApplicationsLoader applications={data.applications} applicants={data.applicants}>
-				<svelte:fragment let:applications>
-					<ApplicationsAccordian groupedApplications={groupByYear(applications)}>
-						<svelte:fragment let:subsetOfApplications>
-							{#each Object.entries(groupByType(subsetOfApplications)) as [applType, subSubsetOfApplications]}
-								<!-- introduce a div to override the style of <li> -->
-								<div class="school-page-applications">
-									<Timeline class="ml-1 -mb-4">
-										<TimelineItem title={`${applType} (${subSubsetOfApplications.length})`}>
-											<ApplicationsTable
-												applications={subSubsetOfApplications}
-												isUndergraduate={applType.startsWith('UG')}
-											/>
-										</TimelineItem>
-									</Timeline>
-								</div>
-							{/each}
-						</svelte:fragment>
-					</ApplicationsAccordian>
-				</svelte:fragment>
-			</ApplicationsLoader>
-		</article>
-	{/if}
-
 	<article class="col-span-2 mt-16">
 		<EnrollmentsLoader enrollments={data.enrollments}>
 			<svelte:fragment let:enrollments>
 				<EnrollmentsTable {enrollments} schoolType={data.school.type} />
 			</svelte:fragment>
 		</EnrollmentsLoader>
+	</article>
+
+	<article class="col-span-2 mt-16">
+		<ApplicationsLoader
+			heading={isNotSecondarySchool ? 'Applications' : 'Applications by Students and Alumni'}
+			applications={data.applications}
+			applicants={data.applicants}
+		>
+			<svelte:fragment let:applications>
+				<ApplicationsAccordian groupedApplications={groupByYear(applications)}>
+					<svelte:fragment let:subsetOfApplications>
+						{#each Object.entries(groupByType(subsetOfApplications)) as [applType, subSubsetOfApplications]}
+							<!-- introduce a div to override the style of <li> -->
+							<div class="school-page-applications">
+								<Timeline class="ml-1 -mb-4">
+									<TimelineItem title={`${applType} (${subSubsetOfApplications.length})`}>
+										{#if isNotSecondarySchool}
+											<ApplicationsTable
+												applications={subSubsetOfApplications}
+												isUndergraduate={applType.startsWith('UG')}
+											/>
+										{:else}
+											<AlumApplicationsTable applications={subSubsetOfApplications} />
+										{/if}
+									</TimelineItem>
+								</Timeline>
+							</div>
+						{/each}
+					</svelte:fragment>
+				</ApplicationsAccordian>
+			</svelte:fragment>
+		</ApplicationsLoader>
 	</article>
 </Main>
 

@@ -31,13 +31,21 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(404, 'School not found');
 	}
 
+	let applications;
+
+	if (school.type === 'Secondary School') {
+		applications = fetchApplications({ school_attended: school.id });
+	} else {
+		applications = fetchApplications({ school: school.id });
+	}
+
 	return {
 		school,
 		programs: fetchPrograms({ school: school.id }),
 		stats: fetchApplicationStats({ school_id: school.id }),
 		schoolForm: await superValidate(school, zod(schoolSchema)),
 		deleteForm: await superValidate(zod(deleteSchema)),
-		applications: fetchApplications({ school: school.id }),
+		applications,
 		applicants: fetchApplicants(),
 		enrollments: fetchEnrollments({ school: school.id })
 	};

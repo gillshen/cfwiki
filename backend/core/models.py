@@ -1,8 +1,5 @@
-from decimal import Decimal
-from collections import defaultdict
-
 from django.db import models
-from django.db.models import Case, When, Value, OuterRef, Subquery, Q, F, Max, Count
+from django.db.models import Case, When, Value, OuterRef, Subquery, Q
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
@@ -224,6 +221,7 @@ class Application(models.Model):
         student: int = None,
         cfer: int = None,
         school: int = None,
+        school_attended: int = None,
         program: int = None,
         programs: list = None,
         program_iteration: int = None,
@@ -237,6 +235,8 @@ class Application(models.Model):
             q = q.filter(contract__services__cfer=cfer)
         if school is not None:
             q = q.filter(round__program_iteration__program__schools=school)
+        if school_attended is not None:
+            q = q.filter(contract__student__enrollments__school=school_attended)
         if program is not None:
             q = q.filter(round__program_iteration__program=program)
         if programs is not None:
