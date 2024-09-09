@@ -26,6 +26,14 @@ export function compose(
 	});
 }
 
+export function isUndergraduate(application: ApplicationListItem) {
+	return application.program.type === 'UG Freshman' || application.program.type === 'UG Transfer';
+}
+
+export function isGraduate(application: ApplicationListItem) {
+	return application.program.type === "Master's" || application.program.type === 'Doctorate';
+}
+
 const _typeOrdering: Record<string, number> = {
 	'UG Freshman': 0,
 	'UG Transfer': 1,

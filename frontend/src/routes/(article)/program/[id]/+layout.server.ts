@@ -1,13 +1,7 @@
 import { error } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
 
-import { fetchApplicationStats, fetchProgram, type ProgramDetail } from '$lib/api/program';
-
+import { fetchProgram, type ProgramDetail } from '$lib/api/program';
 import { fetchApplicants, fetchApplications } from '$lib/api/application';
-import { fetchApplicationRounds } from '$lib/api/applicationRound';
-import { programUpdateSchema } from '$lib/schemas/program';
-import { deleteSchema } from '$lib/schemas/delete';
 
 export async function load(event) {
 	const id = parseInt(event.params.id, 10);
@@ -24,10 +18,6 @@ export async function load(event) {
 
 	return {
 		program,
-		statsItems: fetchApplicationStats({ program_id: program.id }),
-		programForm: await superValidate(program, zod(programUpdateSchema)),
-		deleteForm: await superValidate(zod(deleteSchema)),
-		applicationRounds: fetchApplicationRounds({ program: program.id }),
 		applications: fetchApplications({ program: program.id }),
 		applicants: fetchApplicants()
 	};

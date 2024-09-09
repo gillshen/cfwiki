@@ -88,7 +88,7 @@
 
 			<NavUl>
 				<NavLi class="cursor-pointer">
-					CF<ChevronDownOutline class="dropdown-icon" />
+					CF People<ChevronDownOutline class="dropdown-icon" />
 				</NavLi>
 				<Dropdown>
 					<div class="grid grid-cols-4 gap-x-4 px-2 mb-2">

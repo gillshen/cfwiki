@@ -18,7 +18,15 @@
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
-	import { groupByType, groupByYear } from '$lib/utils/applicationUtils';
+
+	import {
+		compose,
+		getStats,
+		groupByType,
+		groupByYear,
+		isGraduate,
+		isUndergraduate
+	} from '$lib/utils/applicationUtils';
 
 	export let data;
 
@@ -62,43 +70,37 @@
 		{/if}
 	</article>
 
-	{#if isNotSecondarySchool}
-		<article class="flex flex-col gap-8">
-			<div class="bg-stone-50 rounded-xl w-full p-8">
-				{#await data.stats}
-					<WidgetPlaceholder />
-				{:then stats}
+	<article class="flex flex-col gap-8">
+		{#await Promise.all([data.applications, data.applicants])}
+			<WidgetPlaceholder />
+		{:then [applications, applicants]}
+			{#if isNotSecondarySchool}
+				<div class="bg-stone-50 rounded-xl w-full p-8">
 					<ApplicationStatsDoughnut
-						stats={{
-							applied: stats[0].ug_applied,
-							pending: stats[0].ug_pending,
-							accepted: stats[0].ug_accepted,
-							denied: stats[0].ug_denied,
-							neutral: stats[0].ug_neutral
-						}}
+						stats={getStats(compose(applications.filter(isUndergraduate), applicants))}
 						title="Undergraduate Statistics"
+						href={`/school/${data.school.id}/stats/undergraduate`}
 					/>
-				{/await}
-			</div>
+				</div>
 
-			<div class="bg-stone-50 rounded-xl w-full p-8">
-				{#await data.stats}
-					<WidgetPlaceholder />
-				{:then stats}
+				<div class="bg-stone-50 rounded-xl w-full p-8">
 					<ApplicationStatsDoughnut
-						stats={{
-							applied: stats[0].grad_applied,
-							pending: stats[0].grad_pending,
-							accepted: stats[0].grad_accepted,
-							denied: stats[0].grad_denied,
-							neutral: stats[0].grad_neutral
-						}}
+						stats={getStats(compose(applications.filter(isGraduate), applicants))}
 						title="Graduate Statistics"
+						href={`/school/${data.school.id}/stats/graduate`}
 					/>
-				{/await}
-			</div>
-		</article>
-	{/if}
+				</div>
+			{:else}
+				<div class="bg-stone-50 rounded-xl w-full p-8">
+					<ApplicationStatsDoughnut
+						stats={getStats(compose(applications, applicants))}
+						title="Student & Alumni Statistics"
+						href={`/school/${data.school.id}/stats/alumni`}
+					/>
+				</div>
+			{/if}
+		{/await}
+	</article>
 
 	<article class="col-span-2 mt-16">
 		<EnrollmentsLoader enrollments={data.enrollments}>
@@ -110,7 +112,7 @@
 
 	<article class="col-span-2 mt-16">
 		<ApplicationsLoader
-			heading={isNotSecondarySchool ? 'Applications' : 'Applications by Students and Alumni'}
+			heading={isNotSecondarySchool ? 'Applications' : 'Applications by Students & Alumni'}
 			applications={data.applications}
 			applicants={data.applicants}
 		>

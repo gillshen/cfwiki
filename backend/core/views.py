@@ -36,11 +36,6 @@ from core.serializers import (
     ApplicationLogCRUDSerializer,
 )
 
-_PENDING = ["Started", "Submitted", "Under Review", "Deferred", "On Waitlist"]
-_ACCEPTED = ["Accepted"]
-_DENIED = ["Rejected", "Pres. Rejected", "Offer Rescinded"]
-_NEUTRAL = ["Cancelled", "Withdrawn", "Untracked"]
-
 
 class CFUserListView(ListAPIView):
     queryset = CFUser.objects.all()
@@ -273,6 +268,12 @@ class ApplicationRUDView(RetrieveUpdateDestroyAPIView):
         return Response(student_serializer.data, status=status.HTTP_200_OK)
 
 
+_PENDING = ["Started", "Submitted", "Under Review", "Deferred", "On Waitlist"]
+_ACCEPTED = ["Accepted"]
+_DENIED = ["Rejected", "Pres. Rejected", "Offer Rescinded"]
+_NEUTRAL = ["Cancelled", "Withdrawn", "Untracked"]
+
+
 class ApplicationPerProgramListView(ListAPIView):
     serializer_class = ApplicationPerProgramSerializer
 
@@ -337,12 +338,10 @@ class ApplicationPerSchoolListView(ListAPIView):
             .values("status")[:1]
         )
 
-        is_ug = Q(
-            round__program_iteration__program__type__in=["UG Freshman", "UG Transfer"]
-        )
-        is_grad = Q(
-            round__program_iteration__program__type__in=["Master's", "Doctorate"]
-        )
+        ug_types = ["UG Freshman", "UG Transfer"]
+        grad_types = ["Master's", "Doctorate"]
+        is_ug = Q(round__program_iteration__program__type__in=ug_types)
+        is_grad = Q(round__program_iteration__program__type__in=grad_types)
         no_status = Q(latest_status__isnull=True)
         pending = Q(latest_status__in=_PENDING)
         accepted = Q(latest_status__in=_ACCEPTED)
