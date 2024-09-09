@@ -14,7 +14,7 @@
 		type ColumnVisibleEvent
 	} from 'ag-grid-community';
 
-	import type { ContractSummary, StudentListItem } from '$lib/api/student';
+	import type { ContractSummary, StudentEnrollmentItem, StudentListItem } from '$lib/api/student';
 	import type { ContractType } from '$lib/api/contract';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { AgCellRenderer, SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
@@ -42,6 +42,7 @@
 		getEnglishProficiency,
 		getGreOrGmat,
 		getSatOrAct,
+		gradeValueGetter,
 		localeComparator,
 		moveColumnVisibilityKey,
 		showColumn
@@ -172,6 +173,10 @@
 		return formatEnrollments(params.data.enrollments);
 	}
 
+	function _enrollmentsGetter(params: ValueGetterParams): StudentEnrollmentItem[] {
+		return params.data.enrollments;
+	}
+
 	function satOrActValueGetter(params: ValueGetterParams): string {
 		return getSatOrAct(params.data.scores);
 	}
@@ -201,6 +206,49 @@
 			filter: 'agNumberColumnFilter'
 		}
 	};
+
+	const secondarySchoolGradeColumns = [
+		{ headerName: 'G9 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'G9') },
+		{ headerName: 'G10 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'G10') },
+		{ headerName: 'G11 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'G11') },
+		{ headerName: 'G12 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'G12') }
+	];
+	const secondarySchoolGradeColumnVisibility = {
+		'G9 GPA': false,
+		'G10 GPA': false,
+		'G11 GPA': false,
+		'G12 GPA': false
+	};
+
+	const universityGradeColumns = [
+		{ headerName: 'Year 1 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'Year 1') },
+		{ headerName: 'Year 2 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'Year 2') },
+		{ headerName: 'Year 3 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'Year 3') },
+		{ headerName: 'Year 4 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'Year 4') }
+	];
+	const universityGradeColumnVisibility = {
+		'Year 1 GPA': false,
+		'Year 2 GPA': false,
+		'Year 3 GPA': false,
+		'Year 4 GPA': false
+	};
+
+	let gradeColumns;
+	let gradeColumnVisibility;
+
+	if (data.contractType === 'UG Freshman') {
+		gradeColumns = secondarySchoolGradeColumns;
+		gradeColumnVisibility = secondarySchoolGradeColumnVisibility;
+	} else if (data.contractType === 'Graduate') {
+		gradeColumns = universityGradeColumns;
+		gradeColumnVisibility = universityGradeColumnVisibility;
+	} else {
+		gradeColumns = [...secondarySchoolGradeColumns, ...universityGradeColumns];
+		gradeColumnVisibility = {
+			...secondarySchoolGradeColumnVisibility,
+			...universityGradeColumnVisibility
+		};
+	}
 
 	const columnDefs = [
 		{
@@ -245,6 +293,7 @@
 			useValueFormatterForExport: false
 		},
 		{ headerName: 'Edu. History', valueGetter: enrollmentsValueGetter, flex: 1.5 },
+		...gradeColumns,
 		{ headerName: 'SAT/ACT', valueGetter: satOrActValueGetter },
 		{ headerName: 'SAT', field: 'scores.super_sat', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'ACT', field: 'scores.super_act', type: ['numeric', 'rightAligned'] },
@@ -278,6 +327,7 @@
 		'Date of Birth': false,
 		Home: false,
 		'Edu. History': true,
+		...gradeColumnVisibility,
 		'SAT/ACT': data.contractType !== 'Graduate',
 		SAT: false,
 		ACT: false,

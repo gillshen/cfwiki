@@ -90,12 +90,27 @@ class StudentListSerializer(serializers.ModelSerializer):
                 "start_progression",
                 "end_progression",
                 "curriculum",
+                "grades",
             ]
 
         school_name = serializers.SerializerMethodField()
 
         def get_school_name(self, enrollment):
             return enrollment.school.name
+
+        class GradeSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = academics.models.Grade
+                fields = [
+                    "progression",
+                    "term",
+                    "value",
+                    "scale",
+                    "is_cumulative",
+                    "comments",
+                ]
+
+        grades = GradeSerializer(many=True)
 
     enrollments = EnrollmentSerializer(many=True)
 
@@ -333,39 +348,6 @@ class ApplicantListSerializer(StudentListSerializer):
             "ib_summary",
             "alevel_summary",
         ]
-
-    class EnrollmentSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = academics.models.Enrollment
-            fields = [
-                "school_name",
-                "program_type",
-                "start_progression",
-                "end_progression",
-                "curriculum",
-                "grades",
-            ]
-
-        school_name = serializers.SerializerMethodField()
-
-        def get_school_name(self, enrollment):
-            return enrollment.school.name
-
-        class GradeSerializer(serializers.ModelSerializer):
-            class Meta:
-                model = academics.models.Grade
-                fields = [
-                    "progression",
-                    "term",
-                    "value",
-                    "scale",
-                    "is_cumulative",
-                    "comments",
-                ]
-
-        grades = GradeSerializer(many=True)
-
-    enrollments = EnrollmentSerializer(many=True)
 
 
 class ApplicationDetailSerializer(serializers.ModelSerializer):

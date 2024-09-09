@@ -10,17 +10,20 @@
 		type GridApi,
 		type GridOptions,
 		type ICellRendererParams,
+		type ValueFormatterParams,
 		type ValueGetterParams
 	} from 'ag-grid-community';
 
 	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
-	import type { BaseGrade } from '$lib/api/grade';
+	import type { StudentEnrollmentItem } from '$lib/api/student';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
+	import countryFlags from '$lib/constants/countryFlags';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
-	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
-	import ApplicationStatus from '$lib/components/grid-cells/ApplicationStatus.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
+	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
+	import Gender from '$lib/components/grid-cells/Gender.svelte';
+	import ApplicationStatus from '$lib/components/grid-cells/ApplicationStatus.svelte';
 	import RowCountBadge from '$lib/components/grid-pages/RowCountBadge.svelte';
 	import ControlButton from '$lib/components/grid-pages/ControlButton.svelte';
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
@@ -28,8 +31,6 @@
 	import { formatAlevelSummary, formatApSummary, formatIbSummary } from '$lib/utils/studentUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 	import { formatEnrollments } from '$lib/utils/enrollmentUtils';
-	import { formatGradeValue } from '$lib/utils/gradesUtils';
-	import { parseNum } from '$lib/utils/numUtils';
 
 	import {
 		compose,
@@ -44,6 +45,7 @@
 		getEnglishProficiency,
 		getGreOrGmat,
 		getSatOrAct,
+		gradeValueGetter,
 		localeComparator,
 		moveColumnVisibilityKey,
 		showColumn
@@ -66,6 +68,15 @@
 		}
 	}
 
+	class GenderRenderer extends SvelteCellRenderer {
+		createComponent(params: ICellRendererParams): void {
+			this.component = new Gender({
+				target: this.eGui,
+				props: { student: params.data.student }
+			});
+		}
+	}
+
 	class StatusRenderer extends SvelteCellRenderer {
 		createComponent(params: ICellRendererParams): void {
 			this.component = new ApplicationStatus({
@@ -73,6 +84,11 @@
 				props: { application: params.data }
 			});
 		}
+	}
+
+	function citizenshipValueFormatter(params: ValueFormatterParams): string {
+		const flag = countryFlags[params.value];
+		return `${flag}\xa0\xa0${params.value}`;
 	}
 
 	function schoolValueGetter(params: ValueGetterParams): string {
@@ -104,25 +120,8 @@
 		return formatEnrollments(params.data.student.enrollments);
 	}
 
-	function gradeValueGetter(progression: string): (params: ValueGetterParams) => string {
-		return (params: ValueGetterParams) => {
-			for (const e of params.data.student.enrollments) {
-				// find grades of the right progression
-				const matchingGrades = e.grades.filter((g: BaseGrade) => g.progression === progression);
-				// if not found, continue with the next education experience
-				if (!matchingGrades.length) {
-					continue;
-				}
-				// if found, take the last grade and format it
-				const grade: BaseGrade = matchingGrades[matchingGrades.length - 1];
-				if (parseNum(grade.scale)) {
-					return `${formatGradeValue(grade.value, grade.scale)}/${formatGradeValue(grade.scale)}`;
-				} else {
-					return grade.comments;
-				}
-			}
-			return '';
-		};
+	function _enrollmentsGetter(params: ValueGetterParams): StudentEnrollmentItem[] {
+		return params.data.student.enrollments;
 	}
 
 	function satOrActValueGetter(params: ValueGetterParams): string {
@@ -164,10 +163,10 @@
 	};
 
 	const secondarySchoolGradeColumns = [
-		{ headerName: 'G9 GPA', valueGetter: gradeValueGetter('G9') },
-		{ headerName: 'G10 GPA', valueGetter: gradeValueGetter('G10') },
-		{ headerName: 'G11 GPA', valueGetter: gradeValueGetter('G11') },
-		{ headerName: 'G12 GPA', valueGetter: gradeValueGetter('G12') }
+		{ headerName: 'G9 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'G9') },
+		{ headerName: 'G10 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'G10') },
+		{ headerName: 'G11 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'G11') },
+		{ headerName: 'G12 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'G12') }
 	];
 	const secondarySchoolGradeColumnVisibility = {
 		'G9 GPA': false,
@@ -177,10 +176,10 @@
 	};
 
 	const universityGradeColumns = [
-		{ headerName: 'Year 1 GPA', valueGetter: gradeValueGetter('Year 1') },
-		{ headerName: 'Year 2 GPA', valueGetter: gradeValueGetter('Year 2') },
-		{ headerName: 'Year 3 GPA', valueGetter: gradeValueGetter('Year 3') },
-		{ headerName: 'Year 4 GPA', valueGetter: gradeValueGetter('Year 4') }
+		{ headerName: 'Year 1 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'Year 1') },
+		{ headerName: 'Year 2 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'Year 2') },
+		{ headerName: 'Year 3 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'Year 3') },
+		{ headerName: 'Year 4 GPA', valueGetter: gradeValueGetter(_enrollmentsGetter, 'Year 4') }
 	];
 	const universityGradeColumnVisibility = {
 		'Year 1 GPA': false,
@@ -219,6 +218,13 @@
 		{ headerName: 'Year', field: 'year', type: 'numeric', headerTooltip: 'Year of admission' },
 		{ headerName: 'Term', field: 'term' },
 		{ headerName: 'Student', field: 'student.fullname', flex: 1.2, comparator: localeComparator },
+		{ headerName: 'Gender', field: 'student.gender', cellRenderer: GenderRenderer, flex: 0.8 },
+		{
+			headerName: 'Citizenship',
+			field: 'student.citizenship',
+			valueFormatter: citizenshipValueFormatter,
+			useValueFormatterForExport: false
+		},
 		{ headerName: '战略顾问', valueGetter: stratPeopleValueGetter },
 		{ headerName: '顾问', valueGetter: salesPeopleValueGetter },
 		{ headerName: '文案', valueGetter: workPeopleValueGetter, flex: 1.2 },
@@ -271,6 +277,8 @@
 		Year: !data.year,
 		Term: false,
 		Student: true,
+		Gender: false,
+		Citizenship: false,
 		战略顾问: false,
 		顾问: true,
 		文案: true,

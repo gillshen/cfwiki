@@ -1,4 +1,8 @@
-import type { GridApi, ValueFormatterParams } from 'ag-grid-community';
+import type { BaseGrade } from '$lib/api/grade';
+import type { GridApi, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
+import { parseNum } from '$lib/utils/numUtils';
+import { formatGradeValue } from '$lib/utils/gradesUtils';
+import type { StudentEnrollmentItem } from '$lib/api/student';
 
 export const localeComparator = (
 	a: string,
@@ -46,6 +50,32 @@ export function getEnglishProficiency(data: {
 	const ieltsString = best_ielts !== undefined ? `IELTS ${best_ielts.toFixed(1)}` : '';
 	const duolingoString = best_duolingo !== undefined ? `Duolingo ${best_duolingo}` : '';
 	return [toeflString, ieltsString, duolingoString].filter(Boolean).join('/');
+}
+
+export function gradeValueGetter(
+	enrollmentsGetter: (params: ValueGetterParams) => StudentEnrollmentItem[],
+	progression: string
+): (params: ValueGetterParams) => string {
+	return (params: ValueGetterParams) => {
+		const enrollments = enrollmentsGetter(params);
+
+		for (const e of enrollments) {
+			// find grades of the right progression
+			const matchingGrades = e.grades.filter((g: BaseGrade) => g.progression === progression);
+			// if not found, continue with the next education experience
+			if (!matchingGrades.length) {
+				continue;
+			}
+			// if found, take the last grade and format it
+			const grade: BaseGrade = matchingGrades[matchingGrades.length - 1];
+			if (parseNum(grade.scale)) {
+				return `${formatGradeValue(grade.value, grade.scale)}/${formatGradeValue(grade.scale)}`;
+			} else {
+				return grade.comments;
+			}
+		}
+		return '';
+	};
 }
 
 export function showColumn(gridApi: GridApi, headerName: string, show: boolean) {

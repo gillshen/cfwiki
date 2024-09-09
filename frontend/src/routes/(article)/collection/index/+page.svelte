@@ -15,8 +15,8 @@
 
 <article class="max-w-prose rounded-lg text-gray-500 bg-stone-50 p-6 mb-8 flex flex-col gap-4">
 	<span>
-		A collection is a way of aggregating application statistics from a set of related programs, and
-		what counts as related is up to <i>you</i>.
+		A collection is a way of aggregating application statistics from a set of related programs. What
+		counts as related is up to <i>you</i>.
 	</span>
 	<Button outline href={`/collection/new`} class="w-fit">Create a collection</Button>
 </article>

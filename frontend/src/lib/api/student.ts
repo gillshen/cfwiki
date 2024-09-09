@@ -1,6 +1,7 @@
 import { get, patch, post, destroy, buildQuery } from '$lib/api/api';
 import type { Service } from '$lib/api/contract';
 import type { EnrollmentByStudent } from '$lib/api/enrollment';
+import type { BaseGrade } from '$lib/api/grade';
 
 import type {
 	ToeflScore,
@@ -52,6 +53,7 @@ export type StudentEnrollmentItem = {
 	start_progression: string;
 	end_progression: string;
 	curriculum: string;
+	grades: BaseGrade[];
 };
 
 export type ApSummary = Record<1 | 2 | 3 | 4 | 5, number>;

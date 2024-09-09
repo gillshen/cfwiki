@@ -24,7 +24,7 @@
 	import ControlButton from '$lib/components/grid-pages/ControlButton.svelte';
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
-	import { compose } from '$lib/utils/schoolUtils';
+	import { compose, formatRegionCity } from '$lib/utils/schoolUtils';
 	import { lexicalChineseLast } from '$lib/utils/stringUtils';
 	import { calcSuccessRate } from '$lib/utils/numUtils';
 
@@ -58,6 +58,10 @@
 		return `${flag}\xa0\xa0${params.value}`;
 	}
 
+	function regionValueGetter(params: ValueGetterParams): string {
+		return formatRegionCity(params.data);
+	}
+
 	function ugSuccessRateValueGetter(params: ValueGetterParams): number | null {
 		return calcSuccessRate(params.data.ug_stats);
 	}
@@ -71,24 +75,6 @@
 			valueFormatter: noZeroValueFormatter
 		}
 	};
-
-	const columnDefs: any[] = [
-		{
-			headerName: 'Name',
-			field: 'name',
-			width: 500,
-			flex: 3,
-			cellRenderer: NameRenderer,
-			comparator: localeComparator
-		},
-		{ headerName: 'Alt. Name', field: 'alt_name', flex: 1.2 },
-		{
-			headerName: 'Country',
-			field: 'country',
-			flex: 1.5,
-			valueFormatter: countryValueFormatter
-		}
-	];
 
 	const statsColumnDefs = [
 		{
@@ -152,16 +138,7 @@
 			headerTooltip: 'Cancelled, withdrawn, or untracked'
 		}
 	];
-
-	let columnVisibility: Record<string, boolean>;
-
-	columnVisibility = {
-		Name: true,
-		'Alt. Name': true,
-		Country: true
-	};
-
-	const statsColumnVisibility: Record<string, boolean> = {
+	const statsColumnVisibilityDefs: Record<string, boolean> = {
 		'UG Applied': true,
 		'UG Pending': false,
 		'UG Accepted': true,
@@ -176,14 +153,43 @@
 		'Grad Cancelled, etc.': false
 	};
 
+	let statsColumns: any = [];
+	let statsColumnVisibility = {};
+
 	if (data.schoolType !== 'Secondary Schools') {
-		for (const column of statsColumnDefs) {
-			columnDefs.push(column);
-		}
-		for (const headerName in statsColumnVisibility) {
-			columnVisibility[headerName] = statsColumnVisibility[headerName];
-		}
+		statsColumns = statsColumnDefs;
+		statsColumnVisibility = statsColumnVisibilityDefs;
 	}
+
+	const columnDefs: any[] = [
+		{
+			headerName: 'Name',
+			field: 'name',
+			width: 500,
+			flex: 3,
+			cellRenderer: NameRenderer,
+			comparator: localeComparator
+		},
+		{ headerName: 'Alt. Name', field: 'alt_name', flex: 1.2 },
+		{
+			headerName: 'Country',
+			field: 'country',
+			flex: 1.5,
+			valueFormatter: countryValueFormatter
+		},
+		{ headerName: 'Region/City', flex: 1.5, valueGetter: regionValueGetter },
+		...statsColumns
+	];
+
+	let columnVisibility: Record<string, boolean>;
+
+	columnVisibility = {
+		Name: true,
+		'Alt. Name': true,
+		Country: true,
+		'Region/City': true,
+		...statsColumnVisibility
+	};
 
 	let gridApi: GridApi;
 	let rowCount: number;

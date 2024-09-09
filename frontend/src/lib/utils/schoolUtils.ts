@@ -29,14 +29,19 @@ export function compose(schools: School[], stats: SchoolStats[]): ComposedSchool
 	});
 }
 
-export function formatLocation(student: School): string {
-	const { country, region, city } = student;
+export function formatLocation(school: School): string {
+	const { country, region, city } = school;
 	if (!country) {
 		return '';
 	}
 	if (!region && !city) {
 		return country;
 	}
+	return formatRegionCity(school);
+}
+
+export function formatRegionCity(school: School): string {
+	const { country, region, city } = school;
 	if (!city) {
 		return region;
 	}

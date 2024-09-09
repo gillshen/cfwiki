@@ -1,13 +1,10 @@
-import type { ApplicantEnrollmentItem } from '$lib/api/application';
 import type { StudentEnrollmentItem } from '$lib/api/student';
 
-export function formatEnrollments(
-	enrollments: (StudentEnrollmentItem | ApplicantEnrollmentItem)[]
-): string {
+export function formatEnrollments(enrollments: StudentEnrollmentItem[]): string {
 	return enrollments.map((e) => formatEnrollment(e)).join('; ');
 }
 
-export function formatEnrollment(e: StudentEnrollmentItem | ApplicantEnrollmentItem): string {
+export function formatEnrollment(e: StudentEnrollmentItem): string {
 	const dash = '\u2013';
 	let progression: string;
 	if (e.start_progression == e.end_progression) {
