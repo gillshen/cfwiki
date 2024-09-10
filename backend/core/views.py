@@ -89,6 +89,7 @@ class StudentListView(ListAPIView):
                     "grades"
                 ),
             ),
+            "academy_products",
         )
 
         return Student.filter(
@@ -225,6 +226,7 @@ class ApplicantListView(ListAPIView):
                     "grades"
                 ),
             ),
+            "academy_products",
         )
         student_id = self.request.query_params.get("id")
         if student_id is not None:

@@ -7,7 +7,9 @@ from core.models import CFUser, Student, Contract, Service, Application, Applica
 
 from target.models import School, Program, ProgramIteration, ApplicationRound
 import academics.models
+
 import academics.serializers
+import cf.serializers
 
 
 class CFUserSerializer(serializers.ModelSerializer):
@@ -118,6 +120,7 @@ class StudentListSerializer(serializers.ModelSerializer):
     ap_summary = serializers.SerializerMethodField()
     ib_summary = serializers.SerializerMethodField()
     alevel_summary = serializers.SerializerMethodField()
+    academy_products = cf.serializers.AcademyProductListSerializer(many=True)
 
     def get_scores(self, student):
         scores = {}
@@ -221,6 +224,8 @@ class StudentDetailSerializer(serializers.ModelSerializer):
     gre = academics.serializers.GREScoreCRUDSerializer(many=True)
     gmat = academics.serializers.GMATScoreCRUDSerializer(many=True)
     lsat = academics.serializers.LSATScoreCRUDSerializer(many=True)
+
+    academy_products = cf.serializers.AcademyProductCRUDSerializer(many=True)
 
 
 class StudentStaffListSerializer(serializers.ModelSerializer):
@@ -347,6 +352,7 @@ class ApplicantListSerializer(StudentListSerializer):
             "ap_summary",
             "ib_summary",
             "alevel_summary",
+            "academy_products",
         ]
 
 

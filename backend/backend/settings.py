@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "core",
     "target",
     "academics",
+    "cf",
     "debug_toolbar",
 ]
 

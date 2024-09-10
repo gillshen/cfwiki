@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .managers import CFUserManager
 from target.models import ApplicationRound
+from cf.models import AcademyProduct
 
 
 class CFUser(AbstractUser):
@@ -45,6 +46,8 @@ class Student(models.Model):
     base_city = models.CharField(max_length=100, blank=True)
 
     comments = models.TextField(max_length=5000, blank=True)
+
+    academy_products = models.ManyToManyField(AcademyProduct, related_name="students")
 
     def __str__(self) -> str:
         return self.fullname
