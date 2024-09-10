@@ -395,7 +395,7 @@
 	{#if canEdit}
 		<div class="mt-6">
 			<MultiActionButton text="Add a score" actions={newScoreActions} placement="right-end">
-				<PlusOutline slot="icon" />
+				<PlusOutline slot="icon" class="-ml-0.5 size-4" />
 			</MultiActionButton>
 		</div>
 	{/if}

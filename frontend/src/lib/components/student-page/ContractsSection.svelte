@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Writable } from 'svelte/store';
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import { Button } from 'flowbite-svelte';
 	import { PlusOutline } from 'flowbite-svelte-icons';
@@ -18,22 +19,22 @@
 	export let username: string;
 	export let form: SuperValidated<any>;
 	export let deleteForm: SuperValidated<any>;
+	export let contractModal: Writable<boolean>;
 
-	let contractModal = false;
 	let contractDeleteModal = false;
 	let activeContract: Contract | null = null;
 
 	const contractModalOpener = (contract?: Contract): (() => void) => {
 		return () => {
 			activeContract = contract ?? null;
-			contractModal = true;
+			contractModal.set(true);
 		};
 	};
 
 	$: canAddContract = canEditStudent(username, student);
 </script>
 
-<article class="bg-stone-50 rounded-xl w-full h-fit pb-6 pt-8 px-12">
+<article class="w-full h-fit">
 	{#if student.contracts.length}
 		<div class="flex flex-col gap-4 mb-6">
 			{#each student.contracts as contract}
@@ -53,23 +54,25 @@
 		</div>
 		{#if canAddContract}
 			<LinkButton text="Add a contract" action={contractModalOpener()}>
-				<PlusOutline slot="icon" />
+				<PlusOutline slot="icon" class="size-4 -ml-0.5" />
 			</LinkButton>
 		{/if}
 	{:else}
-		<Button on:click={contractModalOpener()}>Add a contract</Button>
+		<div class="w-full h-36 flex bg-stone-50 rounded-lg">
+			<Button on:click={contractModalOpener()} class="m-auto">Add a contract</Button>
+		</div>
 	{/if}
 </article>
 
 <FormModal
-	open={contractModal}
+	open={$contractModal}
 	superform={form}
 	fields={ContractForm}
 	action={`/student/${student.id}?/createOrUpdateContract`}
 	entity={activeContract}
 	extra={[{ name: 'student', type: 'number', value: student.id }]}
 	title={`${activeContract ? 'Update' : 'Create a'} contract`}
-	on:close={() => (contractModal = false)}
+	on:close={() => contractModal.set(false)}
 />
 
 <FormModal

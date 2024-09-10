@@ -8,6 +8,6 @@
 <A class="flex gap-1 items-center w-fit" on:click={action}>
 	<slot name="icon" />
 	{#if text}
-		<span class="text-sm font-medium">{text}</span>
+		<span class="text-xs uppercase">{text}</span>
 	{/if}
 </A>

@@ -7,6 +7,7 @@ export function formatEnrollments(enrollments: StudentEnrollmentItem[]): string 
 export function formatEnrollment(e: StudentEnrollmentItem): string {
 	const dash = '\u2013';
 	let progression: string;
+
 	if (e.start_progression == e.end_progression) {
 		progression = e.start_progression;
 	} else if (e.start_progression.startsWith('G') && e.end_progression.startsWith('G')) {
@@ -16,5 +17,7 @@ export function formatEnrollment(e: StudentEnrollmentItem): string {
 	} else {
 		progression = `${e.start_progression} ${dash} ${e.end_progression || 'Now'}`;
 	}
-	return `${e.school_name} (${[progression, e.curriculum].filter(Boolean).join(', ')})`;
+
+	const extra = [progression, e.curriculum].filter(Boolean).join(', ');
+	return e.school_name + (extra ? ` (${extra})` : '');
 }

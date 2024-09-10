@@ -74,16 +74,16 @@
 		{/each}
 	</div>
 
-	<div class="flex gap-8 mt-8">
+	<div class="flex gap-8 mt-8 items-center">
 		<slot />
 
 		<A href={`/contract/${contract.id}`}>
 			{#if canEdit}
-				<span class="text-sm font-medium">Manage Staff</span>
-				<ArrowRightOutline class="ms-0.5" />
+				<span class="text-xs uppercase">Manage Staff</span>
+				<ArrowRightOutline class="ms-0.5 size-4" />
 			{:else}
-				<span class="text-sm font-medium">Staff Details</span>
-				<ArrowRightOutline class="ms-0.5" />
+				<span class="text-xs uppercase">Staff Details</span>
+				<ArrowRightOutline class="ms-0.5 size-4" />
 			{/if}
 		</A>
 	</div>

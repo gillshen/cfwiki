@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { writable } from 'svelte/store';
 	import { Heading, Hr } from 'flowbite-svelte';
 
 	import { canEditStudent } from '$lib/utils/userUtils';
@@ -8,8 +9,11 @@
 	import EducationSection from '$lib/components/student-page/EducationSection.svelte';
 	import ScoresSection from '$lib/components/student-page/ScoresSection.svelte';
 	import ApplicationsSection from '$lib/components/student-page/ApplicationsSection.svelte';
+	import StudentAlert from '$lib/components/student-page/StudentAlert.svelte';
 
 	export let data;
+
+	const contractModal = writable(false);
 
 	$: canEdit = canEditStudent(data.username, data.student);
 </script>
@@ -19,13 +23,16 @@
 <Hr />
 
 <Main>
-	<BioSection student={data.student} {canEdit} deleteForm={data.deleteForm} />
+	<BioSection student={data.student} {canEdit} deleteForm={data.deleteForm}>
+		<StudentAlert student={data.student} addContract={() => contractModal.set(true)} />
+	</BioSection>
 
 	<ContractsSection
 		student={data.student}
 		username={data.username}
 		form={data.contractForm}
 		deleteForm={data.deleteForm}
+		{contractModal}
 	/>
 
 	<EducationSection

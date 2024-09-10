@@ -72,10 +72,10 @@
 
 			<div class="mt-8">
 				<LinkButton
-					text="Add an admission plan"
+					text="Add an Admission Plan"
 					action={() => goto(`/program/${data.program.id}/plan/new`)}
 				>
-					<PlusOutline slot="icon" class="-ml-0.5" />
+					<PlusOutline slot="icon" class="size-4 -ml-0.5" />
 				</LinkButton>
 			</div>
 		</div>

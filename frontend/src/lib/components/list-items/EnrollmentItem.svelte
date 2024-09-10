@@ -75,11 +75,11 @@
 		</Table>
 	{/if}
 
-	<div class="mt-8 flex gap-8">
+	<div class="mt-8 flex gap-8 items-center">
 		<slot />
 		<A href={`/grades/${enrollment.id}`}>
-			<span class="text-sm font-medium">{canEdit ? 'Manage Grades' : 'Grade Details'}</span>
-			<ArrowRightOutline class="ms-0.5" />
+			<span class="text-xs uppercase">{canEdit ? 'Manage Grades' : 'Grade Details'}</span>
+			<ArrowRightOutline class="ms-0.5 size-4" />
 		</A>
 	</div>
 </TimelineItem>
