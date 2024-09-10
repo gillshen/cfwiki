@@ -46,14 +46,16 @@
 	let showErrorToast = false;
 </script>
 
-<Heading tag="h1" class="alt-page-title flex gap-2 items-baseline">
+<Heading tag="h1" class="page-title flex gap-2 items-baseline">
 	<Avatar bordered size="sm" class="translate-y-0.5" />{data.username}
 </Heading>
 
 <Hr />
 
 <article class="h-[150px]">
-	<Heading tag="h3" class="text-xl font-semibold flex items-center">Personal Page Title</Heading>
+	<Heading tag="h3" class="text-xl font-medium flex items-center section-title">
+		Personal Page Title
+	</Heading>
 
 	{#if editingBanner}
 		<form class="form-width mt-6" method="post" action="?/updateUser" use:userEnhance>
@@ -81,14 +83,16 @@
 		<div class="form-width mt-6 text-sm font-medium p-3 rounded-lg text-gray-700 bg-stone-100">
 			{data.user.public_banner || defaultBanner(data.user.username)}
 		</div>
-		<A class="text-sm mt-4" on:click={() => (editingBanner = true)}>
-			<PenOutline class="me-2" />Edit
+		<A class="mt-4 text-sm" on:click={() => (editingBanner = true)}>
+			<PenOutline class="me-2 size-4" />Edit
 		</A>
 	{/if}
 </article>
 
 <article class="mt-12 pt-6 border-t-[1px] border-solid">
-	<Heading tag="h3" class="text-xl font-semibold flex items-center">Change Password</Heading>
+	<Heading tag="h3" class="text-xl font-medium flex items-center section-title">
+		Change Password
+	</Heading>
 
 	{#if changingPassword}
 		<form class="form-width mt-6" method="post" action="?/updatePassword" use:passwordEnhance>

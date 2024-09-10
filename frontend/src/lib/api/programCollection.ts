@@ -15,7 +15,7 @@ export async function fetchProgramCollections(): Promise<ProgramCollectionListIt
 	return await get('collections/');
 }
 export async function fetchProgramCollection(id: number): Promise<ProgramCollectionDetail> {
-	return await get(`collections/${id}/`);
+	return await get(`collections/${id}/`, 'Collection not found');
 }
 
 export async function createProgramCollection(data: any) {

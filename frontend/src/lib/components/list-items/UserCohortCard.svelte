@@ -16,7 +16,10 @@
 <div
 	class="flex flex-col w-full h-fit px-4 py-6 rounded-xl overflow-x-hidden shadow-md bg-stone-50"
 >
-	<Heading tag="h3" class="flex items-center gap-2 ml-6 w-fit text-xl font-bold  tracking-wide">
+	<Heading
+		tag="h3"
+		class="flex items-center gap-2 ml-6 w-fit text-lg tracking-wide text-gray-700 font-normal section-title"
+	>
 		{contractType}
 		<div class="relative -top-1 flex gap-1">
 			{#if currentStudents.length}

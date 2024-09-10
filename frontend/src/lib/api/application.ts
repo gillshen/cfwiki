@@ -94,7 +94,7 @@ export async function fetchApplicants(params?: { id: number }): Promise<Applican
 }
 
 export async function fetchApplication(id: number): Promise<ApplicationDetail> {
-	return await get(`applications/${id}/`);
+	return await get(`applications/${id}/`, 'Application not found');
 }
 
 export async function fetchCoApplications(

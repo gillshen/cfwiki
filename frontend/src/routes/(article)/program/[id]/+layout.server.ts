@@ -7,14 +7,10 @@ export async function load(event) {
 	const id = parseInt(event.params.id, 10);
 
 	if (isNaN(id)) {
-		throw error(404, 'Invalid id');
+		throw error(404, 'Invalid program ID');
 	}
 
 	const program: ProgramDetail = await fetchProgram(id);
-
-	if (program?.id === undefined) {
-		throw error(404, 'Program not found');
-	}
 
 	return {
 		program,

@@ -4,5 +4,5 @@
 
 <div class="flex gap-1 items-center rounded-md hover:underline">
 	<PenOutline class="size-4 me-0.5" />
-	<span class="text-xs uppercase">Edit/Delete</span>
+	<span class="text-xs uppercase font-normal">Edit/Delete</span>
 </div>

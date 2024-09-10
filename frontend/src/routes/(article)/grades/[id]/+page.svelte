@@ -122,7 +122,7 @@
 {/if}
 
 {#if canEdit}
-	<Button class="mt-8" on:click={modalOpener()} outline>Add a GPA</Button>
+	<Button class="mt-8 w-fit" on:click={modalOpener()} outline>Add a GPA</Button>
 {/if}
 
 <FormModal

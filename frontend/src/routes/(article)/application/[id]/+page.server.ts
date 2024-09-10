@@ -30,15 +30,10 @@ export async function load(event: PageServerLoadEvent) {
 	const id = parseInt(event.params.id, 10);
 
 	if (isNaN(id)) {
-		throw error(404, 'Invalid id');
+		throw error(404, 'Invalid application ID');
 	}
 
 	const application: ApplicationDetail = await fetchApplication(id);
-
-	if (application?.id === undefined) {
-		throw error(404, 'Application not found');
-	}
-
 	const staffList = (await fetchStaffList(application.student.id)).staff_names;
 
 	return {

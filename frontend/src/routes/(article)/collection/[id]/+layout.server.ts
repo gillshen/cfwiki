@@ -7,15 +7,10 @@ export async function load(event) {
 	const id = parseInt(event.params.id, 10);
 
 	if (isNaN(id)) {
-		throw error(404, 'Invalid id');
+		throw error(404, 'Invalid collection ID');
 	}
 
 	const collection: ProgramCollectionDetail = await fetchProgramCollection(id);
-
-	if (!collection?.id) {
-		throw error(404, 'Program collection not found');
-	}
-
 	const programIds = collection.programs.map((program) => program.id).join(',');
 
 	return {

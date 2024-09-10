@@ -48,7 +48,7 @@
 
 <Card class="hover:bg-white !px-8">
 	<div class="flex items-center gap-4">
-		<Heading tag="h3" class="font-bold text-xl w-fit">
+		<Heading tag="h3" class="text-gray-800 font-bold text-xl w-fit section-title">
 			{contract.type}
 			{contract.target_year}
 		</Heading>
@@ -60,7 +60,7 @@
 	</div>
 
 	{#if dateString}
-		<P size="sm" color="text-gray-500" class="mt-1">{dateString}</P>
+		<P size="sm" color="text-gray-500" class="mt-2">{dateString}</P>
 	{/if}
 
 	<div class="text-sm mt-6 flex flex-col gap-2">

@@ -44,7 +44,7 @@ export async function fetchApplicationStats(params?: {
 }
 
 export async function fetchSchool(id: number): Promise<School> {
-	return await get(`schools/${id}/`);
+	return await get(`schools/${id}/`, 'School not found');
 }
 
 export async function createSchool(data: any) {

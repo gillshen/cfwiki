@@ -5,7 +5,7 @@
 	export let data;
 
 	const backUrl = `/school/${data.school.id}`;
-	const backUrlText = 'Back to the School Page';
+	const backUrlText = `Back to ${data.school.name}`;
 </script>
 
 {#if data.school.type === 'Secondary School'}

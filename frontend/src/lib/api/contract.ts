@@ -31,7 +31,7 @@ export type ContractDetail = Contract & {
 };
 
 export async function fetchContract(id: number): Promise<ContractDetail> {
-	return await get(`contracts/${id}/`);
+	return await get(`contracts/${id}/`, 'Contract not found');
 }
 
 export async function createOrUpdateContract(data: any) {

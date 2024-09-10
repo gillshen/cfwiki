@@ -7,14 +7,10 @@ export async function load(event) {
 	const id = parseInt(event.params.id, 10);
 
 	if (isNaN(id)) {
-		throw error(404, 'Invalid id');
+		throw error(404, 'Invalid school ID');
 	}
 
 	const school: School = await fetchSchool(id);
-
-	if (school?.id === undefined) {
-		throw error(404, 'School not found');
-	}
 
 	let applications;
 

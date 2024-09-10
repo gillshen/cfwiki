@@ -40,7 +40,7 @@ export async function fetchEnrollments(
 }
 
 export async function fetchEnrollment(id: number): Promise<EnrollmentDetail> {
-	return await get(`enrollments/${id}/`);
+	return await get(`enrollments/${id}/`, 'Educational experience not found');
 }
 
 export async function createOrUpdateEnrollment(data: any) {

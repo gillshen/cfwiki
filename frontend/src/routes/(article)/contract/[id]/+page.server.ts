@@ -13,14 +13,10 @@ export async function load(event: PageServerLoadEvent) {
 	const id = parseInt(event.params.id, 10);
 
 	if (isNaN(id)) {
-		throw error(404, 'Invalid id');
+		throw error(404, 'Invalid contract ID');
 	}
 
 	const contract: ContractDetail = await fetchContract(id);
-
-	if (!contract?.id) {
-		throw error(404, 'Contract not found');
-	}
 
 	return {
 		contract,

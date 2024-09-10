@@ -56,7 +56,7 @@ export async function fetchApplicationStats(params?: {
 }
 
 export async function fetchProgram(id: number): Promise<ProgramDetail> {
-	return await get(`programs/${id}/`);
+	return await get(`programs/${id}/`, 'Program not found');
 }
 
 export async function createProgram(data: any) {

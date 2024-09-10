@@ -22,7 +22,7 @@ export async function fetchCfUsers(): Promise<CfUserListItem[]> {
 }
 
 export async function fetchUser(username: string): Promise<CfUserDetail> {
-	return await get(`users/${username}/`);
+	return await get(`users/${username}/`, 'CFer not found');
 }
 
 export async function updateUser(data: any) {

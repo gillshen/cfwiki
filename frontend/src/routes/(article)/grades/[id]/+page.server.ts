@@ -14,15 +14,10 @@ export async function load(event: PageServerLoadEvent) {
 	const enrollmentId = parseInt(event.params.id, 10);
 
 	if (isNaN(enrollmentId)) {
-		throw error(404, 'Invalid id');
+		throw error(404, 'Invalid enrollment ID');
 	}
 
 	const enrollment = await fetchEnrollment(enrollmentId);
-
-	if (enrollment?.id === undefined) {
-		throw error(404, 'Educational experience not found');
-	}
-
 	const staffList = (await fetchStaffList(enrollment.student.id)).staff_names;
 
 	return {

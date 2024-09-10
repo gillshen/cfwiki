@@ -123,7 +123,7 @@ export async function fetchStudentsByUser(
 }
 
 export async function fetchStudent(id: number): Promise<StudentDetail> {
-	return await get(`students/${id}/`);
+	return await get(`students/${id}/`, 'Student not found');
 }
 
 export async function fetchStaffList(id: number): Promise<{ staff_names: string[] }> {

@@ -17,12 +17,19 @@
 
 .page-title {
 	@apply text-3xl font-bold pt-4 -mb-1;
+	font-family: 'Montserrat', 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial,
+		sans-serif;
 }
 .alt-page-title {
 	@apply text-4xl font-normal pt-4 -mb-1;
 }
+.section-title {
+	font-family: 'Montserrat', 'Fira Sans', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, Arial,
+		sans-serif;
+	@apply text-gray-800;
+}
 h2.section-title {
-	@apply text-xl font-bold;
+	@apply text-xl font-medium;
 }
 h2.flex-title {
 	@apply flex items-center gap-2;
@@ -142,7 +149,11 @@ div[role='tabpanel'] {
 	@apply text-gray-500;
 }
 
-/* Override timeline styles in /school/[id] */
+/* Override the default timeline heading style */
+li h3 {
+	@apply !font-medium mt-1;
+}
+/* Override the default timeline heading style in /school/[id] */
 .school-page-applications li h3 {
 	@apply !text-sm mb-4 translate-y-0.5;
 }

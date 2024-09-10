@@ -1,11 +1,20 @@
+import { error } from '@sveltejs/kit';
+
 const BASE = 'http://127.0.0.1:8000/api/';
 
-export async function get(url: string) {
+export async function get(url: string, notFoundMessage?: string) {
 	const response = await fetch(`${BASE}${url}`);
-	if (!response.ok) {
-		throw new Error(response.statusText);
+	if (response.ok) {
+		return await response.json();
 	}
-	return await response.json();
+
+	if (response.status === 404) {
+		throw error(response.status, notFoundMessage ?? 'Not found');
+	} else if (response.status >= 500) {
+		throw error(response.status, 'Server error');
+	} else {
+		throw error(response.status, 'Client error');
+	}
 }
 
 export async function post(url: string, data: any) {

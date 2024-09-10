@@ -74,9 +74,9 @@
 </script>
 
 <Heading tag="h2" class="section-title flex-title flex items-center justify-between">
-	<span>{title}</span>
+	<span class="section-title">{title}</span>
 	{#if href}
-		<A {href} class="text-sm font-medium">More stats<ArrowRightOutline class="ms-1" /></A>
+		<A {href} class="text-sm font-normal uppercase">More stats<ArrowRightOutline class="ms-1" /></A>
 	{/if}
 </Heading>
 

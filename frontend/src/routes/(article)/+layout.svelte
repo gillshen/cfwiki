@@ -13,8 +13,7 @@
 		DropdownDivider,
 		Avatar,
 		Hr,
-		Heading,
-		Button
+		Heading
 	} from 'flowbite-svelte';
 
 	import {
@@ -34,6 +33,7 @@
 
 	export let data;
 
+	// TODO
 	const years = quickAccessYears();
 
 	const activeUsers = data.cfUsers.filter((user) => user.is_active);
@@ -108,7 +108,7 @@
 					</div>
 					{#if exUsers.length}
 						<DropdownDivider />
-						<DropdownItem class="dropdown-link w-fit mx-2 mt-2 mb-1" href="/excf">
+						<DropdownItem class="dropdown-link w-fit mx-2 mt-2 mb-1" href="/cf/index/ex">
 							Ex-CFers
 						</DropdownItem>
 					{/if}
@@ -204,7 +204,7 @@
 	</div>
 
 	<div class="mt-[84px] px-4 flex flex-col justify-between min-h-[calc(100vh-280px)] flex-grow">
-		<div>
+		<div class="flex flex-col flex-grow">
 			<slot />
 		</div>
 	</div>
@@ -226,7 +226,7 @@
 		</article>
 
 		<article class="border-r-[1px] border-solid mr-6">
-			<Heading tag="h3" class="text-lg font-medium">CFers</Heading>
+			<Heading tag="h3" class="text-lg font-medium">CF People</Heading>
 			<div class="grid grid-cols-2 mt-2">
 				<ul>
 					{#each cfServicePeople as cfer}
@@ -237,7 +237,7 @@
 					{#each cfSalesPeople as cfer}
 						<li><a href={`/cf/${cfer.username}`}>{cfer.username}</a></li>
 					{/each}
-					<li><a href="/excf" class="block mt-3">Ex-CFers</a></li>
+					<li><a href="/cf/index/ex" class="block mt-3">Ex-CFers</a></li>
 				</ul>
 			</div>
 		</article>
