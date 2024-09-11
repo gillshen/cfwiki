@@ -79,6 +79,7 @@ from academics.views import (
 
 from cf.views import (
     AcademyProductListView,
+    AcademyProductDetailView,
     AcademyProductCreateView,
     AcademyProductRUDView,
 )
@@ -177,6 +178,7 @@ urlpatterns = [
     path("lsat-scores/<int:pk>/update/", LSATScoreRUDView.as_view()),
     # academy product
     path("academy-products/", AcademyProductListView.as_view()),
+    path("academy-products/<int:pk>/", AcademyProductDetailView.as_view()),
     path("academy-products/new/", AcademyProductCreateView.as_view()),
     path("academy-products/<int:pk>/update/", AcademyProductRUDView.as_view()),
 ]

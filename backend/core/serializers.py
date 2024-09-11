@@ -120,7 +120,7 @@ class StudentListSerializer(serializers.ModelSerializer):
     ap_summary = serializers.SerializerMethodField()
     ib_summary = serializers.SerializerMethodField()
     alevel_summary = serializers.SerializerMethodField()
-    academy_products = cf.serializers.AcademyProductListSerializer(many=True)
+    academy_products = serializers.SerializerMethodField()
 
     def get_scores(self, student):
         scores = {}
@@ -192,6 +192,9 @@ class StudentListSerializer(serializers.ModelSerializer):
         for alevel in [a for a in student.alevel.all() if a.grade is not None]:
             summary[alevel.type][alevel.grade] += 1
         return summary
+
+    def get_academy_products(self, student):
+        return [product.name for product in student.academy_products.all()]
 
 
 class StudentPerUserSerializer(serializers.ModelSerializer):

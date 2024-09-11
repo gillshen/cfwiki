@@ -76,7 +76,7 @@ form.modal {
 }
 
 .tooltip {
-	@apply text-sm font-normal text-gray-100 bg-stone-700;
+	@apply text-sm font-normal text-white bg-stone-600;
 }
 
 .grid-title {
@@ -130,7 +130,7 @@ div[role='tabpanel'] {
 }
 .status-started,
 .status-deferred {
-	@apply text-amber-500;
+	@apply text-amber-600;
 }
 .status-on-waitlist {
 	@apply text-purple-500;

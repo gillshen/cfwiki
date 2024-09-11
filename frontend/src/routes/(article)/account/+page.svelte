@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
 	import { Heading, Hr, Label, Input, Helper, Button, Avatar, A, Alert } from 'flowbite-svelte';
-	import { PenOutline, InfoCircleSolid } from 'flowbite-svelte-icons';
+	import { PenOutline, InfoCircleOutline } from 'flowbite-svelte-icons';
 
 	import ChecklistItem from '$lib/components/list-items/ChecklistItem.svelte';
 	import Toast from '$lib/components/misc/Toast.svelte';
@@ -150,7 +150,7 @@
 			</Helper>
 
 			<Alert color="yellow" class="mt-6 flex gap-2">
-				<InfoCircleSolid />
+				<InfoCircleOutline />
 				<span> After changing the password, you will be logged out immediately. </span>
 			</Alert>
 

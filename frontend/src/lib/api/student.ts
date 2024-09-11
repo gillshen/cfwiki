@@ -74,8 +74,7 @@ export type AlevelSummary = {
 	final?: Record<'A*' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F', number>;
 };
 
-export type StudentListItem = BaseStudent & {
-	contracts: ContractSummary[];
+export type AcademicFields = {
 	enrollments: StudentEnrollmentItem[];
 	scores: {
 		best_toefl?: number;
@@ -90,7 +89,10 @@ export type StudentListItem = BaseStudent & {
 	ap_summary: ApSummary;
 	ib_summary: IbSummary;
 	alevel_summary: AlevelSummary;
+	academy_products: string[];
 };
+
+export type StudentListItem = BaseStudent & { contracts: ContractSummary[] } & AcademicFields;
 
 export type StudentOfCferListItem = BaseStudent & {
 	contracts: Contract[];
@@ -110,6 +112,7 @@ export type StudentDetail = BaseStudent & {
 	gre: GreScore[];
 	gmat: GmatScore[];
 	lsat: LsatScore[];
+	academy_products: { id: number; name: string }[];
 };
 
 export async function fetchStudents(params?: Record<string, any>): Promise<StudentListItem[]> {

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Alert, Breadcrumb, BreadcrumbItem, Button, Heading, Hr } from 'flowbite-svelte';
-	import { InfoCircleSolid } from 'flowbite-svelte-icons';
+	import { InfoCircleOutline } from 'flowbite-svelte-icons';
 
 	import type { Service } from '$lib/api/contract';
 	import { canEditContract } from '$lib/utils/userUtils';
@@ -67,7 +67,7 @@
 {#if canEdit}
 	{#if !data.contract.services.length}
 		<Alert color="yellow" class="mb-4 max-w-prose flex gap-2">
-			<InfoCircleSolid />
+			<InfoCircleOutline />
 			<div class="flex flex-col gap-2">
 				<p><strong>Add yourself first!</strong></p>
 				<p>

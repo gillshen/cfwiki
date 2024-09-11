@@ -201,6 +201,10 @@
 		return getEnglishProficiency(params.data.scores);
 	}
 
+	function academyProductsValueGetter(params: ValueGetterParams): string {
+		return params.data.academy_products.join('; ');
+	}
+
 	const columnTypes = {
 		numeric: {
 			filter: 'agNumberColumnFilter'
@@ -307,7 +311,8 @@
 		{ headerName: 'Eng. Proficiency', valueGetter: englishValueGetter },
 		{ headerName: 'TOEFL', field: 'scores.best_toefl', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'IELTS', field: 'scores.best_ielts', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'Duolingo', field: 'scores.best_duolingo', type: ['numeric', 'rightAligned'] }
+		{ headerName: 'Duolingo', field: 'scores.best_duolingo', type: ['numeric', 'rightAligned'] },
+		{ headerName: 'CF Academy', valueGetter: academyProductsValueGetter, flex: 1.2 }
 	];
 
 	let columnVisibility: Record<string, boolean>;
@@ -341,7 +346,8 @@
 		'Eng. Proficiency': true,
 		TOEFL: false,
 		IELTS: false,
-		Duolingo: false
+		Duolingo: false,
+		'CF Academy': false
 	};
 
 	let gridApi: GridApi;

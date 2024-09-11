@@ -7,3 +7,7 @@ export function lexicalChineseLast(a: string, b: string): number {
 		return a.localeCompare(b, 'en-US-u-kf-upper');
 	}
 }
+
+export function splitAtChineseRuns(input: string): string[] {
+	return input.split(/([\u4E00-\u9FFF]+)/g).filter(Boolean);
+}

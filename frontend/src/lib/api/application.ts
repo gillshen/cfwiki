@@ -1,6 +1,6 @@
 import { get, post, patch, buildQuery, destroy } from '$lib/api/api';
 import type { ApplicationLog, ApplicationLogBrief } from '$lib/api/applicationLog';
-import type { ApSummary, IbSummary, AlevelSummary, StudentEnrollmentItem } from '$lib/api/student';
+import type { AcademicFields } from '$lib/api/student';
 
 export const applicationTypes = ['freshman', 'transfer', 'graduate', 'other'] as const;
 
@@ -30,21 +30,7 @@ export type ApplicantListItem = {
 	fullname: string;
 	gender: 'female' | 'male' | 'other';
 	citizenship: string;
-	enrollments: StudentEnrollmentItem[];
-	scores: {
-		best_toefl?: number;
-		best_ielts?: number;
-		best_duolingo?: number;
-		super_sat?: number;
-		super_act?: number;
-		best_gre?: number;
-		best_gmat?: number;
-		best_lsat?: number;
-	};
-	ap_summary: ApSummary;
-	ib_summary: IbSummary;
-	alevel_summary: AlevelSummary;
-};
+} & AcademicFields;
 
 export type ComposedApplicationListItem = {
 	id: number;

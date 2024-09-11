@@ -148,6 +148,10 @@
 		return getEnglishProficiency(params.data.student.scores);
 	}
 
+	function academyProductsValueGetter(params: ValueGetterParams): string {
+		return params.data.student.academy_products.join('; ');
+	}
+
 	function statusValueGetter(params: ValueGetterParams): string {
 		return formatNotableStatuses(getNotableStatuses(params.data));
 	}
@@ -267,7 +271,8 @@
 			valueGetter: statusDateValueGetter,
 			flex: 1.5,
 			headerTooltip: 'Date of the latest status'
-		}
+		},
+		{ headerName: 'CF Academy', valueGetter: academyProductsValueGetter, flex: 1.2 }
 	];
 
 	let columnVisibility: Record<string, boolean>;
@@ -306,7 +311,8 @@
 		'Adm. Plan': true,
 		Due: true,
 		Status: true,
-		'Last Updated': false
+		'Last Updated': false,
+		'CF Academy': false
 	};
 
 	let gridApi: GridApi;

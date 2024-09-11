@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { Heading, Hr, Alert, WidgetPlaceholder } from 'flowbite-svelte';
-	import { PlusOutline, InfoCircleSolid } from 'flowbite-svelte-icons';
+	import { PlusOutline, InfoCircleOutline } from 'flowbite-svelte-icons';
 
 	import Main from '$lib/components/containers/Main.svelte';
 	import ProgramInfobox from '$lib/components/infobox/ProgramInfobox.svelte';
@@ -38,7 +38,7 @@
 	<article>
 		{#if data.program.is_defunct}
 			<Alert color="red" class="mb-4 flex gap-2">
-				<InfoCircleSolid />
+				<InfoCircleOutline />
 				<span>This program is defunct and no longer accepting applications.</span>
 			</Alert>
 		{/if}
