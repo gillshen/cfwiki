@@ -3,9 +3,9 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { updateStudent } from '$lib/api/student';
-import { createAcademyProduct, fetchAcademyProducts } from '$lib/api/academyProduct';
-import { studentAcamdeyProductSchema } from '$lib/schemas/student';
-import { academyProductSchema } from '$lib/schemas/academyProduct';
+import { createAcademyProgram, fetchAcademyPrograms } from '$lib/api/academyProgram';
+import { studentAcamdeyProgramSchema } from '$lib/schemas/student';
+import { academyProgramSchema } from '$lib/schemas/academyProgram';
 import { formAction } from '$lib/abstract/formAction';
 
 export async function load(event) {
@@ -13,23 +13,23 @@ export async function load(event) {
 
 	const formEntity = {
 		id: student.id,
-		academy_products: student.academy_products.map((p) => p.id)
+		cf_academy_programs: student.cf_academy_programs.map((p) => p.id)
 	};
 
 	return {
-		products: fetchAcademyProducts(),
-		productsUpdateForm: await superValidate(formEntity, zod(studentAcamdeyProductSchema)),
-		newProductForm: await superValidate(zod(academyProductSchema))
+		programs: fetchAcademyPrograms(),
+		programsUpdateForm: await superValidate(formEntity, zod(studentAcamdeyProgramSchema)),
+		newProgramForm: await superValidate(zod(academyProgramSchema))
 	};
 }
 
 export const actions = {
-	updateStudentAcademyProducts: formAction(
-		studentAcamdeyProductSchema,
+	updateStudentAcademyPrograms: formAction(
+		studentAcamdeyProgramSchema,
 		updateStudent,
 		(student) => {
 			throw redirect(303, `/student/${student.id}`);
 		}
 	),
-	createAcademyProduct: formAction(academyProductSchema, createAcademyProduct)
+	createAcademyProgram: formAction(academyProgramSchema, createAcademyProgram)
 };

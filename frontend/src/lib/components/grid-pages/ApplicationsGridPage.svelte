@@ -14,7 +14,12 @@
 		type ValueGetterParams
 	} from 'ag-grid-community';
 
-	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
+	import type {
+		ApplicantListItem,
+		ApplicationListItem,
+		ComposedApplicationListItem
+	} from '$lib/api/application';
+
 	import type { StudentEnrollmentItem } from '$lib/api/student';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
@@ -31,6 +36,7 @@
 	import { formatAlevelSummary, formatApSummary, formatIbSummary } from '$lib/utils/studentUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 	import { formatEnrollments } from '$lib/utils/enrollmentUtils';
+	import { orderByCategoryName } from '$lib/utils/academyProgramUtils';
 
 	import {
 		compose,
@@ -47,6 +53,7 @@
 		getSatOrAct,
 		gradeValueGetter,
 		localeComparator,
+		mixedLanguageFormatter,
 		moveColumnVisibilityKey,
 		showColumn
 	} from '$lib/utils/gridUtils';
@@ -148,16 +155,31 @@
 		return getEnglishProficiency(params.data.student.scores);
 	}
 
-	function academyProductsValueGetter(params: ValueGetterParams): string {
-		return params.data.student.academy_products.join('; ');
-	}
-
 	function statusValueGetter(params: ValueGetterParams): string {
 		return formatNotableStatuses(getNotableStatuses(params.data));
 	}
 
 	function statusDateValueGetter(params: ValueGetterParams): string {
 		return getLatestLog(params.data)?.date ?? '';
+	}
+
+	function _getAcademyPrograms(
+		application: ComposedApplicationListItem,
+		category: 'club' | ''
+	): string {
+		return application.student.cf_academy_programs
+			.filter((p) => p.category === category)
+			.sort(orderByCategoryName)
+			.map((p) => p.name)
+			.join('; ');
+	}
+
+	function academyValueGetter(params: ValueGetterParams): string {
+		return _getAcademyPrograms(params.data, '');
+	}
+
+	function clubsValueGetter(params: ValueGetterParams): string {
+		return _getAcademyPrograms(params.data, 'club');
 	}
 
 	const columnTypes = {
@@ -272,7 +294,20 @@
 			flex: 1.5,
 			headerTooltip: 'Date of the latest status'
 		},
-		{ headerName: 'CF Academy', valueGetter: academyProductsValueGetter, flex: 1.2 }
+		{
+			headerName: 'CF Academy',
+			valueGetter: academyValueGetter,
+			valueFormatter: mixedLanguageFormatter,
+			useValueFormatterForExport: false,
+			flex: 1.2
+		},
+		{
+			headerName: 'CF Clubs',
+			valueGetter: clubsValueGetter,
+			valueFormatter: mixedLanguageFormatter,
+			useValueFormatterForExport: false,
+			flex: 1.2
+		}
 	];
 
 	let columnVisibility: Record<string, boolean>;
@@ -312,7 +347,8 @@
 		Due: true,
 		Status: true,
 		'Last Updated': false,
-		'CF Academy': false
+		'CF Academy': false,
+		'CF Clubs': false
 	};
 
 	let gridApi: GridApi;

@@ -32,6 +32,7 @@
 		localeComparator,
 		noZeroValueFormatter,
 		percentageValueFormatter,
+		mixedLanguageFormatter,
 		moveColumnVisibilityKey,
 		showColumn
 	} from '$lib/utils/gridUtils';
@@ -170,7 +171,13 @@
 			cellRenderer: NameRenderer,
 			comparator: localeComparator
 		},
-		{ headerName: 'Alt. Name', field: 'alt_name', flex: 1.2 },
+		{
+			headerName: 'Alt. Name',
+			field: 'alt_name',
+			valueFormatter: mixedLanguageFormatter,
+			useValueFormatterForExport: false,
+			flex: 1.2
+		},
 		{
 			headerName: 'Country',
 			field: 'country',

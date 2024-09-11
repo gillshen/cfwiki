@@ -12,22 +12,31 @@
 		Button
 	} from 'flowbite-svelte';
 
-	import { InfoCircleOutline, ChevronDoubleRightOutline } from 'flowbite-svelte-icons';
+	import {
+		InfoCircleOutline,
+		ChevronDoubleRightOutline,
+		CloseCircleOutline
+	} from 'flowbite-svelte-icons';
+
 	import { superForm } from 'sveltekit-superforms';
 
 	import BreadcrumbLink from '$lib/components/misc/BreadcrumbLink.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
-	import StagedAcademyProductCard from '$lib/components/student-page/StagedAcademyProductCard.svelte';
+	import StagedAcademyProgramCard from '$lib/components/student-page/StagedAcademyProgramCard.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
-	import AcademyProductForm from '$lib/components/academy-product-form/AcademyProductForm.svelte';
+	import AcademyProgramForm from '$lib/components/academy-program-form/AcademyProgramForm.svelte';
 	import Toast from '$lib/components/misc/Toast.svelte';
-	import { addChinesePadding, lexicalChineseLast } from '$lib/utils/stringUtils';
+	import { canEditStudent } from '$lib/utils/userUtils';
+	import { orderByCategoryName } from '$lib/utils/academyProgramUtils';
+	import { addChinesePadding } from '$lib/utils/stringUtils';
 
 	export let data;
 
+	$: canEdit = canEditStudent(data.username, data.student);
+
 	let showToast = false;
 
-	const { form, enhance } = superForm(data.productsUpdateForm, {
+	const { form, enhance } = superForm(data.programsUpdateForm, {
 		dataType: 'json',
 		onUpdated({ form }) {
 			if (!form.valid) {
@@ -36,28 +45,28 @@
 		}
 	});
 
-	let productId: number | '';
-	let productModal = false;
+	let programId: number | '';
+	let programModal = false;
 	let prepError = '';
 
 	const stageProgram = () => {
-		if (typeof productId !== 'number') {
+		if (typeof programId !== 'number') {
 			return;
 		}
 
-		if ($form.academy_products.includes(productId)) {
+		if ($form.cf_academy_programs.includes(programId)) {
 			prepError = 'You have already selected this program.';
 			return;
 		}
 		prepError = '';
-		$form.academy_products = [...$form.academy_products, productId as number];
-		productId = '';
+		$form.cf_academy_programs = [...$form.cf_academy_programs, programId as number];
+		programId = '';
 	};
 
 	const removeStaged = (index: number) => {
-		$form.academy_products = $form.academy_products
+		$form.cf_academy_programs = $form.cf_academy_programs
 			.slice(0, index)
-			.concat($form.academy_products.slice(index + 1));
+			.concat($form.cf_academy_programs.slice(index + 1));
 	};
 </script>
 
@@ -65,80 +74,86 @@
 
 <Hr />
 
-<Breadcrumb class="mb-8">
-	<BreadcrumbLink text={data.student.fullname} href={`/student/${data.student.id}`} />
-	<BreadcrumbItem>CF Academy</BreadcrumbItem>
-</Breadcrumb>
+{#if canEdit}
+	<Breadcrumb class="mb-8">
+		<BreadcrumbLink text={data.student.fullname} href={`/student/${data.student.id}`} />
+		<BreadcrumbItem>CF Academy</BreadcrumbItem>
+	</Breadcrumb>
 
-<form
-	class="grid grid-cols-2 gap-4"
-	method="post"
-	action="?/updateStudentAcademyProducts"
-	use:enhance
->
-	{#await data.products}
-		<FetchingDataSign divClass="mt-6" text="Preparing your form..." />
-	{:then products}
-		<div>
-			<Alert color="light" class="form-width flex gap-2">
-				<InfoCircleOutline />
-				<span>
-					Use the form below to select programs. The ones you&rsquo;ve selected will appear on the
-					right. When done, click <strong>Update</strong>.
-				</span>
-			</Alert>
+	<form
+		class="grid grid-cols-2 gap-4"
+		method="post"
+		action="?/updateStudentAcademyPrograms"
+		use:enhance
+	>
+		{#await data.programs}
+			<FetchingDataSign divClass="mt-6" text="Preparing your form..." />
+		{:then programs}
+			<div>
+				<Alert color="light" class="form-width flex gap-2">
+					<InfoCircleOutline />
+					<span>
+						Use the form below to select programs. The ones you&rsquo;ve selected will appear on the
+						right. When done, click <strong>Update</strong>.
+					</span>
+				</Alert>
 
-			<div class="form-width">
-				<Label for="product" class="form-label">Program</Label>
-				<Select id="product" bind:value={productId}>
-					{#each products.sort((a, b) => lexicalChineseLast(a.name, b.name)) as product}
-						<option value={product.id}>{addChinesePadding(product.name)}</option>
-					{/each}
-				</Select>
-				<Helper class="form-helper mt-2"
-					>If your desired program is not listed, you can create it by <A
-						on:click={() => (productModal = true)}>clicking here</A
-					>.</Helper
-				>
-
-				<Button
-					outline
-					type="button"
-					class="mt-8 w-full"
-					on:click={stageProgram}
-					disabled={!productId}
-				>
-					Select<ChevronDoubleRightOutline class="ms-2" />
-				</Button>
-				{#if prepError}
-					<Helper class="form-helper mt-4 flex items-center font-medium !text-red-500">
-						{prepError}
+				<div class="form-width">
+					<Label for="program" class="form-label">Program</Label>
+					<Select id="program" bind:value={programId}>
+						{#each programs.sort(orderByCategoryName) as program}
+							<option value={program.id}>{addChinesePadding(program.name)}</option>
+						{/each}
+					</Select>
+					<Helper class="form-helper mt-2">
+						If your desired program is not listed, go to <A href="/cf-academy">this page</A> and create
+						it.
 					</Helper>
-				{/if}
+
+					<Button
+						outline
+						type="button"
+						class="mt-8 w-full"
+						on:click={stageProgram}
+						disabled={!programId}
+					>
+						Select<ChevronDoubleRightOutline class="ms-2" />
+					</Button>
+					{#if prepError}
+						<Helper class="form-helper mt-4 flex items-center font-medium !text-red-500">
+							{prepError}
+						</Helper>
+					{/if}
+				</div>
 			</div>
-		</div>
 
-		<div class="h-fit min-h-[10rem] flex flex-col px-8 py-6 rounded-lg bg-stone-50">
-			<Heading tag="h2" class="section-title mb-4">Selected programs</Heading>
+			<div class="h-fit min-h-[10rem] flex flex-col px-8 py-6 rounded-lg bg-stone-50">
+				<Heading tag="h2" class="section-title mb-4">Selected programs</Heading>
 
-			<div class="flex flex-col gap-4">
-				{#each products.filter((p) => $form.academy_products.includes(p.id)) as product, i}
-					<StagedAcademyProductCard item={product} onRemove={() => removeStaged(i)} />
-				{/each}
+				<div class="flex flex-col gap-4">
+					{#each programs.filter((p) => $form.cf_academy_programs.includes(p.id)) as program, i}
+						<StagedAcademyProgramCard item={program} onRemove={() => removeStaged(i)} />
+					{/each}
+				</div>
+
+				<Button type="submit" class="w-fit mt-6 mb-2">Update</Button>
 			</div>
-
-			<Button type="submit" class="w-fit mt-6 mb-2">Update</Button>
-		</div>
-	{/await}
-</form>
+		{/await}
+	</form>
+{:else}
+	<Alert color="red" class="flex gap-2 max-w-prose">
+		<CloseCircleOutline />
+		<span>You are not authorized to access this page.</span>
+	</Alert>
+{/if}
 
 <FormModal
-	open={productModal}
-	superform={data.newProductForm}
-	fields={AcademyProductForm}
-	action="?/createAcademyProduct"
+	open={programModal}
+	superform={data.newProgramForm}
+	fields={AcademyProgramForm}
+	action="?/createAcademyProgram"
 	title="Create an Academy program"
-	on:close={() => (productModal = false)}
+	on:close={() => (programModal = false)}
 />
 
 {#if showToast}

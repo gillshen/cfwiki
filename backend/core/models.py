@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .managers import CFUserManager
 from target.models import ApplicationRound
-from cf.models import AcademyProduct
+from cf.models import AcademyProgram
 
 
 class CFUser(AbstractUser):
@@ -47,8 +47,8 @@ class Student(models.Model):
 
     comments = models.TextField(max_length=5000, blank=True)
 
-    academy_products = models.ManyToManyField(
-        AcademyProduct,
+    cf_academy_programs = models.ManyToManyField(
+        AcademyProgram,
         related_name="students",
         blank=True,
     )

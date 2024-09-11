@@ -1,18 +1,18 @@
 from rest_framework import serializers
 
-from cf.models import AcademyProduct
+from cf.models import AcademyProgram
 from core.models import Student
 
 
-class AcademyProductListSerializer(serializers.ModelSerializer):
+class AcademyProgramListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AcademyProduct
+        model = AcademyProgram
         fields = "__all__"
 
 
-class AcademyProductDetailSerializer(serializers.ModelSerializer):
+class AcademyProgramDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AcademyProduct
+        model = AcademyProgram
         fields = "__all__"
 
     class StudentSerializer(serializers.ModelSerializer):
@@ -25,7 +25,7 @@ class AcademyProductDetailSerializer(serializers.ModelSerializer):
     students = StudentSerializer(many=True)
 
 
-class AcademyProductCRUDSerializer(serializers.ModelSerializer):
+class AcademyProgramCRUDSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AcademyProduct
+        model = AcademyProgram
         fields = "__all__"

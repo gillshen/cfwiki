@@ -29,6 +29,7 @@
 	import { filterForActive, formatCfNames } from '$lib/utils/serviceUtils';
 	import { formatEnrollments } from '$lib/utils/enrollmentUtils';
 	import { makeDate, toISODate } from '$lib/utils/dateUtils';
+	import { orderByCategoryName } from '$lib/utils/academyProgramUtils';
 
 	import {
 		formatAlevelSummary,
@@ -44,6 +45,7 @@
 		getSatOrAct,
 		gradeValueGetter,
 		localeComparator,
+		mixedLanguageFormatter,
 		moveColumnVisibilityKey,
 		showColumn
 	} from '$lib/utils/gridUtils';
@@ -201,8 +203,20 @@
 		return getEnglishProficiency(params.data.scores);
 	}
 
-	function academyProductsValueGetter(params: ValueGetterParams): string {
-		return params.data.academy_products.join('; ');
+	function _getAcademyPrograms(student: StudentListItem, category: 'club' | ''): string {
+		return student.cf_academy_programs
+			.filter((p) => p.category === category)
+			.sort(orderByCategoryName)
+			.map((p) => p.name)
+			.join('; ');
+	}
+
+	function academyValueGetter(params: ValueGetterParams): string {
+		return _getAcademyPrograms(params.data, '');
+	}
+
+	function clubsValueGetter(params: ValueGetterParams): string {
+		return _getAcademyPrograms(params.data, 'club');
 	}
 
 	const columnTypes = {
@@ -312,7 +326,20 @@
 		{ headerName: 'TOEFL', field: 'scores.best_toefl', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'IELTS', field: 'scores.best_ielts', type: ['numeric', 'rightAligned'] },
 		{ headerName: 'Duolingo', field: 'scores.best_duolingo', type: ['numeric', 'rightAligned'] },
-		{ headerName: 'CF Academy', valueGetter: academyProductsValueGetter, flex: 1.2 }
+		{
+			headerName: 'CF Academy',
+			valueGetter: academyValueGetter,
+			valueFormatter: mixedLanguageFormatter,
+			useValueFormatterForExport: false,
+			flex: 1.2
+		},
+		{
+			headerName: 'CF Clubs',
+			valueGetter: clubsValueGetter,
+			valueFormatter: mixedLanguageFormatter,
+			useValueFormatterForExport: false,
+			flex: 1.2
+		}
 	];
 
 	let columnVisibility: Record<string, boolean>;
@@ -347,7 +374,8 @@
 		TOEFL: false,
 		IELTS: false,
 		Duolingo: false,
-		'CF Academy': false
+		'CF Academy': false,
+		'CF Clubs': false
 	};
 
 	let gridApi: GridApi;

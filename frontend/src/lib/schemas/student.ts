@@ -17,9 +17,9 @@ export const studentSchema = z.object({
 
 export type StudentSchema = typeof studentSchema;
 
-export const studentAcamdeyProductSchema = z.object({
+export const studentAcamdeyProgramSchema = z.object({
 	id: z.number(),
-	academy_products: z.number().array()
+	cf_academy_programs: z.number().array()
 });
 
-export type StudentAcamdeyProductSchema = typeof studentAcamdeyProductSchema;
+export type StudentAcamdeyProgramSchema = typeof studentAcamdeyProgramSchema;

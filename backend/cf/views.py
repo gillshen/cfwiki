@@ -5,30 +5,30 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
-from cf.models import AcademyProduct
+from cf.models import AcademyProgram
 
 from cf.serializers import (
-    AcademyProductListSerializer,
-    AcademyProductDetailSerializer,
-    AcademyProductCRUDSerializer,
+    AcademyProgramListSerializer,
+    AcademyProgramDetailSerializer,
+    AcademyProgramCRUDSerializer,
 )
 
 
-class AcademyProductListView(ListAPIView):
-    queryset = AcademyProduct.objects.all()
-    serializer_class = AcademyProductListSerializer
+class AcademyProgramListView(ListAPIView):
+    queryset = AcademyProgram.objects.all()
+    serializer_class = AcademyProgramListSerializer
 
 
-class AcademyProductDetailView(RetrieveAPIView):
-    queryset = AcademyProduct.objects.prefetch_related("students")
-    serializer_class = AcademyProductDetailSerializer
+class AcademyProgramDetailView(RetrieveAPIView):
+    queryset = AcademyProgram.objects.prefetch_related("students")
+    serializer_class = AcademyProgramDetailSerializer
 
 
-class AcademyProductCreateView(CreateAPIView):
-    queryset = AcademyProduct.objects.all()
-    serializer_class = AcademyProductCRUDSerializer
+class AcademyProgramCreateView(CreateAPIView):
+    queryset = AcademyProgram.objects.all()
+    serializer_class = AcademyProgramCRUDSerializer
 
 
-class AcademyProductRUDView(RetrieveUpdateDestroyAPIView):
-    queryset = AcademyProduct.objects.all()
-    serializer_class = AcademyProductCRUDSerializer
+class AcademyProgramRUDView(RetrieveUpdateDestroyAPIView):
+    queryset = AcademyProgram.objects.all()
+    serializer_class = AcademyProgramCRUDSerializer

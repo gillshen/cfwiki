@@ -1,27 +1,28 @@
 <script lang="ts">
 	import { Breadcrumb, BreadcrumbItem, Button, Heading, Hr, Tooltip } from 'flowbite-svelte';
 
-	import AcademyProductItem from '$lib/components/list-items/AcademyProductItem.svelte';
+	import AcademyProgramItem from '$lib/components/list-items/AcademyProgramItem.svelte';
 	import LinkWithIcon from '$lib/components/infobox/LinkWithIcon.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import BreadcrumbLink from '$lib/components/misc/BreadcrumbLink.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
-	import AcademyProductForm from '$lib/components/academy-product-form/AcademyProductForm.svelte';
+	import AcademyProgramForm from '$lib/components/academy-program-form/AcademyProgramForm.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
+	import { addChinesePadding } from '$lib/utils/stringUtils.js';
 
 	export let data;
 
-	let productModal = false;
-	let productDeleteModal = false;
+	let programModal = false;
+	let programDeleteModal = false;
 
 	// TODO let user with staff status override this
-	$: canDelete = !data.product.students.length;
+	$: canDelete = !data.program.students.length;
 </script>
 
 <Heading tag="h1" class="alt-page-title flex">
 	<span>CF Academy |&nbsp;</span>
-	<AcademyProductItem product={data.product} gap="gap-2" />
+	<AcademyProgramItem program={data.program} gap="gap-2" />
 </Heading>
 
 <Hr />
@@ -30,19 +31,19 @@
 	<Breadcrumb>
 		<BreadcrumbLink text="CF Academy" href="/cf-academy" />
 		<BreadcrumbItem>
-			<AcademyProductItem product={data.product} />
+			<AcademyProgramItem program={data.program} />
 		</BreadcrumbItem>
 	</Breadcrumb>
 
 	<div class="flex gap-2 mt-8">
-		<Button outline on:click={() => (productModal = true)}>Update</Button>
+		<Button outline on:click={() => (programModal = true)}>Update</Button>
 
-		<Button outline color="light" on:click={() => (productDeleteModal = true)} disabled={!canDelete}
+		<Button outline color="light" on:click={() => (programDeleteModal = true)} disabled={!canDelete}
 			>Delete</Button
 		>
 		{#if !canDelete}
 			<Tooltip class="tooltip max-w-sm" placement="right-end">
-				You cannot delete this Academy product because it already has at least one participant.
+				You cannot delete this Academy program because it already has at least one participant.
 			</Tooltip>
 		{/if}
 	</div>
@@ -51,9 +52,9 @@
 <article class="mt-12">
 	<Heading tag="h2" class="section-title">Participants</Heading>
 
-	{#if data.product.students.length}
+	{#if data.program.students.length}
 		<div class="flex flex-col gap-3 mt-6 text-sm">
-			{#each data.product.students as student}
+			{#each data.program.students as student}
 				<LinkWithIcon text={student.fullname} href={`/student/${student.id}`} iconFirst={true} />
 			{/each}
 		</div>
@@ -63,26 +64,27 @@
 </article>
 
 <FormModal
-	open={productModal}
-	superform={data.productForm}
-	fields={AcademyProductForm}
-	entity={data.product}
-	title="Update Academy product"
-	action="?/updateAcademyProduct"
-	on:close={() => (productModal = false)}
+	open={programModal}
+	superform={data.programForm}
+	fields={AcademyProgramForm}
+	entity={data.program}
+	title="Update Academy program"
+	action="?/updateAcademyProgram"
+	extra={[{ type: 'text', name: 'category', value: data.program.category }]}
+	on:close={() => (programModal = false)}
 />
 
 <FormModal
-	open={productDeleteModal}
+	open={programDeleteModal}
 	superform={data.deleteForm}
 	fields={DeleteForm}
-	entity={data.product}
-	title="Delete Academy product"
-	action="?/deleteAcademyProduct"
-	on:close={() => (productDeleteModal = false)}
+	entity={data.program}
+	title="Delete Academy program"
+	action="?/deleteAcademyProgram"
+	on:close={() => (programDeleteModal = false)}
 >
 	<DeleteMessage
 		slot="preface"
-		name={`this Academy product (${data.product.name}), including the associated records of student participation, if any,`}
+		name={`this CF Academy program/club (${addChinesePadding(data.program.name)}), including the associated participation records, if any,`}
 	/>
 </FormModal>

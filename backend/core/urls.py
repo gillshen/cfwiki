@@ -78,10 +78,10 @@ from academics.views import (
 )
 
 from cf.views import (
-    AcademyProductListView,
-    AcademyProductDetailView,
-    AcademyProductCreateView,
-    AcademyProductRUDView,
+    AcademyProgramListView,
+    AcademyProgramDetailView,
+    AcademyProgramCreateView,
+    AcademyProgramRUDView,
 )
 
 urlpatterns = [
@@ -176,9 +176,9 @@ urlpatterns = [
     # LSAT
     path("lsat-scores/new/", LSATScoreCreateView.as_view()),
     path("lsat-scores/<int:pk>/update/", LSATScoreRUDView.as_view()),
-    # academy product
-    path("academy-products/", AcademyProductListView.as_view()),
-    path("academy-products/<int:pk>/", AcademyProductDetailView.as_view()),
-    path("academy-products/new/", AcademyProductCreateView.as_view()),
-    path("academy-products/<int:pk>/update/", AcademyProductRUDView.as_view()),
+    # academy program
+    path("cf/academy-programs/", AcademyProgramListView.as_view()),
+    path("cf/academy-programs/<int:pk>/", AcademyProgramDetailView.as_view()),
+    path("cf/academy-programs/new/", AcademyProgramCreateView.as_view()),
+    path("cf/academy-programs/<int:pk>/update/", AcademyProgramRUDView.as_view()),
 ]

@@ -1,8 +1,9 @@
-import type { BaseGrade } from '$lib/api/grade';
 import type { GridApi, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
-import { parseNum } from '$lib/utils/numUtils';
-import { formatGradeValue } from '$lib/utils/gradesUtils';
+import type { BaseGrade } from '$lib/api/grade';
 import type { StudentEnrollmentItem } from '$lib/api/student';
+import { parseNum } from '$lib/utils/numUtils';
+import { addChinesePadding } from '$lib/utils/stringUtils';
+import { formatGradeValue } from '$lib/utils/gradesUtils';
 
 export const localeComparator = (
 	a: string,
@@ -24,6 +25,10 @@ export function percentageValueFormatter(params: ValueFormatterParams): string {
 	} else {
 		return `${(params.value * 100).toFixed(1)}\u202f%`;
 	}
+}
+
+export function mixedLanguageFormatter(params: ValueFormatterParams): string {
+	return addChinesePadding(params.value);
 }
 
 export function getSatOrAct(data: { super_sat?: number; super_act?: number }): string {

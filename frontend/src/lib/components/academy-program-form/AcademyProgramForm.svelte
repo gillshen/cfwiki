@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Label, Button, Input } from 'flowbite-svelte';
-	import type { AcademyProductListItem } from '$lib/api/academyProduct';
+	import type { AcademyProgramListItem } from '$lib/api/academyProgram';
 
 	export let form: any;
 	export let message: any;
 	export let errors: any;
-	export let entity: AcademyProductListItem | null = null;
+	export let entity: AcademyProgramListItem | null = null;
 
 	$form.id = entity?.id;
 	$form.name = entity?.name;

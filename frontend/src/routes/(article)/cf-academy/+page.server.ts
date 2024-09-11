@@ -1,17 +1,17 @@
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-import { createAcademyProduct, fetchAcademyProducts } from '$lib/api/academyProduct';
-import { academyProductSchema } from '$lib/schemas/academyProduct';
+import { createAcademyProgram, fetchAcademyPrograms } from '$lib/api/academyProgram';
+import { academyProgramSchema } from '$lib/schemas/academyProgram';
 import { formAction } from '$lib/abstract/formAction';
 
 export async function load(_) {
 	return {
-		products: fetchAcademyProducts(),
-		productForm: await superValidate(zod(academyProductSchema))
+		programs: fetchAcademyPrograms(),
+		programForm: await superValidate(zod(academyProgramSchema))
 	};
 }
 
 export const actions = {
-	createAcademyProduct: formAction(academyProductSchema, createAcademyProduct)
+	createAcademyProgram: formAction(academyProgramSchema, createAcademyProgram)
 };

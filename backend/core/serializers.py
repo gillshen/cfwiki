@@ -5,11 +5,12 @@ from rest_framework.exceptions import ValidationError
 from django.db import IntegrityError
 from core.models import CFUser, Student, Contract, Service, Application, ApplicationLog
 
+from cf.models import AcademyProgram
 from target.models import School, Program, ProgramIteration, ApplicationRound
 import academics.models
 
-import academics.serializers
 import cf.serializers
+import academics.serializers
 
 
 class CFUserSerializer(serializers.ModelSerializer):
@@ -120,7 +121,13 @@ class StudentListSerializer(serializers.ModelSerializer):
     ap_summary = serializers.SerializerMethodField()
     ib_summary = serializers.SerializerMethodField()
     alevel_summary = serializers.SerializerMethodField()
-    academy_products = serializers.SerializerMethodField()
+
+    class AcademyProgramSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = AcademyProgram
+            fields = ["name", "category"]
+
+    cf_academy_programs = AcademyProgramSerializer(many=True)
 
     def get_scores(self, student):
         scores = {}
@@ -193,9 +200,6 @@ class StudentListSerializer(serializers.ModelSerializer):
             summary[alevel.type][alevel.grade] += 1
         return summary
 
-    def get_academy_products(self, student):
-        return [product.name for product in student.academy_products.all()]
-
 
 class StudentPerUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -228,7 +232,7 @@ class StudentDetailSerializer(serializers.ModelSerializer):
     gmat = academics.serializers.GMATScoreCRUDSerializer(many=True)
     lsat = academics.serializers.LSATScoreCRUDSerializer(many=True)
 
-    academy_products = cf.serializers.AcademyProductCRUDSerializer(many=True)
+    cf_academy_programs = cf.serializers.AcademyProgramCRUDSerializer(many=True)
 
 
 class StudentStaffListSerializer(serializers.ModelSerializer):
@@ -355,7 +359,7 @@ class ApplicantListSerializer(StudentListSerializer):
             "ap_summary",
             "ib_summary",
             "alevel_summary",
-            "academy_products",
+            "cf_academy_programs",
         ]
 
 

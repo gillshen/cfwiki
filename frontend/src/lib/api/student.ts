@@ -2,6 +2,7 @@ import { get, patch, post, destroy, buildQuery } from '$lib/api/api';
 import type { Service } from '$lib/api/contract';
 import type { EnrollmentByStudent } from '$lib/api/enrollment';
 import type { BaseGrade } from '$lib/api/grade';
+import type { AcademyProgramListItem } from '$lib/api/academyProgram';
 
 import type {
 	ToeflScore,
@@ -74,6 +75,8 @@ export type AlevelSummary = {
 	final?: Record<'A*' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F', number>;
 };
 
+export type AcademyProgram = Omit<AcademyProgramListItem, 'id'>;
+
 export type AcademicFields = {
 	enrollments: StudentEnrollmentItem[];
 	scores: {
@@ -89,7 +92,7 @@ export type AcademicFields = {
 	ap_summary: ApSummary;
 	ib_summary: IbSummary;
 	alevel_summary: AlevelSummary;
-	academy_products: string[];
+	cf_academy_programs: AcademyProgram[];
 };
 
 export type StudentListItem = BaseStudent & { contracts: ContractSummary[] } & AcademicFields;
@@ -112,7 +115,7 @@ export type StudentDetail = BaseStudent & {
 	gre: GreScore[];
 	gmat: GmatScore[];
 	lsat: LsatScore[];
-	academy_products: { id: number; name: string }[];
+	cf_academy_programs: AcademyProgramListItem[];
 };
 
 export async function fetchStudents(params?: Record<string, any>): Promise<StudentListItem[]> {
