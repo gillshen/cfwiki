@@ -1,6 +1,12 @@
 import { get, patch, post, destroy, buildQuery } from '$lib/api/api';
 import type { ApplicationStats } from '$lib/api/stats';
 
+export type RankingEntry = {
+	ranking_name: string;
+	year: number;
+	rank: number;
+};
+
 export type School = {
 	id: number;
 	name: string;
@@ -9,6 +15,7 @@ export type School = {
 	country: string;
 	region: string;
 	city: string;
+	rankings: RankingEntry[];
 };
 
 export type SchoolStats = {

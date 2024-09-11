@@ -24,7 +24,7 @@
 	import ControlButton from '$lib/components/grid-pages/ControlButton.svelte';
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
-	import { compose, formatRegionCity } from '$lib/utils/schoolUtils';
+	import { compose, formatRegionCity, getLatestRanking } from '$lib/utils/schoolUtils';
 	import { lexicalChineseLast } from '$lib/utils/stringUtils';
 	import { calcSuccessRate } from '$lib/utils/numUtils';
 
@@ -61,6 +61,14 @@
 
 	function regionValueGetter(params: ValueGetterParams): string {
 		return formatRegionCity(params.data);
+	}
+
+	function usNewsRankingGetter(params: ValueGetterParams): number | null {
+		return getLatestRanking(params.data, { rankingName: 'US News' })?.rank || null;
+	}
+
+	function qsRankingGetter(params: ValueGetterParams): number | null {
+		return getLatestRanking(params.data, { rankingName: 'QS World' })?.rank || null;
 	}
 
 	function ugSuccessRateValueGetter(params: ValueGetterParams): number | null {
@@ -185,6 +193,12 @@
 			valueFormatter: countryValueFormatter
 		},
 		{ headerName: 'Region/City', flex: 1.5, valueGetter: regionValueGetter },
+		{
+			headerName: 'US News Rank',
+			valueGetter: usNewsRankingGetter,
+			type: ['numeric', 'rightAligned']
+		},
+		{ headerName: 'QS Rank', valueGetter: qsRankingGetter, type: ['numeric', 'rightAligned'] },
 		...statsColumns
 	];
 
@@ -195,6 +209,8 @@
 		'Alt. Name': true,
 		Country: true,
 		'Region/City': true,
+		'US News Rank': false,
+		'QS Rank': false,
 		...statsColumnVisibility
 	};
 

@@ -1,8 +1,10 @@
 import type { GridApi, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
 import type { BaseGrade } from '$lib/api/grade';
 import type { StudentEnrollmentItem } from '$lib/api/student';
+import type { AcademyProgramListItem } from '$lib/api/academyProgram';
 import { parseNum } from '$lib/utils/numUtils';
 import { addChinesePadding } from '$lib/utils/stringUtils';
+import { orderByCategoryName } from '$lib/utils/academyProgramUtils';
 import { formatGradeValue } from '$lib/utils/gradesUtils';
 
 export const localeComparator = (
@@ -55,6 +57,17 @@ export function getEnglishProficiency(data: {
 	const ieltsString = best_ielts !== undefined ? `IELTS ${best_ielts.toFixed(1)}` : '';
 	const duolingoString = best_duolingo !== undefined ? `Duolingo ${best_duolingo}` : '';
 	return [toeflString, ieltsString, duolingoString].filter(Boolean).join('/');
+}
+
+export function getAcademyPrograms(
+	student: { cf_academy_programs: AcademyProgramListItem[] },
+	category: '' | 'club'
+): string {
+	return student.cf_academy_programs
+		.filter((p) => p.category === category)
+		.sort(orderByCategoryName)
+		.map((p) => p.name)
+		.join('; ');
 }
 
 export function gradeValueGetter(

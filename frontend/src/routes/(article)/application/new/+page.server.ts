@@ -2,6 +2,7 @@ import type { PageServerLoadEvent } from './$types';
 import { error, redirect } from '@sveltejs/kit';
 import { fail, message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+import { format as formatDate } from 'date-fns';
 
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '$env/static/private';
@@ -15,6 +16,7 @@ import { batchNewApplicationSchema } from '$lib/schemas/application';
 import { newProgramSchema } from '$lib/schemas/program';
 import { roundSchema } from '$lib/schemas/applicationRound';
 import { createApplication } from '$lib/api/application';
+import { createOrUpdateApplicationLog } from '$lib/api/applicationLog';
 import { formAction } from '$lib/abstract/formAction';
 
 let studentId: number; // for redirecting
@@ -92,6 +94,15 @@ export const actions = {
 			const response = await createApplication({ contract, round });
 			if (!response.ok) {
 				errors.push({ round, index });
+			} else {
+				// create a log with the status `Started`
+				const application = await response.json();
+
+				await createOrUpdateApplicationLog({
+					application: application.id,
+					status: 'Started',
+					date: formatDate(new Date(), 'yyyy-LL-dd')
+				});
 			}
 		});
 

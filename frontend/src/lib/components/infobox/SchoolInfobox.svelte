@@ -3,9 +3,15 @@
 
 	import type { School } from '$lib/api/school';
 	import countryFlags from '$lib/constants/countryFlags';
-	import { formatLocation } from '$lib/utils/schoolUtils';
+	import { formatLocation, formatRanking, getLatestRanking } from '$lib/utils/schoolUtils';
 
 	export let school: School;
+
+	$: usNewsRank = formatRanking(getLatestRanking(school, { rankingName: 'US News' }), {
+		year: true
+	});
+
+	$: qsRank = formatRanking(getLatestRanking(school, { rankingName: 'QS World' }), { year: true });
 </script>
 
 <Table>
@@ -27,6 +33,20 @@
 					<div>{countryFlags[school.country]}</div>
 					<div>{formatLocation(school)}</div>
 				</div>
+			</TableBodyCell>
+		</TableBodyRow>
+
+		<TableBodyRow>
+			<TableBodyCell tdClass="w-40 font-medium py-4">US News Rank</TableBodyCell>
+			<TableBodyCell tdClass="font-normal py-4">
+				{usNewsRank ? `#\u2009${usNewsRank}` : '-'}
+			</TableBodyCell>
+		</TableBodyRow>
+
+		<TableBodyRow>
+			<TableBodyCell tdClass="w-40 font-medium py-4">QS Rank</TableBodyCell>
+			<TableBodyCell tdClass="font-normal py-4">
+				{qsRank ? `#\u2009${qsRank}` : '-'}
 			</TableBodyCell>
 		</TableBodyRow>
 	</TableBody>

@@ -6,7 +6,13 @@ from django.db import IntegrityError
 from core.models import CFUser, Student, Contract, Service, Application, ApplicationLog
 
 from cf.models import AcademyProgram
-from target.models import School, Program, ProgramIteration, ApplicationRound
+from target.models import (
+    School,
+    Program,
+    ProgramIteration,
+    ApplicationRound,
+    SchoolRankingEntry,
+)
 import academics.models
 
 import cf.serializers
@@ -321,7 +327,19 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     class SchoolSerializer(serializers.ModelSerializer):
         class Meta:
             model = School
-            fields = ["name", "country"]
+            fields = ["name", "country", "rankings"]
+
+        class RankingEntrySerializer(serializers.ModelSerializer):
+            class Meta:
+                model = SchoolRankingEntry
+                fields = ["ranking_name", "year", "rank"]
+
+            ranking_name = serializers.SerializerMethodField()
+
+            def get_ranking_name(self, ranking_entry):
+                return ranking_entry.ranking.name
+
+        rankings = RankingEntrySerializer(many=True)
 
     schools = SchoolSerializer(many=True)
 

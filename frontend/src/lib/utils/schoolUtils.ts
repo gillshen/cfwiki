@@ -1,4 +1,4 @@
-import type { ComposedSchoolListItem, School, SchoolStats } from '$lib/api/school';
+import type { ComposedSchoolListItem, School, SchoolStats, RankingEntry } from '$lib/api/school';
 import { blankStats } from '$lib/api/stats';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
@@ -61,4 +61,77 @@ export function formatRegionCity(school: School): string {
 			regionAbbr = '';
 	}
 	return `${city}, ${regionAbbr}`;
+}
+
+const _rankingOrder: Record<string, number> = {
+	'US News National Universities': 0,
+	'US News Liberal Arts Colleges': 0,
+	'QS World': 1,
+	'Times Higher Education': 2,
+	'Shanghai Ranking': 3,
+	Forbes: 4
+};
+
+export function getLatestRanking(
+	school: School,
+	params?: { year?: number | undefined; rankingName?: string | undefined }
+): RankingEntry | null {
+	let year = params?.year;
+	let rankingName = params?.rankingName;
+
+	let rankings = [...school.rankings].filter(
+		(entry) =>
+			(year === undefined || entry.year === year) &&
+			(rankingName === undefined || entry.ranking_name.startsWith(rankingName))
+	);
+
+	if (!rankings.length) {
+		return null;
+	}
+
+	rankings
+		.sort((a, b) => (_rankingOrder[a.ranking_name] ?? 99) - (_rankingOrder[b.ranking_name] ?? 99))
+		.sort((a, b) => b.year - a.year);
+
+	return rankings[0];
+}
+
+export function formatRanking(
+	entry: RankingEntry | null,
+	params?: { year?: boolean; rankingName?: boolean }
+): string {
+	if (entry === null) {
+		return '';
+	}
+
+	let rankingName = '';
+
+	if (params?.rankingName) {
+		switch (entry.ranking_name) {
+			case 'US News National Universities':
+			case 'US News Liberal Arts Colleges':
+				rankingName = 'US News';
+				break;
+			case 'QS World':
+				rankingName = 'QS';
+				break;
+			case 'Times Higher Education':
+				rankingName = 'Times';
+				break;
+			case 'Shanghai Ranking':
+				rankingName = 'Shanghai';
+				break;
+			default:
+				rankingName = entry.ranking_name;
+		}
+	}
+
+	const year = params?.year ? entry.year.toString() : '';
+
+	let nameAndYear = `${rankingName} ${year}`.trim();
+	if (nameAndYear) {
+		nameAndYear = ` (${nameAndYear})`;
+	}
+
+	return `${entry.rank}${nameAndYear}`;
 }

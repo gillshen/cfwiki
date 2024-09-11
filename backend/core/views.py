@@ -185,7 +185,7 @@ class ApplicationListView(ListAPIView):
             "round__program_iteration__program",
         ).prefetch_related(
             "contract__services__cfer",
-            "round__program_iteration__program__schools",
+            "round__program_iteration__program__schools__rankings__ranking",
             "logs",
         )
 
@@ -238,14 +238,12 @@ class ApplicationDetailView(RetrieveAPIView):
     queryset = (
         Application.objects.all()
         .select_related(
-            "round",
-            "round__program_iteration",
             "round__program_iteration__program",
         )
         .prefetch_related(
             "contract__student",
-            "contract__services",
-            "round__program_iteration__program",
+            "contract__services__cfer",
+            "round__program_iteration__program__schools",
             "logs",
         )
     )

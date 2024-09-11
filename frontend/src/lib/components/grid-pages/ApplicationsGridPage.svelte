@@ -14,13 +14,9 @@
 		type ValueGetterParams
 	} from 'ag-grid-community';
 
-	import type {
-		ApplicantListItem,
-		ApplicationListItem,
-		ComposedApplicationListItem
-	} from '$lib/api/application';
-
+	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
 	import type { StudentEnrollmentItem } from '$lib/api/student';
+	import type { School } from '$lib/api/school';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
 	import { SvelteCellRenderer } from '$lib/abstract/agCellRenderer';
 	import countryFlags from '$lib/constants/countryFlags';
@@ -36,7 +32,7 @@
 	import { formatAlevelSummary, formatApSummary, formatIbSummary } from '$lib/utils/studentUtils';
 	import { formatCfNames } from '$lib/utils/serviceUtils';
 	import { formatEnrollments } from '$lib/utils/enrollmentUtils';
-	import { orderByCategoryName } from '$lib/utils/academyProgramUtils';
+	import { getLatestRanking } from '$lib/utils/schoolUtils';
 
 	import {
 		compose,
@@ -48,6 +44,7 @@
 	} from '$lib/utils/applicationUtils';
 
 	import {
+		getAcademyPrograms,
 		getEnglishProficiency,
 		getGreOrGmat,
 		getSatOrAct,
@@ -101,6 +98,23 @@
 	function schoolValueGetter(params: ValueGetterParams): string {
 		const application: ApplicationListItem = params.data;
 		return application.schools.map((s) => s.name).join(' | ');
+	}
+
+	function _getSchoolRanking(schools: School[], year: number, rankingName: string): number | null {
+		// if more than one school, there is no ranking to speak of
+		if (schools.length > 1) {
+			return null;
+		}
+		const latestRanking = getLatestRanking(schools[0], { year, rankingName });
+		return latestRanking?.rank ?? null;
+	}
+
+	function usNewsRankingGetter(params: ValueGetterParams): number | null {
+		return _getSchoolRanking(params.data.schools, params.data.year, 'US News');
+	}
+
+	function qsRankingGetter(params: ValueGetterParams): number | null {
+		return _getSchoolRanking(params.data.schools, params.data.year, 'QS World');
 	}
 
 	function stratPeopleValueGetter(params: ValueGetterParams): string {
@@ -163,23 +177,12 @@
 		return getLatestLog(params.data)?.date ?? '';
 	}
 
-	function _getAcademyPrograms(
-		application: ComposedApplicationListItem,
-		category: 'club' | ''
-	): string {
-		return application.student.cf_academy_programs
-			.filter((p) => p.category === category)
-			.sort(orderByCategoryName)
-			.map((p) => p.name)
-			.join('; ');
-	}
-
 	function academyValueGetter(params: ValueGetterParams): string {
-		return _getAcademyPrograms(params.data, '');
+		return getAcademyPrograms(params.data.student, '');
 	}
 
 	function clubsValueGetter(params: ValueGetterParams): string {
-		return _getAcademyPrograms(params.data, 'club');
+		return getAcademyPrograms(params.data.student, 'club');
 	}
 
 	const columnTypes = {
@@ -277,6 +280,12 @@
 			type: ['numeric', 'rightAligned']
 		},
 		{ headerName: 'School', valueGetter: schoolValueGetter, flex: 3 },
+		{
+			headerName: 'US News Rank',
+			valueGetter: usNewsRankingGetter,
+			type: ['numeric', 'rightAligned']
+		},
+		{ headerName: 'QS Rank', valueGetter: qsRankingGetter, type: ['numeric', 'rightAligned'] },
 		{ headerName: 'Program', field: 'program.display_name', flex: 3 },
 		{ headerName: 'Major/Track', field: 'majors_or_track', flex: 2 },
 		{ headerName: 'Adm. Plan', field: 'round_name', headerTooltip: 'Admission plan' },
@@ -341,6 +350,8 @@
 		IELTS: false,
 		Duolingo: false,
 		School: true,
+		'US News Rank': false,
+		'QS Rank': false,
 		Program: data.applicationType !== 'freshman' && data.applicationType !== 'transfer',
 		'Major/Track': data.applicationType !== 'graduate' && data.applicationType !== 'other',
 		'Adm. Plan': true,

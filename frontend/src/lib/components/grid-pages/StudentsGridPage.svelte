@@ -29,7 +29,6 @@
 	import { filterForActive, formatCfNames } from '$lib/utils/serviceUtils';
 	import { formatEnrollments } from '$lib/utils/enrollmentUtils';
 	import { makeDate, toISODate } from '$lib/utils/dateUtils';
-	import { orderByCategoryName } from '$lib/utils/academyProgramUtils';
 
 	import {
 		formatAlevelSummary,
@@ -40,6 +39,7 @@
 	} from '$lib/utils/studentUtils';
 
 	import {
+		getAcademyPrograms,
 		getEnglishProficiency,
 		getGreOrGmat,
 		getSatOrAct,
@@ -203,20 +203,12 @@
 		return getEnglishProficiency(params.data.scores);
 	}
 
-	function _getAcademyPrograms(student: StudentListItem, category: 'club' | ''): string {
-		return student.cf_academy_programs
-			.filter((p) => p.category === category)
-			.sort(orderByCategoryName)
-			.map((p) => p.name)
-			.join('; ');
-	}
-
 	function academyValueGetter(params: ValueGetterParams): string {
-		return _getAcademyPrograms(params.data, '');
+		return getAcademyPrograms(params.data, '');
 	}
 
 	function clubsValueGetter(params: ValueGetterParams): string {
-		return _getAcademyPrograms(params.data, 'club');
+		return getAcademyPrograms(params.data, 'club');
 	}
 
 	const columnTypes = {
