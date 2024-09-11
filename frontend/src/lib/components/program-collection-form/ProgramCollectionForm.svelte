@@ -20,7 +20,7 @@
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import Toast from '$lib/components/misc/Toast.svelte';
-	import { enhanceDisplayName, orderByName } from '$lib/utils/programUtils';
+	import { enhanceDisplayName, orderByName, orderBySchoolNames } from '$lib/utils/programUtils';
 
 	export let schools: Promise<School[]>;
 	export let programs: Promise<ProgramListItem[]>;
@@ -64,7 +64,8 @@
 		programId = '';
 	};
 
-	const removeStaged = (index: number) => {
+	const removeStaged = (program: ProgramListItem) => {
+		const index = $form.programs.findIndex((id: number) => id === program.id);
 		$form.programs = $form.programs.slice(0, index).concat($form.programs.slice(index + 1));
 	};
 </script>
@@ -138,8 +139,11 @@
 			<Heading tag="h2" class="section-title mb-4">Selected programs</Heading>
 
 			<div class="flex flex-col gap-4">
-				{#each programs.filter((p) => $form.programs.includes(p.id)) as program, i}
-					<StagedApplicationCard item={{ program }} onRemove={() => removeStaged(i)} />
+				{#each programs
+					.filter((p) => $form.programs.includes(p.id))
+					.sort(orderByName)
+					.sort(orderBySchoolNames) as program}
+					<StagedApplicationCard item={{ program }} onRemove={() => removeStaged(program)} />
 				{/each}
 			</div>
 

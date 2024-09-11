@@ -20,6 +20,7 @@
 
 	import { superForm } from 'sveltekit-superforms';
 
+	import type { AcademyProgramListItem } from '$lib/api/academyProgram';
 	import BreadcrumbLink from '$lib/components/misc/BreadcrumbLink.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import StagedAcademyProgramCard from '$lib/components/student-page/StagedAcademyProgramCard.svelte';
@@ -63,7 +64,8 @@
 		programId = '';
 	};
 
-	const removeStaged = (index: number) => {
+	const removeStaged = (program: AcademyProgramListItem) => {
+		const index = $form.cf_academy_programs.findIndex((id: number) => id === program.id);
 		$form.cf_academy_programs = $form.cf_academy_programs
 			.slice(0, index)
 			.concat($form.cf_academy_programs.slice(index + 1));
@@ -131,8 +133,10 @@
 				<Heading tag="h2" class="section-title mb-4">Selected programs</Heading>
 
 				<div class="flex flex-col gap-4">
-					{#each programs.filter((p) => $form.cf_academy_programs.includes(p.id)) as program, i}
-						<StagedAcademyProgramCard item={program} onRemove={() => removeStaged(i)} />
+					{#each programs
+						.filter((p) => $form.cf_academy_programs.includes(p.id))
+						.sort(orderByCategoryName) as program}
+						<StagedAcademyProgramCard item={program} onRemove={() => removeStaged(program)} />
 					{/each}
 				</div>
 
