@@ -1,5 +1,5 @@
 import type { PageServerLoadEvent } from './$types';
-import { error, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '$env/static/private';
 
 import { formAction } from '$lib/abstract/formAction';
-import { deleteStudent, fetchStudent, type StudentDetail } from '$lib/api/student';
+import { deleteStudent } from '$lib/api/student';
 import { fetchApplicants, fetchApplications } from '$lib/api/application';
 import { fetchSchools } from '$lib/api/school';
 import { contractSchema } from '$lib/schemas/contract';
@@ -58,13 +58,7 @@ import {
 } from '$lib/api/scores';
 
 export async function load(event: PageServerLoadEvent) {
-	const id = parseInt(event.params.id, 10);
-
-	if (isNaN(id)) {
-		throw error(404, 'Invalid student ID');
-	}
-
-	const student: StudentDetail = await fetchStudent(id);
+	const { student } = await event.parent();
 
 	return {
 		student,

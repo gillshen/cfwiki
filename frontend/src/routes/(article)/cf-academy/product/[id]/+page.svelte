@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Breadcrumb, BreadcrumbItem, Button, Heading, Hr, Tooltip } from 'flowbite-svelte';
 
-	import Main from '$lib/components/containers/Main.svelte';
 	import AcademyProductItem from '$lib/components/list-items/AcademyProductItem.svelte';
 	import LinkWithIcon from '$lib/components/infobox/LinkWithIcon.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
@@ -16,7 +15,7 @@
 	let productModal = false;
 	let productDeleteModal = false;
 
-	// TODO user with staff status can override this
+	// TODO let user with staff status override this
 	$: canDelete = !data.product.students.length;
 </script>
 
@@ -27,46 +26,41 @@
 
 <Hr />
 
-<Main>
-	<article>
-		<Breadcrumb>
-			<BreadcrumbLink text="CF Academy" href="/cf-academy" />
-			<BreadcrumbItem>
-				<AcademyProductItem product={data.product} />
-			</BreadcrumbItem>
-		</Breadcrumb>
+<article>
+	<Breadcrumb>
+		<BreadcrumbLink text="CF Academy" href="/cf-academy" />
+		<BreadcrumbItem>
+			<AcademyProductItem product={data.product} />
+		</BreadcrumbItem>
+	</Breadcrumb>
 
-		<div class="flex gap-2 mt-8">
-			<Button outline on:click={() => (productModal = true)}>Update</Button>
+	<div class="flex gap-2 mt-8">
+		<Button outline on:click={() => (productModal = true)}>Update</Button>
 
-			<Button
-				outline
-				color="light"
-				on:click={() => (productDeleteModal = true)}
-				disabled={!canDelete}>Delete</Button
-			>
-			{#if !canDelete}
-				<Tooltip class="tooltip max-w-sm" placement="right-end">
-					You cannot delete this Academy product because it already has at least one participant.
-				</Tooltip>
-			{/if}
-		</div>
-	</article>
-
-	<article>
-		<Heading tag="h2" class="section-title">Participants</Heading>
-
-		{#if data.product.students.length}
-			<div class="flex flex-col gap-2 mt-6">
-				{#each data.product.students as student}
-					<LinkWithIcon text={student.fullname} href={`/student/${student.id}`} iconFirst={true} />
-				{/each}
-			</div>
-		{:else}
-			<NoDataSign text="None" divClass="mt-6" />
+		<Button outline color="light" on:click={() => (productDeleteModal = true)} disabled={!canDelete}
+			>Delete</Button
+		>
+		{#if !canDelete}
+			<Tooltip class="tooltip max-w-sm" placement="right-end">
+				You cannot delete this Academy product because it already has at least one participant.
+			</Tooltip>
 		{/if}
-	</article>
-</Main>
+	</div>
+</article>
+
+<article class="mt-12">
+	<Heading tag="h2" class="section-title">Participants</Heading>
+
+	{#if data.product.students.length}
+		<div class="flex flex-col gap-3 mt-6 text-sm">
+			{#each data.product.students as student}
+				<LinkWithIcon text={student.fullname} href={`/student/${student.id}`} iconFirst={true} />
+			{/each}
+		</div>
+	{:else}
+		<NoDataSign text="None" divClass="mt-6" />
+	{/if}
+</article>
 
 <FormModal
 	open={productModal}

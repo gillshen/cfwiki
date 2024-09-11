@@ -78,7 +78,7 @@
 			</div>
 		</Alert>
 	{/if}
-	<Button outline on:click={modalOpener()}>Add staff</Button>
+	<Button outline on:click={modalOpener()} class="w-fit">Add staff</Button>
 {/if}
 
 <FormModal

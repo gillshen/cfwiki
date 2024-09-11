@@ -21,8 +21,6 @@
 			{/if}
 		</div>
 
-		<div class="-mt-2">
-			<CloseButton on:click={onRemove} />
-		</div>
+		<div class="-mt-2"><CloseButton on:click={onRemove} /></div>
 	</div>
 </Card>

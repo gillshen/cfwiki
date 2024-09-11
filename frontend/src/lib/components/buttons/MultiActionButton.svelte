@@ -22,7 +22,7 @@
 >
 	<slot name="icon" />
 	{#if text}
-		<span class="text-xs uppercase">{text}</span>
+		<span class="text-xs uppercase tracking-wide">{text}</span>
 	{/if}
 </div>
 <Dropdown class="w-fit min-w-40 z-20" {placement}>

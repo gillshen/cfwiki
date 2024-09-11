@@ -276,130 +276,118 @@
 	];
 </script>
 
-<article class="mt-16">
-	<Heading tag="h2" class="section-title">Test Scores</Heading>
+<Heading tag="h2" class="section-title">Test Scores</Heading>
 
-	<div class="flex flex-col gap-6">
-		<GreSection
-			{student}
-			{canEdit}
-			onUpdate={greScoreModalOpener}
-			onDelete={greScoreDeleteModalOpener}
-		/>
+<div class="flex flex-col gap-6">
+	<GreSection
+		{student}
+		{canEdit}
+		onUpdate={greScoreModalOpener}
+		onDelete={greScoreDeleteModalOpener}
+	/>
 
-		<GmatSection
-			{student}
-			{canEdit}
-			onUpdate={gmatScoreModalOpener}
-			onDelete={gmatScoreDeleteModalOpener}
-		/>
+	<GmatSection
+		{student}
+		{canEdit}
+		onUpdate={gmatScoreModalOpener}
+		onDelete={gmatScoreDeleteModalOpener}
+	/>
 
-		<LsatSection
-			{student}
-			{canEdit}
-			onUpdate={lsatScoreModalOpener}
-			onDelete={lsatScoreDeleteModalOpener}
-		/>
+	<LsatSection
+		{student}
+		{canEdit}
+		onUpdate={lsatScoreModalOpener}
+		onDelete={lsatScoreDeleteModalOpener}
+	/>
 
-		<SatSection
-			{student}
-			{canEdit}
-			onUpdate={satScoreModalOpener}
-			onDelete={satScoreDeleteModalOpener}
-		/>
+	<SatSection
+		{student}
+		{canEdit}
+		onUpdate={satScoreModalOpener}
+		onDelete={satScoreDeleteModalOpener}
+	/>
 
-		<ActSection
-			{student}
-			{canEdit}
-			onUpdate={actScoreModalOpener}
-			onDelete={actScoreDeleteModalOpener}
-		/>
+	<ActSection
+		{student}
+		{canEdit}
+		onUpdate={actScoreModalOpener}
+		onDelete={actScoreDeleteModalOpener}
+	/>
 
-		<ToeflSection
-			{student}
-			{canEdit}
-			onUpdate={toeflModalOpener}
-			onDelete={toeflDeleteModalOpener}
-		/>
+	<ToeflSection {student} {canEdit} onUpdate={toeflModalOpener} onDelete={toeflDeleteModalOpener} />
 
-		<IeltsSection
-			{student}
-			{canEdit}
-			onUpdate={ieltsModalOpener}
-			onDelete={ieltsDeleteModalOpener}
-		/>
+	<IeltsSection {student} {canEdit} onUpdate={ieltsModalOpener} onDelete={ieltsDeleteModalOpener} />
 
-		<DuolingoSection
-			{student}
-			{canEdit}
-			onUpdate={duolingoModalOpener}
-			onDelete={duolingoDeleteModalOpener}
-		/>
+	<DuolingoSection
+		{student}
+		{canEdit}
+		onUpdate={duolingoModalOpener}
+		onDelete={duolingoDeleteModalOpener}
+	/>
+</div>
+
+{#if student.ap.length}
+	<ScoreSectionHeading title="AP" />
+	<div class="mt-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
+		{#each student.ap.sort(orderBySubject) as score}
+			<ApScoreItem
+				{score}
+				{canEdit}
+				updateAction={apScoreModalOpener(score)}
+				deleteAction={() => {
+					activeApScore = score;
+					apScoreDeleteModal = true;
+				}}
+			/>
+		{/each}
 	</div>
+{/if}
 
-	{#if student.ap.length}
-		<ScoreSectionHeading title="AP" />
-		<div class="mt-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
-			{#each student.ap.sort(orderBySubject) as score}
-				<ApScoreItem
-					{score}
-					{canEdit}
-					updateAction={apScoreModalOpener(score)}
-					deleteAction={() => {
-						activeApScore = score;
-						apScoreDeleteModal = true;
-					}}
-				/>
-			{/each}
-		</div>
-	{/if}
+{#if student.ib.length}
+	<ScoreSectionHeading title="IB" />
+	<div class="my-4 mb-8">
+		{#each student.ib.sort(orderBySubject).sort(orderByPredictedOrFinal) as grade}
+			<IbAlevelGradeItem
+				{grade}
+				{canEdit}
+				updateAction={ibGradeModalOpener(grade)}
+				deleteAction={() => {
+					activeIbGrade = grade;
+					ibGradeDeleteModal = true;
+				}}
+			/>
+		{/each}
+	</div>
+{/if}
 
-	{#if student.ib.length}
-		<ScoreSectionHeading title="IB" />
-		<div class="my-4 mb-8">
-			{#each student.ib.sort(orderBySubject).sort(orderByPredictedOrFinal) as grade}
-				<IbAlevelGradeItem
-					{grade}
-					{canEdit}
-					updateAction={ibGradeModalOpener(grade)}
-					deleteAction={() => {
-						activeIbGrade = grade;
-						ibGradeDeleteModal = true;
-					}}
-				/>
-			{/each}
-		</div>
-	{/if}
+{#if student.alevel.length}
+	<ScoreSectionHeading title="A-level" />
+	<div class="my-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
+		{#each student.alevel.sort(orderBySubject).sort(orderByPredictedOrFinal) as grade}
+			<IbAlevelGradeItem
+				{grade}
+				{canEdit}
+				updateAction={alevelGradeModalOpener(grade)}
+				deleteAction={() => {
+					activeAlevelGrade = grade;
+					alevelGradeDeleteModal = true;
+				}}
+			/>
+		{/each}
+	</div>
+{/if}
 
-	{#if student.alevel.length}
-		<ScoreSectionHeading title="A-level" />
-		<div class="my-4 mb-8 grid grid-cols-2 gap-x-4 gap-y-4">
-			{#each student.alevel.sort(orderBySubject).sort(orderByPredictedOrFinal) as grade}
-				<IbAlevelGradeItem
-					{grade}
-					{canEdit}
-					updateAction={alevelGradeModalOpener(grade)}
-					deleteAction={() => {
-						activeAlevelGrade = grade;
-						alevelGradeDeleteModal = true;
-					}}
-				/>
-			{/each}
-		</div>
-	{/if}
+{#if noScore(student) && !canEdit}
+	<NoDataSign text="None" divClass="mt-6" />
+{/if}
 
-	{#if noScore(student) && !canEdit}
-		<NoDataSign text="No test scores" divClass="mt-6" />
-	{/if}
-
-	{#if canEdit}
-		<div class="mt-6">
-			<MultiActionButton text="Add a score" actions={newScoreActions} placement="right-end">
-				<PlusOutline slot="icon" class="-ml-0.5 size-4" />
-			</MultiActionButton>
-		</div>
-	{/if}
-</article>
+{#if canEdit}
+	<div class="mt-6">
+		<MultiActionButton text="Add a score" actions={newScoreActions} placement="right-end">
+			<PlusOutline slot="icon" class="-ml-0.5 size-4" />
+		</MultiActionButton>
+	</div>
+{/if}
 
 <FormModal
 	open={$toeflModal}

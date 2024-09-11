@@ -11,7 +11,7 @@
 
 <UserIndexPage users={exUsers} title="Ex-CFers">
 	<div class="mt-12">
-		<A href="/cf/index" class="text-xs uppercase font-normal">
+		<A href="/cf/index" class="text-xs uppercase tracking-wide font-normal">
 			Current CFers<ArrowRightOutline class="ms-1 size-4" />
 		</A>
 	</div>

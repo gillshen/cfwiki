@@ -11,3 +11,7 @@ export function lexicalChineseLast(a: string, b: string): number {
 export function splitAtChineseRuns(input: string): string[] {
 	return input.split(/([\u4E00-\u9FFF]+)/g).filter(Boolean);
 }
+
+export function addChinesePadding(input: string): string {
+	return splitAtChineseRuns(input).join('\u2009');
+}

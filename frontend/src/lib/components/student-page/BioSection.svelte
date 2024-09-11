@@ -16,20 +16,16 @@
 	let deleteModal = false;
 </script>
 
-<article>
-	<slot />
+<StudentInfobox {student} />
 
-	<StudentInfobox {student} />
-
-	{#if canEdit}
-		<div class="mt-3">
-			<UpdateDeleteButton
-				updateAction={() => goto(`${student.id}/update`)}
-				deleteAction={() => (deleteModal = true)}
-			/>
-		</div>
-	{/if}
-</article>
+{#if canEdit}
+	<div class="mt-3">
+		<UpdateDeleteButton
+			updateAction={() => goto(`${student.id}/update`)}
+			deleteAction={() => (deleteModal = true)}
+		/>
+	</div>
+{/if}
 
 <FormModal
 	open={deleteModal}

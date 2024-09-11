@@ -79,10 +79,10 @@
 
 		<A href={`/contract/${contract.id}`}>
 			{#if canEdit}
-				<span class="text-xs uppercase">Manage Staff</span>
+				<span class="text-xs uppercase tracking-wide">Manage Staff</span>
 				<ArrowRightOutline class="ms-0.5 size-4" />
 			{:else}
-				<span class="text-xs uppercase">Staff Details</span>
+				<span class="text-xs uppercase tracking-wide">Staff Details</span>
 				<ArrowRightOutline class="ms-0.5 size-4" />
 			{/if}
 		</A>

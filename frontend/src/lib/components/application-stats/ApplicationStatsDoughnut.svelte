@@ -75,8 +75,10 @@
 
 <Heading tag="h2" class="section-title flex-title flex items-center justify-between">
 	<span class="section-title">{title}</span>
-	{#if href}
-		<A {href} class="text-sm font-normal uppercase">More stats<ArrowRightOutline class="ms-1" /></A>
+	{#if href && stats.applied}
+		<A {href} class="text-sm font-normal uppercase tracking-wide">
+			More Stats<ArrowRightOutline class="ms-1" />
+		</A>
 	{/if}
 </Heading>
 

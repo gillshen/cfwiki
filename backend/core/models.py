@@ -47,7 +47,11 @@ class Student(models.Model):
 
     comments = models.TextField(max_length=5000, blank=True)
 
-    academy_products = models.ManyToManyField(AcademyProduct, related_name="students")
+    academy_products = models.ManyToManyField(
+        AcademyProduct,
+        related_name="students",
+        blank=True,
+    )
 
     def __str__(self) -> str:
         return self.fullname

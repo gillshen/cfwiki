@@ -34,35 +34,33 @@
 	$: canAddContract = canEditStudent(username, student);
 </script>
 
-<article class="w-full h-fit">
-	{#if student.contracts.length}
-		<div class="flex flex-col gap-4 mb-6">
-			{#each student.contracts as contract}
-				{@const canEdit = canEditContract(username, contract)}
-				<ContractItem {contract} {canEdit}>
-					{#if canEdit}
-						<UpdateDeleteButton
-							updateAction={contractModalOpener(contract)}
-							deleteAction={() => {
-								activeContract = contract;
-								contractDeleteModal = true;
-							}}
-						/>
-					{/if}
-				</ContractItem>
-			{/each}
-		</div>
-		{#if canAddContract}
-			<LinkButton text="Add a contract" action={contractModalOpener()}>
-				<PlusOutline slot="icon" class="size-4 -ml-0.5" />
-			</LinkButton>
-		{/if}
-	{:else}
-		<div class="w-full h-36 flex bg-stone-50 rounded-lg">
-			<Button on:click={contractModalOpener()} class="m-auto">Add a contract</Button>
-		</div>
+{#if student.contracts.length}
+	<div class="flex flex-col gap-4 mb-6">
+		{#each student.contracts as contract}
+			{@const canEdit = canEditContract(username, contract)}
+			<ContractItem {contract} {canEdit}>
+				{#if canEdit}
+					<UpdateDeleteButton
+						updateAction={contractModalOpener(contract)}
+						deleteAction={() => {
+							activeContract = contract;
+							contractDeleteModal = true;
+						}}
+					/>
+				{/if}
+			</ContractItem>
+		{/each}
+	</div>
+	{#if canAddContract}
+		<LinkButton text="Add a contract" action={contractModalOpener()}>
+			<PlusOutline slot="icon" class="size-4 -ml-0.5" />
+		</LinkButton>
 	{/if}
-</article>
+{:else}
+	<div class="w-full h-36 flex bg-stone-50 rounded-lg">
+		<Button on:click={contractModalOpener()} class="m-auto">Add a contract</Button>
+	</div>
+{/if}
 
 <FormModal
 	open={$contractModal}

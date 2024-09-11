@@ -65,7 +65,7 @@
 					{#if applRounds.length}
 						<ApplicationRoundsBox {applRounds} deleteForm={data.deleteForm} />
 					{:else}
-						<NoDataSign text="No admission plans" divClass="mt-6" />
+						<NoDataSign text="None" divClass="mt-6" />
 					{/if}
 				{/await}
 			</div>

@@ -42,57 +42,55 @@
 	let newApplicationModal = false;
 </script>
 
-<article class="mt-16 col-span-2">
-	<ApplicationsLoader {applications} {applicants}>
-		<svelte:fragment let:applications>
-			<ApplicationsAccordian groupedApplications={groupByYear(applications)}>
-				<svelte:fragment let:subsetOfApplications>
-					<Table hoverable={applications.length > 1}>
-						<TableHead>
-							<TableHeadCell></TableHeadCell>
-							<TableHeadCell class="w-16">Type</TableHeadCell>
-							<TableHeadCell class="w-40">Status</TableHeadCell>
-							<TableHeadCell class="w-[20rem]">School</TableHeadCell>
-							<TableHeadCell class="w-[30rem]">Program/Major</TableHeadCell>
-							<TableHeadCell class="w-40">Adm. plan</TableHeadCell>
-							<TableHeadCell class="w-40">Due</TableHeadCell>
-						</TableHead>
+<ApplicationsLoader {applications} {applicants}>
+	<svelte:fragment let:applications>
+		<ApplicationsAccordian groupedApplications={groupByYear(applications)}>
+			<svelte:fragment let:subsetOfApplications>
+				<Table hoverable={applications.length > 1}>
+					<TableHead>
+						<TableHeadCell></TableHeadCell>
+						<TableHeadCell class="w-16">Type</TableHeadCell>
+						<TableHeadCell class="w-40">Status</TableHeadCell>
+						<TableHeadCell class="w-[20rem]">School</TableHeadCell>
+						<TableHeadCell class="w-[30rem]">Program/Major</TableHeadCell>
+						<TableHeadCell class="w-40">Adm. plan</TableHeadCell>
+						<TableHeadCell class="w-40">Due</TableHeadCell>
+					</TableHead>
 
-						<TableBody>
-							{#each subsetOfApplications
-								.sort(orderBySchoolName)
-								.sort(orderByDueDate)
-								.sort(orderByStatus)
-								.sort(orderByYearDesc) as application}
-								<TableBodyRow>
-									<ApplicationLink {application} />
-									<ProgramType {application} />
-									<ApplicationStatus {application} />
-									<Schools {application} />
-									<ProgramOrMajors {application} />
-									<ApplicationRound {application} />
-									<ShortDate date={application.due_date} />
-								</TableBodyRow>
-							{/each}
-						</TableBody>
-					</Table>
-				</svelte:fragment>
-			</ApplicationsAccordian>
-		</svelte:fragment>
-	</ApplicationsLoader>
+					<TableBody>
+						{#each subsetOfApplications
+							.sort(orderBySchoolName)
+							.sort(orderByDueDate)
+							.sort(orderByStatus)
+							.sort(orderByYearDesc) as application}
+							<TableBodyRow>
+								<ApplicationLink {application} />
+								<ProgramType {application} />
+								<ApplicationStatus {application} />
+								<Schools {application} />
+								<ProgramOrMajors {application} />
+								<ApplicationRound {application} />
+								<ShortDate date={application.due_date} />
+							</TableBodyRow>
+						{/each}
+					</TableBody>
+				</Table>
+			</svelte:fragment>
+		</ApplicationsAccordian>
+	</svelte:fragment>
+</ApplicationsLoader>
 
-	{#if canEdit && student.contracts.length}
-		<Button outline on:click={() => (newApplicationModal = true)} class="mt-8">
-			Create applications
-		</Button>
-	{:else if canEdit}
-		<Button outline disabled class="mt-8">Create applications</Button>
-		<Helper class="form-helper font-medium mt-2 max-w-[20rem]">
-			Applications must be attached to an existing contract. Add a contract first to enable this
-			option.
-		</Helper>
-	{/if}
-</article>
+{#if canEdit && student.contracts.length}
+	<Button outline on:click={() => (newApplicationModal = true)} class="mt-8">
+		Create applications
+	</Button>
+{:else if canEdit}
+	<Button outline disabled class="mt-8">Create applications</Button>
+	<Helper class="form-helper font-medium mt-2 max-w-[20rem]">
+		Applications must be attached to an existing contract. Add a contract first to enable this
+		option.
+	</Helper>
+{/if}
 
 <FormModal
 	open={newApplicationModal}

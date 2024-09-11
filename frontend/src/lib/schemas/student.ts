@@ -16,3 +16,10 @@ export const studentSchema = z.object({
 });
 
 export type StudentSchema = typeof studentSchema;
+
+export const studentAcamdeyProductSchema = z.object({
+	id: z.number(),
+	academy_products: z.number().array()
+});
+
+export type StudentAcamdeyProductSchema = typeof studentAcamdeyProductSchema;

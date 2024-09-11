@@ -7,7 +7,10 @@
 	const { form, message, enhance } = superForm(data.authForm);
 </script>
 
-<Heading tag="h1" class="text-3xl font-bold pb-4">Login</Heading>
+<Heading tag="h1" class="text-3xl font-bold pb-4 flex gap-2 items-center">
+	<img src="/favicon.png" class="me-1 h-10" alt="CF Logo" />
+	ChoiceFreezer
+</Heading>
 
 <form method="post" action="?/login" use:enhance>
 	<Label for="username" class="form-label">Username</Label>
@@ -30,7 +33,7 @@
 		required
 	/>
 
-	<Button type="submit" class="mt-8">Log in</Button>
+	<Button type="submit" outline class="mt-8 w-full uppercase tracking-wide">Log in</Button>
 
 	<P size="sm" color="text-red-700" class="mt-4 h-6">{$message || ''}</P>
 </form>

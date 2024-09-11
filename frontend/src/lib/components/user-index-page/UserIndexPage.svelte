@@ -17,13 +17,13 @@
 		<li class="w-fit">
 			<A href={`/cf/${user.username}`}>
 				{#if user.department === '文案'}
-					<PenNibOutline class="size-4 me-2" />
+					<PenNibOutline class="size-4 me-1" />
 				{:else if user.department === '咨询'}
-					<PhoneOutline class="size-4 me-2 text-stone-500" />
+					<PhoneOutline class="size-4 me-1 text-stone-500" />
 				{:else}
-					<UserCircleOutline class="size-4 me-2 text-stone-500" />
+					<UserCircleOutline class="size-4 me-1 text-stone-500" />
 				{/if}
-				<span class="text-gray-900 font-medium">{user.username}</span>
+				<span class="text-gray-900 text-sm">{user.username}</span>
 			</A>
 		</li>
 	{/each}

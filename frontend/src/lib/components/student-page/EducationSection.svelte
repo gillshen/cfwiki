@@ -34,39 +34,37 @@
 	};
 </script>
 
-<article class="mt-16">
-	<Heading tag="h2" class="section-title">Educational Experiences</Heading>
+<Heading tag="h2" class="section-title">Educational Experiences</Heading>
 
-	{#if student.enrollments.length}
-		<Timeline class="mt-6 flex flex-col gap-4">
-			{#each student.enrollments as enrollment}
-				<EnrollmentItem {enrollment} {canEdit}>
-					{#if canEdit}
-						<div class="-translate-x-0.5">
-							<UpdateDeleteButton
-								updateAction={enrollmentModalOpener(enrollment)}
-								deleteAction={() => {
-									activeEnrollment = enrollment;
-									enrollmentDeleteModal = true;
-								}}
-							/>
-						</div>
-					{/if}
-				</EnrollmentItem>
-			{/each}
-		</Timeline>
-	{:else if !canEdit}
-		<NoDataSign text="No educational experience" divClass="mt-6" />
-	{/if}
+{#if student.enrollments.length}
+	<Timeline class="mt-6 flex flex-col gap-4">
+		{#each student.enrollments as enrollment}
+			<EnrollmentItem {enrollment} {canEdit}>
+				{#if canEdit}
+					<div class="-translate-x-0.5">
+						<UpdateDeleteButton
+							updateAction={enrollmentModalOpener(enrollment)}
+							deleteAction={() => {
+								activeEnrollment = enrollment;
+								enrollmentDeleteModal = true;
+							}}
+						/>
+					</div>
+				{/if}
+			</EnrollmentItem>
+		{/each}
+	</Timeline>
+{:else if !canEdit}
+	<NoDataSign text="None" divClass="mt-6" />
+{/if}
 
-	{#if canEdit}
-		<div class="mt-6">
-			<LinkButton text="Add an educational experience" action={enrollmentModalOpener()}>
-				<PlusOutline slot="icon" class="-ml-0.5 size-4" />
-			</LinkButton>
-		</div>
-	{/if}
-</article>
+{#if canEdit}
+	<div class="mt-6">
+		<LinkButton text="Add an educational experience" action={enrollmentModalOpener()}>
+			<PlusOutline slot="icon" class="-ml-0.5 size-4" />
+		</LinkButton>
+	</div>
+{/if}
 
 <FormModal
 	open={enrollmentModal}
