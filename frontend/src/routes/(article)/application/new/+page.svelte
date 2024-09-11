@@ -60,7 +60,7 @@
 
 <div class="grid grid-cols-2 gap-4">
 	<div>
-		<Alert color="blue" class="form-width flex gap-2">
+		<Alert color="light" class="form-width flex gap-2">
 			<InfoCircleOutline />
 			<span>
 				Use the form below to select programs. The ones you&rsquo;ve selected will appear on the

@@ -149,7 +149,7 @@
 				/>
 			</Helper>
 
-			<Alert color="yellow" class="mt-6 flex gap-2">
+			<Alert color="pink" class="mt-6 flex gap-2">
 				<InfoCircleOutline />
 				<span> After changing the password, you will be logged out immediately. </span>
 			</Alert>

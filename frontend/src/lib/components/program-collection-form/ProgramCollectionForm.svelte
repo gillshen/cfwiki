@@ -94,7 +94,7 @@
 				Provide a self-explanatory name. Names of public collections must be unique.
 			</Helper>
 
-			<Alert color="blue" class="form-width flex gap-2 mt-8">
+			<Alert color="light" class="form-width flex gap-2 mt-8">
 				<InfoCircleOutline />
 				<span>
 					Use the form below to select programs. The ones you&rsquo;ve selected will appear on the

@@ -5,6 +5,8 @@ from target.models import (
     Program,
     ProgramIteration,
     ApplicationRound,
+    SchoolRanking,
+    SchoolRankingEntry,
 )
 
 
@@ -41,3 +43,13 @@ class ApplicationRoundAdmin(admin.ModelAdmin):
         "due_time",
         "timezone",
     )
+
+
+@admin.register(SchoolRanking)
+class SchoolRankingAdmin(admin.ModelAdmin):
+    list_display = "id", "name"
+
+
+@admin.register(SchoolRankingEntry)
+class SchoolRankingEntryAdmin(admin.ModelAdmin):
+    list_display = "id", "ranking", "year", "school", "rank"

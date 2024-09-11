@@ -22,7 +22,7 @@
 
 {#if canEdit}
 	<A href={`/student/${student.id}/cf-academy`} class="mt-6">
-		<span class="text-xs uppercase tracking-wide">Manage Participation</span>
+		<span class="text-xs uppercase tracking-wide">Manage Academy Programs</span>
 		<ArrowRightOutline class="ms-0.5 size-4" />
 	</A>
 {/if}

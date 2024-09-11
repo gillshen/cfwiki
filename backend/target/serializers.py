@@ -8,6 +8,7 @@ from target.models import (
     Program,
     ProgramIteration,
     ApplicationRound,
+    SchoolRankingEntry,
 )
 
 
@@ -15,6 +16,18 @@ class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
         fields = "__all__"
+
+    class RankingEntrySerializer(serializers.ModelSerializer):
+        class Meta:
+            model = SchoolRankingEntry
+            fields = ["ranking_name", "year", "rank"]
+
+        ranking_name = serializers.SerializerMethodField()
+
+        def get_ranking_name(self, ranking_entry):
+            return ranking_entry.ranking.name
+
+    rankings = RankingEntrySerializer(many=True)
 
 
 class SchoolCRUDSerializer(serializers.ModelSerializer):

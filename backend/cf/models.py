@@ -3,6 +3,7 @@ from django.db.models.functions import Lower
 
 
 class AcademyProgram(models.Model):
+
     name = models.CharField(max_length=100)
     category = models.CharField(max_length=100, blank=True)
 

@@ -26,7 +26,11 @@ class SchoolListView(ListAPIView):
 
     def get_queryset(self):
         query_params = self.request.query_params
-        return School.filter(School.objects.all(), school_type=query_params.get("type"))
+
+        return School.filter(
+            School.objects.prefetch_related("rankings__ranking"),
+            school_type=query_params.get("type"),
+        )
 
 
 class SchoolDetailView(RetrieveAPIView):

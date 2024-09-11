@@ -191,3 +191,51 @@ class ApplicationRound(models.Model):
     @property
     def applications_count(self):
         return self.applications.count()
+
+
+class SchoolRanking(models.Model):
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                Lower("name"),
+                name="schoolranking_unique_name",
+            )
+        ]
+
+    def __str__(self):
+        return self.name
+
+
+class SchoolRankingEntry(models.Model):
+
+    ranking = models.ForeignKey(
+        SchoolRanking,
+        related_name="entries",
+        on_delete=models.CASCADE,
+    )
+    year = models.IntegerField()
+
+    school = models.ForeignKey(
+        School,
+        related_name="rankings",
+        on_delete=models.CASCADE,
+    )
+    rank = models.PositiveSmallIntegerField()
+
+    class Meta:
+        verbose_name_plural = "School ranking entries"
+        ordering = ["-year", "ranking", "rank", "school__name"]
+
+        constraints = [
+            models.UniqueConstraint(
+                "ranking",
+                "year",
+                "school",
+                name="schoolrankingentry_unique_ranking_year_school",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.ranking} {self.year} | {self.rank:>02} {self.school}"
