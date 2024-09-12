@@ -1,5 +1,11 @@
 import { get, post, patch, buildQuery, destroy } from '$lib/api/api';
-import type { ApplicationLog, ApplicationLogBrief } from '$lib/api/applicationLog';
+
+import type {
+	ApplicationLog,
+	ApplicationLogBrief,
+	ApplicationStatus
+} from '$lib/api/applicationLog';
+
 import type { AcademicFields } from '$lib/api/student';
 
 export const applicationTypes = ['freshman', 'transfer', 'graduate', 'other'] as const;
@@ -16,7 +22,7 @@ type ApplicationWithLogs = {
 	contract: number;
 	round: number;
 	majors_or_track: string;
-	logs: { status: string; date: string }[];
+	logs: { status: ApplicationStatus; date: string }[];
 };
 
 type ApplicationTarget = {

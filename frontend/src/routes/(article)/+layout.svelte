@@ -29,7 +29,6 @@
 	import { contractTypeToSlug } from '$lib/utils/contractUtils';
 	import { applicationTypes } from '$lib/api/application';
 	import { formatApplicationType } from '$lib/utils/applicationUtils';
-	import FooterYearGroupItem from '$lib/components/list-items/FooterYearGroupItem.svelte';
 
 	export let data;
 
@@ -207,7 +206,7 @@
 		</Navbar>
 	</div>
 
-	<div class="mt-[84px] px-4 flex flex-col justify-between min-h-[calc(100vh-280px)] flex-grow">
+	<div class="mt-[84px] px-4 flex flex-col justify-between min-h-[calc(100vh-360px)] flex-grow">
 		<div class="flex flex-col flex-grow">
 			<slot />
 		</div>
@@ -217,70 +216,73 @@
 <Hr hrClass="mt-8" />
 
 <div class="footer bg-stone-100">
-	<div
-		class="container max-w-[1280px] mx-auto px-12 pt-8 pb-12 grid grid-cols-[2fr_3fr_2fr_2fr_2fr] gap-x-4"
-	>
-		<article>
-			<NavBrand href="/home">
+	<div class="container max-w-5xl mx-auto flex flex-col px-12 pt-8 pb-16">
+		<article class="mx-auto flex flex-col">
+			<!-- Use pr to shift to the right slightly for better visual balance -->
+			<div class="flex items-center pr-8">
 				<img src="/favicon.png" class="me-1 h-6" alt="CF Logo" />
 				<span class="self-center whitespace-nowrap text-lg font-semibold">ChoiceFreezer</span>
-			</NavBrand>
-
-			<div class="text-sm mt-4 translate-x-1">&copy; just-a-test</div>
-		</article>
-
-		<article class="border-r-[1px] border-solid mr-6">
-			<Heading tag="h3" class="text-lg font-medium">CF People</Heading>
-			<div class="grid grid-cols-2 mt-2">
-				<ul>
-					{#each cfServicePeople as cfer}
-						<li><a href={`/cf/${cfer.username}`}>{cfer.username}</a></li>
-					{/each}
-				</ul>
-				<ul>
-					{#each cfSalesPeople as cfer}
-						<li><a href={`/cf/${cfer.username}`}>{cfer.username}</a></li>
-					{/each}
-					<li><a href="/cf/index/ex" class="block mt-3">Ex-CFers</a></li>
-				</ul>
 			</div>
 		</article>
 
-		<article>
-			<Heading tag="h3" class="text-lg font-medium">Students</Heading>
-			<FooterYearGroupItem {years} domain="students" />
-			<ul class="mt-3">
-				<li><a href="/data/students/current">Current Students</a></li>
-				<li><a href="/data/students/all">All Students</a></li>
-				<li class="mt-2"><a href="/student/new">Create New</a></li>
-			</ul>
-		</article>
+		<div class="flex gap-8 justify-between mt-8 text-sm">
+			<article class="flex flex-col justify-between">
+				<div class="flex flex-col gap-2 pt-1">
+					<a href="/home">Home</a>
+					<a href="/cf/index">CF People</a>
+					<a href="/cf-academy">CF Academy</a>
+					<a href="/collection/index">Program Collections</a>
+				</div>
 
-		<article>
-			<Heading tag="h3" class="text-lg font-medium">Applications</Heading>
-			<FooterYearGroupItem {years} domain="applications" />
-			<ul class="mt-3">
-				<li><a href="/data/applications/pending">Pending Applications</a></li>
-				<li><a href="/data/applications/all">All Applications</a></li>
-			</ul>
-		</article>
+				<div class="text-sm text-gray-700 flex gap-0.5">
+					<span class="translate-y-0.5">&copy;</span>
+					just-a-test
+				</div>
+			</article>
 
-		<article>
-			<Heading tag="h3" class="text-lg font-medium">Schools</Heading>
-			<ul class="mt-2">
-				<li><a href="/data/schools/universities">Universities</a></li>
-				<li><a href="/data/schools/secondary-schools">Secondary Schools</a></li>
-				<li><a href="/data/schools/other-institutions">Other Institutions</a></li>
-				<li class="mt-2"><a href="/school/new">Create New</a></li>
-			</ul>
+			<article class="flex flex-col gap-2">
+				<Heading
+					tag="h3"
+					class="section-title text-base font-normal border-b-[1px] border-solid h-7 !text-stone-600"
+				>
+					Undergraduate
+				</Heading>
+				<a href="/data/programs/undergraduate">Programs</a>
+				<a href="/data/students/freshman">Freshman Applicants</a>
+				<a href="/data/applications/freshman">Freshman Applications</a>
+				<a href="/data/students/transfer">Transfer Applicants</a>
+				<a href="/data/applications/transfer">Transfer Applications</a>
+				<!-- TODO -->
+				<div title="TODO" class="text-gray-400">Statistics</div>
+			</article>
 
-			<Heading tag="h3" class="mt-8 text-lg font-medium">Programs</Heading>
-			<ul class="mt-2">
-				<li><a href="/data/programs/undergraduate">Undergraduate</a></li>
-				<li><a href="/data/programs/graduate">Graduate</a></li>
-				<li><a href="/data/programs/non-degree">Non-degree</a></li>
-				<li class="mt-2"><a href="/collection/index">Program Collections</a></li>
-			</ul>
-		</article>
+			<article class="flex flex-col gap-2">
+				<Heading
+					tag="h3"
+					class="section-title text-base font-normal border-b-[1px] border-solid h-7 !text-stone-600"
+				>
+					Graduate
+				</Heading>
+				<a href="/data/programs/graduate">Programs</a>
+				<a href="/data/students/graduate">Applicants</a>
+				<a href="/data/applications/graduate">Applications</a>
+				<!-- TODO -->
+				<div title="TODO" class="text-gray-400">Statistics</div>
+			</article>
+
+			<article class="flex flex-col gap-2">
+				<Heading
+					tag="h3"
+					class="section-title text-base font-normal border-b-[1px] border-solid h-7 !text-stone-600"
+				>
+					Other
+				</Heading>
+				<a href="/data/programs/other">Programs</a>
+				<a href="/data/students/other">Applicants</a>
+				<a href="/data/applications/other">Applications</a>
+				<!-- TODO -->
+				<div title="TODO" class="text-gray-400">Statistics</div>
+			</article>
+		</div>
 	</div>
 </div>

@@ -54,7 +54,7 @@
 		students: Promise<StudentListItem[]>;
 		targetYear?: number | undefined;
 		contractType?: ContractType | undefined;
-		current?: true;
+		current?: boolean;
 	};
 
 	function _getName(student: StudentListItem): string {
@@ -429,6 +429,8 @@
 		Current
 	{:else if data.contractType && data.targetYear}
 		{data.contractType} {data.targetYear}
+	{:else if data.contractType}
+		{data.contractType}
 	{:else}
 		All
 	{/if}

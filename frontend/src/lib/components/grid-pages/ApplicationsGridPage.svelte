@@ -419,6 +419,8 @@
 		Pending
 	{:else if data.year && data.applicationType}
 		{formatApplicationType(data.applicationType)} {data.year}
+	{:else if data.applicationType}
+		{formatApplicationType(data.applicationType)}
 	{:else}
 		All
 	{/if}

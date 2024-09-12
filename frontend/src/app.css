@@ -35,11 +35,11 @@ h2.flex-title {
 	@apply flex items-center gap-2;
 }
 
-.footer li a {
-	@apply text-sm text-gray-700;
+.footer a {
+	@apply text-gray-700;
 }
-.footer li > a:hover {
-	@apply text-primary-700;
+.footer a:hover {
+	@apply text-primary-700 underline;
 }
 
 .form-width {
