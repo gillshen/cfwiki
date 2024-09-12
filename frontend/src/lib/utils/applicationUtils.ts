@@ -90,8 +90,10 @@ export function orderByRoundName(a: ComposedApplication, b: ComposedApplication)
 }
 
 export function orderByStatus(a: ComposedApplication, b: ComposedApplication) {
-	const aStatusOrder: number = applicationStatusOrder[getLatestLog(a)?.status ?? ''] ?? -1;
-	const bStatusOrder: number = applicationStatusOrder[getLatestLog(b)?.status ?? ''] ?? -1;
+	const aStatusOrder: number =
+		applicationStatusOrder[getLatestLog(a)?.status as ApplicationStatus] ?? -1;
+	const bStatusOrder: number =
+		applicationStatusOrder[getLatestLog(b)?.status as ApplicationStatus] ?? -1;
 	return aStatusOrder - bStatusOrder;
 }
 

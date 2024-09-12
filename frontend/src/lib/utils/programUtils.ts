@@ -57,20 +57,21 @@ export function orderBySchoolNames(a: ProgramListItem, b: ProgramListItem): numb
 	return formatSchoolNames(a).localeCompare(formatSchoolNames(b));
 }
 
-export function typeToBadgeColor(programType: string): ColorVariant {
+export function typeToBadgeColor(programType: string): string {
 	switch (programType) {
 		case 'UG Freshman':
-			return 'indigo';
+			return 'bg-stone-100 text-gray-700';
 		case 'UG Transfer':
-			return 'purple';
+			return 'bg-pink-100 text-pink-700';
 		case "Master's":
-		case 'Doctorate':
 		case 'Graduate':
-			return 'yellow';
+			return 'bg-stone-500 text-white';
+		case 'Doctorate':
+			return 'bg-gray-700 text-white';
 		case 'Non-degree':
-			return 'green';
+			return 'bg-green-200 text-green-700';
 		default:
-			return 'dark';
+			return 'bg-black text-white';
 	}
 }
 

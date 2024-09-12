@@ -8,7 +8,7 @@
 </script>
 
 <TableBodyCell class="max-w-10">
-	<Badge color={typeToBadgeColor(application.program.type)}>
+	<Badge class={typeToBadgeColor(application.program.type)}>
 		{typeToBadgeText(application.program.type)}
 	</Badge>
 </TableBodyCell>

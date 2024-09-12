@@ -123,30 +123,30 @@ div[role='tabpanel'] {
 }
 
 .status-submitted {
-	@apply text-sky-600;
+	@apply text-sky-400;
 }
 .status-under-review {
-	@apply text-blue-500;
+	@apply text-blue-400;
 }
 .status-started,
 .status-deferred {
-	@apply text-amber-600;
+	@apply text-amber-500;
 }
 .status-on-waitlist {
-	@apply text-purple-500;
+	@apply text-purple-400;
 }
 .status-accepted {
-	@apply text-green-500;
+	@apply text-green-400;
 }
 .status-rejected,
 .status-pres-rejected,
 .status-offer-rescinded {
-	@apply text-rose-500;
+	@apply text-rose-400;
 }
 .status-cancelled,
 .status-withdrawn,
 .status-untracked {
-	@apply text-gray-500;
+	@apply text-gray-400;
 }
 
 /* Override the default timeline heading style */

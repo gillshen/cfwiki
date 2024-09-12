@@ -1,6 +1,20 @@
 import { createOrUpdate, destroy } from '$lib/api/api';
 
-export const applicationStatusOrder: Record<string, number> = {
+export type ApplicationStatus =
+	| 'Started'
+	| 'Submitted'
+	| 'Under Review'
+	| 'Deferred'
+	| 'On Waitlist'
+	| 'Accepted'
+	| 'Rejected'
+	| 'Pres. Rejected'
+	| 'Offer Rescinded'
+	| 'Cancelled'
+	| 'Withdrawn'
+	| 'Untracked';
+
+export const applicationStatusOrder: Record<ApplicationStatus, number> = {
 	Started: 0,
 	Submitted: 1,
 	'Under Review': 2,
@@ -16,8 +30,6 @@ export const applicationStatusOrder: Record<string, number> = {
 };
 
 export const applicationStatuses: string[] = Object.keys(applicationStatusOrder);
-
-export type ApplicationStatus = keyof typeof applicationStatusOrder;
 
 export type ApplicationLogBrief = {
 	status: ApplicationStatus;
