@@ -8,7 +8,8 @@
 	import ProgramsListBox from '$lib/components/program-page/ProgramsListBox.svelte';
 	import ApplicationStatsDoughnut from '$lib/components/application-stats/ApplicationStatsDoughnut.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
-	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
+	import UpdateButton from '$lib/components/buttons/UpdateButton.svelte';
+	import DeleteButton from '$lib/components/buttons/DeleteButton.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import ApplicationsAccordian from '$lib/components/containers/ApplicationsAccordian.svelte';
 	import ApplicationsTable from '$lib/components/school-page/ApplicationsTable.svelte';
@@ -43,12 +44,12 @@
 	<article>
 		<SchoolInfobox school={data.school} />
 
-		<div class="mt-3">
+		<div class="mt-3 flex gap-4 items-baseline">
 			{#await Promise.all([data.applications, data.enrollments]) then [applications, enrollments]}
-				<UpdateDeleteButton
-					updateAction={() => (schoolUpdateModal = true)}
-					deleteAction={() => (schoolDeleteModal = true)}
-					deleteDisabled={!!applications.length || !!enrollments.length}
+				<UpdateButton onClick={() => (schoolUpdateModal = true)} />
+				<DeleteButton
+					onClick={() => (schoolDeleteModal = true)}
+					disabled={!!applications.length || !!enrollments.length}
 				/>
 			{/await}
 		</div>

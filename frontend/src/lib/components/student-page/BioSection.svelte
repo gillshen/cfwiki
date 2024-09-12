@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { SuperValidated } from 'sveltekit-superforms';
-	import { goto } from '$app/navigation';
+	import { PenOutline } from 'flowbite-svelte-icons';
 
 	import type { StudentDetail } from '$lib/api/student';
 	import StudentInfobox from '$lib/components/infobox/StudentInfobox.svelte';
-	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
+	import GotoButton from '$lib/components/buttons/GotoButton.svelte';
+	import DeleteButton from '$lib/components/buttons/DeleteButton.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
@@ -19,11 +20,9 @@
 <StudentInfobox {student} />
 
 {#if canEdit}
-	<div class="mt-3">
-		<UpdateDeleteButton
-			updateAction={() => goto(`${student.id}/update`)}
-			deleteAction={() => (deleteModal = true)}
-		/>
+	<div class="mt-3 flex gap-4">
+		<GotoButton href={`${student.id}/update`} text="Update" icon={PenOutline} />
+		<DeleteButton onClick={() => (deleteModal = true)} />
 	</div>
 {/if}
 

@@ -2,6 +2,7 @@
 	import { Dropdown, DropdownDivider } from 'flowbite-svelte';
 
 	import DropdownActionItem from '$lib/components/list-items/DropdownActionItem.svelte';
+	import Button from '$lib/components/buttons/Button.svelte';
 
 	type DropdownAction = {
 		text: string;
@@ -13,19 +14,14 @@
 
 	export let actions: DropdownAction[];
 	export let text: string = '';
+	export let icon: any | undefined = undefined;
 	export let placement: 'right' | 'right-start' | 'right-end' = 'right';
 	export let disabled: boolean = false;
 </script>
 
-<div
-	class={`flex gap-1 items-center w-fit ${disabled ? 'text-gray-400 hover:cursor-default' : 'text-primary-700 hover:cursor-pointer'}`}
->
-	<slot name="icon" />
-	{#if text}
-		<span class="text-xs uppercase tracking-wide">{text}</span>
-	{/if}
-</div>
-<Dropdown class="w-fit min-w-40 z-20" {placement}>
+<Button onClick={() => {}} {text} {icon} {disabled} />
+
+<Dropdown class="w-fit min-w-40 z-20 bg-stone-50" {placement}>
 	{#each actions as { text, action, divider, dark, disabled }}
 		{#if divider}
 			<DropdownDivider />

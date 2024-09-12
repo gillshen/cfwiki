@@ -272,15 +272,14 @@
 	});
 </script>
 
-<Heading tag="h1" class="grid-title flex gap-8 items-center justify-between">
-	<div class="flex gap-4 items-center">
-		{data.schoolType}
-		<ControlButton {hideControl} />
-		<RowCountBadge rows={data.schools} {rowCount} />
-	</div>
-
-	{#await Promise.all([data.schools, data.stats]) then _}
-		<DownloadButton {gridApi} fileName="cf_schools" />
+<Heading tag="h1" class="grid-title flex gap-6 items-baseline">
+	{data.schoolType}
+	{#await Promise.all([data.schools, data.stats]) then [schools]}
+		<div class="flex gap-4">
+			<RowCountBadge rows={schools} {rowCount} />
+			<ControlButton {hideControl} />
+			<DownloadButton {gridApi} fileName="cf_schools" />
+		</div>
 	{/await}
 </Heading>
 

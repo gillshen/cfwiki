@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { Heading, Hr, Modal, Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
+	import { PenOutline } from 'flowbite-svelte-icons';
 
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ApplicationInfobox from '$lib/components/infobox/ApplicationInfobox.svelte';
 	import Main from '$lib/components/containers/Main.svelte';
 	import MultiActionButton from '$lib/components/buttons/MultiActionButton.svelte';
-	import UpdateDeleteIcon from '$lib/components/buttons/UpdateDeleteIcon.svelte';
+	import DeleteButton from '$lib/components/buttons/DeleteButton.svelte';
 	import RoundChangeForm from '$lib/components/application-update-form/RoundChangeForm.svelte';
 	import RoundUpdateDialog from '$lib/components/application-round-form/RoundUpdateDialog.svelte';
 	import MajorsForm from '$lib/components/application-update-form/MajorsForm.svelte';
@@ -47,8 +48,7 @@
 			action: isUndergad ? () => (majorsUpdateModal = true) : () => (trackUpdateModal = true),
 			divider: true
 		},
-		{ text: 'Update comments', action: () => (commentsUpdateModal = true) },
-		{ text: 'Delete', action: () => (deleteModal = true), divider: true, dark: true }
+		{ text: 'Update comments', action: () => (commentsUpdateModal = true) }
 	];
 </script>
 
@@ -71,10 +71,9 @@
 		<ApplicationInfobox application={data.application} />
 
 		{#if canEdit}
-			<div class="mt-3">
-				<MultiActionButton actions={applicationActions}>
-					<UpdateDeleteIcon slot="icon" />
-				</MultiActionButton>
+			<div class="mt-3 flex gap-4">
+				<MultiActionButton actions={applicationActions} text="Update" icon={PenOutline} />
+				<DeleteButton onClick={() => (deleteModal = true)} />
 			</div>
 		{/if}
 	</article>

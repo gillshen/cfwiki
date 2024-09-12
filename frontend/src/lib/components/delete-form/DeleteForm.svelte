@@ -16,4 +16,4 @@
 
 <input type="number" name="id" class="hidden" bind:value={$form.id} />
 
-<Button class="mt-8 bg-red-600 hover:bg-red-700" type="submit">Yes, Delete It</Button>
+<Button class="mt-8 bg-red-700 hover:bg-red-600" type="submit">Yes, delete this</Button>

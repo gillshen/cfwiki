@@ -5,6 +5,9 @@
 
 	import Main from '$lib/components/containers/Main.svelte';
 	import ProgramInfobox from '$lib/components/infobox/ProgramInfobox.svelte';
+	import Button from '$lib/components/buttons/Button.svelte';
+	import UpdateButton from '$lib/components/buttons/UpdateButton.svelte';
+	import DeleteButton from '$lib/components/buttons/DeleteButton.svelte';
 	import ApplicationRoundsBox from '$lib/components/program-page/ApplicationRoundsBox.svelte';
 	import ApplicationStatsDoughnut from '$lib/components/application-stats/ApplicationStatsDoughnut.svelte';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
@@ -12,12 +15,10 @@
 	import ApplicationsTable from '$lib/components/program-page/ApplicationsTable.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
-	import LinkButton from '$lib/components/buttons/LinkButton.svelte';
 
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ProgramForm from '$lib/components/program-form/ProgramForm.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
-	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { formatSchoolNamesShort, isUndergraduate } from '$lib/utils/programUtils';
 	import { getStats, groupByYear } from '$lib/utils/applicationUtils';
@@ -45,12 +46,12 @@
 
 		<ProgramInfobox program={data.program} />
 
-		<div class="mt-3">
+		<div class="mt-3 flex gap-4 items-baseline">
 			{#await data.applications then applications}
-				<UpdateDeleteButton
-					updateAction={() => (programUpdateModal = true)}
-					deleteAction={() => (programDeleteModal = true)}
-					deleteDisabled={!!applications.length}
+				<UpdateButton onClick={() => (programUpdateModal = true)} />
+				<DeleteButton
+					onClick={() => (programDeleteModal = true)}
+					disabled={!!applications.length}
 				/>
 			{/await}
 		</div>
@@ -58,7 +59,7 @@
 		<div class="mt-16">
 			<Heading tag="h2" class="section-title">Admission Plans</Heading>
 
-			<div class="mt-4">
+			<div class="mt-6">
 				{#await data.applicationRounds}
 					<FetchingDataSign />
 				{:then applRounds}
@@ -70,13 +71,12 @@
 				{/await}
 			</div>
 
-			<div class="mt-8">
-				<LinkButton
+			<div class="mt-6">
+				<Button
+					onClick={() => goto(`/program/${data.program.id}/plan/new`)}
 					text="Add an Admission Plan"
-					action={() => goto(`/program/${data.program.id}/plan/new`)}
-				>
-					<PlusOutline slot="icon" class="size-4 -ml-0.5" />
-				</LinkButton>
+					icon={PlusOutline}
+				/>
 			</div>
 		</div>
 	</article>

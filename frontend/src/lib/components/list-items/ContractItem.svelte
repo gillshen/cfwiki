@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { type IndicatorColorType, Card, P, A, Heading, Indicator } from 'flowbite-svelte';
-	import { ArrowRightOutline } from 'flowbite-svelte-icons';
+	import { type IndicatorColorType, Card, P, Heading, Indicator } from 'flowbite-svelte';
 
 	import type { Contract } from '$lib/api/student';
 	import { toShortDate } from '$lib/utils/dateUtils';
 	import { isActive, orderByEndDateRole } from '$lib/utils/serviceUtils';
 
 	export let contract: Contract;
-	export let canEdit: boolean;
 
 	let dateString: string;
 
@@ -47,15 +45,15 @@
 </script>
 
 <Card class="hover:bg-white !px-8">
-	<div class="flex items-center gap-4">
+	<div class="flex items-baseline gap-6">
 		<Heading tag="h3" class="text-gray-800 font-bold text-xl w-fit section-title">
 			{contract.type}
 			{contract.target_year}
 		</Heading>
 
-		<div class="flex gap-2 items-center">
-			<Indicator color={setColor(contract.status)} />
-			<P size="sm" color="text-gray-500" class="font-medium">{contract.status}</P>
+		<div class="flex gap-1 items-center">
+			<Indicator color={setColor(contract.status)} class="size-3" />
+			<P size="sm" color="text-gray-500" class="font-normal section-title">{contract.status}</P>
 		</div>
 	</div>
 
@@ -74,17 +72,5 @@
 		{/each}
 	</div>
 
-	<div class="flex gap-8 mt-8 items-center">
-		<slot />
-
-		<A href={`/contract/${contract.id}`}>
-			{#if canEdit}
-				<span class="text-xs uppercase tracking-wide">Manage Staff</span>
-				<ArrowRightOutline class="ms-0.5 size-4" />
-			{:else}
-				<span class="text-xs uppercase tracking-wide">Staff Details</span>
-				<ArrowRightOutline class="ms-0.5 size-4" />
-			{/if}
-		</A>
-	</div>
+	<slot />
 </Card>

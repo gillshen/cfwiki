@@ -5,7 +5,8 @@
 	import type { ApplicationDetail } from '$lib/api/application';
 	import type { ApplicationLog } from '$lib/api/applicationLog';
 	import ApplicationLogItem from '$lib/components/list-items/ApplicationLogItem.svelte';
-	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
+	import UpdateButton from '$lib/components/buttons/UpdateButton.svelte';
+	import DeleteButton from '$lib/components/buttons/DeleteButton.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ApplicationLogForm from '$lib/components/application-log-form/ApplicationLogForm.svelte';
@@ -43,10 +44,10 @@
 			{#each logs as log}
 				<ApplicationLogItem {log}>
 					{#if canEdit}
-						<div class="mt-3">
-							<UpdateDeleteButton
-								updateAction={logModalOpener(log)}
-								deleteAction={() => {
+						<div class="mt-3 flex gap-4 items-baseline">
+							<UpdateButton onClick={logModalOpener(log)} />
+							<DeleteButton
+								onClick={() => {
 									activeLog = log;
 									logDeleteModal = true;
 								}}

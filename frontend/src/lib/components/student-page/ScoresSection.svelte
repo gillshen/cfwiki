@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { writable } from 'svelte/store';
 	import type { SuperValidated } from 'sveltekit-superforms';
+	import { writable } from 'svelte/store';
 	import { Heading } from 'flowbite-svelte';
 	import { PlusOutline } from 'flowbite-svelte-icons';
 
@@ -383,9 +383,7 @@
 
 {#if canEdit}
 	<div class="mt-6">
-		<MultiActionButton text="Add a score" actions={newScoreActions} placement="right-end">
-			<PlusOutline slot="icon" class="-ml-0.5 size-4" />
-		</MultiActionButton>
+		<MultiActionButton text="Add a Score" actions={newScoreActions} icon={PlusOutline} />
 	</div>
 {/if}
 

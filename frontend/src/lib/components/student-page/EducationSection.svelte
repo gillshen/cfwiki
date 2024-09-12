@@ -1,15 +1,15 @@
 <script lang="ts">
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import { Heading, Timeline } from 'flowbite-svelte';
-	import { PlusOutline } from 'flowbite-svelte-icons';
 
 	import type { StudentDetail } from '$lib/api/student';
 	import type { EnrollmentByStudent } from '$lib/api/enrollment';
 	import type { School } from '$lib/api/school';
-
 	import EnrollmentItem from '$lib/components/list-items/EnrollmentItem.svelte';
-	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
-	import LinkButton from '$lib/components/buttons/LinkButton.svelte';
+	import AddButton from '$lib/components/buttons/AddButton.svelte';
+	import UpdateButton from '$lib/components/buttons/UpdateButton.svelte';
+	import DeleteButton from '$lib/components/buttons/DeleteButton.svelte';
+	import GotoButton from '$lib/components/buttons/GotoButton.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import EnrollmentForm from '$lib/components/enrollment-form/EnrollmentForm.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
@@ -39,18 +39,24 @@
 {#if student.enrollments.length}
 	<Timeline class="mt-6 flex flex-col gap-4">
 		{#each student.enrollments as enrollment}
-			<EnrollmentItem {enrollment} {canEdit}>
-				{#if canEdit}
-					<div class="-translate-x-0.5">
-						<UpdateDeleteButton
-							updateAction={enrollmentModalOpener(enrollment)}
-							deleteAction={() => {
+			<EnrollmentItem {enrollment}>
+				<div class="mt-8 flex gap-4 items-baseline">
+					{#if canEdit}
+						<UpdateButton onClick={enrollmentModalOpener(enrollment)} />
+					{/if}
+					<GotoButton
+						href={`/grades/${enrollment.id}`}
+						text={canEdit ? 'Manage Grades' : 'Grade Details'}
+					/>
+					{#if canEdit}
+						<DeleteButton
+							onClick={() => {
 								activeEnrollment = enrollment;
 								enrollmentDeleteModal = true;
 							}}
 						/>
-					</div>
-				{/if}
+					{/if}
+				</div>
 			</EnrollmentItem>
 		{/each}
 	</Timeline>
@@ -60,9 +66,7 @@
 
 {#if canEdit}
 	<div class="mt-6">
-		<LinkButton text="Add an educational experience" action={enrollmentModalOpener()}>
-			<PlusOutline slot="icon" class="-ml-0.5 size-4" />
-		</LinkButton>
+		<AddButton onClick={enrollmentModalOpener()} text="Add an Educational Experience" />
 	</div>
 {/if}
 

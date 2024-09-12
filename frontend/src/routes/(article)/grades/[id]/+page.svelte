@@ -2,7 +2,6 @@
 	import {
 		Heading,
 		Hr,
-		A,
 		Button,
 		Table,
 		TableBody,
@@ -20,12 +19,13 @@
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import GradeForm from '$lib/components/grade-form/GradeForm.svelte';
 	import GradeValueItem from '$lib/components/list-items/GradeValueItem.svelte';
-	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import Comments from '$lib/components/typography/Comments.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import BreadcrumbLink from '$lib/components/misc/BreadcrumbLink.svelte';
+	import UpdateButton from '$lib/components/buttons/UpdateButton.svelte';
+	import DeleteButton from '$lib/components/buttons/DeleteButton.svelte';
 
 	export let data;
 
@@ -100,15 +100,17 @@
 								{/if}
 							</TableBodyCell>
 
-							<TableBodyCell class="w-8">
+							<TableBodyCell class="w-full">
 								{#if canEdit}
-									<UpdateDeleteButton
-										updateAction={modalOpener(grade)}
-										deleteAction={() => {
-											activeGrade = grade;
-											gradeDeleteModal = true;
-										}}
-									/>
+									<div class="flex gap-4 items-baseline">
+										<UpdateButton onClick={modalOpener(grade)} />
+										<DeleteButton
+											onClick={() => {
+												activeGrade = grade;
+												gradeDeleteModal = true;
+											}}
+										/>
+									</div>
 								{/if}
 							</TableBodyCell>
 						</TableBodyRow>

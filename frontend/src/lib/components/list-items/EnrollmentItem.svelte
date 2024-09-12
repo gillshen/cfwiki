@@ -1,24 +1,13 @@
 <script lang="ts">
-	import {
-		Table,
-		TableBody,
-		TableBodyCell,
-		TableBodyRow,
-		TimelineItem,
-		P,
-		A
-	} from 'flowbite-svelte';
-
-	import { ArrowRightOutline } from 'flowbite-svelte-icons';
+	import { Table, TableBody, TableBodyCell, TableBodyRow, TimelineItem, P } from 'flowbite-svelte';
 
 	import type { EnrollmentByStudent } from '$lib/api/enrollment';
+	import GradeValueItem from '$lib/components/list-items/GradeValueItem.svelte';
 	import { groupByProgressionTerm } from '$lib/utils/gradesUtils';
 	import { toShortYearMonth } from '$lib/utils/dateUtils';
 	import { parseNum } from '$lib/utils/numUtils';
-	import GradeValueItem from '$lib/components/list-items/GradeValueItem.svelte';
 
 	export let enrollment: EnrollmentByStudent;
-	export let canEdit: boolean;
 
 	const formatDateWithProgression = (date: string | null, progression: string): string => {
 		const formattedDate = toShortYearMonth(date);
@@ -52,7 +41,7 @@
 			<TableBody>
 				{#each Object.entries(groupByProgressionTerm(enrollment.grades)) as [key, grades]}
 					<TableBodyRow class="bg-transparent">
-						<TableBodyCell class="text-gray-400 px-0 w-24 align-top">
+						<TableBodyCell class="text-gray-600 px-0 w-24 align-top">
 							{key}
 						</TableBodyCell>
 						<TableBodyCell class="text-gray-400 font-normal">
@@ -75,11 +64,5 @@
 		</Table>
 	{/if}
 
-	<div class="mt-8 flex gap-8 items-center">
-		<slot />
-		<A href={`/grades/${enrollment.id}`}>
-			<span class="text-xs uppercase">{canEdit ? 'Manage Grades' : 'Grade Details'}</span>
-			<ArrowRightOutline class="ms-0.5 size-4" />
-		</A>
-	</div>
+	<slot />
 </TimelineItem>

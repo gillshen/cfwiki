@@ -1,16 +1,13 @@
 <script lang="ts">
-	import { Badge } from 'flowbite-svelte';
+	import { DatabaseOutline } from 'flowbite-svelte-icons';
 
-	export let rows: Promise<any[]>;
+	export let rows: any[];
 	export let rowCount: number | null | undefined;
+
+	$: total = `${rows.length} record${rows.length === 1 ? '' : 's'}`;
+	$: displayed = typeof rowCount === 'number' && rowCount !== rows.length ? `${rowCount} of ` : '';
 </script>
 
-<div class="relative -top-2.5 -left-4 -z-10">
-	{#await rows then rows}
-		{#if rows.length && rowCount !== undefined && rowCount !== rows.length}
-			<Badge>{rowCount}/{rows.length}</Badge>
-		{:else if rows.length}
-			<Badge>{rows.length}</Badge>
-		{/if}
-	{/await}
+<div class="text-xs font-normal text-gray-500 flex">
+	<DatabaseOutline class="size-4 me-1" /><span>{displayed}{total}</span>
 </div>

@@ -1,22 +1,22 @@
 <script lang="ts">
-	import { Badge, type ColorVariant } from 'flowbite-svelte';
+	import { Badge } from 'flowbite-svelte';
 	import type { StudentListItem } from '$lib/api/student';
 
 	export let student: StudentListItem;
 
-	let color: ColorVariant;
+	let color: string;
 	let text: string;
 
 	if (student.gender === 'female') {
-		color = 'indigo';
+		color = 'bg-stone-200 text-gray-700';
 		text = 'F';
 	} else if (student.gender === 'male') {
-		color = 'dark';
+		color = 'bg-stone-500 text-white';
 		text = 'M';
 	} else {
-		color = 'purple';
+		color = 'bg-primary-600 text-white';
 		text = 'X';
 	}
 </script>
 
-<Badge {color} rounded class="w-[30px] h-[30px]">{text}</Badge>
+<Badge rounded class={`w-[28px] h-[28px] font-normal ${color}`}>{text}</Badge>

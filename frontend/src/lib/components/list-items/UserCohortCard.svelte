@@ -21,12 +21,12 @@
 		class="flex items-center gap-2 ml-6 w-fit text-lg tracking-wide text-gray-700 font-normal section-title"
 	>
 		{contractType}
-		<div class="relative -top-1 flex gap-1">
+		<div class="flex gap-1">
 			{#if currentStudents.length}
-				<Badge class="h-4">{currentStudents.length}</Badge>
+				<Badge>{currentStudents.length}</Badge>
 			{/if}
 			{#if pastStudents.length}
-				<Badge class="h-4" color="dark">{pastStudents.length}</Badge>
+				<Badge color="dark">{pastStudents.length}</Badge>
 			{/if}
 		</div>
 	</Heading>

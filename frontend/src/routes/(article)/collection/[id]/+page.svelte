@@ -1,14 +1,14 @@
 <script>
-	import { goto } from '$app/navigation';
 	import { Alert, Breadcrumb, BreadcrumbItem, Heading, Hr } from 'flowbite-svelte';
-	import { ObjectsColumnOutline, InfoCircleOutline } from 'flowbite-svelte-icons';
+	import { ObjectsColumnOutline, InfoCircleOutline, PenOutline } from 'flowbite-svelte-icons';
 
 	import Main from '$lib/components/containers/Main.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
+	import GotoButton from '$lib/components/buttons/GotoButton.svelte';
+	import DeleteButton from '$lib/components/buttons/DeleteButton.svelte';
 	import ApplicationStatsDoughnut from '$lib/components/application-stats/ApplicationStatsDoughnut.svelte';
 	import LinkWithIcon from '$lib/components/infobox/LinkWithIcon.svelte';
-	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
@@ -54,11 +54,13 @@
 
 		<!-- TODO allow admin to edit as well -->
 		{#if data.username === data.collection.creator_name}
-			<div class="mt-8">
-				<UpdateDeleteButton
-					updateAction={() => goto(`/collection/${data.collection.id}/update`)}
-					deleteAction={() => (deleteModal = true)}
+			<div class="mt-8 flex gap-4 items-baseline">
+				<GotoButton
+					href={`/collection/${data.collection.id}/update`}
+					text="Update"
+					icon={PenOutline}
 				/>
+				<DeleteButton onClick={() => (deleteModal = true)} />
 			</div>
 		{:else}
 			<Alert color="light" class="flex gap-2 mt-8">
@@ -92,5 +94,8 @@
 	entity={data.collection}
 	on:close={() => (deleteModal = false)}
 >
-	<DeleteMessage slot="preface" name={`the program collection "${data.collection.name}"`} />
+	<DeleteMessage
+		slot="preface"
+		name={`the program collection \u201c${data.collection.name}\u201d`}
+	/>
 </FormModal>

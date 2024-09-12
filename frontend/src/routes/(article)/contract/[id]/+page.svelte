@@ -6,8 +6,9 @@
 	import { canEditContract } from '$lib/utils/userUtils';
 	import { orderByEndDateRole } from '$lib/utils/serviceUtils';
 	import ServiceItem from '$lib/components/list-items/ServiceItem.svelte';
+	import UpdateButton from '$lib/components/buttons/UpdateButton.svelte';
+	import DeleteButton from '$lib/components/buttons/DeleteButton.svelte';
 	import ServiceForm from '$lib/components/service-form/ServiceForm.svelte';
-	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
@@ -49,10 +50,10 @@
 		{#each data.contract.services.sort(orderByEndDateRole) as service}
 			<ServiceItem {service}>
 				{#if canEdit}
-					<div class="mt-8">
-						<UpdateDeleteButton
-							updateAction={modalOpener(service)}
-							deleteAction={() => {
+					<div class="mt-8 flex gap-4 items-baseline">
+						<UpdateButton onClick={modalOpener(service)} />
+						<DeleteButton
+							onClick={() => {
 								activeService = service;
 								serviceDeleteModal = true;
 							}}

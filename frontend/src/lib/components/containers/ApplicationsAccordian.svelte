@@ -16,7 +16,7 @@
 		>
 			<div slot="header" class="flex items-center gap-2">
 				<span class="tabular-nums">{heading}</span>
-				<Badge size="sm">{subsetOfApplications.length}</Badge>
+				<Badge color="dark" size="sm">{subsetOfApplications.length}</Badge>
 			</div>
 
 			<slot {subsetOfApplications} />

@@ -2,13 +2,14 @@
 	import type { Writable } from 'svelte/store';
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import { Button } from 'flowbite-svelte';
-	import { PlusOutline } from 'flowbite-svelte-icons';
 
 	import type { StudentDetail } from '$lib/api/student';
 	import type { Contract } from '$lib/api/contract';
 	import ContractItem from '$lib/components/list-items/ContractItem.svelte';
-	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
-	import LinkButton from '$lib/components/buttons/LinkButton.svelte';
+	import AddButton from '$lib/components/buttons/AddButton.svelte';
+	import UpdateButton from '$lib/components/buttons/UpdateButton.svelte';
+	import DeleteButton from '$lib/components/buttons/DeleteButton.svelte';
+	import GotoButton from '$lib/components/buttons/GotoButton.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ContractForm from '$lib/components/contract-form/ContractForm.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
@@ -38,27 +39,33 @@
 	<div class="flex flex-col gap-4 mb-6">
 		{#each student.contracts as contract}
 			{@const canEdit = canEditContract(username, contract)}
-			<ContractItem {contract} {canEdit}>
-				{#if canEdit}
-					<UpdateDeleteButton
-						updateAction={contractModalOpener(contract)}
-						deleteAction={() => {
-							activeContract = contract;
-							contractDeleteModal = true;
-						}}
+			<ContractItem {contract}>
+				<div class="mt-8 flex gap-4 items-baseline">
+					{#if canEdit}
+						<UpdateButton onClick={contractModalOpener(contract)} />
+					{/if}
+					<GotoButton
+						href={`/contract/${contract.id}`}
+						text={canEdit ? 'Manage Staff' : 'Staff Details'}
 					/>
-				{/if}
+					{#if canEdit}
+						<DeleteButton
+							onClick={() => {
+								activeContract = contract;
+								contractDeleteModal = true;
+							}}
+						/>
+					{/if}
+				</div>
 			</ContractItem>
 		{/each}
 	</div>
 	{#if canAddContract}
-		<LinkButton text="Add a contract" action={contractModalOpener()}>
-			<PlusOutline slot="icon" class="size-4 -ml-0.5" />
-		</LinkButton>
+		<AddButton onClick={contractModalOpener()} text="Add a Contract" />
 	{/if}
 {:else}
-	<div class="w-full h-36 flex bg-stone-50 rounded-lg">
-		<Button on:click={contractModalOpener()} class="m-auto">Add a contract</Button>
+	<div class="w-full flex p-8 bg-stone-50 rounded-lg">
+		<Button on:click={contractModalOpener()}>Add a contract</Button>
 	</div>
 {/if}
 

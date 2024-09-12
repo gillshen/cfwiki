@@ -28,6 +28,7 @@
 	>
 		{#each Object.keys(columnVisibility) as headerName}
 			<Checkbox
+				class="font-normal text-gray-700"
 				bind:checked={columnVisibility[headerName]}
 				on:change={() => showColumn(gridApi, headerName, columnVisibility[headerName])}
 			>

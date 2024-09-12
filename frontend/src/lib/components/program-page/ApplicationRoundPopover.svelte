@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { Popover, Heading, P, A, Tooltip } from 'flowbite-svelte';
+	import { Popover, Heading, P, Tooltip } from 'flowbite-svelte';
+	import { PenOutline } from 'flowbite-svelte-icons';
 
 	import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
 	import { formatDueDateTime, toLongDate } from '$lib/utils/dateUtils';
+	import DeleteButton from '$lib/components/buttons/DeleteButton.svelte';
+	import GotoButton from '$lib/components/buttons/GotoButton.svelte';
 
 	export let applRound: ApplicationRoundListItem;
 	export let onDelete: () => void = () => {};
@@ -38,12 +41,10 @@
 			<P size="sm" weight="light">{toLongDate(decision_date) || 'N/A'}</P>
 		</div>
 
-		<div class="mt-8 flex gap-4">
-			<A href={`/program/${program}/plan/${id}`}>Update</A>
-			{#if !applications_count}
-				<A on:click={onDelete}>Delete</A>
-			{:else}
-				<div class="text-gray-400 font-medium cursor-default">Delete</div>
+		<div class="mt-8 flex gap-4 items-baseline">
+			<GotoButton href={`/program/${program}/plan/${id}`} text="Update" icon={PenOutline} />
+			<DeleteButton onClick={onDelete} disabled={!!applications_count} />
+			{#if applications_count}
 				<Tooltip class="tooltip" placement="right-end">
 					You cannot delete this admission plan because it has applications attached it.
 				</Tooltip>

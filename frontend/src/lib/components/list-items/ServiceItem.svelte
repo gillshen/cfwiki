@@ -10,7 +10,7 @@
 </script>
 
 <Card class={`w-[14rem]${serviceIsActive ? '' : ' bg-gray-50'}`}>
-	<P size="sm" color="text-gray-500" class="font-semibold">{service.role}</P>
+	<P size="sm" color="text-gray-500" class="font-normal">{service.role}</P>
 
 	<Heading tag="h3" class={`text-2xl font-medium py-1${serviceIsActive ? '' : ' text-gray-500'}`}>
 		{service.cf_username}

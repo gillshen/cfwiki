@@ -423,22 +423,22 @@
 	});
 </script>
 
-<Heading tag="h1" class="grid-title flex gap-2 items-center justify-between">
-	<div class="flex gap-4 items-center">
-		Students:
-		{#if data.current}
-			Current
-		{:else if data.contractType && data.targetYear}
-			{data.contractType} {data.targetYear}
-		{:else}
-			All
-		{/if}
-		<ControlButton {hideControl} />
-		<RowCountBadge rows={data.students} {rowCount} />
-	</div>
+<Heading tag="h1" class="grid-title flex gap-6 items-baseline">
+	Students:
+	{#if data.current}
+		Current
+	{:else if data.contractType && data.targetYear}
+		{data.contractType} {data.targetYear}
+	{:else}
+		All
+	{/if}
 
-	{#await data.students then _}
-		<DownloadButton {gridApi} fileName="cf_students" />
+	{#await data.students then students}
+		<div class="flex gap-4">
+			<RowCountBadge rows={students} {rowCount} />
+			<ControlButton {hideControl} />
+			<DownloadButton {gridApi} fileName="cf_students" />
+		</div>
 	{/await}
 </Heading>
 

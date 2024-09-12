@@ -10,9 +10,7 @@
 </script>
 
 <UserIndexPage users={exUsers} title="Ex-CFers">
-	<div class="mt-12">
-		<A href="/cf/index" class="text-xs uppercase tracking-wide font-normal">
-			Current CFers<ArrowRightOutline class="ms-1 size-4" />
-		</A>
-	</div>
+	<A href="/cf/index" class="mt-12 w-fit text-sm font-normal">
+		Current CFers<ArrowRightOutline class="ms-1 size-4" />
+	</A>
 </UserIndexPage>

@@ -16,8 +16,8 @@
 	import { QuestionCircleOutline, ArrowRightOutline } from 'flowbite-svelte-icons';
 	import Chart from 'chart.js/auto';
 
-	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import type { ApplicationStats } from '$lib/api/stats';
+	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 	import { getSuccessRateAsPercentage } from '$lib/utils/numUtils';
 
 	export let stats: ApplicationStats;
@@ -76,7 +76,7 @@
 <Heading tag="h2" class="section-title flex-title flex items-center justify-between">
 	<span class="section-title">{title}</span>
 	{#if href && stats.applied}
-		<A {href} class="text-sm font-normal uppercase tracking-wide">
+		<A {href} class="text-sm font-normal section-title !text-primary-700">
 			More Stats<ArrowRightOutline class="ms-1" />
 		</A>
 	{/if}

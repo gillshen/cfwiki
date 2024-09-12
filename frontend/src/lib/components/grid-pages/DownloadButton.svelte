@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { GridApi } from 'ag-grid-community';
-	import { Button } from 'flowbite-svelte';
 	import { DownloadOutline } from 'flowbite-svelte-icons';
+
+	import Button from '$lib/components/buttons/Button.svelte';
 
 	export let gridApi: GridApi;
 	export let fileName: string;
@@ -11,6 +12,4 @@
 	};
 </script>
 
-<Button outline class="!py-2" on:click={exportAsCsv}>
-	<DownloadOutline class="me-2" />Download
-</Button>
+<Button onClick={exportAsCsv} text="Download" icon={DownloadOutline} />

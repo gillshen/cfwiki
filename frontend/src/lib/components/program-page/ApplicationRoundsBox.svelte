@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import { slide } from 'svelte/transition';
+	import { sineIn, sineInOut } from 'svelte/easing';
 	import { ChevronDownOutline, ChevronRightOutline } from 'flowbite-svelte-icons';
 
 	import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
@@ -39,8 +40,8 @@
 			{#if rowStates[key]}
 				<div
 					class="grid grid-cols-3 gap-4"
-					in:slide={{ duration: 300 }}
-					out:slide={{ duration: 300 }}
+					in:slide={{ duration: 300, easing: sineIn }}
+					out:slide={{ duration: 300, easing: sineInOut }}
 				>
 					{#each rounds as applRound}
 						<ApplicationRoundCard {applRound} {deleteForm} />

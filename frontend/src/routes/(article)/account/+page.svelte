@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
 	import { Heading, Hr, Label, Input, Helper, Button, Avatar, A, Alert } from 'flowbite-svelte';
-	import { PenOutline, InfoCircleOutline } from 'flowbite-svelte-icons';
+	import { EyeOutline, InfoCircleOutline } from 'flowbite-svelte-icons';
 
+	import UpdateButton from '$lib/components/buttons/UpdateButton.svelte';
+	import MyButton from '$lib/components/buttons/Button.svelte';
 	import ChecklistItem from '$lib/components/list-items/ChecklistItem.svelte';
 	import Toast from '$lib/components/misc/Toast.svelte';
 
@@ -46,7 +48,7 @@
 	let showErrorToast = false;
 </script>
 
-<Heading tag="h1" class="page-title flex gap-2 items-baseline">
+<Heading tag="h1" class="page-title flex gap-4 items-baseline">
 	<Avatar bordered size="sm" class="translate-y-0.5" />{data.username}
 </Heading>
 
@@ -83,9 +85,9 @@
 		<div class="form-width mt-6 text-sm font-medium p-3 rounded-lg text-gray-700 bg-stone-100">
 			{data.user.public_banner || defaultBanner(data.user.username)}
 		</div>
-		<A class="mt-4 text-sm" on:click={() => (editingBanner = true)}>
-			<PenOutline class="me-2 size-4" />Edit
-		</A>
+		<div class="mt-4">
+			<UpdateButton onClick={() => (editingBanner = true)} />
+		</div>
 	{/if}
 </article>
 
@@ -164,7 +166,13 @@
 			>
 		</form>
 	{:else}
-		<A class="text-sm mt-4" on:click={() => (changingPassword = true)}>Click to show the form</A>
+		<div class="mt-4">
+			<MyButton
+				onClick={() => (changingPassword = true)}
+				text="Click to show the form"
+				icon={EyeOutline}
+			/>
+		</div>
 	{/if}
 </article>
 

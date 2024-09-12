@@ -16,9 +16,7 @@
 	{heading}
 	{#await enrollments then enrollments}
 		{#if enrollments.length}
-			<div class="relative -top-2 -left-1">
-				<Badge class="h-5">{enrollments.length}</Badge>
-			</div>
+			<Badge color="dark">{enrollments.length}</Badge>
 		{/if}
 	{/await}
 </Heading>

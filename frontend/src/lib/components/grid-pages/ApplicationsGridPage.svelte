@@ -413,22 +413,21 @@
 	});
 </script>
 
-<Heading tag="h1" class="grid-title flex gap-2 items-center justify-between">
-	<div class="flex gap-4 items-center">
-		Applications:
-		{#if data.pending}
-			Pending
-		{:else if data.year && data.applicationType}
-			{formatApplicationType(data.applicationType)} {data.year}
-		{:else}
-			All
-		{/if}
-		<ControlButton {hideControl} />
-		<RowCountBadge rows={data.applications} {rowCount} />
-	</div>
-
-	{#await data.applications then _}
-		<DownloadButton {gridApi} fileName="cf_applications" />
+<Heading tag="h1" class="grid-title flex gap-6 items-baseline">
+	Applications:
+	{#if data.pending}
+		Pending
+	{:else if data.year && data.applicationType}
+		{formatApplicationType(data.applicationType)} {data.year}
+	{:else}
+		All
+	{/if}
+	{#await data.applications then applications}
+		<div class="flex gap-4">
+			<RowCountBadge rows={applications} {rowCount} />
+			<ControlButton {hideControl} />
+			<DownloadButton {gridApi} fileName="cf_applications" />
+		</div>
 	{/await}
 </Heading>
 
