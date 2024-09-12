@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { TableBodyCell, Badge } from 'flowbite-svelte';
 
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplication } from '$lib/api/application';
 	import { typeToBadgeColor, typeToBadgeText } from '$lib/utils/programUtils';
 
-	export let application: ApplicationListItem;
+	export let application: ComposedApplication;
 </script>
 
 <TableBodyCell class="max-w-10">

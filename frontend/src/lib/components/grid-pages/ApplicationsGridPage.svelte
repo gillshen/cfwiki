@@ -14,7 +14,7 @@
 		type ValueGetterParams
 	} from 'ag-grid-community';
 
-	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplication } from '$lib/api/application';
 	import type { StudentEnrollmentItem } from '$lib/api/student';
 	import type { School } from '$lib/api/school';
 	import { agGridOptions } from '$lib/abstract/agGridOptions';
@@ -35,7 +35,6 @@
 	import { getLatestRanking } from '$lib/utils/schoolUtils';
 
 	import {
-		compose,
 		formatApplicationType,
 		formatNotableStatuses,
 		getLatestLog,
@@ -56,8 +55,7 @@
 	} from '$lib/utils/gridUtils';
 
 	export let data: {
-		applications: Promise<ApplicationListItem[]>;
-		applicants: Promise<ApplicantListItem[]>;
+		applications: Promise<ComposedApplication[]>;
 		year?: number;
 		applicationType?: string;
 		pending?: boolean;
@@ -96,7 +94,7 @@
 	}
 
 	function schoolValueGetter(params: ValueGetterParams): string {
-		const application: ApplicationListItem = params.data;
+		const application: ComposedApplication = params.data;
 		return application.schools.map((s) => s.name).join(' | ');
 	}
 
@@ -373,13 +371,11 @@
 	};
 
 	onMount(async () => {
-		const [applications, applicants] = await Promise.all([data.applications, data.applicants]);
+		const applications = await data.applications;
 
 		if (!applications.length) {
 			return;
 		}
-
-		const rowData = compose(applications, applicants).sort((a, b) => orderByStatusDateDesc(a, b));
 
 		const gridOptions: GridOptions = {
 			defaultColDef: {
@@ -389,7 +385,7 @@
 			},
 			columnTypes,
 			columnDefs,
-			rowData,
+			rowData: applications.sort((a, b) => orderByStatusDateDesc(a, b)),
 			onFilterChanged: showDisplayedRowCount,
 			onModelUpdated: showDisplayedRowCount,
 			...agGridOptions
@@ -427,18 +423,18 @@
 		{:else}
 			All
 		{/if}
-		<RowCountBadge rows={data.applications} {rowCount} />
 		<ControlButton {hideControl} />
+		<RowCountBadge rows={data.applications} {rowCount} />
 	</div>
 
-	{#await Promise.all([data.applications, data.applicants]) then _}
+	{#await data.applications then _}
 		<DownloadButton {gridApi} fileName="cf_applications" />
 	{/await}
 </Heading>
 
-{#await Promise.all([data.applications, data.applicants])}
+{#await data.applications}
 	<FetchingDataSign />
-{:then [applications, _]}
+{:then applications}
 	{#if applications.length}
 		<div id="grid" class="data-grid ag-theme-alpine full-page" />
 	{:else}

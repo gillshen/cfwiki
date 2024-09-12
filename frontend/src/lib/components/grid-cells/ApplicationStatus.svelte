@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplication } from '$lib/api/application';
 
 	import {
 		formatNotableStatuses,
@@ -7,7 +7,7 @@
 		statusToClass
 	} from '$lib/utils/applicationUtils';
 
-	export let application: ApplicationListItem;
+	export let application: ComposedApplication;
 
 	const statuses = getNotableStatuses(application);
 	const formattedStatuses = formatNotableStatuses(statuses);

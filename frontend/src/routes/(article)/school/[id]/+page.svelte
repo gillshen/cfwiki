@@ -20,7 +20,6 @@
 	import NoDataSign from '$lib/components/misc/NoDataSign.svelte';
 
 	import {
-		compose,
 		getStats,
 		groupByType,
 		groupByYear,
@@ -71,13 +70,13 @@
 	</article>
 
 	<article class="flex flex-col gap-8">
-		{#await Promise.all([data.applications, data.applicants])}
+		{#await data.applications}
 			<WidgetPlaceholder />
-		{:then [applications, applicants]}
+		{:then applications}
 			{#if isNotSecondarySchool}
 				<div class="bg-stone-50 rounded-xl w-full p-8">
 					<ApplicationStatsDoughnut
-						stats={getStats(compose(applications.filter(isUndergraduate), applicants))}
+						stats={getStats(applications.filter(isUndergraduate))}
 						title="Undergraduate Statistics"
 						href={`/school/${data.school.id}/stats/undergraduate`}
 					/>
@@ -85,7 +84,7 @@
 
 				<div class="bg-stone-50 rounded-xl w-full p-8">
 					<ApplicationStatsDoughnut
-						stats={getStats(compose(applications.filter(isGraduate), applicants))}
+						stats={getStats(applications.filter(isGraduate))}
 						title="Graduate Statistics"
 						href={`/school/${data.school.id}/stats/graduate`}
 					/>
@@ -93,7 +92,7 @@
 			{:else}
 				<div class="bg-stone-50 rounded-xl w-full p-8">
 					<ApplicationStatsDoughnut
-						stats={getStats(compose(applications, applicants))}
+						stats={getStats(applications)}
 						title="Student & Alumni Statistics"
 						href={`/school/${data.school.id}/stats/alumni`}
 					/>
@@ -114,7 +113,6 @@
 		<ApplicationsLoader
 			heading={isNotSecondarySchool ? 'Applications' : 'Applications by Students & Alumni'}
 			applications={data.applications}
-			applicants={data.applicants}
 		>
 			<svelte:fragment let:applications>
 				<ApplicationsAccordian groupedApplications={groupByYear(applications)}>

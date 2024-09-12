@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Table, TableBody, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
 
-	import type { ComposedApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplication } from '$lib/api/application';
 	import { orderByStudentName, orderByStatus, orderByRoundName } from '$lib/utils/applicationUtils';
 
 	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
@@ -11,7 +11,7 @@
 	import ApplicationRound from '$lib/components/table-cells/ApplicationRound.svelte';
 	import ApplicationStatus from '$lib/components/table-cells/ApplicationStatus.svelte';
 
-	export let applications: ComposedApplicationListItem[];
+	export let applications: ComposedApplication[];
 </script>
 
 <Table hoverable={applications.length > 1}>

@@ -12,7 +12,7 @@ from rest_framework import status
 from django.db.models import OuterRef, Subquery, Count, F, Q, Prefetch
 
 from core.models import CFUser, Student, Service, Contract, Application, ApplicationLog
-from target.models import School
+from target.models import School, ApplicationRound
 from academics.models import Enrollment
 
 from core.serializers import (
@@ -27,8 +27,9 @@ from core.serializers import (
     ContractDetailSerializer,
     ContractCRUDSerializer,
     ServiceCRUDSerializer,
-    ApplicationListSerializer,
-    ApplicantListSerializer,
+    ApplicationWithLogsSerializer,
+    ApplicationTargetSerializer,
+    ApplicationContractSerializer,
     ApplicationDetailSerializer,
     ApplicationCRUDSerializer,
     ApplicationPerProgramSerializer,
@@ -174,8 +175,8 @@ class ServiceRUDView(RetrieveUpdateDestroyAPIView):
     serializer_class = ServiceCRUDSerializer
 
 
-class ApplicationListView(ListAPIView):
-    serializer_class = ApplicationListSerializer
+class ApplicationWithLogsListView(ListAPIView):
+    serializer_class = ApplicationWithLogsSerializer
 
     def get_queryset(self):
         query_params = self.request.query_params
@@ -204,33 +205,63 @@ class ApplicationListView(ListAPIView):
         )
 
 
-class ApplicantListView(ListAPIView):
-    serializer_class = ApplicantListSerializer
+class ApplicationTargetListView(ListAPIView):
+    serializer_class = ApplicationTargetSerializer
 
     def get_queryset(self):
-        q = Student.objects.prefetch_related(
-            "toefl",
-            "ielts",
-            "duolingo",
-            "sat",
-            "act",
-            "gre",
-            "gmat",
-            "lsat",
-            "ap",
-            "ib",
-            "alevel",
+        q = ApplicationRound.objects.select_related(
+            "program_iteration__program",
+        ).prefetch_related(
+            "program_iteration__program__schools__rankings__ranking",
+        )
+
+        query_params = self.request.query_params
+
+        q = ApplicationRound.filter(
+            q,
+            school=query_params.get("school"),
+            program=query_params.get("program"),
+            programs=query_params.get("programs"),
+            program_iteration=query_params.get("program_iteration"),
+            year=query_params.get("year"),
+        )
+        return q
+
+
+class ApplicationContractListView(ListAPIView):
+    serializer_class = ApplicationContractSerializer
+
+    def get_queryset(self):
+        q = Contract.objects.select_related("student").prefetch_related(
+            "services__cfer",
+            "student__toefl",
+            "student__ielts",
+            "student__duolingo",
+            "student__sat",
+            "student__act",
+            "student__gre",
+            "student__gmat",
+            "student__lsat",
+            "student__ap",
+            "student__ib",
+            "student__alevel",
             Prefetch(
-                "enrollments",
+                "student__enrollments",
                 queryset=Enrollment.objects.select_related("school").prefetch_related(
                     "grades"
                 ),
             ),
-            "cf_academy_programs",
+            "student__cf_academy_programs",
         )
-        student_id = self.request.query_params.get("id")
-        if student_id is not None:
-            q = q.filter(id=student_id)
+
+        student = self.request.query_params.get("student")
+        if student is not None:
+            q = q.filter(student=student)
+
+        cfer = self.request.query_params.get("cfer")
+        if cfer is not None:
+            q = q.filter(services__cfer=cfer)
+
         return q
 
 

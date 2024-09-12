@@ -5,7 +5,7 @@
 	export let rowCount: number | null | undefined;
 </script>
 
-<div class="relative -top-3 -left-2 -z-10">
+<div class="relative -top-2.5 -left-4 -z-10">
 	{#await rows then rows}
 		{#if rows.length && rowCount !== undefined && rowCount !== rows.length}
 			<Badge>{rowCount}/{rows.length}</Badge>

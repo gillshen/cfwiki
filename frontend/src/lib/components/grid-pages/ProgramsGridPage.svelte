@@ -23,7 +23,7 @@
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
 	import IdLink from '$lib/components/grid-cells/IdLink.svelte';
-	import { compose, formatSchoolNames } from '$lib/utils/programUtils';
+	import { combineWithStats, formatSchoolNames } from '$lib/utils/programUtils';
 	import { lexicalChineseLast } from '$lib/utils/stringUtils';
 	import { calcSuccessRate } from '$lib/utils/numUtils';
 
@@ -156,7 +156,7 @@
 			return;
 		}
 
-		const rowData = compose(programs, stats).sort((a, b) =>
+		const rowData = combineWithStats(programs, stats).sort((a, b) =>
 			lexicalChineseLast(a.display_name, b.display_name)
 		);
 
@@ -200,8 +200,8 @@
 <Heading tag="h1" class="grid-title flex gap-8 items-center justify-between">
 	<div class="flex gap-4 items-center">
 		{`${data.programType} Programs`}
-		<RowCountBadge rows={data.programs} {rowCount} />
 		<ControlButton {hideControl} />
+		<RowCountBadge rows={data.programs} {rowCount} />
 	</div>
 
 	{#await Promise.all([data.programs, data.stats]) then _}

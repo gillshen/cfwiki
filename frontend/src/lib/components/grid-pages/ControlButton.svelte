@@ -5,6 +5,6 @@
 	export let hideControl: Writable<boolean>;
 </script>
 
-<button class="text-primary-700 relative -top-1.5 -left-4" on:click={() => hideControl.set(false)}>
+<button class="text-primary-700 relative -top-1.5 -left-2" on:click={() => hideControl.set(false)}>
 	<CogOutline />
 </button>

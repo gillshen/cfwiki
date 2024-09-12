@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { TableBodyCell } from 'flowbite-svelte';
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplication } from '$lib/api/application';
 	import countryFlags from '$lib/constants/countryFlags';
 
-	export let application: ApplicationListItem;
+	export let application: ComposedApplication;
 </script>
 
 <TableBodyCell class={`max-w-[16rem] truncate`}>

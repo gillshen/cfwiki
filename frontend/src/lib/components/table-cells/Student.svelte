@@ -2,7 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import { Popover, TableBodyCell } from 'flowbite-svelte';
 
-	import type { ComposedApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplication } from '$lib/api/application';
 	import LinkWithIcon from '$lib/components/infobox/LinkWithIcon.svelte';
 	import PopoverScoreItem from '$lib/components/table-cells/PopoverScoreItem.svelte';
 	import PopoverAlevelItem from '$lib/components/table-cells/PopoverAlevelItem.svelte';
@@ -11,7 +11,7 @@
 	import { formatGradeValue, summarizeByProgression } from '$lib/utils/gradesUtils';
 	import { parseNum } from '$lib/utils/numUtils';
 
-	export let application: ComposedApplicationListItem;
+	export let application: ComposedApplication;
 
 	const { id, fullname, enrollments, scores, ap_summary, ib_summary, alevel_summary } =
 		application.student;

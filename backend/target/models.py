@@ -156,15 +156,19 @@ class ApplicationRound(models.Model):
     def __str__(self) -> str:
         return f"{self.program_iteration} | {self.name}"
 
-    @classmethod
+    @staticmethod
     def filter(
-        cls,
+        q,
+        school: int = None,
         program_type: str = None,
         program: int = None,
+        programs: str = None,
+        program_iteration: int = None,
         year: int = None,
         term: str = None,
     ):
-        q = cls.objects.all().prefetch_related("program_iteration__program")
+        if school is not None:
+            q = q.filter(program_iteration__program__schools=school)
 
         if program_type == "undergraduate":
             q = q.filter(
@@ -180,7 +184,12 @@ class ApplicationRound(models.Model):
             q = q.filter(program_iteration__program__type="Non-degree")
 
         if program is not None:
-            q = q.filter(program_iteration__program__id=program)
+            q = q.filter(program_iteration__program=program)
+        if programs is not None:
+            programs_list = [int(pk) for pk in programs.split(",")]
+            q = q.filter(program_iteration__program__in=programs_list)
+        if program_iteration is not None:
+            q = q.filter(program_iteration=program_iteration)
         if year is not None:
             q = q.filter(program_iteration__year=year)
         if term is not None:
@@ -191,6 +200,14 @@ class ApplicationRound(models.Model):
     @property
     def applications_count(self):
         return self.applications.count()
+
+    @property
+    def schools(self):
+        return self.program_iteration.program.schools
+
+    @property
+    def program(self):
+        return self.program_iteration.program
 
 
 class SchoolRanking(models.Model):

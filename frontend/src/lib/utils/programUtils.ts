@@ -10,7 +10,7 @@ import type {
 import { orderByName as _orderByName } from '$lib/api/school';
 import { blankStats } from '$lib/api/stats';
 
-export function compose(
+export function combineWithStats(
 	programs: ProgramListItem[],
 	stats: ProgramStats[]
 ): ComposedProgramListItem[] {

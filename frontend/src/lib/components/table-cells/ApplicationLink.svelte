@@ -2,9 +2,9 @@
 	import { TableBodyCell, A } from 'flowbite-svelte';
 	import { LinkOutline } from 'flowbite-svelte-icons';
 
-	import type { ApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplication } from '$lib/api/application';
 
-	export let application: ApplicationListItem;
+	export let application: ComposedApplication;
 </script>
 
 <TableBodyCell class="w-4 pl-2 pr-0">

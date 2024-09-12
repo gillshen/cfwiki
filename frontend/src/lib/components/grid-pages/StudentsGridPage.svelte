@@ -433,8 +433,8 @@
 		{:else}
 			All
 		{/if}
-		<RowCountBadge rows={data.students} {rowCount} />
 		<ControlButton {hideControl} />
+		<RowCountBadge rows={data.students} {rowCount} />
 	</div>
 
 	{#await data.students then _}

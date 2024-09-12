@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 
 import { fetchProgram, type ProgramDetail } from '$lib/api/program';
-import { fetchApplicants, fetchApplications } from '$lib/api/application';
+import { fetchComposedApplications } from '$lib/api/application';
 
 export async function load(event) {
 	const id = parseInt(event.params.id, 10);
@@ -14,7 +14,6 @@ export async function load(event) {
 
 	return {
 		program,
-		applications: fetchApplications({ program: program.id }),
-		applicants: fetchApplicants()
+		applications: fetchComposedApplications({ program: program.id })
 	};
 }

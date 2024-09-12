@@ -296,33 +296,32 @@ class ContractCRUDSerializer(serializers.ModelSerializer):
             raise ValidationError({"detail": "Contract already exists"})
 
 
-class ApplicationListSerializer(serializers.ModelSerializer):
+class ApplicationWithLogsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        exclude = [
-            "contract",
-            "round",
-            "major_1",
-            "major_2",
-            "major_3",
-            "track",
-            "double_application",
-            "comments",
+        fields = ["id", "contract", "round", "logs", "majors_or_track"]
+
+    class ApplicationLogSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = ApplicationLog
+            fields = ["status", "date"]
+
+    logs = ApplicationLogSerializer(many=True)
+    majors_or_track = serializers.CharField()
+
+
+class ApplicationTargetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationRound
+        fields = [
+            "id",
+            "name",
+            "due_date",
+            "schools",
+            "program",
+            "year",
+            "term",
         ]
-
-    class StudentSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Student
-            fields = ["id"]
-
-    student = StudentSerializer()
-
-    class ServiceSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Service
-            fields = ["cf_username", "role"]
-
-    services = ServiceSerializer(many=True)
 
     class SchoolSerializer(serializers.ModelSerializer):
         class Meta:
@@ -349,36 +348,45 @@ class ApplicationListSerializer(serializers.ModelSerializer):
             fields = ["type", "display_name"]
 
     program = ProgramSerializer()
-    year = serializers.IntegerField()
-    term = serializers.CharField()
-    round_name = serializers.CharField()
-    due_date = serializers.DateField()
+    year = serializers.SerializerMethodField()
+    term = serializers.SerializerMethodField()
 
-    class ApplicationLogSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = ApplicationLog
-            fields = ["status", "date", "updated"]
+    def get_year(self, obj):
+        return obj.program_iteration.year
 
-    logs = ApplicationLogSerializer(many=True)
-    majors_or_track = serializers.CharField()
+    def get_term(self, obj):
+        return obj.program_iteration.term
 
 
-# for use in conjunction with ApplicationListSerializer
-class ApplicantListSerializer(StudentListSerializer):
+class ApplicationContractSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Student
-        fields = [
-            "id",
-            "fullname",
-            "gender",
-            "citizenship",
-            "enrollments",
-            "scores",
-            "ap_summary",
-            "ib_summary",
-            "alevel_summary",
-            "cf_academy_programs",
-        ]
+        model = Contract
+        fields = ["id", "student", "services"]
+
+    class StudentSerializer(StudentListSerializer):
+        class Meta:
+            model = Student
+            fields = [
+                "id",
+                "fullname",
+                "gender",
+                "citizenship",
+                "enrollments",
+                "scores",
+                "ap_summary",
+                "ib_summary",
+                "alevel_summary",
+                "cf_academy_programs",
+            ]
+
+    student = StudentSerializer()
+
+    class ServiceSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Service
+            fields = ["cf_username", "role"]
+
+    services = ServiceSerializer(many=True)
 
 
 class ApplicationDetailSerializer(serializers.ModelSerializer):

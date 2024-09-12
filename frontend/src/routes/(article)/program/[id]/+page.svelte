@@ -20,7 +20,7 @@
 	import UpdateDeleteButton from '$lib/components/buttons/UpdateDeleteButton.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import { formatSchoolNamesShort, isUndergraduate } from '$lib/utils/programUtils';
-	import { compose, getStats, groupByYear } from '$lib/utils/applicationUtils';
+	import { getStats, groupByYear } from '$lib/utils/applicationUtils';
 
 	export let data;
 
@@ -82,18 +82,18 @@
 	</article>
 
 	<article class="bg-stone-50 rounded-xl w-full p-8 h-fit">
-		{#await Promise.all([data.applications, data.applicants])}
+		{#await data.applications}
 			<WidgetPlaceholder />
-		{:then [applications, applicants]}
+		{:then applications}
 			<ApplicationStatsDoughnut
-				stats={getStats(compose(applications, applicants))}
+				stats={getStats(applications)}
 				href={`/program/${data.program.id}/stats`}
 			/>
 		{/await}
 	</article>
 
 	<article class="col-span-2 mt-16">
-		<ApplicationsLoader applications={data.applications} applicants={data.applicants}>
+		<ApplicationsLoader applications={data.applications}>
 			<svelte:fragment let:applications>
 				<ApplicationsAccordian groupedApplications={groupByYear(applications)}>
 					<svelte:fragment let:subsetOfApplications>

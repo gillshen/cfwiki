@@ -22,12 +22,12 @@ export type ApplicationStatus = keyof typeof applicationStatusOrder;
 export type ApplicationLogBrief = {
 	status: ApplicationStatus;
 	date: string;
-	updated: string;
 };
 
 export type ApplicationLog = ApplicationLogBrief & {
 	id: number;
 	comments: string;
+	updated: string;
 };
 
 export async function createOrUpdateApplicationLog(data: any) {

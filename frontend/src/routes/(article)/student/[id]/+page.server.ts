@@ -8,7 +8,7 @@ import { JWT_SECRET_KEY } from '$env/static/private';
 
 import { formAction } from '$lib/abstract/formAction';
 import { deleteStudent } from '$lib/api/student';
-import { fetchApplicants, fetchApplications } from '$lib/api/application';
+import { fetchComposedApplications } from '$lib/api/application';
 import { fetchSchools } from '$lib/api/school';
 import { contractSchema } from '$lib/schemas/contract';
 import { enrollmentSchema } from '$lib/schemas/enrollment';
@@ -63,8 +63,7 @@ export async function load(event: PageServerLoadEvent) {
 	return {
 		student,
 		promisedSchools: fetchSchools(),
-		applications: fetchApplications({ student: student.id }),
-		applicants: fetchApplicants({ id: student.id }),
+		applications: fetchComposedApplications({ student: student.id }),
 		contractForm: await superValidate(zod(contractSchema)),
 		enrollmentForm: await superValidate(zod(enrollmentSchema)),
 		newApplicationPrepForm: await superValidate(zod(newApplicationPrepSchema)),

@@ -13,7 +13,7 @@
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 	import BreadcrumbLink from '$lib/components/misc/BreadcrumbLink.svelte';
-	import { compose, getStats } from '$lib/utils/applicationUtils';
+	import { getStats } from '$lib/utils/applicationUtils';
 	import { formatSchoolNames, orderByName, orderBySchoolNames } from '$lib/utils/programUtils';
 
 	export let data;
@@ -72,11 +72,11 @@
 	</article>
 
 	<article class="bg-stone-50 rounded-xl w-full p-8 h-fit">
-		{#await Promise.all([data.applications, data.applicants])}
+		{#await data.applications}
 			<FetchingDataSign />
-		{:then [applications, applicants]}
+		{:then applications}
 			<ApplicationStatsDoughnut
-				stats={getStats(compose(applications, applicants))}
+				stats={getStats(applications)}
 				href={`/collection/${data.collection.id}/stats`}
 			/>
 		{/await}

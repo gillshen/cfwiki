@@ -1,8 +1,5 @@
-import { fetchApplicants, fetchApplications } from '$lib/api/application';
+import { fetchComposedApplications } from '$lib/api/application';
 
 export async function load(_) {
-	return {
-		applications: fetchApplications(),
-		applicants: fetchApplicants()
-	};
+	return { applications: fetchComposedApplications() };
 }

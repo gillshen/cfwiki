@@ -3,8 +3,7 @@ import { error } from '@sveltejs/kit';
 
 import {
 	applicationTypes,
-	fetchApplicants,
-	fetchApplications,
+	fetchComposedApplications,
 	type ApplicationType
 } from '$lib/api/application';
 
@@ -24,7 +23,6 @@ export async function load(event: PageServerLoadEvent) {
 	return {
 		year,
 		applicationType,
-		applications: fetchApplications({ year, application_type: applicationType }),
-		applicants: fetchApplicants()
+		applications: fetchComposedApplications({ year, application_type: applicationType })
 	};
 }

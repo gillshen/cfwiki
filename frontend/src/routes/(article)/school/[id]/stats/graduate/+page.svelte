@@ -12,7 +12,6 @@
 {#if data.school.type === 'University'}
 	<ApplicationStatsPage
 		applications={data.applications.then((appls) => appls.filter(isGraduate))}
-		applicants={data.applicants}
 		title={`${data.school.alt_name || data.school.name} | Graduate Programs`}
 		{backUrl}
 		{backUrlText}

@@ -24,7 +24,7 @@
 	import ControlButton from '$lib/components/grid-pages/ControlButton.svelte';
 	import ControlDrawer from '$lib/components/grid-pages/ControlDrawer.svelte';
 	import DownloadButton from '$lib/components/grid-pages/DownloadButton.svelte';
-	import { compose, formatRegionCity, getLatestRanking } from '$lib/utils/schoolUtils';
+	import { combineWithStats, formatRegionCity, getLatestRanking } from '$lib/utils/schoolUtils';
 	import { lexicalChineseLast } from '$lib/utils/stringUtils';
 	import { calcSuccessRate } from '$lib/utils/numUtils';
 
@@ -231,7 +231,9 @@
 			return;
 		}
 
-		const rowData = compose(schools, stats).sort((a, b) => lexicalChineseLast(a.name, b.name));
+		const rowData = combineWithStats(schools, stats).sort((a, b) =>
+			lexicalChineseLast(a.name, b.name)
+		);
 
 		const gridOptions: GridOptions = {
 			defaultColDef: {
@@ -273,8 +275,8 @@
 <Heading tag="h1" class="grid-title flex gap-8 items-center justify-between">
 	<div class="flex gap-4 items-center">
 		{data.schoolType}
-		<RowCountBadge rows={data.schools} {rowCount} />
 		<ControlButton {hideControl} />
+		<RowCountBadge rows={data.schools} {rowCount} />
 	</div>
 
 	{#await Promise.all([data.schools, data.stats]) then _}

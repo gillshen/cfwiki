@@ -11,28 +11,42 @@ type Service = {
 	role: string;
 };
 
-export type ApplicationListItem = {
+type ApplicationWithLogs = {
 	id: number;
-	student: { id: number };
-	services: Service[];
-	schools: { name: string; country: string }[];
+	contract: number;
+	round: number;
+	majors_or_track: string;
+	logs: { status: string; date: string }[];
+};
+
+type ApplicationTarget = {
+	id: number;
+	name: string;
+	due_date: string;
+	schools: {
+		name: string;
+		country: string;
+		rankings: { ranking_name: string; year: number; rank: number }[];
+	}[];
 	program: { type: string; display_name: string };
 	year: number;
 	term: string;
-	round_name: string;
-	due_date: string | null;
-	majors_or_track: string;
-	logs: ApplicationLogBrief[];
 };
 
-export type ApplicantListItem = {
+type ApplicantListItem = {
 	id: number;
 	fullname: string;
 	gender: 'female' | 'male' | 'other';
 	citizenship: string;
 } & AcademicFields;
 
-export type ComposedApplicationListItem = {
+type ApplicationContract = {
+	id: number;
+	student: ApplicantListItem;
+	services: Service[];
+};
+
+export type ComposedApplication = {
 	id: number;
 	student: ApplicantListItem;
 	services: Service[];
@@ -69,27 +83,76 @@ export type ApplicationDetail = {
 	logs: ApplicationLog[];
 };
 
-export async function fetchApplications(
+async function fetchApplicationsWithLogs(
 	params?: Record<string, any>
-): Promise<ApplicationListItem[]> {
-	return await get(`applications/${buildQuery(params)}`);
+): Promise<ApplicationWithLogs[]> {
+	return await get(`applications-logged/${buildQuery(params)}`);
 }
 
-export async function fetchApplicants(params?: { id: number }): Promise<ApplicantListItem[]> {
-	return await get(`applicants/${buildQuery(params)}`);
+async function fetchApplicationTargets(params?: {
+	year?: number;
+	school?: number;
+	program?: number;
+	programs?: string;
+	program_iteration?: number;
+}): Promise<ApplicationTarget[]> {
+	return await get(`application-targets/${buildQuery(params)}`);
 }
 
-export async function fetchApplication(id: number): Promise<ApplicationDetail> {
-	return await get(`applications/${id}/`, 'Application not found');
+async function fetchApplicationContracts(params?: {
+	student?: number | undefined;
+}): Promise<ApplicationContract[]> {
+	return await get(`application-contracts/${buildQuery(params)}`);
+}
+
+export async function fetchComposedApplications(params?: {
+	cfer?: number;
+	year?: number;
+	application_type?: string;
+	student?: number;
+	school?: number;
+	school_attended?: number;
+	program?: number;
+	programs?: string;
+	program_iteration?: number;
+	status?: string;
+}): Promise<ComposedApplication[]> {
+	const [applications, targets, contracts] = await Promise.all([
+		fetchApplicationsWithLogs(params),
+		fetchApplicationTargets(params),
+		fetchApplicationContracts(params)
+	]);
+
+	return applications.map((application: ApplicationWithLogs) => {
+		const target = targets.find((target: ApplicationTarget) => target.id === application.round)!;
+		const contract = contracts.find(
+			(contract: ApplicationContract) => contract.id === application.contract
+		)!;
+		return {
+			...application,
+			round_name: target.name,
+			due_date: target.due_date,
+			schools: target.schools,
+			program: target.program,
+			year: target.year,
+			term: target.term,
+			student: contract.student,
+			services: contract.services
+		};
+	});
 }
 
 export async function fetchCoApplications(
 	application: ApplicationDetail
-): Promise<ApplicationListItem[]> {
-	const coApplications = await fetchApplications({
+): Promise<ComposedApplication[]> {
+	const coApplications = await fetchComposedApplications({
 		program_iteration: application.program_iteration.id
 	});
 	return coApplications.filter((appl) => appl.id !== application.id);
+}
+
+export async function fetchApplication(id: number): Promise<ApplicationDetail> {
+	return await get(`applications/${id}/`, 'Application not found');
 }
 
 export async function createApplication(data: any) {

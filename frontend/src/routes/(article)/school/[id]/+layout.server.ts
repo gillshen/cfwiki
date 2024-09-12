@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 
 import { fetchSchool, type School } from '$lib/api/school';
-import { fetchApplicants, fetchApplications } from '$lib/api/application';
+import { fetchComposedApplications } from '$lib/api/application';
 
 export async function load(event) {
 	const id = parseInt(event.params.id, 10);
@@ -15,14 +15,13 @@ export async function load(event) {
 	let applications;
 
 	if (school.type === 'Secondary School') {
-		applications = fetchApplications({ school_attended: school.id });
+		applications = fetchComposedApplications({ school_attended: school.id });
 	} else {
-		applications = fetchApplications({ school: school.id });
+		applications = fetchComposedApplications({ school: school.id });
 	}
 
 	return {
 		school,
-		applications,
-		applicants: fetchApplicants()
+		applications
 	};
 }

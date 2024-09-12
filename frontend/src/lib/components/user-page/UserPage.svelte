@@ -13,7 +13,7 @@
 
 	import type { CfUserListItem } from '$lib/api/user';
 	import type { StudentOfCferListItem } from '$lib/api/student';
-	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplication } from '$lib/api/application';
 
 	import { categorize, groupByTargetYear } from '$lib/utils/studentUtils';
 	import UserCohortCard from '$lib/components/list-items/UserCohortCard.svelte';
@@ -46,8 +46,7 @@
 		userId: number;
 		host: CfUserListItem;
 		students: Promise<StudentOfCferListItem[]>;
-		applications: Promise<ApplicationListItem[]>;
-		applicants: Promise<ApplicantListItem[]>;
+		applications: Promise<ComposedApplication[]>;
 	};
 
 	$: userIsHost = data.host.id === data.userId;
@@ -91,11 +90,7 @@
 	</TabItem>
 
 	<TabItem title="Applications">
-		<ApplicationsLoader
-			applications={data.applications}
-			applicants={data.applicants}
-			showHeading={false}
-		>
+		<ApplicationsLoader applications={data.applications} showHeading={false}>
 			<svelte:fragment let:applications>
 				<ApplicationsAccordian groupedApplications={groupByYear(applications)} divClass="-mt-4">
 					<svelte:fragment let:subsetOfApplications>

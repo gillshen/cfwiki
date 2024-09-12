@@ -11,7 +11,6 @@
 {#if data.school.type === 'Secondary School'}
 	<ApplicationStatsPage
 		applications={data.applications}
-		applicants={data.applicants}
 		title={`${data.school.alt_name || data.school.name} | Graduate Programs`}
 		{backUrl}
 		{backUrlText}

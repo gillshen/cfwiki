@@ -3,7 +3,10 @@ import { blankStats } from '$lib/api/stats';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
 
-export function compose(schools: School[], stats: SchoolStats[]): ComposedSchoolListItem[] {
+export function combineWithStats(
+	schools: School[],
+	stats: SchoolStats[]
+): ComposedSchoolListItem[] {
 	return schools.map((school) => {
 		const statsItem = stats.find((s) => s.school_id === school.id);
 

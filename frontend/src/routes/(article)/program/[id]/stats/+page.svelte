@@ -7,7 +7,6 @@
 
 <ApplicationStatsPage
 	applications={data.applications}
-	applicants={data.applicants}
 	title={`${formatSchoolNamesShort(data.program)} | ${data.program.display_name}`}
 	backUrl={`/program/${data.program.id}`}
 	backUrlText="Back to the Program Page"

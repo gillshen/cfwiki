@@ -103,9 +103,17 @@ class ApplicationRoundListView(ListAPIView):
     serializer_class = ApplicationRoundSerializer
 
     def get_queryset(self):
+        q = ApplicationRound.objects.select_related(
+            "program_iteration__program"
+        ).prefetch_related(
+            "program_iteration__program__schools",
+            "applications",
+        )
+
         query_params = self.request.query_params
 
         return ApplicationRound.filter(
+            q,
             program_type=query_params.get("program_type"),
             program=query_params.get("program"),
             year=query_params.get("year"),

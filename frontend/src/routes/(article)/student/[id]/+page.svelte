@@ -66,7 +66,6 @@
 		<ApplicationsSection
 			student={data.student}
 			applications={data.applications}
-			applicants={data.applicants}
 			form={data.newApplicationPrepForm}
 			{canEdit}
 		/>

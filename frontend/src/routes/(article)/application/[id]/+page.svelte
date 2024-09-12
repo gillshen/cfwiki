@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Heading, A, Hr, Modal, Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
+	import { Heading, Hr, Modal, Breadcrumb, BreadcrumbItem } from 'flowbite-svelte';
 
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
 	import ApplicationInfobox from '$lib/components/infobox/ApplicationInfobox.svelte';
@@ -86,7 +86,7 @@
 		{canEdit}
 	/>
 
-	<CoApplicationsSection coApplications={data.coApplications} applicants={data.applicants} />
+	<CoApplicationsSection coApplications={data.coApplications} />
 </Main>
 
 <FormModal

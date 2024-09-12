@@ -12,7 +12,7 @@
 	} from 'flowbite-svelte';
 
 	import type { StudentDetail } from '$lib/api/student';
-	import type { ApplicantListItem, ApplicationListItem } from '$lib/api/application';
+	import type { ComposedApplication } from '$lib/api/application';
 	import ApplicationsLoader from '$lib/components/misc/ApplicationsLoader.svelte';
 	import ApplicationsAccordian from '$lib/components/containers/ApplicationsAccordian.svelte';
 	import ApplicationLink from '$lib/components/table-cells/ApplicationLink.svelte';
@@ -34,15 +34,14 @@
 	} from '$lib/utils/applicationUtils';
 
 	export let student: StudentDetail;
-	export let applications: Promise<ApplicationListItem[]>;
-	export let applicants: Promise<ApplicantListItem[]>;
+	export let applications: Promise<ComposedApplication[]>;
 	export let form: SuperValidated<any>;
 	export let canEdit: boolean = false;
 
 	let newApplicationModal = false;
 </script>
 
-<ApplicationsLoader {applications} {applicants}>
+<ApplicationsLoader {applications}>
 	<svelte:fragment let:applications>
 		<ApplicationsAccordian groupedApplications={groupByYear(applications)}>
 			<svelte:fragment let:subsetOfApplications>
