@@ -243,7 +243,6 @@ class SchoolRankingEntry(models.Model):
 
     class Meta:
         verbose_name_plural = "School ranking entries"
-        ordering = ["-year", "ranking", "rank", "school__name"]
 
         constraints = [
             models.UniqueConstraint(
@@ -256,3 +255,11 @@ class SchoolRankingEntry(models.Model):
 
     def __str__(self):
         return f"{self.ranking} {self.year} | {self.rank:>02} {self.school}"
+
+    @staticmethod
+    def filter(q, ranking: int = None, year: int = None):
+        if ranking is not None:
+            q = q.filter(ranking=ranking)
+        if year is not None:
+            q = q.filter(year=year)
+        return q

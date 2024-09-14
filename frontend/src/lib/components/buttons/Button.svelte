@@ -11,5 +11,5 @@
 	{#if icon}
 		<svelte:component this={icon} class="size-4 me-1" />
 	{/if}
-	<span class="text-xs font-normal">{text}</span>
+	<span class="text-xs font-normal tracking-normal">{text}</span>
 </button>

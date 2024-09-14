@@ -54,7 +54,7 @@
 		{:else}
 			<HourglassSolid class={iconClass} />
 		{/if}
-		<span class={`font-medium${icon === 'minus' ? ' text-gray-500' : ''}`}>
+		<span class={`font-medium truncate${icon === 'minus' ? ' text-gray-500' : ''}`}>
 			{formattedStatuses}
 		</span>
 	</div>

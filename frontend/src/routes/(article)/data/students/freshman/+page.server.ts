@@ -1,4 +1,4 @@
-import type { ContractType } from '$lib/api/contract.js';
+import type { ContractType } from '$lib/api/contract';
 import { fetchStudents } from '$lib/api/student';
 
 export async function load(_) {

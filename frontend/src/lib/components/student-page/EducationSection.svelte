@@ -37,25 +37,25 @@
 <Heading tag="h2" class="section-title">Educational Experiences</Heading>
 
 {#if student.enrollments.length}
-	<Timeline class="mt-6 flex flex-col gap-4">
+	<Timeline class="mt-6 flex flex-col gap-4 max-w-lg">
 		{#each student.enrollments as enrollment}
 			<EnrollmentItem {enrollment}>
-				<div class="mt-8 flex gap-4 items-baseline">
+				<div class="mt-8 flex gap-4 items-baseline justify-between pr-2">
 					{#if canEdit}
-						<UpdateButton onClick={enrollmentModalOpener(enrollment)} />
+						<div class="flex gap-4 items-baseline">
+							<UpdateButton onClick={enrollmentModalOpener(enrollment)} />
+							<DeleteButton
+								onClick={() => {
+									activeEnrollment = enrollment;
+									enrollmentDeleteModal = true;
+								}}
+							/>
+						</div>
 					{/if}
 					<GotoButton
 						href={`/grades/${enrollment.id}`}
 						text={canEdit ? 'Manage Grades' : 'Grade Details'}
 					/>
-					{#if canEdit}
-						<DeleteButton
-							onClick={() => {
-								activeEnrollment = enrollment;
-								enrollmentDeleteModal = true;
-							}}
-						/>
-					{/if}
 				</div>
 			</EnrollmentItem>
 		{/each}

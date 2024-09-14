@@ -9,7 +9,7 @@
 	import AcademyProgramForm from '$lib/components/academy-program-form/AcademyProgramForm.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
-	import { addChinesePadding } from '$lib/utils/stringUtils.js';
+	import { addChinesePadding } from '$lib/utils/stringUtils';
 
 	export let data;
 

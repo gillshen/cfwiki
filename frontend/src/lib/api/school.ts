@@ -1,8 +1,9 @@
 import { get, patch, post, destroy, buildQuery } from '$lib/api/api';
 import type { ApplicationStats } from '$lib/api/stats';
+import type { RecognizedRanking } from '$lib/api/ranking';
 
 export type RankingEntry = {
-	ranking_name: string;
+	ranking_name: RecognizedRanking | string;
 	year: number;
 	rank: number;
 };
@@ -68,8 +69,4 @@ export async function deleteSchool(data: any) {
 
 export function sortedSchoolNames(schools: { name: string }[]): string[] {
 	return schools.map((s) => s.name).sort();
-}
-
-export function orderByName<T extends { name: string }>(schools: T[]): T[] {
-	return schools.sort((a, b) => a.name.localeCompare(b.name));
 }

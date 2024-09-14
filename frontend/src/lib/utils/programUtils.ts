@@ -1,5 +1,3 @@
-import type { ColorVariant } from 'flowbite-svelte';
-
 import type {
 	ComposedProgramListItem,
 	ProgramListItem,
@@ -7,7 +5,7 @@ import type {
 	ProgramType
 } from '$lib/api/program';
 
-import { orderByName as _orderByName } from '$lib/api/school';
+import { orderByName as _orderByName } from '$lib/utils/schoolUtils';
 import { blankStats } from '$lib/api/stats';
 
 export function combineWithStats(
@@ -30,13 +28,15 @@ export function enhanceDisplayName(program: ProgramListItem): string {
 }
 
 export function formatSchoolNames(program: ProgramListItem): string {
-	return _orderByName(program.schools)
+	return program.schools
+		.sort(_orderByName)
 		.map((s) => s.name)
 		.join(' + ');
 }
 
 export function formatSchoolNamesShort(program: ProgramListItem): string {
-	return _orderByName(program.schools)
+	return program.schools
+		.sort(_orderByName)
 		.map((s) => s.alt_name || s.name)
 		.join(' + ');
 }

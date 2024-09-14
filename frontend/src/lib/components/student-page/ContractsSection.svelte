@@ -40,22 +40,22 @@
 		{#each student.contracts as contract}
 			{@const canEdit = canEditContract(username, contract)}
 			<ContractItem {contract}>
-				<div class="mt-8 flex gap-4 items-baseline">
+				<div class="mt-8 flex gap-4 items-baseline justify-between">
 					{#if canEdit}
-						<UpdateButton onClick={contractModalOpener(contract)} />
+						<div class="flex gap-4 items-baseline">
+							<UpdateButton onClick={contractModalOpener(contract)} />
+							<DeleteButton
+								onClick={() => {
+									activeContract = contract;
+									contractDeleteModal = true;
+								}}
+							/>
+						</div>
 					{/if}
 					<GotoButton
 						href={`/contract/${contract.id}`}
 						text={canEdit ? 'Manage Staff' : 'Staff Details'}
 					/>
-					{#if canEdit}
-						<DeleteButton
-							onClick={() => {
-								activeContract = contract;
-								contractDeleteModal = true;
-							}}
-						/>
-					{/if}
 				</div>
 			</ContractItem>
 		{/each}

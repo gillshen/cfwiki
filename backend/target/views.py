@@ -5,7 +5,14 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
-from target.models import School, Program, ProgramCollection, ApplicationRound
+from target.models import (
+    School,
+    Program,
+    ProgramCollection,
+    ApplicationRound,
+    SchoolRanking,
+    SchoolRankingEntry,
+)
 
 from target.serializers import (
     SchoolSerializer,
@@ -18,6 +25,10 @@ from target.serializers import (
     ApplicationRoundSerializer,
     ApplicationRoundRUDSerializer,
     ApplicationRoundCreateSerializer,
+    SchoolRankingSerializer,
+    SchoolRankingCRUDSerializer,
+    SchoolRankingEntrySerializer,
+    SchoolRankingEntryCRUDSerializer,
 )
 
 
@@ -134,3 +145,46 @@ class ApplicationRoundRUDView(RetrieveUpdateDestroyAPIView):
 class ApplicationRoundCreateView(CreateAPIView):
     queryset = ApplicationRound.objects.all()
     serializer_class = ApplicationRoundCreateSerializer
+
+
+class SchoolRankingListView(ListAPIView):
+    queryset = SchoolRanking.objects.prefetch_related("entries")
+    serializer_class = SchoolRankingSerializer
+
+
+class SchoolRankingDetailView(RetrieveAPIView):
+    queryset = SchoolRanking.objects.prefetch_related("entries")
+    serializer_class = SchoolRankingSerializer
+
+
+class SchoolRankingCreateView(CreateAPIView):
+    queryset = SchoolRanking.objects.all()
+    serializer_class = SchoolRankingCRUDSerializer
+
+
+class SchoolRankingRUDView(RetrieveUpdateDestroyAPIView):
+    queryset = SchoolRanking.objects.all()
+    serializer_class = SchoolRankingCRUDSerializer
+
+
+class SchoolRankingEntryListView(ListAPIView):
+    serializer_class = SchoolRankingEntrySerializer
+
+    def get_queryset(self):
+        query_params = self.request.query_params
+
+        return SchoolRankingEntry.filter(
+            SchoolRankingEntry.objects.select_related("ranking", "school"),
+            ranking=query_params.get("ranking"),
+            year=query_params.get("year"),
+        )
+
+
+class SchoolRankingEntryCreateView(CreateAPIView):
+    queryset = SchoolRankingEntry.objects.all()
+    serializer_class = SchoolRankingEntryCRUDSerializer
+
+
+class SchoolRankingEntryRUDView(RetrieveUpdateDestroyAPIView):
+    queryset = SchoolRankingEntry.objects.all()
+    serializer_class = SchoolRankingEntryCRUDSerializer

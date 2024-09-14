@@ -36,18 +36,20 @@
 			</TableBodyCell>
 		</TableBodyRow>
 
-		<TableBodyRow>
-			<TableBodyCell tdClass="w-40 font-medium py-4">US News Rank</TableBodyCell>
-			<TableBodyCell tdClass="font-normal py-4">
-				{usNewsRank ? `#\u2009${usNewsRank}` : '-'}
-			</TableBodyCell>
-		</TableBodyRow>
+		{#if school.type === 'University'}
+			<TableBodyRow>
+				<TableBodyCell tdClass="w-40 font-medium py-4">US News Rank</TableBodyCell>
+				<TableBodyCell tdClass="font-normal py-4">
+					{usNewsRank ? `#\u2009${usNewsRank}` : '-'}
+				</TableBodyCell>
+			</TableBodyRow>
 
-		<TableBodyRow>
-			<TableBodyCell tdClass="w-40 font-medium py-4">QS Rank</TableBodyCell>
-			<TableBodyCell tdClass="font-normal py-4">
-				{qsRank ? `#\u2009${qsRank}` : '-'}
-			</TableBodyCell>
-		</TableBodyRow>
+			<TableBodyRow>
+				<TableBodyCell tdClass="w-40 font-medium py-4">QS Rank</TableBodyCell>
+				<TableBodyCell tdClass="font-normal py-4">
+					{qsRank ? `#\u2009${qsRank}` : '-'}
+				</TableBodyCell>
+			</TableBodyRow>
+		{/if}
 	</TableBody>
 </Table>

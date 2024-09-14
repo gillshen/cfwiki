@@ -9,5 +9,5 @@
 </script>
 
 <div class="text-xs font-normal text-gray-500 flex">
-	<DatabaseOutline class="size-4 me-1" /><span>{displayed}{total}</span>
+	<DatabaseOutline class="size-4 me-1" /><span class="tracking-normal">{displayed}{total}</span>
 </div>

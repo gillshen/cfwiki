@@ -45,6 +45,13 @@ from target.views import (
     ApplicationRoundDetailView,
     ApplicationRoundCreateView,
     ApplicationRoundRUDView,
+    SchoolRankingListView,
+    SchoolRankingDetailView,
+    SchoolRankingCreateView,
+    SchoolRankingRUDView,
+    SchoolRankingEntryListView,
+    SchoolRankingEntryCreateView,
+    SchoolRankingEntryRUDView,
 )
 
 from academics.views import (
@@ -183,4 +190,13 @@ urlpatterns = [
     path("cf/academy-programs/<int:pk>/", AcademyProgramDetailView.as_view()),
     path("cf/academy-programs/new/", AcademyProgramCreateView.as_view()),
     path("cf/academy-programs/<int:pk>/update/", AcademyProgramRUDView.as_view()),
+    # school ranking
+    path("school-rankings/", SchoolRankingListView.as_view()),
+    path("school-rankings/<int:pk>/", SchoolRankingDetailView.as_view()),
+    path("school-rankings/new/", SchoolRankingCreateView.as_view()),
+    path("school-rankings/<int:pk>/update/", SchoolRankingRUDView.as_view()),
+    # school ranking entry
+    path("school-ranks/", SchoolRankingEntryListView.as_view()),
+    path("school-ranks/new/", SchoolRankingEntryCreateView.as_view()),
+    path("school-ranks/<int:pk>/update/", SchoolRankingEntryRUDView.as_view()),
 ]

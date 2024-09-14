@@ -84,7 +84,7 @@ export function getLatestRanking(
 
 	let rankings = [...school.rankings].filter(
 		(entry) =>
-			(year === undefined || entry.year === year) &&
+			(year === undefined || entry.year <= year) &&
 			(rankingName === undefined || entry.ranking_name.startsWith(rankingName))
 	);
 
@@ -137,4 +137,8 @@ export function formatRanking(
 	}
 
 	return `${entry.rank}${nameAndYear}`;
+}
+
+export function orderByName(a: { name: string }, b: { name: string }): number {
+	return a.name.localeCompare(b.name);
 }

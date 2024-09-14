@@ -232,6 +232,7 @@
 					<a href="/cf/index">CF People</a>
 					<a href="/cf-academy">CF Academy</a>
 					<a href="/collection/index">Program Collections</a>
+					<a href="/ranking/index">School Rankings</a>
 				</div>
 
 				<div class="text-sm text-gray-700 flex gap-0.5">

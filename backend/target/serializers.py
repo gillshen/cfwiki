@@ -8,6 +8,7 @@ from target.models import (
     Program,
     ProgramIteration,
     ApplicationRound,
+    SchoolRanking,
     SchoolRankingEntry,
 )
 
@@ -181,4 +182,47 @@ class ApplicationRoundCreateSerializer(serializers.ModelSerializer):
 class ApplicationRoundRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationRound
+        fields = "__all__"
+
+
+class SchoolRankingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SchoolRanking
+        fields = "__all__"
+
+    editions = serializers.SerializerMethodField()
+
+    def get_editions(self, ranking):
+        return ranking.entries.values_list("year", flat=True).distinct()
+
+
+class SchoolRankingCRUDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SchoolRanking
+        fields = "__all__"
+
+
+class SchoolRankingEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SchoolRankingEntry
+        fields = "__all__"
+
+    class RankingSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = SchoolRanking
+            fields = ["id", "name"]
+
+    ranking = RankingSerializer()
+
+    class SchoolSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = School
+            fields = ["id", "name"]
+
+    school = SchoolSerializer()
+
+
+class SchoolRankingEntryCRUDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SchoolRankingEntry
         fields = "__all__"
