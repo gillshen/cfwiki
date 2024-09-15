@@ -212,17 +212,19 @@ class ApplicationRound(models.Model):
 
 class SchoolRanking(models.Model):
     name = models.CharField(max_length=100)
+    year = models.IntegerField()
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 Lower("name"),
-                name="schoolranking_unique_name",
+                "year",
+                name="schoolranking_unique_name_year",
             )
         ]
 
     def __str__(self):
-        return self.name
+        return f"{self.name} {self.year}"
 
 
 class SchoolRankingEntry(models.Model):
@@ -232,8 +234,6 @@ class SchoolRankingEntry(models.Model):
         related_name="entries",
         on_delete=models.CASCADE,
     )
-    year = models.IntegerField()
-
     school = models.ForeignKey(
         School,
         related_name="rankings",
@@ -247,19 +247,10 @@ class SchoolRankingEntry(models.Model):
         constraints = [
             models.UniqueConstraint(
                 "ranking",
-                "year",
                 "school",
-                name="schoolrankingentry_unique_ranking_year_school",
+                name="schoolrankingentry_unique_ranking_school",
             )
         ]
 
     def __str__(self):
-        return f"{self.ranking} {self.year} | {self.rank:>02} {self.school}"
-
-    @staticmethod
-    def filter(q, ranking: int = None, year: int = None):
-        if ranking is not None:
-            q = q.filter(ranking=ranking)
-        if year is not None:
-            q = q.filter(year=year)
-        return q
+        return f"{self.ranking} | {self.rank:>02} {self.school}"

@@ -171,13 +171,13 @@ class SchoolRankingEntryListView(ListAPIView):
     serializer_class = SchoolRankingEntrySerializer
 
     def get_queryset(self):
-        query_params = self.request.query_params
+        q = SchoolRankingEntry.objects.select_related("ranking", "school")
 
-        return SchoolRankingEntry.filter(
-            SchoolRankingEntry.objects.select_related("ranking", "school"),
-            ranking=query_params.get("ranking"),
-            year=query_params.get("year"),
-        )
+        ranking = self.request.query_params.get("ranking")
+        if ranking is not None:
+            q = q.filter(ranking=ranking)
+
+        return q
 
 
 class SchoolRankingEntryCreateView(CreateAPIView):

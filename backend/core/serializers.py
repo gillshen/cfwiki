@@ -334,9 +334,13 @@ class ApplicationTargetSerializer(serializers.ModelSerializer):
                 fields = ["ranking_name", "year", "rank"]
 
             ranking_name = serializers.SerializerMethodField()
+            year = serializers.SerializerMethodField()
 
             def get_ranking_name(self, ranking_entry):
                 return ranking_entry.ranking.name
+
+            def get_year(self, ranking_entry):
+                return ranking_entry.ranking.year
 
         rankings = RankingEntrySerializer(many=True)
 

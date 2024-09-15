@@ -24,9 +24,13 @@ class SchoolSerializer(serializers.ModelSerializer):
             fields = ["ranking_name", "year", "rank"]
 
         ranking_name = serializers.SerializerMethodField()
+        year = serializers.SerializerMethodField()
 
         def get_ranking_name(self, ranking_entry):
             return ranking_entry.ranking.name
+
+        def get_year(self, ranking_entry):
+            return ranking_entry.ranking.year
 
     rankings = RankingEntrySerializer(many=True)
 
@@ -190,11 +194,6 @@ class SchoolRankingSerializer(serializers.ModelSerializer):
         model = SchoolRanking
         fields = "__all__"
 
-    editions = serializers.SerializerMethodField()
-
-    def get_editions(self, ranking):
-        return ranking.entries.values_list("year", flat=True).distinct()
-
 
 class SchoolRankingCRUDSerializer(serializers.ModelSerializer):
     class Meta:
@@ -210,7 +209,7 @@ class SchoolRankingEntrySerializer(serializers.ModelSerializer):
     class RankingSerializer(serializers.ModelSerializer):
         class Meta:
             model = SchoolRanking
-            fields = ["id", "name"]
+            fields = ["id", "name", "year"]
 
     ranking = RankingSerializer()
 

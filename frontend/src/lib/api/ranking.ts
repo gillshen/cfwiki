@@ -11,14 +11,13 @@ export type RecognizedRanking = (typeof recognizedRankings)[number];
 export type SchoolRanking = {
 	id: number;
 	name: RecognizedRanking | string;
-	editions: number[];
+	year: number;
 };
 
 export type SchoolRankingEntry = {
 	id: number;
-	ranking: { id: number; name: string };
+	ranking: SchoolRanking;
 	school: { id: number; name: string };
-	year: number;
 	rank: number;
 };
 

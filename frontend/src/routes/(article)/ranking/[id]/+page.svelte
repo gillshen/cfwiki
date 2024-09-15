@@ -21,7 +21,7 @@
 	import BreadcrumbLink from '$lib/components/misc/BreadcrumbLink.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
-	import RankingEntryForm from '$lib/components/ranking-entry-form/RankingEntryForm.svelte';
+	import RankingEntryForm from '$lib/components/ranking-forms/RankingEntryForm.svelte';
 	import DeleteForm from '$lib/components/delete-form/DeleteForm.svelte';
 	import DeleteMessage from '$lib/components/delete-form/DeleteMessage.svelte';
 
@@ -42,56 +42,58 @@
 <Heading tag="h1" class="alt-page-title flex items-center gap-4">
 	<AwardOutline size="xl" />
 	{data.ranking.name}
-	{data.year}
+	{data.ranking.year}
 </Heading>
 
 <Hr />
 
 <Breadcrumb>
 	<BreadcrumbLink text="Rankings" href="/ranking/index" />
-	<BreadcrumbItem>{data.ranking.name} {data.year}</BreadcrumbItem>
+	<BreadcrumbItem>{data.ranking.name} {data.ranking.year}</BreadcrumbItem>
 </Breadcrumb>
 
 {#await data.rankingEntries}
 	<FetchingDataSign divClass="mt-8" />
 {:then rankingEntries}
-	<Table divClass="max-w-2xl mt-8" hoverable={rankingEntries.length > 1}>
-		<TableHead>
-			<TableHeadCell>School</TableHeadCell>
-			<TableHeadCell class="text-right">Rank</TableHeadCell>
-			<TableHeadCell></TableHeadCell>
-		</TableHead>
-		<TableBody>
-			{#each rankingEntries.sort(orderByRankName) as entry}
-				<TableBodyRow>
-					<TableBodyCell class="font-normal w-[360px] truncate">
-						<a href={`/school/${entry.school.id}`} class="hover:underline hover:text-primary-700">
-							{entry.school.name}
-						</a>
-					</TableBodyCell>
+	{#if rankingEntries.length}
+		<Table divClass="max-w-2xl mt-8" hoverable={rankingEntries.length > 1}>
+			<TableHead>
+				<TableHeadCell>School</TableHeadCell>
+				<TableHeadCell class="text-right">Rank</TableHeadCell>
+				<TableHeadCell></TableHeadCell>
+			</TableHead>
+			<TableBody>
+				{#each rankingEntries.sort(orderByRankName) as entry}
+					<TableBodyRow>
+						<TableBodyCell class="font-normal w-[360px] truncate">
+							<a href={`/school/${entry.school.id}`} class="hover:underline hover:text-primary-700">
+								{entry.school.name}
+							</a>
+						</TableBodyCell>
 
-					<TableBodyCell class="text-right w-8 tabular-nums">{entry.rank}</TableBodyCell>
+						<TableBodyCell class="text-right w-8 tabular-nums">{entry.rank}</TableBodyCell>
 
-					<TableBodyCell>
-						<div class="flex gap-4 items-baseline justify-end">
-							<UpdateButton
-								onClick={() => {
-									activeEntry = entry;
-									entryModal = true;
-								}}
-							/>
-							<DeleteButton
-								onClick={() => {
-									activeEntry = entry;
-									entryDeleteModal = true;
-								}}
-							/>
-						</div>
-					</TableBodyCell>
-				</TableBodyRow>
-			{/each}
-		</TableBody>
-	</Table>
+						<TableBodyCell>
+							<div class="flex gap-4 items-baseline justify-end">
+								<UpdateButton
+									onClick={() => {
+										activeEntry = entry;
+										entryModal = true;
+									}}
+								/>
+								<DeleteButton
+									onClick={() => {
+										activeEntry = entry;
+										entryDeleteModal = true;
+									}}
+								/>
+							</div>
+						</TableBodyCell>
+					</TableBodyRow>
+				{/each}
+			</TableBody>
+		</Table>
+	{/if}
 {/await}
 
 <Button
@@ -114,7 +116,6 @@
 	title={`${activeEntry ? 'Update' : 'Create a'} ranking entry`}
 	schools={data.schools}
 	ranking={data.ranking}
-	year={data.year}
 	on:close={() => (entryModal = false)}
 />
 

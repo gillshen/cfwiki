@@ -2,16 +2,16 @@
 	import { A, Card, Heading, Hr } from 'flowbite-svelte';
 	import { AwardOutline, PlusOutline } from 'flowbite-svelte-icons';
 
-	import type { SchoolRanking } from '$lib/api/ranking';
+	import { recognizedRankings } from '$lib/api/ranking';
 	import Button from '$lib/components/buttons/Button.svelte';
 	import FetchingDataSign from '$lib/components/misc/FetchingDataSign.svelte';
 	import FormModal from '$lib/components/form-modal/FormModal.svelte';
-	import RankingEntryForm from '$lib/components/ranking-entry-form/RankingEntryForm.svelte';
+	import RankingForm from '$lib/components/ranking-forms/RankingForm.svelte';
 
 	export let data;
 
-	let newEntryModal = false;
-	let activeRanking: SchoolRanking | null = null;
+	let rankingModal = false;
+	let activeRankingName: string | null = null;
 </script>
 
 <Heading tag="h1" class="page-title">School Rankings</Heading>
@@ -22,17 +22,19 @@
 	<FetchingDataSign />
 {:then rankings}
 	<article class="flex flex-wrap gap-8">
-		{#each rankings as ranking}
+		{#each Array.from(recognizedRankings) as rankingName}
 			<Card>
 				<Heading tag="h2" class="text-lg font-medium flex items-center">
-					<AwardOutline class="me-1" />{ranking.name}
+					<AwardOutline class="me-1" />{rankingName}
 				</Heading>
 
 				<div class="mt-4 h-full flex flex-col justify-between">
 					<ul class="grid grid-cols-4 gap-x-6 gap-y-3">
-						{#each ranking.editions.sort((a, b) => b - a) as edition}
+						{#each rankings
+							.filter((ranking) => ranking.name === rankingName)
+							.sort((a, b) => b.year - a.year) as ranking}
 							<li class="list-disc list-inside text-gray-400">
-								<A href={`/ranking/${ranking.id}/${edition}`}>{edition}</A>
+								<A href={`/ranking/${ranking.id}`}>{ranking.year}</A>
 							</li>
 						{/each}
 					</ul>
@@ -40,8 +42,8 @@
 					<div class="mt-8 flex gap-4 items-baseline">
 						<Button
 							onClick={() => {
-								activeRanking = ranking;
-								newEntryModal = true;
+								activeRankingName = rankingName;
+								rankingModal = true;
 							}}
 							text="New Edition"
 							icon={PlusOutline}
@@ -54,12 +56,11 @@
 {/await}
 
 <FormModal
-	open={newEntryModal}
-	superform={data.newEntryForm}
-	fields={RankingEntryForm}
-	action="?/createOrUpdateRankingEntry"
+	open={rankingModal}
+	superform={data.newRankingForm}
+	fields={RankingForm}
+	action="?/createSchoolRanking"
 	title="Create a new edition"
-	schools={data.schools}
-	ranking={activeRanking}
-	on:close={() => (newEntryModal = false)}
+	name={activeRankingName}
+	on:close={() => (rankingModal = false)}
 />

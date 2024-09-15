@@ -47,9 +47,9 @@ class ApplicationRoundAdmin(admin.ModelAdmin):
 
 @admin.register(SchoolRanking)
 class SchoolRankingAdmin(admin.ModelAdmin):
-    list_display = "id", "name"
+    list_display = "id", "name", "year"
 
 
 @admin.register(SchoolRankingEntry)
 class SchoolRankingEntryAdmin(admin.ModelAdmin):
-    list_display = "id", "ranking", "year", "school", "rank"
+    list_display = "id", "ranking", "school", "rank"
