@@ -1,0 +1,93 @@
+<script lang="ts">
+	import { tick } from 'svelte';
+
+	import * as Form from '$lib/components/ui/form/index';
+	import * as Popover from '$lib/components/ui/popover/index';
+	import * as Command from '$lib/components/ui/command/index';
+
+	import { cn } from '$lib/utils';
+	import { buttonVariants } from '$lib/components/ui/button/index';
+	import ChevronDown from 'lucide-svelte/icons/chevron-down';
+	import Check from 'lucide-svelte/icons/check';
+
+	import type { SuperForm } from 'sveltekit-superforms';
+
+	export let form: SuperForm<any>;
+	export let name: string;
+	export let label: string;
+	export let items: { label: string; value: any }[];
+	export let width: string = 'w-[360px]';
+	export let description: string = '';
+	export let isOptional: boolean = false;
+	export let onSelect: () => void = () => {};
+
+	const { form: formData } = form;
+
+	let open = false;
+
+	// We want to refocus the trigger button when the user selects
+	// an item from the list so users can continue navigating the
+	// rest of the form with the keyboard.
+	function closeAndFocusTrigger(triggerId: string) {
+		open = false;
+		tick().then(() => {
+			document.getElementById(triggerId)?.focus();
+		});
+	}
+</script>
+
+<Form.Field {form} {name} class="flex flex-col">
+	<Popover.Root bind:open let:ids>
+		<Form.Control let:attrs>
+			{#if isOptional}
+				<Form.Label class="pb-1 optional-field">{label}</Form.Label>
+			{:else}
+				<Form.Label class="pb-1">{label}</Form.Label>
+			{/if}
+			<Popover.Trigger
+				role="combobox"
+				class={cn(
+					buttonVariants({ variant: 'outline' }),
+					`${width} justify-between font-normal`,
+					!$formData[name] && 'text-muted-foreground'
+				)}
+				{...attrs}
+			>
+				{items.find((item) => item.value === $formData[name])?.label || 'Select an option'}
+				<ChevronDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+			</Popover.Trigger>
+			<input hidden value={$formData[name]} name={attrs.name} />
+		</Form.Control>
+		<Popover.Content class={`${width} p-0`}>
+			<Command.Root>
+				<Command.Input placeholder="Search..." />
+				<Command.Empty>No matching options found</Command.Empty>
+				<Command.List>
+					{#each items as item}
+						<Command.Item
+							{...form}
+							value={item.value}
+							onSelect={() => {
+								onSelect();
+								closeAndFocusTrigger(ids.trigger);
+								$formData[name] = item.value;
+							}}
+						>
+							<Check
+								class={cn(
+									'mr-2 size-4',
+									item.value === $formData[name] ? 'opacity-100' : 'opacity-0'
+								)}
+							/>
+							{item.label}
+						</Command.Item>
+					{/each}
+				</Command.List>
+			</Command.Root>
+		</Popover.Content>
+	</Popover.Root>
+	{#if description}
+		<Form.Description>{description}</Form.Description>
+	{/if}
+	<Form.FieldErrors />
+</Form.Field>
