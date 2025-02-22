@@ -9,7 +9,7 @@
 	const { form: formData, message, enhance } = form;
 </script>
 
-<div class="mx-auto space-y-12">
+<div class="mx-auto space-y-12 px-4 pt-4 pb-20">
 	<h1 class="text-3xl font-bold">ChoiceFreezer</h1>
 
 	<form method="POST" class="space-y-6" action="?/login" use:enhance id="login-form">

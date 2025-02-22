@@ -164,7 +164,7 @@
 			</FormField>
 		{/if}
 
-		<Form.Button class="w-fit">Submit</Form.Button>
+		<Form.Button class="w-fit min-w-24">Submit</Form.Button>
 	</form>
 </Section>
 

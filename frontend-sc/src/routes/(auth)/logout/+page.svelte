@@ -5,5 +5,5 @@
 <div class="flex flex-col w-full gap-8">
 	<h1 class="text-2xl text-center">You're logged out</h1>
 
-	<Button href="/login" class="w-fit mx-auto">Log in</Button>
+	<Button href="/login" class="w-36 mx-auto">Log in</Button>
 </div>

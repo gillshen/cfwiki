@@ -68,8 +68,10 @@
 							{...form}
 							value={item.value}
 							onSelect={() => {
-								onSelect();
+								// Order of operation critical;
+								// changing order results in UI failing to update properly
 								closeAndFocusTrigger(ids.trigger);
+								onSelect();
 								$formData[name] = item.value;
 							}}
 						>
