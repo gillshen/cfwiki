@@ -124,3 +124,7 @@ a {
 a:hover {
 	@apply underline
 }
+
+form .hidden {
+	display: none;
+}

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as Dialog from '$lib/components/ui/dialog/index';
-	import { Button, buttonVariants } from '$lib/components/ui/button/index';
+	import * as Form from '$lib/components/ui/form/index';
+	import { Button } from '$lib/components/ui/button/index';
 	import Venus from 'lucide-svelte/icons/venus';
 	import Mars from 'lucide-svelte/icons/mars';
 	import NonBinary from 'lucide-svelte/icons/non-binary';
@@ -13,10 +13,34 @@
 
 	import countryFlags from '$lib/constants/countries';
 	import { formatLocation } from '$lib/util/studentUtils';
+	import { superForm } from 'sveltekit-superforms';
+	import Combobox from '$lib/components/forms/Combobox.svelte';
 
 	export let data;
 
 	let canEdit: boolean = true;
+
+	const form = superForm(data.newApplicationPrepForm);
+	const { form: formData, enhance } = form;
+
+	const contractItems = data.student.contracts.map((contract) => ({
+		value: contract.id.toString(),
+		label: `${contract.type} ${contract.target_year}`
+	}));
+	const applicationTypes = ['UG Freshman', 'UG Transfer', 'Graduate', 'Non-degree'];
+	const applicationTypeItems = applicationTypes.map((value) => ({
+		value,
+		label: value
+	}));
+	const yearItems = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029] // TODO
+		.map((year) => ({
+			value: year.toString(),
+			label: year.toString()
+		}));
+	const termItems = ['Fall', 'Spring', 'Summer', 'Winter'].map((value) => ({
+		value,
+		label: value
+	}));
 </script>
 
 <section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-6">
@@ -109,7 +133,20 @@
 	{#if canEdit}
 		<div class="pt-4">
 			<ButtonDialog buttonText="Create Applications" dialogTitle="Create Applications">
-				<div>Dialog body</div>
+				<form
+					method="POST"
+					action="?/startApplication"
+					class="max-w-prose space-y-4 my-4 mx-auto"
+					id="new-application-prep-form"
+					use:enhance
+				>
+					<input type="number" name="student" value={data.student.id} class="hidden" />
+					<Combobox {form} name="contract" label="Contract" items={contractItems} />
+					<Combobox {form} name="type" label="Application type" items={applicationTypeItems} />
+					<Combobox {form} name="year" label="Year of admission" items={yearItems} />
+					<Combobox {form} name="term" label="Term" items={termItems} />
+					<Form.Button class="w-fit min-w-24">Next</Form.Button>
+				</form>
 			</ButtonDialog>
 		</div>
 	{/if}

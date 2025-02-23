@@ -89,8 +89,7 @@
 					<DropdownMenu.Group>
 						<DropdownMenu.Item>UG Freshman</DropdownMenu.Item>
 						<DropdownMenu.Item>UG Transfer</DropdownMenu.Item>
-						<DropdownMenu.Item>Master&rsquo;s</DropdownMenu.Item>
-						<DropdownMenu.Item>Doctorate</DropdownMenu.Item>
+						<DropdownMenu.Item>Graduate</DropdownMenu.Item>
 						<DropdownMenu.Item>Non-degree</DropdownMenu.Item>
 						<DropdownMenu.Separator />
 						<DropdownMenu.Item>Program Collections</DropdownMenu.Item>

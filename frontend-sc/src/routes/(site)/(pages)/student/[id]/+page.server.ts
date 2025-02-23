@@ -88,7 +88,7 @@ export const actions = {
 	createOrUpdateContract: formAction(contractSchema, createOrUpdateContract),
 	createOrUpdateEnrollment: formAction(enrollmentSchema, createOrUpdateEnrollment),
 
-	initiateApplication: async ({ request }) => {
+	startApplication: async ({ request }) => {
 		const form = await superValidate(request, zod(newApplicationPrepSchema));
 		console.log(form.data);
 

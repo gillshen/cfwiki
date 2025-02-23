@@ -12,11 +12,11 @@ export const batchNewApplicationSchema = z.object({
 export type BatchNewApplicationSchema = typeof batchNewApplicationSchema;
 
 export const newApplicationPrepSchema = z.object({
-	student: z.number(),
-	contract: z.number(),
-	type: z.string(),
-	year: z.number(),
-	term: z.string()
+	student: z.number().min(1, 'This field is required'),
+	contract: z.number().min(1, 'This field is required'),
+	type: z.string().min(1, 'This field is required'),
+	year: z.number().min(1, 'This field is required'),
+	term: z.string().min(1, 'This field is required')
 });
 
 export type NewApplicationPrepSchema = typeof newApplicationPrepSchema;
