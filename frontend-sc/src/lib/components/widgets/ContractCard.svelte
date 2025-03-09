@@ -16,8 +16,8 @@
 </script>
 
 <HoverCard.Root>
-	<HoverCard.Trigger class="text-stone-700 w-fit hover:no-underline">
-		<Card.Root class="w-48 hover:bg-gray-100">
+	<HoverCard.Trigger class="text-zinc-700 w-fit hover:no-underline">
+		<Card.Root class="w-48 hover:bg-zinc-100">
 			<Card.Header class="px-4 py-4">
 				<Card.Title class="text-base">{contract.type} {contract.target_year}</Card.Title>
 				<Card.Description class="text-sm flex gap-1.5 items-center">
@@ -33,26 +33,34 @@
 			</Card.Header>
 		</Card.Root>
 	</HoverCard.Trigger>
-	<HoverCard.Content class="w-fit flex text-sm flex flex-col gap-2 px-6">
-		<div class="flex gap-1 items-center text-stone-600 text-xs">
+	<HoverCard.Content class="w-fit min-w-48 flex text-sm flex flex-col gap-2 px-6">
+		<div class="flex gap-2 items-center text-zinc-600 text-sm border-b w-full pb-2">
 			<CalendarDays class="w-4 h-4" />
-			{#if contract.date}
-				Signed {contract.date}
-			{:else}
-				Date unknown
-			{/if}
-			{#if contract.date && contract.student_progression_when_signed}
-				<div>&bullet;</div>
-			{/if}
-			{#if contract.student_progression_when_signed}
-				<div>{contract.student_progression_when_signed}</div>
-			{/if}
+			<div class="flex gap-1">
+				{#if contract.date}
+					<div>{contract.date}</div>
+				{/if}
+				{#if contract.date && contract.student_progression_when_signed}
+					&bullet;
+				{/if}
+				{#if contract.student_progression_when_signed}
+					<div>{contract.student_progression_when_signed}</div>
+				{/if}
+			</div>
 		</div>
-		<div class="flex flex-col gap-2 mt-2 text-sm">
+		<div class="flex flex-col gap-3 mt-2 text-sm">
 			{#each contract.services.sort(orderByEndDateRole) as service}
-				<div class="flex gap-2">
-					<div class="font-medium">{service.role}</div>
-					<a href={`/cf/${service.cf_username}`}>{service.cf_username}</a>
+				<div class="flex justify-between items-center">
+					<div>
+						<a class="font-medium text-black" href={`/cf/${service.cf_username}`}
+							>{service.cf_username}</a
+						>
+						<div class="text-zinc-400 text-xs">{service.role}</div>
+					</div>
+					<div class="text-xs text-zinc-400 text-right">
+						<div>since {service.start_date || 'n/a'}</div>
+						<div>until {service.start_date || 'n/a'}</div>
+					</div>
 				</div>
 			{/each}
 		</div>

@@ -100,13 +100,13 @@
 	height: calc(100vh - 10rem);
 }
 .data-grid .ag-header-cell {
-	@apply bg-stone-50 hover:!bg-stone-100;
+	@apply bg-zinc-50 hover:!bg-zinc-100;
 }
 .data-grid .ag-header-cell:hover .ag-icon:hover {
 	@apply text-slate-500;
 }
 .data-grid a:hover {
-	@apply underline;
+	text-decoration: underline;
 }
 
 h1.page-title {
@@ -114,15 +114,17 @@ h1.page-title {
 }
 
 .optional-field::after {
-	color: #888;
+	/* muted foreground */
+	color: #71717a;
 	content: ' (optional)';
 }
 
 a {
-	@apply text-stone-600;
+	/* muted foreground */
+	color: #71717a;
 }
 a:hover {
-	@apply underline
+	text-decoration: underline;
 }
 
 form .hidden {

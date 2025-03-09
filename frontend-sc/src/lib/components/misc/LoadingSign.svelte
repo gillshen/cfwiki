@@ -3,7 +3,7 @@
 	export let text: string = 'Fetching data...';
 </script>
 
-<div>
-	<LoaderCircle class="mr-2" />
-	{text}
+<div class="flex gap-2 items-center">
+	<LoaderCircle class="animate-spin w-4 h-4" />
+	<div class="animate-pulse text-sm">{text}</div>
 </div>
