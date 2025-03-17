@@ -1,75 +1,50 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card/index';
-	import * as HoverCard from '$lib/components/ui/hover-card/index';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import Pencil from 'lucide-svelte/icons/pencil';
+	import * as Avatar from '$lib/components/ui/avatar/index';
+	import { Button } from '$lib/components/ui/button/index';
+	import ChevronRight from 'lucide-svelte/icons/chevron-right';
 	import CircleCheckBig from 'lucide-svelte/icons/circle-check-big';
 	import CalendarClock from 'lucide-svelte/icons/calendar-clock';
 	import Ban from 'lucide-svelte/icons/ban';
-	import CalendarDays from 'lucide-svelte/icons/calendar-days';
 
 	import type { Contract } from '$lib/api/student';
 	import { orderByEndDateRole } from '$lib/util/serviceUtils';
 
 	export let contract: Contract;
-	export let canEdit: boolean;
 </script>
 
-<HoverCard.Root>
-	<HoverCard.Trigger class="text-zinc-700 w-fit hover:no-underline">
-		<Card.Root class="w-48 hover:bg-zinc-100">
-			<Card.Header class="px-4 py-4">
-				<Card.Title class="text-base">{contract.type} {contract.target_year}</Card.Title>
-				<Card.Description class="text-sm flex gap-1.5 items-center">
-					{#if contract.status === 'Fulfilled'}
-						<CircleCheckBig class="w-4 h-4" />
-					{:else if contract.status === 'In effect'}
-						<CalendarClock class="w-4 h-4" />
-					{:else}
-						<Ban class="w-4 h-4" />
-					{/if}
-					{contract.status}</Card.Description
-				>
-			</Card.Header>
-		</Card.Root>
-	</HoverCard.Trigger>
-	<HoverCard.Content class="w-fit min-w-48 flex text-sm flex flex-col gap-2 px-6">
-		<div class="flex gap-2 items-center text-zinc-600 text-sm border-b w-full pb-2">
-			<CalendarDays class="w-4 h-4" />
-			<div class="flex gap-1">
-				{#if contract.date}
-					<div>{contract.date}</div>
-				{/if}
-				{#if contract.date && contract.student_progression_when_signed}
-					&bullet;
-				{/if}
-				{#if contract.student_progression_when_signed}
-					<div>{contract.student_progression_when_signed}</div>
-				{/if}
-			</div>
-		</div>
-		<div class="flex flex-col gap-3 mt-2 text-sm">
+<Card.Root>
+	<Card.Header class="py-4">
+		<Card.Title class="flex w-full justify-between items-center">
+			<div class="text-base font-bold">{contract.type} {contract.target_year}</div>
+			<Button href={`/contract/${contract.id}`} variant="ghost" size="icon" class="rounded-full">
+				<ChevronRight class="h-4 w-4" />
+			</Button>
+		</Card.Title>
+		<Card.Description class="text-sm flex gap-1.5 items-center">
+			{#if contract.status === 'Fulfilled'}
+				<CircleCheckBig class="w-4 h-4" />
+			{:else if contract.status === 'In effect'}
+				<CalendarClock class="w-4 h-4" />
+			{:else}
+				<Ban class="w-4 h-4" />
+			{/if}
+			{contract.status}</Card.Description
+		>
+	</Card.Header>
+	<Card.Content class="w-fit min-w-[300px] pl-5 pt-2">
+		<div class="flex gap-8 text-sm pr-4">
 			{#each contract.services.sort(orderByEndDateRole) as service}
-				<div class="flex justify-between items-center">
-					<div>
-						<a class="font-medium text-black" href={`/cf/${service.cf_username}`}
-							>{service.cf_username}</a
-						>
-						<div class="text-zinc-400 text-xs">{service.role}</div>
-					</div>
-					<div class="text-xs text-zinc-400 text-right">
-						<div>since {service.start_date || 'n/a'}</div>
-						<div>until {service.start_date || 'n/a'}</div>
+				<div class="flex gap-2 items-center">
+					<Avatar.Root>
+						<Avatar.Fallback>{service.cf_username.charAt(0)}</Avatar.Fallback>
+					</Avatar.Root>
+					<div class="flex flex-col">
+						<div class="font-medium">{service.cf_username}</div>
+						<div class="text-xs text-zinc-400">{service.role}</div>
 					</div>
 				</div>
 			{/each}
 		</div>
-		{#if canEdit}
-			<div class="mt-4">
-				<Button variant="link" size="sm" class="px-0">
-					<Pencil class="mr-1 h-3 w-3" />Edit
-				</Button>
-			</div>
-		{/if}
-	</HoverCard.Content>
-</HoverCard.Root>
+	</Card.Content>
+</Card.Root>
