@@ -13,6 +13,15 @@ import canadianProvinces from '$lib/constants/canadianProvinces';
 import { isActive } from '$lib/util/serviceUtils';
 import { compareAlevelGrade } from '$lib/util/scoresUtils';
 
+export function isCurrent(student: StudentOfCferListItem): boolean {
+	for (const contract of student.contracts) {
+		if (contract.status === 'In effect') {
+			return true
+		}
+	}
+	return false
+}
+
 export function formatGender(student: BaseStudent): string {
 	switch (student.gender) {
 		case 'female':

@@ -106,6 +106,6 @@
 	</Section>
 {/if}
 
-<section class="w-fit min-w-[60ch] border-t border-dashed pb-4 mb-2 space-y-2">
-	<h2 id="students-and-alumni" class="text-xl font-bold py-2">Students & Alumni</h2>
-</section>
+<Section id="students-and-alumni" title="Students & Alumni">
+	<!-- TODO -->
+</Section>

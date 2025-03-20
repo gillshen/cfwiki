@@ -1,5 +1,6 @@
 <script lang="ts">
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Form from '$lib/components/ui/form/index';
 	import FormField from '$lib/components/ui/form/form-field.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
@@ -16,6 +17,7 @@
 	import canadianProvinces from '$lib/constants/canadianProvinces';
 	import chineseProvinces from '$lib/constants/chineseProvinces';
 	import { names } from '$lib/constants/fake';
+	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 
 	export let data;
 
@@ -62,6 +64,16 @@
 		}
 	}
 </script>
+
+<BreadcrumbContainer>
+	<Breadcrumb.Item>
+		<Breadcrumb.Link href="/student/index">Students</Breadcrumb.Link>
+	</Breadcrumb.Item>
+	<Breadcrumb.Separator />
+	<Breadcrumb.Item>
+		<Breadcrumb.Page>New</Breadcrumb.Page>
+	</Breadcrumb.Item>
+</BreadcrumbContainer>
 
 <h1 class="page-title mb-2">Student Profile</h1>
 

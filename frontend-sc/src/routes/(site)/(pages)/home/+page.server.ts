@@ -1,7 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 
 import { fetchUser } from '$lib/api/user';
-import { fetchStudentsByUser } from '$lib/api/student';
 import { fetchComposedApplications } from '$lib/api/application';
 
 export async function load(event) {
@@ -15,7 +14,6 @@ export async function load(event) {
 
 	return {
 		host,
-		students: fetchStudentsByUser({ cfer: host.id }),
 		applications: fetchComposedApplications({ cfer: host.id })
 	};
 }

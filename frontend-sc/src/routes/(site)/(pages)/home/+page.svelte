@@ -1,13 +1,97 @@
 <script lang="ts">
-	export let data;
+	import * as Tabs from '$lib/components/ui/tabs/index';
+	import * as Card from '$lib/components/ui/card/index';
+	import * as Table from '$lib/components/ui/table/index';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
+	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
+	import { defaultBanner } from '$lib/util/userUtils';
+	import Section from '$lib/components/containers/Section.svelte';
+	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 
-	const { username, userId } = data;
+	export let data;
 </script>
 
-<div class="flex flex-col gap-8">
-	<pre class="bg-stone-50 text-sm">{JSON.stringify({ username, userId }, null, 2)}</pre>
+<BreadcrumbContainer home>
+	<Breadcrumb.Item>Home</Breadcrumb.Item>
+</BreadcrumbContainer>
 
-	<a href="/student/new" class="text-sm">New student</a>
+<section class="w-fit min-w-[60ch] mb-4 space-y-2">
+	<h1 class="page-title">{data.host.public_banner || defaultBanner(data.host.username)}</h1>
+</section>
 
-	<a href="/school/new" class="text-sm">New school</a>
+<div class="grid w-full grid-cols-3">
+	<section class="col-span-2 pt-2 mr-8">
+		<Tabs.Root>
+			<Tabs.List class="grid w-fit grid-cols-2">
+				<Tabs.Trigger value="students" class="w-36">Students</Tabs.Trigger>
+				<Tabs.Trigger value="applications" class="w-36">Applications</Tabs.Trigger>
+			</Tabs.List>
+			<Tabs.Content value="students">
+				<Card.Root>
+					<Card.Header>filters</Card.Header>
+					<Card.Content>
+						{#await data.students}
+							<LoadingSign />
+						{:then students}
+							<Table.Root>
+								<Table.Header>
+									<Table.Row>
+										<Table.Head>Student</Table.Head>
+										<Table.Head>Contract</Table.Head>
+										<Table.Head>Status</Table.Head>
+									</Table.Row>
+								</Table.Header>
+								<Table.Body>
+									{#each students as student}
+										{#each student.contracts as contract}
+											{#if contract.services.map((s) => s.cf_username).includes(data.username)}
+												<Table.Row>
+													<Table.Cell
+														><a href={`/student/${student.id}`}>{student.fullname}</a></Table.Cell
+													>
+													<Table.Cell>{contract.type} {contract.target_year}</Table.Cell>
+													<Table.Cell>{contract.status}</Table.Cell>
+												</Table.Row>
+											{/if}
+										{/each}
+									{/each}
+								</Table.Body>
+							</Table.Root>
+						{/await}
+					</Card.Content>
+				</Card.Root>
+			</Tabs.Content>
+			<Tabs.Content value="applications">
+				<Card.Root>
+					<Card.Header>filters</Card.Header>
+					<Card.Content>
+						{#await data.applications}
+							<LoadingSign />
+						{:then applications}
+							<Table.Root>
+								<Table.Header>
+									<Table.Row>
+										<Table.Head>Student</Table.Head>
+										<Table.Head>Term</Table.Head>
+										<Table.Head>Application</Table.Head>
+									</Table.Row>
+								</Table.Header>
+								<Table.Body>
+									{#each applications as application}
+										<Table.Row>
+											<Table.Cell>{application.student.fullname}</Table.Cell>
+											<Table.Cell>{application.year} {application.term}</Table.Cell>
+											<Table.Cell>{application.schools[0].name}</Table.Cell>
+										</Table.Row>
+									{/each}
+								</Table.Body>
+							</Table.Root>
+						{/await}
+					</Card.Content>
+				</Card.Root>
+			</Tabs.Content>
+		</Tabs.Root>
+	</section>
+
+	<Section id="deadlines" title="Deadlines"></Section>
 </div>

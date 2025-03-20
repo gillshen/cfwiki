@@ -1,10 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	// import Table2 from 'lucide-svelte/icons/table-2';
-	// import Mic from 'lucide-svelte/icons/mic';
-	// import TV from 'lucide-svelte/icons/tv';
-	// import ClapperBoard from 'lucide-svelte/icons/clapperboard';
+	import StudentSideList from '$lib/components/widgets/StudentSideList.svelte';
 
 	export let data;
 </script>
@@ -115,8 +112,11 @@
 
 	<div class="mt-[84px] flex flex-col min-h-[calc(100vh-360px)] flex-grow">
 		<div class="flex">
-			<div class="w-[360px] pr-8 bg-gray-100">
+			<div class="w-[240px] min-w-[240px] h-full overflow-auto pt-2 py-4 pl-4 pr-8">
 				<slot name="sidebar" />
+				{#await data.students then students}
+					<StudentSideList {students} />
+				{/await}
 			</div>
 			<div class="flex flex-col pl-8 w-full">
 				<slot />

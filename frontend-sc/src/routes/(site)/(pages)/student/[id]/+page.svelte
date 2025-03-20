@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as Form from '$lib/components/ui/form/index';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import { Button } from '$lib/components/ui/button/index';
 	import Venus from 'lucide-svelte/icons/venus';
 	import Mars from 'lucide-svelte/icons/mars';
@@ -7,6 +8,7 @@
 	import Pencil from 'lucide-svelte/icons/pencil';
 
 	import Section from '$lib/components/containers/Section.svelte';
+	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import ContractCard from '$lib/components/widgets/ContractCard.svelte';
@@ -42,6 +44,16 @@
 		label: value
 	}));
 </script>
+
+<BreadcrumbContainer>
+	<Breadcrumb.Item>
+		<Breadcrumb.Link href="/student/index">Students</Breadcrumb.Link>
+	</Breadcrumb.Item>
+	<Breadcrumb.Separator />
+	<Breadcrumb.Item>
+		<Breadcrumb.Page>{data.student.fullname}</Breadcrumb.Page>
+	</Breadcrumb.Item>
+</BreadcrumbContainer>
 
 <section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-6">
 	<h1 class="page-title">
@@ -80,7 +92,7 @@
 
 	<div class="flex gap-4 flex-wrap pt-2">
 		{#each data.student.contracts as contract}
-			<ContractCard {contract} {canEdit} />
+			<ContractCard {contract} />
 		{/each}
 	</div>
 

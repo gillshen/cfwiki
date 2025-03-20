@@ -6,7 +6,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '$env/static/private';
 
- import { formAction } from '$lib/util/formUtils';
+import { formAction } from '$lib/util/formUtils';
 import { deleteStudent } from '$lib/api/student';
 import { fetchComposedApplications } from '$lib/api/application';
 import { fetchSchools } from '$lib/api/school';
