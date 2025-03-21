@@ -75,7 +75,7 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<h1 class="page-title mb-2">Student Profile</h1>
+<h1 class="page-title mb-2">Create Student Profile</h1>
 
 <Section id="student-form-section">
 	<form

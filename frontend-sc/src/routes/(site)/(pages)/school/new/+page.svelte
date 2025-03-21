@@ -1,10 +1,12 @@
 <script lang="ts">
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import * as Form from '$lib/components/ui/form/index';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import FormField from '$lib/components/ui/form/form-field.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 
+	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import countryFlags, { orderMostAppliedFirst } from '$lib/constants/countries';
 	import americanStates from '$lib/constants/americanStates';
@@ -54,7 +56,17 @@
 	}
 </script>
 
-<h1 class="page-title mb-2">School Profile</h1>
+<BreadcrumbContainer>
+	<Breadcrumb.Item>
+		<Breadcrumb.Link href="/school/index">Schools</Breadcrumb.Link>
+	</Breadcrumb.Item>
+	<Breadcrumb.Separator />
+	<Breadcrumb.Item>
+		<Breadcrumb.Page>New</Breadcrumb.Page>
+	</Breadcrumb.Item>
+</BreadcrumbContainer>
+
+<h1 class="page-title mb-2">Create School Profile</h1>
 
 <Section id="school-form-section">
 	<form

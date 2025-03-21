@@ -111,7 +111,7 @@
 	<pre class="text-sm">{JSON.stringify(data.student.enrollments, null, 2)}</pre>
 	{#if canEdit}
 		<div class="pt-4">
-			<ButtonDialog buttonText="Add School" dialogTitle="Add School">
+			<ButtonDialog buttonText="Add School" dialogTitle="Add Educational Experience">
 				<div>Dialog body</div>
 			</ButtonDialog>
 		</div>

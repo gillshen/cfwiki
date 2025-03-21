@@ -3,10 +3,10 @@
 	import * as Card from '$lib/components/ui/card/index';
 	import * as Table from '$lib/components/ui/table/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
+
+	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import { defaultBanner } from '$lib/util/userUtils';
-	import Section from '$lib/components/containers/Section.svelte';
-	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 
 	export let data;
 </script>
@@ -93,5 +93,8 @@
 		</Tabs.Root>
 	</section>
 
-	<Section id="deadlines" title="Deadlines"></Section>
+	<section>
+		<h2 class="text-xl font-bold pt-5 pb-2 border-b">Deadlines</h2>
+		<div class="text-zinc-300 py-4">Coming soon...</div>
+	</section>
 </div>
