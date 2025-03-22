@@ -1,8 +1,11 @@
 <script lang="ts">
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
+
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Pencil from 'lucide-svelte/icons/pencil';
 
+	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import countryFlags from '$lib/constants/countries';
@@ -18,6 +21,16 @@
 		year: false
 	});
 </script>
+
+<BreadcrumbContainer>
+	<Breadcrumb.Item>
+		<Breadcrumb.Link href="/school/index">Schools</Breadcrumb.Link>
+	</Breadcrumb.Item>
+	<Breadcrumb.Separator />
+	<Breadcrumb.Item>
+		<Breadcrumb.Page>{data.school.alt_name}</Breadcrumb.Page>
+	</Breadcrumb.Item>
+</BreadcrumbContainer>
 
 <section class="w-fit min-w-[60ch] mb-2 space-y-2">
 	<h1 class="page-title">{data.school.name}</h1>
@@ -53,7 +66,7 @@
 				<div class="flex flex-col">
 					{#each categorizeAndSort(programs) as [_, filteredPrograms], index}
 						{#if index}
-							<hr class="text-stone-400 w-8 my-3" />
+							<hr class="text-stone-400 w-4 my-3" />
 						{/if}
 						<div class="flex flex-col gap-2">
 							{#each filteredPrograms as program}
