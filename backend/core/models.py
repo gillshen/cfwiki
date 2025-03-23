@@ -196,6 +196,11 @@ class Application(models.Model):
         related_name="applications",
         on_delete=models.CASCADE,
     )
+    staff = models.ManyToManyField(
+        CFUser,
+        related_name="applications",
+        blank=True,
+    )
 
     # Undergraduate majors
     major_1 = models.CharField(max_length=100, blank=True)
@@ -369,11 +374,11 @@ class Application(models.Model):
         return self.round.program_iteration
 
     @property
-    def majors(self):
+    def majors(self) -> str:
         return " | ".join(filter(None, [self.major_1, self.major_2, self.major_3]))
 
     @property
-    def majors_or_track(self):
+    def majors_or_track(self) -> str:
         return self.track or self.majors
 
     @property

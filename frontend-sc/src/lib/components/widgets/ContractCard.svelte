@@ -32,8 +32,8 @@
 			{contract.status}</Card.Description
 		>
 	</Card.Header>
-	<Card.Content class="max-w-[260px] min-w-[260px] pl-5 pt-2">
-		<div class="flex flex-wrap gap-4 text-sm pr-4">
+	<Card.Content class="max-w-[360px] min-w-[280px] pl-5 pt-2">
+		<div class="grid grid-cols-2 gap-4 text-sm pr-4">
 			{#each contract.services.sort(orderByEndDateRole) as service}
 				<div class="flex gap-2 items-center">
 					<Avatar.Root>

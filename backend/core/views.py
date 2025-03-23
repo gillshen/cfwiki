@@ -182,10 +182,10 @@ class ApplicationWithLogsListView(ListAPIView):
         query_params = self.request.query_params
 
         q = Application.objects.select_related(
-            "contract__student",
+            "contract",
             "round__program_iteration__program",
         ).prefetch_related(
-            "contract__services__cfer",
+            "staff",
             "round__program_iteration__program__schools__rankings__ranking",
             "logs",
         )
@@ -274,6 +274,7 @@ class ApplicationDetailView(RetrieveAPIView):
         .prefetch_related(
             "contract__student",
             "contract__services__cfer",
+            "staff",
             "round__program_iteration__program__schools",
             "logs",
         )

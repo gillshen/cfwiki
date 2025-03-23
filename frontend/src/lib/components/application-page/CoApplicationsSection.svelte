@@ -30,8 +30,8 @@
 					<TableHeadCell class="w-40">Student</TableHeadCell>
 					<TableHeadCell class="w-[30rem]">Major/Track</TableHeadCell>
 					<TableHeadCell class="w-40">Adm. plan</TableHeadCell>
-					<TableHeadCell class="w-40">顾问</TableHeadCell>
-					<TableHeadCell class="w-40">文案</TableHeadCell>
+					<!-- <TableHeadCell class="w-40">顾问</TableHeadCell>
+					<TableHeadCell class="w-40">文案</TableHeadCell> -->
 				</TableHead>
 
 				<TableBody>
@@ -45,8 +45,8 @@
 							<Student {application} />
 							<MajorsOrTrack {application} />
 							<ApplicationRound {application} />
-							<PlainCell text={formatCfNames(application.services, '顾问')} />
-							<PlainCell text={formatCfNames(application.services, '文案')} />
+							<!-- <PlainCell text={formatCfNames(application.services, '顾问')} /> -->
+							<!-- <PlainCell text={formatCfNames(application.services, '文案')} /> -->
 						</TableBodyRow>
 					{/each}
 				</TableBody>

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
-	import { Separator } from 'bits-ui';
 	export let home: boolean = false;
 </script>
 

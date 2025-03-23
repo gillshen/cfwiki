@@ -18,7 +18,6 @@ import {
     roundChangeSchema
 } from '$lib/schemas/application';
 
-import { fetchStaffList } from '$lib/api/student';
 import { fetchApplicationRounds } from '$lib/api/applicationRound';
 import { applicationLogSchema } from '$lib/schemas/applicationLog';
 import { deleteSchema } from '$lib/schemas/delete';
@@ -33,11 +32,9 @@ export async function load(event: PageServerLoadEvent) {
     }
 
     const application: ApplicationDetail = await fetchApplication(id);
-    const staffList = (await fetchStaffList(application.student.id)).staff_names;
 
     return {
         application,
-        staffList,
         promisedRounds: fetchApplicationRounds({ program: application.program.id }),
         coApplications: fetchCoApplications(application),
         roundChangeForm: await superValidate(zod(roundChangeSchema)),

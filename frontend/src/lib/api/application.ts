@@ -21,6 +21,7 @@ type ApplicationWithLogs = {
 	id: number;
 	contract: number;
 	round: number;
+	staff: string[];
 	majors_or_track: string;
 	logs: { status: ApplicationStatus; date: string }[];
 };
@@ -56,6 +57,7 @@ export type ComposedApplication = {
 	id: number;
 	student: ApplicantListItem;
 	services: Service[];
+	staff: string[];
 	schools: { name: string; country: string }[];
 	program: { type: string; display_name: string };
 	year: number;
@@ -70,6 +72,7 @@ export type ApplicationDetail = {
 	id: number;
 	student: { id: number; fullname: string };
 	services: Service[];
+	staff: string[];
 	schools: { id: number; name: string; country: string }[];
 	program: { id: number; type: string; display_name: string };
 	program_iteration: { id: number; year: number; term: string };

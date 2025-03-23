@@ -132,10 +132,6 @@ export async function fetchStudent(id: number): Promise<StudentDetail> {
 	return await get(`students/${id}/`, 'Student not found');
 }
 
-export async function fetchStaffList(id: number): Promise<{ staff_names: string[] }> {
-	return await get(`students/${id}/staff/`);
-}
-
 export async function createStudent(data: any) {
 	return await post(`students/new/`, data);
 }

@@ -299,7 +299,13 @@ class ContractCRUDSerializer(serializers.ModelSerializer):
 class ApplicationWithLogsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        fields = ["id", "contract", "round", "logs", "majors_or_track"]
+        fields = ["id", "contract", "round", "staff", "logs", "majors_or_track"]
+
+    staff = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="username"
+    )
 
     class ApplicationLogSerializer(serializers.ModelSerializer):
         class Meta:
@@ -411,6 +417,12 @@ class ApplicationDetailSerializer(serializers.ModelSerializer):
             fields = ["cf_username", "role"]
 
     services = ServiceSerializer(many=True)
+
+    staff = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="username"
+    )
 
     class SchoolSerializer(serializers.ModelSerializer):
         class Meta:
