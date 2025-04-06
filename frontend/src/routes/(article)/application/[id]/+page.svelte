@@ -10,7 +10,6 @@
 	import RoundChangeForm from '$lib/components/application-update-form/RoundChangeForm.svelte';
 	import RoundUpdateDialog from '$lib/components/application-round-form/RoundUpdateDialog.svelte';
 	import MajorsForm from '$lib/components/application-update-form/MajorsForm.svelte';
-	import TrackForm from '$lib/components/application-update-form/TrackForm.svelte';
 	import CommentsForm from '$lib/components/application-update-form/CommentsForm.svelte';
 	import LogsSection from '$lib/components/application-page/LogsSection.svelte';
 	import CoApplicationsSection from '$lib/components/application-page/CoApplicationsSection.svelte';
@@ -27,7 +26,6 @@
 	let roundChangeModal = false;
 	let roundUpdateModal = false;
 	let majorsUpdateModal = false;
-	let trackUpdateModal = false;
 	let commentsUpdateModal = false;
 	let deleteModal = false;
 
@@ -44,8 +42,8 @@
 		{ text: 'Change admission plan', action: () => (roundChangeModal = true) },
 		{ text: 'Update admission plan', action: () => (roundUpdateModal = true) },
 		{
-			text: isUndergad ? 'Update majors' : 'Update track',
-			action: isUndergad ? () => (majorsUpdateModal = true) : () => (trackUpdateModal = true),
+			text: 'Update majors/tracks',
+			action: () => (majorsUpdateModal = true),
 			divider: true
 		},
 		{ text: 'Update comments', action: () => (commentsUpdateModal = true) }
@@ -118,16 +116,6 @@
 	entity={data.application}
 	title="Update majors"
 	on:close={() => (majorsUpdateModal = false)}
-/>
-
-<FormModal
-	open={trackUpdateModal}
-	superform={data.trackUpdateForm}
-	fields={TrackForm}
-	action="?/updateTrack"
-	entity={data.application}
-	title="Update track, concentration, etc."
-	on:close={() => (trackUpdateModal = false)}
 />
 
 <FormModal

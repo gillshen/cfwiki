@@ -22,7 +22,7 @@ type ApplicationWithLogs = {
 	contract: number;
 	round: number;
 	staff: string[];
-	majors_or_track: string;
+	majors: string[];
 	logs: { status: ApplicationStatus; date: string }[];
 };
 
@@ -64,7 +64,7 @@ export type ComposedApplication = {
 	term: string;
 	round_name: string;
 	due_date: string | null;
-	majors_or_track: string;
+	majors: string[];
 	logs: ApplicationLogBrief[];
 };
 
@@ -87,7 +87,6 @@ export type ApplicationDetail = {
 	major_1: string;
 	major_2: string;
 	major_3: string;
-	track: string;
 	comments: string;
 	logs: ApplicationLog[];
 };

@@ -6,5 +6,5 @@
 </script>
 
 <TableBodyCell class={`font-normal max-w-[14rem] truncate`}>
-	{application.majors_or_track || '-'}
+	{application.majors.join(' | ') || '-'}
 </TableBodyCell>

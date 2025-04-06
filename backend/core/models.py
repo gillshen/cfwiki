@@ -207,9 +207,6 @@ class Application(models.Model):
     major_2 = models.CharField(max_length=100, blank=True)
     major_3 = models.CharField(max_length=100, blank=True)
 
-    # Track/concentration/pathway/certificate of a graduate program
-    track = models.CharField(max_length=100, blank=True)
-
     comments = models.CharField(max_length=1000, blank=True)
     double_application = models.BooleanField(default=False)
 
@@ -372,14 +369,6 @@ class Application(models.Model):
     @property
     def program_iteration(self):
         return self.round.program_iteration
-
-    @property
-    def majors(self) -> str:
-        return " | ".join(filter(None, [self.major_1, self.major_2, self.major_3]))
-
-    @property
-    def majors_or_track(self) -> str:
-        return self.track or self.majors
 
     @property
     def year(self):

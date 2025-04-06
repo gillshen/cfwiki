@@ -55,7 +55,7 @@
 		{#if majors.length}
 			<TableBodyRow>
 				<TableBodyCell tdClass="w-40 font-medium py-4 align-top">
-					{majors.length > 1 ? 'Majors' : 'Major'}
+					{majors.length > 1 ? 'Majors' : 'Major/Track'}
 				</TableBodyCell>
 				<TableBodyCell tdClass="font-normal py-4 truncate">
 					<div class="flex flex-col gap-2 truncate">
@@ -64,13 +64,6 @@
 						{/each}
 					</div>
 				</TableBodyCell>
-			</TableBodyRow>
-		{/if}
-
-		{#if application.track}
-			<TableBodyRow>
-				<TableBodyCell tdClass="w-40 font-medium py-4 align-top">Track</TableBodyCell>
-				<TableBodyCell tdClass="font-normal py-4 truncate">{application.track}</TableBodyCell>
 			</TableBodyRow>
 		{/if}
 

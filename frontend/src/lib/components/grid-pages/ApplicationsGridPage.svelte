@@ -115,6 +115,10 @@
 		return _getSchoolRanking(params.data.schools, params.data.year, 'QS World');
 	}
 
+	function majorsValueFormatter(params: ValueFormatterParams): string {
+		return params.value.join(' | ');
+	}
+
 	function stratPeopleValueGetter(params: ValueGetterParams): string {
 		return formatCfNames(params.data.services, '战略顾问');
 	}
@@ -285,7 +289,7 @@
 		},
 		{ headerName: 'QS Rank', valueGetter: qsRankingGetter, type: ['numeric', 'rightAligned'] },
 		{ headerName: 'Program', field: 'program.display_name', flex: 3 },
-		{ headerName: 'Major/Track', field: 'majors_or_track', flex: 2 },
+		{ headerName: 'Major/Track', field: 'majors', valueFormatter: majorsValueFormatter, flex: 2 },
 		{ headerName: 'Adm. Plan', field: 'round_name', headerTooltip: 'Admission plan' },
 		{ headerName: 'Due', field: 'due_date', flex: 1.5 },
 		{

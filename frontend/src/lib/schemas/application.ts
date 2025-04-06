@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import type { School } from '$lib/api/school';
 import type { ProgramListItem } from '$lib/api/program';
 import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
 
@@ -36,13 +35,6 @@ export const majorsUpdateSchema = z.object({
 });
 
 export type MajorsUpdateSchema = typeof majorsUpdateSchema;
-
-export const trackUpdateSchema = z.object({
-	id: z.number(),
-	track: z.string().trim()
-});
-
-export type TrackUpdateSchema = typeof trackUpdateSchema;
 
 export const commentsUpdateSchema = z.object({
 	id: z.number(),

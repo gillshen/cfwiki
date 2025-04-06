@@ -86,7 +86,7 @@
 			<!-- TODO table and year filter -->
 			{#each applications.filter((a) => a.program.type === 'UG Freshman') as application}
 				<div class="text-stone-800">
-					{application.student.fullname} @ {application.majors_or_track || '-'}
+					{application.student.fullname} @ {application.majors.join(' | ') || '-'}
 				</div>
 			{/each}
 		{/await}
@@ -99,7 +99,7 @@
 			<!-- TODO table and year filter -->
 			{#each applications.filter((a) => a.program.type === 'UG Transfer') as application}
 				<div class="text-stone-800">
-					{application.student.fullname} @ {application.majors_or_track || '-'}
+					{application.student.fullname} @ {application.majors.join(' | ') || '-'}
 				</div>
 			{/each}
 		{/await}

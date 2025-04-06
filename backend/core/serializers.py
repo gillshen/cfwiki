@@ -299,7 +299,7 @@ class ContractCRUDSerializer(serializers.ModelSerializer):
 class ApplicationWithLogsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        fields = ["id", "contract", "round", "staff", "logs", "majors_or_track"]
+        fields = ["id", "contract", "round", "staff", "logs", "majors"]
 
     staff = serializers.SlugRelatedField(
         many=True,
@@ -313,7 +313,11 @@ class ApplicationWithLogsSerializer(serializers.ModelSerializer):
             fields = ["status", "date"]
 
     logs = ApplicationLogSerializer(many=True)
-    majors_or_track = serializers.CharField()
+    
+    majors = serializers.SerializerMethodField()
+
+    def get_majors(self, obj) -> list[str]:
+        return list(filter(None, [obj.major_1, obj.major_2, obj.major_3]))
 
 
 class ApplicationTargetSerializer(serializers.ModelSerializer):

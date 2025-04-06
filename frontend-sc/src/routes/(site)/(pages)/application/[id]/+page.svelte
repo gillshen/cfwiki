@@ -56,7 +56,6 @@
 				<div>{data.application.major_1}</div>
 				<div>{data.application.major_2}</div>
 				<div>{data.application.major_3}</div>
-				<div>{data.application.track}</div>
 			</div>
 
 			<div>Comments: {data.application.comments}</div>
@@ -92,10 +91,10 @@
 								</Card.Description>
 							</Card.Header>
 							<Card.Content class="pt-2 flex flex-col gap-2 flex-grow">
-								{#if coApplication.majors_or_track}
+								{#if coApplication.majors.length}
 									<ul class="list-disc ml-3.5 flex flex-col gap-1">
-										{#each coApplication.majors_or_track.split(' | ') as major_or_track}
-											<li>{major_or_track}</li>
+										{#each coApplication.majors as major}
+											<li>{major}</li>
 										{/each}
 									</ul>
 								{/if}
