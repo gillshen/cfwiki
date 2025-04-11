@@ -15,7 +15,7 @@ import { schoolSchema } from '$lib/schemas/school';
 import { batchNewApplicationSchema } from '$lib/schemas/application';
 import { newProgramSchema } from '$lib/schemas/program';
 import { roundSchema } from '$lib/schemas/applicationRound';
-import { createApplication } from '$lib/api/application';
+import { createApplication, fetchComposedApplications } from '$lib/api/application';
 import { createOrUpdateApplicationLog } from '$lib/api/applicationLog';
 import { formAction } from '$lib/util/formUtils';
 
@@ -76,6 +76,7 @@ export async function load(event: PageServerLoadEvent) {
 			programType,
 			year,
 			term,
+			applications: fetchComposedApplications({student: studentId, year: year, application_type: programType}),
 			schools: programType === 'Non-degree' ? fetchSchools() : fetchSchools({ type: 'university' }),
 			programs: fetchPrograms({ type: programTypeKey }),
 			applicationRounds: fetchApplicationRounds({ program_type: programType, year, term }),

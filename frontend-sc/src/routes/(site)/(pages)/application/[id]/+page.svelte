@@ -11,6 +11,8 @@
 
 	export let data;
 
+	let canEdit: boolean = true;
+
 	const { student, program_iteration, round, program, schools } = data.application;
 	const schoolNames = schools.map((s) => s.name).join(' + ');
 </script>
@@ -91,13 +93,11 @@
 								</Card.Description>
 							</Card.Header>
 							<Card.Content class="pt-2 flex flex-col gap-2 flex-grow">
-								{#if coApplication.majors.length}
-									<ul class="list-disc ml-3.5 flex flex-col gap-1">
-										{#each coApplication.majors as major}
-											<li>{major}</li>
-										{/each}
-									</ul>
-								{/if}
+								<ul class="list-disc ml-3.5 flex flex-col gap-1">
+									{#each coApplication.majors as major}
+										<li class="text-muted-foreground">{major}</li>
+									{/each}
+								</ul>
 							</Card.Content>
 							<Card.Footer>
 								<ApplicationStatusSign application={coApplication} />
@@ -109,6 +109,12 @@
 		{/if}
 	{/await}
 </Section>
+
+{#if canEdit}
+	<Section id="delete" hrule>
+		<Button variant="destructive" class="mt-4">Delete Application</Button>
+	</Section>
+{/if}
 
 {#await data.promisedRounds then rounds}
 	<!-- for round-change form -->

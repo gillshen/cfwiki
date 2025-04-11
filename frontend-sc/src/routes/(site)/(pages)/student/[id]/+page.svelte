@@ -11,12 +11,13 @@
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
+	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import ContractCard from '$lib/components/widgets/ContractCard.svelte';
+	import StudentApplicationCard from '$lib/components/widgets/StudentApplicationCard.svelte';
 
 	import countryFlags from '$lib/constants/countries';
 	import { formatLocation } from '$lib/util/studentUtils';
 	import { superForm } from 'sveltekit-superforms';
-	import Combobox from '$lib/components/forms/Combobox.svelte';
 
 	export let data;
 
@@ -136,12 +137,17 @@
 	{#await data.applications}
 		<LoadingSign />
 	{:then applications}
-		<pre class="bg-stone-50 rounded-md text-sm h-[300px] overflow-auto p-2">{JSON.stringify(
-				applications,
-				null,
-				2
-			)}</pre>
+		{#if applications.length}
+			<div class="my-4 grid grid-cols-3 gap-4">
+				{#each applications as application}
+					<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
+						<StudentApplicationCard {application} />
+					</a>
+				{/each}
+			</div>
+		{/if}
 	{/await}
+
 	{#if canEdit}
 		<div class="pt-4">
 			<ButtonDialog buttonText="Create Applications" dialogTitle="Create Applications">
@@ -165,11 +171,7 @@
 </Section>
 
 {#if canEdit}
-	<Section id="delete">
+	<Section id="delete" hrule>
 		<Button variant="destructive" class="mt-4">Delete Profile</Button>
 	</Section>
 {/if}
-
-<!-- <div class="bg-stone-100 w-fit h-[600px] overflow-auto">
-	<pre class="text-sm">{JSON.stringify(data, null, 2)}</pre>
-</div> -->
