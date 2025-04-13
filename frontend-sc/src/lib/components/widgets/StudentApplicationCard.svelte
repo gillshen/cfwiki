@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card/index';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import ApplicationStatusSign from '../misc/ApplicationStatusSign.svelte';
+	import ApplicationStatusSign from '$lib/components/misc/ApplicationStatusSign.svelte';
 	import type { ComposedApplication } from '$lib/api/application';
 
 	export let application: ComposedApplication;
@@ -16,7 +16,7 @@
 		</Card.Title>
 		<Card.Description class="pt-1 flex gap-2 flex-wrap">
 			<div class="text-muted-foreground font-semibold">{application.program.display_name}</div>
-			<Badge variant="outline" class="w-fit">{application.round_name}</Badge>
+			<Badge variant="outline" class="w-fit">{application.year} {application.round_name}</Badge>
 		</Card.Description>
 	</Card.Header>
 	<Card.Content class="pt-2 flex flex-col gap-2 flex-grow">

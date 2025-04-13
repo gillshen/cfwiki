@@ -78,6 +78,9 @@ export function formatNotableStatuses(statuses: ApplicationStatus[]): string {
 			}
 			if (status === 'On Waitlist' && index < statuses.length - 1) {
 				return 'WL';
+			} else if (status === 'On Waitlist') {
+				// shorten 'On Waitlist' to 'Waitlist'
+				return 'Waitlist'
 			}
 			// else return the status as is
 			return status;

@@ -26,8 +26,8 @@
 	<h1 class="page-title">{data.host.public_banner || defaultBanner(data.host.username)}</h1>
 </section>
 
-<div class="grid w-full grid-cols-3">
-	<section class="col-span-2 pt-2 mr-8">
+<div class="w-full grid grid-cols-[minmax(480px,1fr)_240px]">
+	<section class="pt-2 mr-12">
 		<Tabs.Root>
 			<Tabs.List class="grid w-fit grid-cols-2">
 				<Tabs.Trigger value="students" class="w-32">Students</Tabs.Trigger>
@@ -46,7 +46,7 @@
 										<Table.Head>Student</Table.Head>
 										<Table.Head>Contract</Table.Head>
 										<Table.Head>Status</Table.Head>
-										<Table.Head>Link</Table.Head>
+										<Table.Head></Table.Head>
 									</Table.Row>
 								</Table.Header>
 								<Table.Body>
@@ -54,7 +54,7 @@
 										{#each student.contracts as contract}
 											{#if contract.services.map((s) => s.cf_username).includes(data.username)}
 												<Table.Row>
-													<Table.Cell>{student.fullname}</Table.Cell>
+													<Table.Cell class="font-medium">{student.fullname}</Table.Cell>
 													<Table.Cell>{contract.type} {contract.target_year}</Table.Cell>
 													<Table.Cell>{contract.status}</Table.Cell>
 													<Table.Cell
@@ -85,7 +85,7 @@
 										<Table.Head>Student</Table.Head>
 										<Table.Head>Term</Table.Head>
 										<Table.Head>Target</Table.Head>
-										<Table.Head>Link</Table.Head>
+										<Table.Head></Table.Head>
 									</Table.Row>
 								</Table.Header>
 								<Table.Body>
@@ -111,7 +111,7 @@
 	</section>
 
 	<section>
-		<h2 class="text-xl font-bold pt-5 pb-2 border-b">Deadlines</h2>
-		<div class="text-zinc-300 py-2">Coming soon...</div>
+		<h2 class="text-xl font-bold pt-5 pb-2 border-b">Important Dates</h2>
+		<div class="text-zinc-300 py-2">(TODO)</div>
 	</section>
 </div>

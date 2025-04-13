@@ -15,18 +15,18 @@ export type ApplicationStatus =
 	| 'Untracked';
 
 export const applicationStatusOrder: Record<ApplicationStatus, number> = {
-	Started: 0,
-	Submitted: 1,
-	'Under Review': 2,
-	Deferred: 3,
-	'On Waitlist': 4,
-	Accepted: 5,
-	Rejected: 7,
-	'Pres. Rejected': 8,
-	'Offer Rescinded': 9,
-	Cancelled: 10,
-	Withdrawn: 11,
-	Untracked: 12
+	Started:10,
+	Submitted: 11,
+	'Under Review': 12,
+	Deferred: 20,
+	'On Waitlist': 21,
+	Accepted: 0,
+	Rejected: 30,
+	'Pres. Rejected': 31,
+	'Offer Rescinded': 32,
+	Cancelled: 40,
+	Withdrawn: 41,
+	Untracked: 50
 };
 
 export const applicationStatuses: string[] = Object.keys(applicationStatusOrder);

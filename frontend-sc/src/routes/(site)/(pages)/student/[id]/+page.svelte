@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import { Button } from '$lib/components/ui/button/index';
@@ -6,6 +7,8 @@
 	import Mars from 'lucide-svelte/icons/mars';
 	import NonBinary from 'lucide-svelte/icons/non-binary';
 	import Pencil from 'lucide-svelte/icons/pencil';
+	import LayoutGrid from 'lucide-svelte/icons/layout-grid';
+	import List from 'lucide-svelte/icons/list';
 
 	import Section from '$lib/components/containers/Section.svelte';
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
@@ -14,10 +17,12 @@
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import ContractCard from '$lib/components/widgets/ContractCard.svelte';
 	import StudentApplicationCard from '$lib/components/widgets/StudentApplicationCard.svelte';
+	import StudentApplicationsTable from '$lib/components/widgets/StudentApplicationsTable.svelte';
 
 	import countryFlags from '$lib/constants/countries';
 	import { formatLocation } from '$lib/util/studentUtils';
 	import { superForm } from 'sveltekit-superforms';
+	import { orderBySchoolName, orderByStatus, orderByYearDesc } from '$lib/util/applicationUtils';
 
 	export let data;
 
@@ -112,7 +117,7 @@
 	<pre class="text-sm">{JSON.stringify(data.student.enrollments, null, 2)}</pre>
 	{#if canEdit}
 		<div class="pt-4">
-			<ButtonDialog buttonText="Add School" dialogTitle="Add Educational Experience">
+			<ButtonDialog buttonText="Add Experience" dialogTitle="Add Educational Experience">
 				<div>Dialog body</div>
 			</ButtonDialog>
 		</div>
@@ -138,13 +143,27 @@
 		<LoadingSign />
 	{:then applications}
 		{#if applications.length}
-			<div class="my-4 grid grid-cols-3 gap-4">
-				{#each applications as application}
-					<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
-						<StudentApplicationCard {application} />
-					</a>
-				{/each}
-			</div>
+			<Tabs.Root value="grid-layout">
+				<Tabs.List class="flex w-fit">
+					<Tabs.Trigger value="grid-layout"><LayoutGrid class="w-4 h-4" /></Tabs.Trigger>
+					<Tabs.Trigger value="table-layout"><List class="w-4 h-4" /></Tabs.Trigger>
+				</Tabs.List>
+				<Tabs.Content value="grid-layout">
+					<div class="my-4 grid grid-cols-3 gap-4">
+						{#each applications
+							.sort(orderBySchoolName)
+							.sort(orderByStatus)
+							.sort(orderByYearDesc) as application}
+							<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
+								<StudentApplicationCard {application} />
+							</a>
+						{/each}
+					</div>
+				</Tabs.Content>
+				<Tabs.Content value="table-layout">
+					<StudentApplicationsTable {applications} />
+				</Tabs.Content>
+			</Tabs.Root>
 		{/if}
 	{/await}
 

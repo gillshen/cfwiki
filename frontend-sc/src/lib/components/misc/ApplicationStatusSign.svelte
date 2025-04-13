@@ -1,5 +1,6 @@
 <script lang="ts">
 	import CircleCheckBig from 'lucide-svelte/icons/circle-check-big';
+	import CircleCheck from 'lucide-svelte/icons/circle-check';
 	import CircleX from 'lucide-svelte/icons/circle-x';
 	import CircleHelp from 'lucide-svelte/icons/circle-help';
 	import Ban from 'lucide-svelte/icons/ban';
@@ -13,10 +14,13 @@
 	const formattedStatuses = formatNotableStatuses(statuses);
 	const latestStatus = statuses[statuses.length - 1];
 
-	let icon: 'check' | 'x' | 'question' | 'ban';
+	let icon: 'check' | 'big-check' | 'x' | 'ban' | 'question';
 
 	switch (latestStatus) {
 		case 'Accepted':
+			icon = 'big-check';
+			break;
+		case 'Under Review':
 			icon = 'check';
 			break;
 		case 'Rejected':
@@ -36,10 +40,12 @@
 
 {#if latestStatus}
 	<div class="flex items-center gap-1.5">
-		{#if icon === 'check'}
+		{#if icon === 'big-check'}
 			<CircleCheckBig class="text-green-600 w-[18px] h-[18px]" />
+		{:else if icon === 'check'}
+			<CircleCheck class="text-sky-600 w-[18px] h-[18px]" />
 		{:else if icon === 'x'}
-			<CircleX class="text-red-600 w-[18px] h-[18px]" />
+			<CircleX class="text-rose-700 w-[18px] h-[18px]" />
 		{:else if icon === 'ban'}
 			<Ban class="text-zinc-400 w-[18px] h-[18px]" />
 		{:else}
