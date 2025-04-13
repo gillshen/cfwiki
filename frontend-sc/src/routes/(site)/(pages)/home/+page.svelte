@@ -43,10 +43,10 @@
 							<Table.Root>
 								<Table.Header>
 									<Table.Row>
-										<Table.Head>Student</Table.Head>
-										<Table.Head>Contract</Table.Head>
-										<Table.Head>Status</Table.Head>
-										<Table.Head></Table.Head>
+										<Table.Head class="font-semibold">Student</Table.Head>
+										<Table.Head class="font-semibold">Contract</Table.Head>
+										<Table.Head class="font-semibold">Status</Table.Head>
+										<Table.Head class="font-semibold"></Table.Head>
 									</Table.Row>
 								</Table.Header>
 								<Table.Body>
@@ -82,10 +82,10 @@
 							<Table.Root>
 								<Table.Header>
 									<Table.Row>
-										<Table.Head>Student</Table.Head>
-										<Table.Head>Term</Table.Head>
-										<Table.Head>Target</Table.Head>
-										<Table.Head></Table.Head>
+										<Table.Head class="font-semibold">Student</Table.Head>
+										<Table.Head class="font-semibold">Term</Table.Head>
+										<Table.Head class="font-semibold">Target</Table.Head>
+										<Table.Head class="font-semibold"></Table.Head>
 									</Table.Row>
 								</Table.Header>
 								<Table.Body>

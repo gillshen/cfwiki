@@ -125,11 +125,11 @@
 					<Table.Root class="w-fit">
 						<Table.Header>
 							<Table.Row>
-								<Table.Head class="font-bold">Student</Table.Head>
-								<Table.Head class="font-bold">Adm. Plan</Table.Head>
-								<Table.Head class="font-bold">Majors/Track</Table.Head>
-								<Table.Head class="font-bold">Status</Table.Head>
-								<Table.Head class="font-bold"></Table.Head>
+								<Table.Head class="font-semibold">Student</Table.Head>
+								<Table.Head class="font-semibold">Adm. Plan</Table.Head>
+								<Table.Head class="font-semibold">Majors/Track</Table.Head>
+								<Table.Head class="font-semibold">Status</Table.Head>
+								<Table.Head class="font-semibold"></Table.Head>
 							</Table.Row>
 						</Table.Header>
 						<Table.Body>
@@ -137,12 +137,13 @@
 								<Table.Row>
 									<Table.Cell class="font-medium">{coApplication.student.fullname}</Table.Cell>
 									<Table.Cell>{coApplication.round_name}</Table.Cell>
-									<Table.Cell>
-										<ul class="list-disc ml-3.5 flex flex-col gap-1 text-muted-foreground">
-											{#each coApplication.majors as major}
-												<li>{major}</li>
-											{/each}
-										</ul>
+									<Table.Cell class="max-w-[600px] inline-block truncate text-muted-foreground">
+										{#each coApplication.majors as major, index}
+											{#if index}
+												<span class="text-gray-300 mx-2">&bullet;</span>
+											{/if}
+											{major}
+										{/each}
 									</Table.Cell>
 									<Table.Cell>
 										<ApplicationStatusSign application={coApplication} />

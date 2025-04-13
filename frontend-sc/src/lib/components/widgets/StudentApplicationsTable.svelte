@@ -11,13 +11,13 @@
 <Table.Root>
 	<Table.Header>
 		<Table.Row>
-			<Table.Head class="font-bold">School</Table.Head>
-			<Table.Head class="font-bold">Program</Table.Head>
-			<Table.Head class="font-bold">Year</Table.Head>
-			<Table.Head class="font-bold">Adm. Plan</Table.Head>
-			<Table.Head class="font-bold">Majors/Track</Table.Head>
-			<Table.Head class="font-bold">Status</Table.Head>
-			<Table.Head class="font-bold"></Table.Head>
+			<Table.Head class="font-semibold">School</Table.Head>
+			<Table.Head class="font-semibold">Program</Table.Head>
+			<Table.Head class="font-semibold">Year</Table.Head>
+			<Table.Head class="font-semibold">Adm. Plan</Table.Head>
+			<Table.Head class="font-semibold">Majors/Track</Table.Head>
+			<Table.Head class="font-semibold">Status</Table.Head>
+			<Table.Head class="font-semibold"></Table.Head>
 		</Table.Row>
 	</Table.Header>
 	<Table.Body>
@@ -31,15 +31,18 @@
 						<div class="font-semibold">{school.name}</div>
 					{/each}
 				</Table.Cell>
-				<Table.Cell>{application.program.display_name}</Table.Cell>
+				<Table.Cell class="max-w-[240px] truncate">{application.program.display_name}</Table.Cell>
 				<Table.Cell>{application.year}</Table.Cell>
 				<Table.Cell>{application.round_name}</Table.Cell>
 				<Table.Cell>
-					<ul class="list-disc ml-3.5 flex flex-col gap-1 text-muted-foreground">
-						{#each application.majors as major}
-							<li>{major}</li>
+					<div class="max-w-[240px] inline-block align-middle truncate text-muted-foreground">
+						{#each application.majors as major, index}
+							{#if index}
+								<span class="text-gray-300 mx-2">&bullet;</span>
+							{/if}
+							{major}
 						{/each}
-					</ul>
+					</div>
 				</Table.Cell>
 				<Table.Cell>
 					<ApplicationStatusSign {application} />
