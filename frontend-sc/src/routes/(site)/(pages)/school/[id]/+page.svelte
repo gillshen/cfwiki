@@ -34,10 +34,10 @@
 
 <section class="w-fit min-w-[60ch] mb-2 space-y-2">
 	<h1 class="page-title">{data.school.name}</h1>
-	<div class="flex flex-row gap-1 items-center text-sm">
+	<div class="flex flex-row gap-2 items-center text-sm">
 		{#if data.school.alt_name}
 			<div>{data.school.alt_name}</div>
-			<div class="text-stone-400">&bullet;</div>
+			<div class="text-gray-400">&bullet;</div>
 		{/if}
 		<div>{countryFlags[data.school.country]}</div>
 		<div>{formatLocation(data.school)}</div>

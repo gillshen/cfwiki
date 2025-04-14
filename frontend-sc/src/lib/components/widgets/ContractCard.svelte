@@ -1,15 +1,14 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card/index';
 	import * as Avatar from '$lib/components/ui/avatar/index';
-	import { Button } from '$lib/components/ui/button/index';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import ChevronRight from 'lucide-svelte/icons/chevron-right';
 	import CircleCheckBig from 'lucide-svelte/icons/circle-check-big';
 	import CalendarClock from 'lucide-svelte/icons/calendar-clock';
 	import Ban from 'lucide-svelte/icons/ban';
 
 	import type { Contract } from '$lib/api/student';
-	import { orderByEndDateRole } from '$lib/util/serviceUtils';
-
+	import { groupByCfPerson, leftEarly, orderByRole } from '$lib/util/serviceUtils';
 	export let contract: Contract;
 </script>
 
@@ -32,16 +31,28 @@
 			{contract.status}</Card.Description
 		>
 	</Card.Header>
-	<Card.Content class="max-w-[360px] min-w-[280px] pl-5 pt-2">
-		<div class="grid grid-cols-2 gap-4 text-sm pr-4">
-			{#each contract.services.sort(orderByEndDateRole) as service}
+	<Card.Content class="min-w-[240px] pl-5 pt-2">
+		<div class="flex flex-col gap-3 text-sm pr-4">
+			{#each Object.entries(groupByCfPerson(contract.services.sort(orderByRole))) as [cfUsername, services]}
+				{@const stayedTillEnd = services.map((s) => !leftEarly(s)).some(Boolean)}
 				<div class="flex gap-2 items-center">
 					<Avatar.Root>
-						<Avatar.Fallback>{service.cf_username.charAt(0)}</Avatar.Fallback>
+						<Avatar.Fallback>
+							<span class={stayedTillEnd ? '' : 'text-gray-300'}>{cfUsername.charAt(0)}</span>
+						</Avatar.Fallback>
 					</Avatar.Root>
 					<div class="flex flex-col">
-						<div class="font-medium">{service.cf_username}</div>
-						<div class="text-xs text-zinc-400">{service.role}</div>
+						<div class={stayedTillEnd ? 'font-medium' : 'font-medium text-gray-300'}>
+							{cfUsername}
+						</div>
+						<div class="text-xs flex text-muted-foreground">
+							{#each services as service, index}
+								{#if index}
+									<div class="mx-1 text-gray-300">&bullet;</div>
+								{/if}
+								<div class={leftEarly(service) ? 'text-gray-300' : ''}>{service.role}</div>
+							{/each}
+						</div>
 					</div>
 				</div>
 			{/each}

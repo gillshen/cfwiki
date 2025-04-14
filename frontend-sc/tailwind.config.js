@@ -47,7 +47,20 @@ const config = {
 				card: {
 					DEFAULT: "hsl(var(--card) / <alpha-value>)",
 					foreground: "hsl(var(--card-foreground) / <alpha-value>)"
-				}
+				},
+				// custom color
+				mint: {
+					50: '#f5fdf6',
+					100: '#e6f9eb',
+					200: '#d3f6db',
+					300: '#b7f0c6',
+					400: '#9eebb3',
+					500: '#adebb3',  // mint green
+					600: '#8dce93',
+					700: '#6eb074',
+					800: '#529358',
+					900: '#3a7540',
+				},
 			},
 			borderRadius: {
 				lg: "var(--radius)",

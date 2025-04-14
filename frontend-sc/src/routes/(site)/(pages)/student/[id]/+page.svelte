@@ -2,7 +2,7 @@
 	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
-	import { Button } from '$lib/components/ui/button/index';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import Venus from 'lucide-svelte/icons/venus';
 	import Mars from 'lucide-svelte/icons/mars';
 	import NonBinary from 'lucide-svelte/icons/non-binary';
@@ -29,7 +29,7 @@
 	let canEdit: boolean = true;
 
 	const form = superForm(data.newApplicationPrepForm);
-	const { form: formData, enhance } = form;
+	const { enhance } = form;
 
 	const contractItems = data.student.contracts.map((contract) => ({
 		value: contract.id.toString(),
@@ -68,7 +68,7 @@
 			&nbsp;{data.student.preferred_name}
 		{/if}
 	</h1>
-	<div class="flex flex-row gap-1 items-center text-sm">
+	<div class="flex flex-row gap-2 items-center text-sm">
 		{#if data.student.gender === 'female'}
 			<Venus class="w-4 h-4" />
 		{:else if data.student.gender === 'male'}
@@ -76,14 +76,14 @@
 		{:else}
 			<NonBinary class="w-4 h-4" />
 		{/if}
-		<div class="text-stone-400">&bullet;</div>
+		<div class="text-gray-400">&bullet;</div>
 		<div>{countryFlags[data.student.citizenship]}</div>
 		<div>{data.student.citizenship}</div>
 		{#if data.student.date_of_birth}
-			<div class="text-stone-400">&bullet;</div>
+			<div class="text-gray-400">&bullet;</div>
 			<div>b. {data.student.date_of_birth}</div>
 		{/if}
-		<div class="text-stone-400">&bullet;</div>
+		<div class="text-gray-400">&bullet;</div>
 		<div>@ {formatLocation(data.student)}</div>
 
 		{#if canEdit}

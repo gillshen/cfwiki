@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Table from '$lib/components/ui/table/index';
-	import SquareArrowOutUpRight from 'lucide-svelte/icons/square-arrow-out-up-right';
 	import ApplicationStatusSign from '$lib/components/misc/ApplicationStatusSign.svelte';
+	import LinkIcon from '$lib/components/misc/LinkIcon.svelte';
 	import type { ComposedApplication } from '$lib/api/application';
 	import { orderBySchoolName, orderByStatus, orderByYearDesc } from '$lib/util/applicationUtils';
 
@@ -26,9 +26,9 @@
 			.sort(orderByStatus)
 			.sort(orderByYearDesc) as application}
 			<Table.Row>
-				<Table.Cell>
+				<Table.Cell class="max-w-[300px]">
 					{#each application.schools as school}
-						<div class="font-semibold">{school.name}</div>
+						<div class="font-semibold truncate">{school.name}</div>
 					{/each}
 				</Table.Cell>
 				<Table.Cell class="max-w-[240px] truncate">{application.program.display_name}</Table.Cell>
@@ -48,7 +48,7 @@
 					<ApplicationStatusSign {application} />
 				</Table.Cell>
 				<Table.Cell>
-					<a href={`/application/${application.id}`}><SquareArrowOutUpRight class="w-4 h-4" /></a>
+					<LinkIcon href={`/application/${application.id}`} />
 				</Table.Cell>
 			</Table.Row>
 		{/each}

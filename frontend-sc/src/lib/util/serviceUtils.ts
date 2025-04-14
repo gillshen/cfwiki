@@ -7,21 +7,29 @@ export function isActive(service: Service): boolean {
 	return !service.end_date || isFuture(service.end_date);
 }
 
+export function leftEarly(service: Service): boolean {
+	return !!service.end_date
+}
+
 export function filterForActive(services: Service[]): Service[] {
 	return services.filter((s) => isActive(s));
 }
 
-export function orderByEndDateRole(a: Service, b: Service) {
-	if (a.end_date !== b.end_date) {
-		if (a.end_date === null) {
-			return -1;
+export function groupByCfPerson(services: Service[]): Record<string, Service[]> {
+	const grouped: Record<string, Service[]> = {}
+
+	for (const service of services) {
+		const key = service.cf_username
+		if (!grouped[key]) {
+			grouped[key] = []
 		}
-		if (b.end_date === null) {
-			return 1;
-		}
-		return a.end_date.localeCompare(b.end_date);
+		grouped[key].push(service)
 	}
 
+	return grouped
+}
+
+export function orderByRole(a: Service, b: Service): number {
 	const roles = Array.from(cfRoles) as string[];
 	let indexA = roles.indexOf(a.role) ?? 99;
 	let indexB = roles.indexOf(b.role) ?? 99;

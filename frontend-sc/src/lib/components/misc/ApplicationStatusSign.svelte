@@ -41,7 +41,7 @@
 {#if latestStatus}
 	<div class="flex items-center gap-1.5">
 		{#if icon === 'big-check'}
-			<CircleCheckBig class="text-green-600 w-[18px] h-[18px]" />
+			<CircleCheckBig class="text-mint-700 w-[18px] h-[18px]" />
 		{:else if icon === 'check'}
 			<CircleCheck class="text-sky-600 w-[18px] h-[18px]" />
 		{:else if icon === 'x'}

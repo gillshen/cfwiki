@@ -19,11 +19,11 @@
 
 <h1 class="page-title mb-2">Create Application</h1>
 
-<div class="flex gap-1 pb-6 text-gray-600">
+<div class="text-sm flex gap-2 pt-2 pb-6">
 	<div>{data.contract.student_name}</div>
-	<div>&bullet;</div>
+	<div class="text-gray-400">&bullet;</div>
 	<div>{data.programType}</div>
-	<div>&bullet;</div>
+	<div class="text-gray-400">&bullet;</div>
 	<div>{data.term} {data.year}</div>
 </div>
 

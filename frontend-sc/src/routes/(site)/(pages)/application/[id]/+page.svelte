@@ -3,16 +3,16 @@
 	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Card from '$lib/components/ui/card/index';
 	import * as Table from '$lib/components/ui/table/index';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import LayoutGrid from 'lucide-svelte/icons/layout-grid';
 	import List from 'lucide-svelte/icons/list';
-	import SquareArrowOutUpRight from 'lucide-svelte/icons/square-arrow-out-up-right';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import ApplicationStatusSign from '$lib/components/misc/ApplicationStatusSign.svelte';
-	import Button from '$lib/components/ui/button/button.svelte';
+	import LinkIcon from '$lib/components/misc/LinkIcon.svelte';
 	import { orderByStatus } from '$lib/util/applicationUtils';
 
 	export let data;
@@ -39,7 +39,12 @@
 			<div>{schoolNames}</div>
 		{/if}
 	</h1>
-	<Badge variant="default">{program.type}</Badge>
+	<div class="flex gap-3 items-center">
+		<Badge variant="default">{program.type}</Badge>
+		<div class="text-sm">
+			<ApplicationStatusSign application={data.application} />
+		</div>
+	</div>
 </section>
 
 <Section id="info">
@@ -149,9 +154,7 @@
 										<ApplicationStatusSign application={coApplication} />
 									</Table.Cell>
 									<Table.Cell>
-										<a href={`/application/${coApplication.id}`}
-											><SquareArrowOutUpRight class="w-4 h-4" /></a
-										>
+										<LinkIcon href={`/application/${coApplication.id}`} />
 									</Table.Cell>
 								</Table.Row>
 							{/each}

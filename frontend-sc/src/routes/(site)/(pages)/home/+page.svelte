@@ -3,10 +3,10 @@
 	import * as Card from '$lib/components/ui/card/index';
 	import * as Table from '$lib/components/ui/table/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
-	import SquareArrowOutUpRight from 'lucide-svelte/icons/square-arrow-out-up-right';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
+	import LinkIcon from '$lib/components/misc/LinkIcon.svelte';
 	import { defaultBanner } from '$lib/util/userUtils';
 
 	export let data;
@@ -55,13 +55,13 @@
 											{#if contract.services.map((s) => s.cf_username).includes(data.username)}
 												<Table.Row>
 													<Table.Cell class="font-medium">{student.fullname}</Table.Cell>
-													<Table.Cell>{contract.type} {contract.target_year}</Table.Cell>
-													<Table.Cell>{contract.status}</Table.Cell>
-													<Table.Cell
-														><a href={`/student/${student.id}`} target="_self">
-															<SquareArrowOutUpRight class="size-4" /></a
-														></Table.Cell
+													<Table.Cell class="truncate"
+														>{contract.type} {contract.target_year}</Table.Cell
 													>
+													<Table.Cell>{contract.status}</Table.Cell>
+													<Table.Cell>
+														<LinkIcon href={`/student/${student.id}`} />
+													</Table.Cell>
 												</Table.Row>
 											{/if}
 										{/each}
@@ -92,13 +92,21 @@
 									{#each applications as application}
 										<Table.Row>
 											<Table.Cell>{application.student.fullname}</Table.Cell>
-											<Table.Cell>{application.year} {application.term}</Table.Cell>
-											<Table.Cell>{application.schools[0].name}</Table.Cell>
-											<Table.Cell
-												><a href={`/application/${application.id}`} target="_self">
-													<SquareArrowOutUpRight class="size-4" /></a
-												></Table.Cell
-											>
+											<Table.Cell>
+												<div class="truncate">{application.year} {application.term}</div>
+											</Table.Cell>
+											<Table.Cell class="max-w-[300px]">
+												{#if application.schools.length}
+													{#each application.schools as school}
+														<div class="truncate">{school.name}</div>
+													{/each}
+												{:else}
+													<div class="truncate">{application.program.display_name}</div>
+												{/if}
+											</Table.Cell>
+											<Table.Cell>
+												<LinkIcon href={`/application/${application.id}`} />
+											</Table.Cell>
 										</Table.Row>
 									{/each}
 								</Table.Body>
