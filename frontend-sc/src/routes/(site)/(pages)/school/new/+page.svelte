@@ -19,7 +19,7 @@
 	const { form: formData, enhance } = form;
 
 	const countryItems = Object.entries(countryFlags)
-		.filter(([country, flag]) => country !== 'United States Green Card')
+		.filter(([country]) => country !== 'United States Green Card')
 		.map(([country, flag]) => ({ label: `${flag}\xa0\xa0${country}`, value: country }))
 		.sort((a, b) => orderMostAppliedFirst(a.value, b.value));
 
@@ -83,7 +83,7 @@
 			items={[
 				{ label: 'University', value: 'University' },
 				{ label: 'Secondary School', value: 'Secondary School' },
-				{ label: 'Other', value: 'other' }
+				{ label: 'Other', value: 'Other' }
 			]}
 		/>
 

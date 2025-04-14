@@ -8,7 +8,7 @@ import {
 
 import { sortedSchoolNames } from '$lib/api/school';
 import { blankStats, type ApplicationDataPoint, type ApplicationStats } from '$lib/api/stats';
-import { orderByRoundName as _orderByRoundName } from '$lib/util/applicationRoundUtils';
+import { compareRoundName} from '$lib/util/applicationRoundUtils';
 import { lexicalChineseLast } from '$lib/util/stringUtils';
 
 export function isUndergraduate(application: ComposedApplication) {
@@ -89,7 +89,7 @@ export function formatNotableStatuses(statuses: ApplicationStatus[]): string {
 }
 
 export function orderByRoundName(a: ComposedApplication, b: ComposedApplication) {
-	return _orderByRoundName(a.round_name, b.round_name);
+	return compareRoundName(a.round_name, b.round_name);
 }
 
 export function orderByStatus(a: ComposedApplication, b: ComposedApplication) {

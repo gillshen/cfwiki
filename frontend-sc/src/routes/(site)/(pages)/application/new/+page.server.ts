@@ -12,7 +12,7 @@ import { createSchool, fetchSchools } from '$lib/api/school';
 import { createProgram, fetchPrograms } from '$lib/api/program';
 import { createApplicationRound, fetchApplicationRounds } from '$lib/api/applicationRound';
 import { schoolSchema } from '$lib/schemas/school';
-import { batchNewApplicationSchema } from '$lib/schemas/application';
+import { applicationSchema } from '$lib/schemas/application';
 import { newProgramSchema } from '$lib/schemas/program';
 import { roundSchema } from '$lib/schemas/applicationRound';
 import { createApplication, fetchComposedApplications } from '$lib/api/application';
@@ -82,7 +82,7 @@ export async function load(event: PageServerLoadEvent) {
 			applicationRounds: fetchApplicationRounds({ program_type: programType, year, term }),
 			newSchoolForm: await superValidate(zod(schoolSchema)),
 			newProgramForm: await superValidate(zod(newProgramSchema)),
-			batchNewApplicationForm: await superValidate(zod(batchNewApplicationSchema)),
+			newApplicationForm: await superValidate(zod(applicationSchema)),
 			newApplicationRoundForm: await superValidate(zod(roundSchema))
 		};
 	} catch (err) {
@@ -97,50 +97,52 @@ export const actions = {
 
 	createApplicationRound: formAction(roundSchema, createApplicationRound),
 
-	createApplications: async ({ request }) => {
-		const form = await superValidate(request, zod(batchNewApplicationSchema));
+	createApplication: async ({ request }) => {
+		const form = await superValidate(request, zod(applicationSchema));
 		console.log(form);
 
 		if (!form.valid) {
 			return fail(400, { form });
 		}
 
-		const { contract, rounds } = form.data;
-		const errors = [];
+		return message(form, 'success');
 
-		const promises = rounds.map(async (round, index) => {
-			const response = await createApplication({ contract, round });
-			if (!response.ok) {
-				errors.push({ round, index });
-			} else {
-				// create a log with the status `Started`
-				const application = await response.json();
+		// const { contract, rounds } = form.data;
+		// const errors = [];
 
-				await createOrUpdateApplicationLog({
-					application: application.id,
-					status: 'Started',
-					date: formatDate(new Date(), 'yyyy-LL-dd')
-				});
-			}
-		});
+		// const promises = rounds.map(async (round, index) => {
+		// 	const response = await createApplication({ contract, round });
+		// 	if (!response.ok) {
+		// 		errors.push({ round, index });
+		// 	} else {
+		// 		// create a log with the status `Started`
+		// 		const application = await response.json();
 
-		await Promise.all(promises);
+		// 		await createOrUpdateApplicationLog({
+		// 			application: application.id,
+		// 			status: 'Started',
+		// 			date: formatDate(new Date(), 'yyyy-LL-dd')
+		// 		});
+		// 	}
+		// });
 
-		if (!errors.length) {
-			redirect(303, `/student/${studentId}`);
-		}
+		// await Promise.all(promises);
 
-		const [subj, why] =
-			errors.length > 1
-				? ['applications', 'they already exist']
-				: ['application', 'it already exists'];
+		// if (!errors.length) {
+		// 	redirect(303, `/student/${studentId}`);
+		// }
 
-		return message(
-			form,
-			`${errors.length} of the ${rounds.length} ${subj} failed to be created, possibly because ${why}`,
-			{
-				status: 400
-			}
-		);
+		// const [subj, why] =
+		// 	errors.length > 1
+		// 		? ['applications', 'they already exist']
+		// 		: ['application', 'it already exists'];
+
+		// return message(
+		// 	form,
+		// 	`${errors.length} of the ${rounds.length} ${subj} failed to be created, possibly because ${why}`,
+		// 	{
+		// 		status: 400
+		// 	}
+		// );
 	}
 };

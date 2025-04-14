@@ -15,10 +15,11 @@
 	export let form: SuperForm<any>;
 	export let name: string;
 	export let label: string;
-	export let items: { label: string; value: any }[];
+	export let items: { label: string; value: string }[];
 	export let width: string = 'w-[360px]';
 	export let description: string = '';
 	export let isOptional: boolean = false;
+	export let disableSearch: boolean = false;
 	export let onSelect: () => void = () => {};
 
 	const { form: formData } = form;
@@ -53,19 +54,26 @@
 				)}
 				{...attrs}
 			>
-				{items.find((item) => item.value === $formData[name])?.label || 'Select an option'}
+				<span class="truncate"
+					>{items.find((item) => item.value === $formData[name])?.label || 'Select an option'}</span
+				>
 				<ChevronDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
 			</Popover.Trigger>
 			<input hidden value={$formData[name]} name={attrs.name} />
 		</Form.Control>
 		<Popover.Content class={`${width} p-0`}>
 			<Command.Root>
-				<Command.Input placeholder="Search..." />
-				<Command.Empty>No matching options found</Command.Empty>
+				{#if !disableSearch}
+					<Command.Input placeholder="Search..." />
+				{/if}
+				<Command.Empty
+					>{disableSearch ? 'No available options' : 'No matching options found'}</Command.Empty
+				>
 				<Command.List>
 					{#each items as item}
 						<Command.Item
 							{...form}
+							class="flex gap-2 items-center"
 							value={item.value}
 							onSelect={() => {
 								// Order of operation critical;
@@ -77,11 +85,11 @@
 						>
 							<Check
 								class={cn(
-									'mr-2 size-4',
+									'size-4 shrink-0',
 									item.value === $formData[name] ? 'opacity-100' : 'opacity-0'
 								)}
 							/>
-							{item.label}
+							<div>{item.label}</div>
 						</Command.Item>
 					{/each}
 				</Command.List>

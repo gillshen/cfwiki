@@ -3,12 +3,21 @@ import { z } from 'zod';
 import type { ProgramListItem } from '$lib/api/program';
 import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
 
-export const batchNewApplicationSchema = z.object({
-	contract: z.number(),
-	rounds: z.number().array()
+export const applicationSchema = z.object({
+	id: z.number().optional(),
+	_school: z.string().min(1, 'This field is required'),
+	_program: z.string().min(1, 'This field is required'),
+	contract: z.number().min(1, 'This field is required'),
+	round: z.number().min(1, 'This field is required'),
+	staff: z.number().array(),
+	major_1: z.string().trim().max(100),
+	major_2: z.string().trim().max(100),
+	major_3: z.string().trim().max(100),
+	comments: z.string().trim().max(1000),
+	double_application: z.boolean().default(false)
 });
 
-export type BatchNewApplicationSchema = typeof batchNewApplicationSchema;
+export type ApplicationSchema = typeof applicationSchema;
 
 export const newApplicationPrepSchema = z.object({
 	student: z.number().min(1, 'This field is required'),

@@ -27,7 +27,7 @@ const _index = (name: string): number | undefined => {
 	}
 };
 
-export function orderByRoundName(nameA: string, nameB: string) {
+export function compareRoundName(nameA: string, nameB: string) {
 	const indexA = _index(nameA);
 	const indexB = _index(nameB);
 
@@ -36,6 +36,10 @@ export function orderByRoundName(nameA: string, nameB: string) {
 	} else {
 		return indexA - indexB;
 	}
+}
+
+export const orderByRoundName =  (a: ApplicationRoundListItem, b: ApplicationRoundListItem)  => {
+	return compareRoundName(a.name, b.name)
 }
 
 export const orderByDueDate = (a: ApplicationRoundListItem, b: ApplicationRoundListItem) => {
@@ -53,13 +57,13 @@ export function filterSortRounds(
 ): ApplicationRoundListItem[] {
 	return rounds
 		.filter((r) => r.program_iteration.year === year && r.program_iteration.term === term)
-		.sort((a, b) => orderByRoundName(a.name, b.name))
+		.sort((a, b) => compareRoundName(a.name, b.name))
 		.sort(orderByDueDate);
 }
 
 export function formatRound(applRound: ApplicationRoundListItem): string {
 	if (applRound.due_date) {
-		return `${applRound.name}, ${toLongDate(applRound.due_date)}`;
+		return `${applRound.name} - ${toLongDate(applRound.due_date)}`;
 	} else {
 		return applRound.name;
 	}
@@ -86,7 +90,7 @@ export function groupByYearTerm(
 
 	for (const key of sortedKeys) {
 		const group = grouped[key];
-		group.sort((a, b) => orderByRoundName(a.name, b.name));
+		group.sort((a, b) => compareRoundName(a.name, b.name));
 		sortedGroups[key.replace(_joiner, ' ')] = group;
 	}
 
