@@ -60,18 +60,21 @@
 			<div>{program_iteration.year} {program_iteration.term}</div>
 			<div>{round.name} {round.due_date ?? ''} {round.due_time ?? ''} {round.timezone ?? ''}</div>
 
-			<pre>{JSON.stringify(data.application.services, null, 2)}</pre>
+			<pre>{JSON.stringify({ services: data.application.services }, null, 2)}</pre>
 			{#each data.application.staff.sort() as staff}
 				<a href={`/cf/${staff}`}>{staff}</a>
 			{/each}
 
-			<div class="bg-zinc-100 p-4 rounded-md">
-				<div>{data.application.major_1}</div>
-				<div>{data.application.major_2}</div>
-				<div>{data.application.major_3}</div>
-			</div>
-
-			<div>Comments: {data.application.comments}</div>
+			<pre>{JSON.stringify(
+					{
+						major_1: data.application.major_1,
+						major_2: data.application.major_2,
+						major_3: data.application.major_3,
+						comments: data.application.comments
+					},
+					null,
+					2
+				)}</pre>
 		</article>
 		<article class="mt-4 text-sm flex flex-col gap-2 bg-zinc-50 p-4 rounded-lg">
 			<div>Logs</div>
@@ -132,7 +135,7 @@
 							<Table.Row>
 								<Table.Head class="font-semibold">Student</Table.Head>
 								<Table.Head class="font-semibold">Adm. Plan</Table.Head>
-								<Table.Head class="font-semibold">Majors/Track</Table.Head>
+								<Table.Head class="font-semibold">Majors/Tracks</Table.Head>
 								<Table.Head class="font-semibold">Status</Table.Head>
 								<Table.Head class="font-semibold"></Table.Head>
 							</Table.Row>

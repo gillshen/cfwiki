@@ -177,7 +177,7 @@
 					id="new-application-prep-form"
 					use:enhance
 				>
-					<input type="number" name="student" value={data.student.id} class="hidden" />
+					<input type="number" name="student" value={data.student.id} hidden />
 					<Combobox {form} name="contract" label="Contract" items={contractItems} />
 					<Combobox {form} name="type" label="Application type" items={applicationTypeItems} />
 					<Combobox {form} name="year" label="Year of admission" items={yearItems} />

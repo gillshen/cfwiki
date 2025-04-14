@@ -1,32 +1,53 @@
 <script lang="ts">
-	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import { onMount } from 'svelte';
 
+	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import { type Selected } from 'bits-ui';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Form from '$lib/components/ui/form/index';
+	import FormField from '$lib/components/ui/form/form-field.svelte';
+	import * as Select from '$lib/components/ui/select/index';
+	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+	import Input from '$lib/components/ui/input/input.svelte';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
-	import FormField from '$lib/components/ui/form/form-field.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import StudentApplicationCard from '$lib/components/widgets/StudentApplicationCard.svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
-	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 
 	import { orderByName } from '$lib/util/schoolUtils';
 	import { enhanceDisplayName, orderByName as orderByProgramName } from '$lib/util/programUtils';
 	import { formatRound, orderByDueDate, orderByRoundName } from '$lib/util/applicationRoundUtils';
-	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
-	import Label from '$lib/components/ui/label/label.svelte';
-	import { groupByCfPerson, orderByRole } from '$lib/util/serviceUtils';
+	import { groupByCfPerson, leftEarly } from '$lib/util/serviceUtils';
 
 	export let data;
 
-	const { studentId, contract, programType, year, term, applications } = data;
+	const { contract, applications } = data;
 
-	const groupedServices = Object.entries(groupByCfPerson(contract.services.sort(orderByRole)));
+	const groupedServices = Object.entries(groupByCfPerson(contract.services)).sort();
 
-	const form = superForm(data.newApplicationForm);
+	const form = superForm(data.newApplicationForm, { invalidateAll: 'force' });
 	const { form: formData, enhance } = form;
+
+	const selectedStaff: Selected<string>[] = $formData.staff_names.length
+		? $formData.staff_names.map((s) => ({ value: s, label: s }))
+		: groupedServices
+				.filter(([, services]) => services.map((s) => !leftEarly(s)).some(Boolean))
+				.map(([cfUsername]) => ({ value: cfUsername, label: cfUsername }));
+
+	$: {
+		if (!$formData.major_1) {
+			$formData.major_2 = '';
+		}
+		if (!$formData.major_2) {
+			$formData.major_3 = '';
+		}
+	}
+
+	onMount(() => {
+		$formData.staff_names = selectedStaff.map((item) => item.value);
+		console.log($formData.staff_names);
+	});
 </script>
 
 <BreadcrumbContainer>
@@ -103,19 +124,39 @@
 					disableSearch
 				/>
 
-				<div class="flex flex-col gap-2">
-					<Label class="pb-1">Staff</Label>
-
-					{#each groupedServices as [cfUsername, services]}
-						{@const checkId = `cf-${cfUsername}-check`}
-						<div class="flex items-center space-x-2">
-							<Checkbox id={checkId} />
-							<Label for={checkId} class="font-normal"
-								>{cfUsername} - {services.map((s) => s.role).join('/')}</Label
-							>
-						</div>
-					{/each}
-				</div>
+				<FormField {form} name="staff_names" class="w-[480px] pb-0.5">
+					<Form.Control let:attrs>
+						<Form.Label>Staff</Form.Label>
+						<Select.Root
+							multiple
+							selected={selectedStaff}
+							onSelectedChange={(v) => {
+								if (v) {
+									$formData.staff_names = v.map((item) => item.value).sort();
+								}
+								console.log($formData.staff_names);
+							}}
+						>
+							<Select.Trigger {...attrs}>
+								<Select.Value placeholder="Select at least one option" />
+							</Select.Trigger>
+							<Select.Content>
+								{#each groupedServices as [cfUsername]}
+									<Select.Item value={cfUsername} label={cfUsername} />
+								{/each}
+							</Select.Content>
+						</Select.Root>
+						<select name="staff_names" multiple bind:value={$formData.staff_names} hidden>
+							{#each groupedServices as [cfUsername]}
+								<option value={cfUsername}>{cfUsername}</option>
+							{/each}
+						</select>
+					</Form.Control>
+					<Form.Description
+						>Select all and only those involved in this particular application</Form.Description
+					>
+					<Form.FieldErrors />
+				</FormField>
 
 				<FormField {form} name="major_1">
 					<Form.Control let:attrs>
@@ -124,19 +165,28 @@
 					</Form.Control>
 				</FormField>
 
-				<FormField {form} name="major_2">
-					<Form.Control let:attrs>
-						<Form.Label class="optional-field">Second-choice major or track</Form.Label>
-						<Input maxlength={100} class="w-[480px]" {...attrs} bind:value={$formData.major_2} />
-					</Form.Control>
-				</FormField>
+				{#if $formData.major_1}
+					<FormField {form} name="major_2">
+						<Form.Control let:attrs>
+							<Form.Label class="optional-field">Second-choice major or track</Form.Label>
+							<Input maxlength={100} class="w-[480px]" {...attrs} bind:value={$formData.major_2} />
+						</Form.Control>
+					</FormField>
 
-				<FormField {form} name="major_3">
-					<Form.Control let:attrs>
-						<Form.Label class="optional-field">Third-choice major or track</Form.Label>
-						<Input maxlength={100} class="w-[480px]" {...attrs} bind:value={$formData.major_3} />
-					</Form.Control>
-				</FormField>
+					{#if $formData.major_2}
+						<FormField {form} name="major_3">
+							<Form.Control let:attrs>
+								<Form.Label class="optional-field">Third-choice major or track</Form.Label>
+								<Input
+									maxlength={100}
+									class="w-[480px]"
+									{...attrs}
+									bind:value={$formData.major_3}
+								/>
+							</Form.Control>
+						</FormField>
+					{/if}
+				{/if}
 
 				<Form.Field {form} name="comments" class="max-w-[480px]">
 					<Form.Control let:attrs>
@@ -154,12 +204,6 @@
 		<div class="mt-12 max-w-prose">
 			<SuperDebug data={$formData} />
 		</div>
-
-		<pre class="mt-4 text-sm bg-zinc-50 p-2 rounded-md">{JSON.stringify(
-				{ studentId, contract, programType, year, term },
-				null,
-				2
-			)}</pre>
 	</section>
 
 	<section class="text-sm flex flex-col gap-4">

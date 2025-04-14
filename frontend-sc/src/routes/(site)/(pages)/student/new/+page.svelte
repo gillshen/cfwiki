@@ -5,7 +5,6 @@
 	import FormField from '$lib/components/ui/form/form-field.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 
 	import Section from '$lib/components/containers/Section.svelte';
@@ -147,15 +146,13 @@
 
 		<Combobox {form} name="citizenship" label="Citizenship" items={citizenshipItems} />
 
-		<FormField {form} name="date_of_birth">
+		<FormField {form} name="date_of_birth" class="pb-1">
 			<Form.Control let:attrs>
 				<Form.Label class="optional-field">Date of birth</Form.Label>
 				<Input type="date" class="w-[360px]" {...attrs} bind:value={$formData.date_of_birth} />
 			</Form.Control>
 			<Form.FieldErrors />
 		</FormField>
-
-		<Separator />
 
 		<Combobox
 			{form}

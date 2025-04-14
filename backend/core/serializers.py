@@ -1,8 +1,9 @@
 from collections import defaultdict
+import datetime
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from core.models import CFUser, Student, Contract, Service, Application, ApplicationLog
 
 from cf.models import AcademyProgram
@@ -304,7 +305,7 @@ class ApplicationWithLogsSerializer(serializers.ModelSerializer):
     staff = serializers.SlugRelatedField(
         many=True,
         read_only=True,
-        slug_field="username"
+        slug_field="username",
     )
 
     class ApplicationLogSerializer(serializers.ModelSerializer):
@@ -313,7 +314,7 @@ class ApplicationWithLogsSerializer(serializers.ModelSerializer):
             fields = ["status", "date"]
 
     logs = ApplicationLogSerializer(many=True)
-    
+
     majors = serializers.SerializerMethodField()
 
     def get_majors(self, obj) -> list[str]:
@@ -425,7 +426,7 @@ class ApplicationDetailSerializer(serializers.ModelSerializer):
     staff = serializers.SlugRelatedField(
         many=True,
         read_only=True,
-        slug_field="username"
+        slug_field="username",
     )
 
     class SchoolSerializer(serializers.ModelSerializer):
@@ -465,9 +466,39 @@ class ApplicationDetailSerializer(serializers.ModelSerializer):
 
 
 class ApplicationCRUDSerializer(serializers.ModelSerializer):
+
+    staff_names = serializers.ListField(child=serializers.CharField(), write_only=True)
+    default_log = serializers.CharField(write_only=True)
+
     class Meta:
         model = Application
         fields = "__all__"
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            staff_names = validated_data.pop("staff_names")
+            default_log = validated_data.pop("default_log")
+
+            major_1 = validated_data.pop("major_1")
+            major_2 = validated_data.pop("major_2")
+            major_3 = validated_data.pop("major_3")
+
+            application = Application.objects.create(**validated_data)
+            application.staff.set(CFUser.objects.filter(username__in=staff_names))
+
+            majors = filter(None, [major_1, major_2, major_3])
+            for field, major in zip(["major_1", "major_2", "major_3"], majors):
+                setattr(application, field, major)
+            application.save()
+
+            if default_log:
+                ApplicationLog.objects.create(
+                    application=application,
+                    date=datetime.date.today(),
+                    status=default_log,
+                )
+
+            return application
 
 
 class ApplicationPerProgramSerializer(serializers.ModelSerializer):

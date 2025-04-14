@@ -9,7 +9,7 @@ export const applicationSchema = z.object({
 	_program: z.string().min(1, 'This field is required'),
 	contract: z.number().min(1, 'This field is required'),
 	round: z.number().min(1, 'This field is required'),
-	staff: z.number().array(),
+	staff_names: z.string().array().min(1, 'Select at least one option'),
 	major_1: z.string().trim().max(100),
 	major_2: z.string().trim().max(100),
 	major_3: z.string().trim().max(100),

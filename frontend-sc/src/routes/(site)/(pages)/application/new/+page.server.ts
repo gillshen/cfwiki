@@ -105,44 +105,12 @@ export const actions = {
 			return fail(400, { form });
 		}
 
+		const response = await createApplication({...form.data, default_log: 'Started'});
+
+		if (!response.ok) {
+			return message(form, 'Sorry, an error occurred', { status: 400 }); 
+		}
+		
 		return message(form, 'success');
-
-		// const { contract, rounds } = form.data;
-		// const errors = [];
-
-		// const promises = rounds.map(async (round, index) => {
-		// 	const response = await createApplication({ contract, round });
-		// 	if (!response.ok) {
-		// 		errors.push({ round, index });
-		// 	} else {
-		// 		// create a log with the status `Started`
-		// 		const application = await response.json();
-
-		// 		await createOrUpdateApplicationLog({
-		// 			application: application.id,
-		// 			status: 'Started',
-		// 			date: formatDate(new Date(), 'yyyy-LL-dd')
-		// 		});
-		// 	}
-		// });
-
-		// await Promise.all(promises);
-
-		// if (!errors.length) {
-		// 	redirect(303, `/student/${studentId}`);
-		// }
-
-		// const [subj, why] =
-		// 	errors.length > 1
-		// 		? ['applications', 'they already exist']
-		// 		: ['application', 'it already exists'];
-
-		// return message(
-		// 	form,
-		// 	`${errors.length} of the ${rounds.length} ${subj} failed to be created, possibly because ${why}`,
-		// 	{
-		// 		status: 400
-		// 	}
-		// );
 	}
 };

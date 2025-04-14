@@ -15,7 +15,7 @@
 			<Table.Head class="font-semibold">Program</Table.Head>
 			<Table.Head class="font-semibold">Year</Table.Head>
 			<Table.Head class="font-semibold">Adm. Plan</Table.Head>
-			<Table.Head class="font-semibold">Majors/Track</Table.Head>
+			<Table.Head class="font-semibold">Majors/Tracks</Table.Head>
 			<Table.Head class="font-semibold">Status</Table.Head>
 			<Table.Head class="font-semibold"></Table.Head>
 		</Table.Row>
