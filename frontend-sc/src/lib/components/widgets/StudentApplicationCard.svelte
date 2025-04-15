@@ -5,6 +5,7 @@
 	import type { ComposedApplication } from '$lib/api/application';
 
 	export let application: ComposedApplication;
+	export let compact: boolean = false;
 </script>
 
 <Card.Root class="h-full flex flex-col">
@@ -19,14 +20,20 @@
 			<Badge variant="outline" class="w-fit">{application.year} {application.round_name}</Badge>
 		</Card.Description>
 	</Card.Header>
-	<Card.Content class="pt-2 flex flex-col gap-2 flex-grow">
-		<ul class="list-disc ml-3.5 flex flex-col gap-1 text-muted-foreground">
-			{#each application.majors as major}
-				<li>{major}</li>
-			{/each}
-		</ul>
-	</Card.Content>
-	<Card.Footer>
-		<ApplicationStatusSign {application} />
-	</Card.Footer>
+	{#if compact}
+		<Card.Content class="pt-2 flex flex-col gap-2 flex-grow">
+			<ApplicationStatusSign {application} />
+		</Card.Content>
+	{:else}
+		<Card.Content class="pt-2 flex flex-col gap-2 flex-grow">
+			<ul class="list-disc ml-3.5 flex flex-col gap-1 text-muted-foreground">
+				{#each application.majors as major}
+					<li>{major}</li>
+				{/each}
+			</ul>
+		</Card.Content>
+		<Card.Footer>
+			<ApplicationStatusSign {application} />
+		</Card.Footer>
+	{/if}
 </Card.Root>

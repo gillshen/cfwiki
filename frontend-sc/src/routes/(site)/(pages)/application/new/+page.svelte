@@ -24,10 +24,10 @@
 
 	const { contract, applications } = data;
 
-	const groupedServices = Object.entries(groupByCfPerson(contract.services)).sort();
+	const form = superForm(data.newApplicationForm);
+	const { form: formData } = form;
 
-	const form = superForm(data.newApplicationForm, { invalidateAll: 'force' });
-	const { form: formData, enhance } = form;
+	const groupedServices = Object.entries(groupByCfPerson(contract.services)).sort();
 
 	const selectedStaff: Selected<string>[] = $formData.staff_names.length
 		? $formData.staff_names.map((s) => ({ value: s, label: s }))
@@ -77,7 +77,6 @@
 				method="POST"
 				class="max-w-prose space-y-6 mt-4"
 				action="?/createApplication"
-				use:enhance
 				id="application-form"
 			>
 				<input name="contract" type="number" value={contract.id} class="hidden" />
@@ -210,9 +209,9 @@
 		{#await applications}
 			<LoadingSign />
 		{:then applications}
-			{#each applications as application}
+			{#each applications.reverse() as application}
 				<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
-					<StudentApplicationCard {application} />
+					<StudentApplicationCard {application} compact />
 				</a>
 			{/each}
 		{/await}
