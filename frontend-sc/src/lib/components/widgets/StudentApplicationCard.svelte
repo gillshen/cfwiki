@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
 	import * as Card from '$lib/components/ui/card/index';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import ApplicationStatusSign from '$lib/components/misc/ApplicationStatusSign.svelte';
@@ -6,9 +7,10 @@
 
 	export let application: ComposedApplication;
 	export let compact: boolean = false;
+	export let classNames: string = '';
 </script>
 
-<Card.Root class="h-full flex flex-col">
+<Card.Root class={cn('h-full flex flex-col', classNames)}>
 	<Card.Header>
 		<Card.Title>
 			{#each application.schools as school}

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
-	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import { type Selected } from 'bits-ui';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Form from '$lib/components/ui/form/index';
@@ -9,6 +9,8 @@
 	import * as Select from '$lib/components/ui/select/index';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
+	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
+	import Separator from '$lib/components/ui/separator/separator.svelte';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
@@ -22,12 +24,10 @@
 
 	export let data;
 
-	const { contract, applications } = data;
-
 	const form = superForm(data.newApplicationForm);
 	const { form: formData, enhance } = form;
 
-	const groupedServices = Object.entries(groupByCfPerson(contract.services)).sort();
+	const groupedServices = Object.entries(groupByCfPerson(data.contract.services)).sort();
 
 	const selectedStaff: Selected<string>[] = $formData.staff_names.length
 		? $formData.staff_names.map((s) => ({ value: s, label: s }))
@@ -44,10 +44,12 @@
 		}
 	}
 
-	onMount(() => {
+	// Runs on initial load AND whenever the page URL changes
+	$: {
+		console.log('Page URL changed:', $page.url);
+		console.table(data.contract);
 		$formData.staff_names = selectedStaff.map((item) => item.value);
-		console.log($formData.staff_names);
-	});
+	}
 </script>
 
 <BreadcrumbContainer>
@@ -58,21 +60,21 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<h1 class="page-title mb-2">Create Application</h1>
-
-<div class="text-sm flex gap-2 pt-2 pb-6">
-	<div>{data.contract.student_name}</div>
-	<div class="text-gray-400">&bullet;</div>
-	<div>{data.programType}</div>
-	<div class="text-gray-400">&bullet;</div>
-	<div>{data.term} {data.year}</div>
-</div>
-
 {#await Promise.all([data.schools, data.programs, data.applicationRounds, data.applications])}
 	<LoadingSign />
 {:then [schools, programs, applicationRounds, applications]}
-	<div class="grid grid-cols-[1fr_400px] gap-8">
+	<div class="grid grid-cols-[1fr_400px] gap-12">
 		<section>
+			<h1 class="page-title mb-2">Create Application</h1>
+
+			<div class="text-sm flex gap-2 pt-2 pb-6">
+				<div><a href={`/student/${data.studentId}`}>{data.contract.student_name}</a></div>
+				<div class="text-gray-400">&bullet;</div>
+				<div>{data.programType}</div>
+				<div class="text-gray-400">&bullet;</div>
+				<div>{data.term} {data.year}</div>
+			</div>
+
 			<form
 				method="POST"
 				class="max-w-prose space-y-6"
@@ -163,7 +165,7 @@
 					</Form.Control>
 				</FormField>
 
-				{#if $formData.major_1}
+				{#if $formData.major_1.trim()}
 					<FormField {form} name="major_2">
 						<Form.Control let:attrs>
 							<Form.Label class="optional-field">Second-choice major or track</Form.Label>
@@ -171,7 +173,7 @@
 						</Form.Control>
 					</FormField>
 
-					{#if $formData.major_2}
+					{#if $formData.major_2.trim()}
 						<FormField {form} name="major_3">
 							<Form.Control let:attrs>
 								<Form.Label class="optional-field">Third-choice major or track</Form.Label>
@@ -195,22 +197,37 @@
 					<Form.FieldErrors />
 				</Form.Field>
 
-				<input name="contract" type="number" value={contract.id} class="hidden" />
+				<input name="contract" type="number" value={data.contract.id} class="hidden" />
 
 				<Form.Button class="w-fit min-w-24">Submit</Form.Button>
 			</form>
 
-			<div class="mt-12 max-w-prose">
+			<!-- <div class="mt-12 max-w-prose w-fit">
 				<SuperDebug data={$formData} />
-			</div>
+			</div> -->
 		</section>
 
-		<section class="text-sm flex flex-col gap-4">
-			{#each applications.reverse() as application}
-				<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
-					<StudentApplicationCard {application} compact />
-				</a>
-			{/each}
+		<section class="text-sm flex flex-col gap-4 min-h-[120px]">
+			{#if applications.length}
+				<h2 class="text-xl font-bold pt-3">Already Applied</h2>
+
+				<ScrollArea class="max-h-[75vh] rounded-md border">
+					<div class="px-4">
+						{#each applications.sort().reverse() as application, index}
+							{#if index}
+								<Separator />
+							{/if}
+							<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
+								<StudentApplicationCard
+									{application}
+									compact
+									classNames="border-none shadow-none"
+								/>
+							</a>
+						{/each}
+					</div>
+				</ScrollArea>
+			{/if}
 		</section>
 	</div>
 {/await}
