@@ -116,6 +116,8 @@ export const actions = {
 		if (!response.ok) {
 			return message(form, 'Sorry, an error occurred', { status: 400 }); 
 		}
-		throw redirect(302, `/application/new?token=${token}`)
+		const url = new URL(request.url);
+		url.searchParams.set('token', token!)
+		throw redirect(307, url.toString());
 	}
 };

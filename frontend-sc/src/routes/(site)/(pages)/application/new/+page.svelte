@@ -25,7 +25,7 @@
 	const { contract, applications } = data;
 
 	const form = superForm(data.newApplicationForm);
-	const { form: formData } = form;
+	const { form: formData, enhance } = form;
 
 	const groupedServices = Object.entries(groupByCfPerson(contract.services)).sort();
 
@@ -68,19 +68,18 @@
 	<div>{data.term} {data.year}</div>
 </div>
 
-<div class="grid grid-cols-[1fr_400px] gap-8">
-	<section>
-		{#await Promise.all([data.schools, data.programs, data.applicationRounds])}
-			<LoadingSign />
-		{:then [schools, programs, applicationRounds]}
+{#await Promise.all([data.schools, data.programs, data.applicationRounds, data.applications])}
+	<LoadingSign />
+{:then [schools, programs, applicationRounds, applications]}
+	<div class="grid grid-cols-[1fr_400px] gap-8">
+		<section>
 			<form
 				method="POST"
-				class="max-w-prose space-y-6 mt-4"
+				class="max-w-prose space-y-6"
 				action="?/createApplication"
+				use:enhance
 				id="application-form"
 			>
-				<input name="contract" type="number" value={contract.id} class="hidden" />
-
 				<Combobox
 					{form}
 					name="_school"
@@ -196,24 +195,22 @@
 					<Form.FieldErrors />
 				</Form.Field>
 
+				<input name="contract" type="number" value={contract.id} class="hidden" />
+
 				<Form.Button class="w-fit min-w-24">Submit</Form.Button>
 			</form>
-		{/await}
 
-		<div class="mt-12 max-w-prose">
-			<SuperDebug data={$formData} />
-		</div>
-	</section>
+			<div class="mt-12 max-w-prose">
+				<SuperDebug data={$formData} />
+			</div>
+		</section>
 
-	<section class="text-sm flex flex-col gap-4">
-		{#await applications}
-			<LoadingSign />
-		{:then applications}
+		<section class="text-sm flex flex-col gap-4">
 			{#each applications.reverse() as application}
 				<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
 					<StudentApplicationCard {application} compact />
 				</a>
 			{/each}
-		{/await}
-	</section>
-</div>
+		</section>
+	</div>
+{/await}

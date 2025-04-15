@@ -177,6 +177,7 @@
 					id="new-application-prep-form"
 					use:enhance
 				>
+					<input name="username" value={data.username} hidden />
 					<input type="number" name="student" value={data.student.id} hidden />
 					<Combobox {form} name="contract" label="Contract" items={contractItems} />
 					<Combobox {form} name="type" label="Application type" items={applicationTypeItems} />
