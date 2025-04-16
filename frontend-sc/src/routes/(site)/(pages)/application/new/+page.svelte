@@ -218,11 +218,7 @@
 								<Separator />
 							{/if}
 							<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
-								<StudentApplicationCard
-									{application}
-									compact
-									classNames="border-none shadow-none"
-								/>
+								<StudentApplicationCard {application} compact class="border-none shadow-none" />
 							</a>
 						{/each}
 					</div>

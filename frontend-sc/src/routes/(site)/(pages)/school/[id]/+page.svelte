@@ -7,10 +7,12 @@
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
+	import CoApplicationsDisplay from '$lib/components/widgets/CoApplicationsDisplay.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import countryFlags from '$lib/constants/countries';
 	import { formatLocation, formatRanking, getLatestRanking } from '$lib/util/schoolUtils';
 	import { categorizeAndSort, enhanceDisplayName } from '$lib/util/programUtils';
+	import { filterByType } from '$lib/util/applicationUtils';
 
 	export let data;
 
@@ -79,44 +81,30 @@
 		{/await}
 	</Section>
 
-	<Section id="ug-freshman-applications" title="UG Freshman Applications">
-		{#await data.applications}
-			<LoadingSign />
-		{:then applications}
-			<!-- TODO table and year filter -->
-			{#each applications.filter((a) => a.program.type === 'UG Freshman') as application}
-				<div class="text-stone-800">
-					{application.student.fullname} @ {application.majors.join(' | ') || '-'}
-				</div>
-			{/each}
-		{/await}
-	</Section>
+	{#await data.applications}
+		<LoadingSign class="mb-8" />
+	{:then applications}
+		{#if filterByType(applications, 'UG Freshman').length}
+			<Section id="ug-freshman-applications" title="UG Freshman Applications">
+				<!-- TODO year filter and sorting options -->
+				<CoApplicationsDisplay applications={filterByType(applications, 'UG Freshman')} />
+			</Section>
+		{/if}
 
-	<Section id="ug-transfer-applications" title="UG Transfer Applications">
-		{#await data.applications}
-			<LoadingSign />
-		{:then applications}
-			<!-- TODO table and year filter -->
-			{#each applications.filter((a) => a.program.type === 'UG Transfer') as application}
-				<div class="text-stone-800">
-					{application.student.fullname} @ {application.majors.join(' | ') || '-'}
-				</div>
-			{/each}
-		{/await}
-	</Section>
+		{#if filterByType(applications, 'UG Transfer').length}
+			<Section id="ug-transfer-applications" title="UG Transfer Applications">
+				<!-- TODO year filter and sorting options -->
+				<CoApplicationsDisplay applications={filterByType(applications, 'UG Transfer')} />
+			</Section>
+		{/if}
 
-	<Section id="graduate-applications" title="Graduate Applications">
-		{#await data.applications}
-			<LoadingSign />
-		{:then applications}
-			<!-- TODO table and year filter -->
-			{#each applications.filter((a) => a.program.type === "Master's" || a.program.type === 'Doctorate') as application}
-				<div class="text-stone-800">
-					{application.student.fullname} @ {application.program.display_name}
-				</div>
-			{/each}
-		{/await}
-	</Section>
+		{#if filterByType(applications, 'Graduate').length}
+			<Section id="graduate-applications" title="Graduate Applications">
+				<!-- TODO year filter and sorting options -->
+				<CoApplicationsDisplay applications={filterByType(applications, 'Graduate')} showPrograms />
+			</Section>
+		{/if}
+	{/await}
 {/if}
 
 <Section id="students-and-alumni" title="Students & Alumni">

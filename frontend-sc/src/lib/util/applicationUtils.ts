@@ -1,4 +1,5 @@
 import type { ComposedApplication, ApplicationType } from '$lib/api/application';
+import type { ProgramType } from '$lib/api/program';
 
 import {
 	applicationStatusOrder,
@@ -10,6 +11,14 @@ import { sortedSchoolNames } from '$lib/api/school';
 import { blankStats, type ApplicationDataPoint, type ApplicationStats } from '$lib/api/stats';
 import { compareRoundName} from '$lib/util/applicationRoundUtils';
 import { lexicalChineseLast } from '$lib/util/stringUtils';
+
+export function filterByType(applications: ComposedApplication[], type: ProgramType | 'Graduate'): ComposedApplication[] {
+	if (type === 'Graduate') {
+		return applications.filter((application)=> isGraduate(application))
+	} else {
+		return applications.filter(application => application.program.type === type)
+	}
+}
 
 export function isUndergraduate(application: ComposedApplication) {
 	return application.program.type === 'UG Freshman' || application.program.type === 'UG Transfer';

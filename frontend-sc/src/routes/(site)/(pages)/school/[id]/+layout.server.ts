@@ -12,16 +12,8 @@ export async function load(event) {
 
 	const school: School = await fetchSchool(id);
 
-	let applications;
-
-	if (school.type === 'Secondary School') {
-		applications = fetchComposedApplications({ school_attended: school.id });
-	} else {
-		applications = fetchComposedApplications({ school: school.id });
-	}
-
 	return {
 		school,
-		applications
+		applications: school.type === 'Secondary School'? fetchComposedApplications({ school_attended: school.id }): fetchComposedApplications({ school: school.id })
 	};
 }

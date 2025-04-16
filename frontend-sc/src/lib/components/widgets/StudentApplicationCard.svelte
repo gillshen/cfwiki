@@ -7,10 +7,11 @@
 
 	export let application: ComposedApplication;
 	export let compact: boolean = false;
-	export let classNames: string = '';
+	export let className: string = '';
+	export { className as class };
 </script>
 
-<Card.Root class={cn('h-full flex flex-col', classNames)}>
+<Card.Root class={cn('h-full flex flex-col', className)}>
 	<Card.Header>
 		<Card.Title>
 			{#each application.schools as school}

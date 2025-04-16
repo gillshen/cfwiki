@@ -1,5 +1,6 @@
 import type { ComposedSchoolListItem, School, SchoolStats, RankingEntry } from '$lib/api/school';
 import { blankStats } from '$lib/api/stats';
+import { lexicalChineseLast } from '$lib/util/stringUtils';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
 
@@ -147,5 +148,5 @@ export function formatRanking(
 }
 
 export function orderByName(a: { name: string }, b: { name: string }): number {
-	return a.name.localeCompare(b.name);
+	return lexicalChineseLast(a.name, b.name);
 }
