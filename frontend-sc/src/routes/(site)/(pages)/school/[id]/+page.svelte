@@ -11,7 +11,7 @@
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import countryFlags from '$lib/constants/countries';
 	import { formatLocation, formatRanking, getLatestRanking } from '$lib/util/schoolUtils';
-	import { categorizeAndSort, enhanceDisplayName } from '$lib/util/programUtils';
+	import { groupByCategory, enhanceDisplayName } from '$lib/util/programUtils';
 	import { filterByType } from '$lib/util/applicationUtils';
 
 	export let data;
@@ -65,16 +65,16 @@
 			<LoadingSign />
 		{:then programs}
 			{#if programs.length}
-				<div class="flex flex-col">
-					{#each categorizeAndSort(programs) as [_, filteredPrograms], index}
-						{#if index}
-							<hr class="text-stone-400 w-4 my-3" />
+				<div class="flex flex-col gap-4">
+					{#each groupByCategory(programs) as [category, filteredPrograms]}
+						{#if filteredPrograms.length}
+							<div class="flex flex-col gap-2">
+								<h4 class="text-base font-bold">{category}</h4>
+								{#each filteredPrograms as program}
+									<a class="w-fit" href={`/program/${program.id}`}>{enhanceDisplayName(program)}</a>
+								{/each}
+							</div>
 						{/if}
-						<div class="flex flex-col gap-2">
-							{#each filteredPrograms as program}
-								<a class="w-fit" href={`/program/${program.id}`}>{enhanceDisplayName(program)}</a>
-							{/each}
-						</div>
 					{/each}
 				</div>
 			{/if}
@@ -107,6 +107,21 @@
 	{/await}
 {/if}
 
-<Section id="students-and-alumni" title="Students & Alumni">
-	<!-- TODO -->
-</Section>
+{#await data.enrollments}
+	<LoadingSign />
+{:then enrollments}
+	{#if enrollments.length}
+		<Section id="students-and-alumni" title="Students & Alumni">
+			<div class="flex flex-col gap-1">
+				{#each enrollments.sort() as enrollment}
+					{@const student = enrollment.student}
+					<a href={`/student/${student.id}`} class="inline-block">
+						{student.fullname}
+						<span class="mx-1 text-gray-400">@</span>
+						{enrollment.start_date} &ndash; {enrollment.end_date ?? '?'}
+					</a>
+				{/each}
+			</div>
+		</Section>
+	{/if}
+{/await}

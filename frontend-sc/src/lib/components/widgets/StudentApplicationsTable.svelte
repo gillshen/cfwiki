@@ -8,14 +8,14 @@
 	export let applications: ComposedApplication[];
 </script>
 
-<Table.Root>
+<Table.Root class="w-full">
 	<Table.Header>
 		<Table.Row>
 			<Table.Head class="font-semibold">School</Table.Head>
 			<Table.Head class="font-semibold">Program</Table.Head>
 			<Table.Head class="font-semibold">Year</Table.Head>
-			<Table.Head class="font-semibold">Adm. Plan</Table.Head>
-			<Table.Head class="font-semibold">Majors/Tracks</Table.Head>
+			<Table.Head class="font-semibold min-w-[100px]">Adm. Plan</Table.Head>
+			<Table.Head class="font-semibold min-w-[130px]">Majors/Tracks</Table.Head>
 			<Table.Head class="font-semibold">Status</Table.Head>
 			<Table.Head class="font-semibold"></Table.Head>
 		</Table.Row>
@@ -26,29 +26,28 @@
 			.sort(orderByStatus)
 			.sort(orderByYearDesc) as application}
 			<Table.Row>
-				<Table.Cell class="max-w-[300px]">
+				<Table.Cell>
 					{#each application.schools as school}
 						<div class="font-semibold truncate">{school.name}</div>
 					{/each}
 				</Table.Cell>
-				<Table.Cell class="max-w-[240px] truncate">{application.program.display_name}</Table.Cell>
+				<Table.Cell class="truncate">{application.program.display_name}</Table.Cell>
 				<Table.Cell>{application.year}</Table.Cell>
 				<Table.Cell>{application.round_name}</Table.Cell>
 				<Table.Cell>
-					<div class="max-w-[240px] inline-block align-middle truncate text-muted-foreground">
+					<div class="inline-block align-middle truncate text-muted-foreground">
 						{#each application.majors as major, index}
-							{#if index}
-								<span class="text-gray-300 mx-2">&bullet;</span>
-							{/if}
-							{major}
+							{#if index}<span class="text-gray-300 mx-2">&bullet;</span>{/if}{major}
 						{/each}
 					</div>
 				</Table.Cell>
 				<Table.Cell>
 					<ApplicationStatusSign {application} />
 				</Table.Cell>
-				<Table.Cell>
-					<LinkIcon href={`/application/${application.id}`} />
+				<Table.Cell class="max-w-[16px]">
+					<div class="flex justify-end">
+						<LinkIcon href={`/application/${application.id}`} />
+					</div>
 				</Table.Cell>
 			</Table.Row>
 		{/each}

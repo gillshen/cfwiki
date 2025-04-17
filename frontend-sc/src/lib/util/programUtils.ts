@@ -1,5 +1,4 @@
 import {
-	programTypes,
 	type ComposedProgramListItem,
 	type ProgramListItem,
 	type ProgramStats,
@@ -8,17 +7,28 @@ import {
 
 import { orderByName as _orderByName } from '$lib/util/schoolUtils';
 import { blankStats } from '$lib/api/stats';
+import { lexicalChineseLast } from '$lib/util/stringUtils';
 
-export function categorizeAndSort(programs: ProgramListItem[]): [ProgramType, ProgramListItem[]][] {
-	const result: [ProgramType, ProgramListItem[]][]= []
-	for (const programType of programTypes) {
-		const matchingPrograms = programs.filter((p)=> p.type === programType)
+const PROGRAM_CATEGORIES = ['Undergraduate', "Master's", 'Doctorate', 'Non-degree'] as const;
+
+type PorgramCategory = (typeof PROGRAM_CATEGORIES)[number];
+
+export function groupByCategory(
+	programs: ProgramListItem[]
+): [PorgramCategory, ProgramListItem[]][] {
+	const result: [PorgramCategory, ProgramListItem[]][] = [];
+
+	for (const category of PROGRAM_CATEGORIES) {
+		const matchingPrograms = programs.filter((program) =>
+			category === 'Undergraduate' ? isUndergraduate(program) : program.type === category
+		);
 		if (matchingPrograms.length) {
-			matchingPrograms.sort(_orderByName)
-			result.push([programType, matchingPrograms])
+			matchingPrograms.sort(_orderByName);
+			result.push([category, matchingPrograms]);
 		}
 	}
-	return result
+
+	return result;
 }
 
 export function combineWithStats(
@@ -63,11 +73,11 @@ export function filterForType(programs: ProgramListItem[], type: ProgramType): P
 }
 
 export function orderByName(a: ProgramListItem, b: ProgramListItem): number {
-	return enhanceDisplayName(a).localeCompare(enhanceDisplayName(b));
+	return lexicalChineseLast(enhanceDisplayName(a), enhanceDisplayName(b));
 }
 
 export function orderBySchoolNames(a: ProgramListItem, b: ProgramListItem): number {
-	return formatSchoolNames(a).localeCompare(formatSchoolNames(b));
+	return lexicalChineseLast(formatSchoolNames(a), formatSchoolNames(b));
 }
 
 export function typeToBadgeColor(programType: string): string {

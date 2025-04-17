@@ -63,7 +63,7 @@
 			</div>
 		</Tabs.Content>
 		<Tabs.Content value="table-layout">
-			<Table.Root class="w-fit">
+			<Table.Root class="w-full">
 				<Table.Header>
 					<Table.Row>
 						{#if !hideYears}
@@ -73,8 +73,8 @@
 						{#if showPrograms}
 							<Table.Head class="font-semibold">Program</Table.Head>
 						{/if}
-						<Table.Head class="font-semibold">Adm. Plan</Table.Head>
-						<Table.Head class="font-semibold">Majors/Tracks</Table.Head>
+						<Table.Head class="font-semibold min-w-[100px]">Adm. Plan</Table.Head>
+						<Table.Head class="font-semibold min-w-[130px]">Majors/Tracks</Table.Head>
 						<Table.Head class="font-semibold">Status</Table.Head>
 						<Table.Head class="font-semibold"></Table.Head>
 					</Table.Row>
@@ -90,19 +90,18 @@
 								<Table.Cell>{application.program.display_name}</Table.Cell>
 							{/if}
 							<Table.Cell>{application.round_name}</Table.Cell>
-							<Table.Cell class="max-w-[600px] inline-block truncate text-muted-foreground">
+							<Table.Cell class="inline-block truncate text-muted-foreground">
 								{#each application.majors as major, index}
-									{#if index}
-										<span class="text-gray-300 mx-2">&bullet;</span>
-									{/if}
-									{major}
+									{#if index}<span class="text-gray-300 mx-2">&bullet;</span>{/if}{major}
 								{/each}
 							</Table.Cell>
 							<Table.Cell>
 								<ApplicationStatusSign {application} />
 							</Table.Cell>
-							<Table.Cell>
-								<LinkIcon href={`/application/${application.id}`} />
+							<Table.Cell class="max-w-[16px]">
+								<div class="flex justify-end">
+									<LinkIcon href={`/application/${application.id}`} />
+								</div>
 							</Table.Cell>
 						</Table.Row>
 					{/each}
