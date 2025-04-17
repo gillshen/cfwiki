@@ -36,6 +36,10 @@ export function toISODate(dateString: string | null | undefined): string {
 	return toFormattedDate(dateString, 'y-LL-dd');
 }
 
+export function toISOYearMonth(dateString: string | null | undefined): string {
+	return toFormattedDate(dateString, 'y-LL');
+}
+
 export function activeYears(lookAhead = 5): number[] {
 	const startYear = 2022;
 	const currentYear = new Date().getFullYear();

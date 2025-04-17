@@ -112,7 +112,7 @@
 {:then enrollments}
 	{#if enrollments.length}
 		<Section id="students-and-alumni" title="Students & Alumni">
-			<div class="flex flex-col gap-1">
+			<div class="flex flex-col gap-2">
 				{#each enrollments.sort() as enrollment}
 					{@const student = enrollment.student}
 					<a href={`/student/${student.id}`} class="inline-block">

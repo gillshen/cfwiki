@@ -2,12 +2,15 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
+	import PartyPopper from 'lucide-svelte/icons/party-popper';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import ApplicationStatusSign from '$lib/components/misc/ApplicationStatusSign.svelte';
 	import CoApplicationsDisplay from '$lib/components/widgets/CoApplicationsDisplay.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
+	import * as Timeline from '$lib/components/widgets/timeline/index';
+	import { toLongDate } from '$lib/util/dateUtils';
 
 	export let data;
 
@@ -70,10 +73,29 @@
 					2
 				)}</pre>
 		</article>
+
 		<article class="mt-4 text-sm flex flex-col gap-2 bg-zinc-50 p-4 rounded-lg">
-			<div>Logs</div>
-			<pre class="bg-zinc-100 p-4 rounded-md">{JSON.stringify(data.application.logs, null, 2)}</pre>
-			<Button variant="outline" class="w-fit">New Status</Button>
+			<h2 class="text-xl font-bold">Status History</h2>
+
+			{#if data.application.logs.length}
+				<Timeline.Root class="mt-4">
+					{#each data.application.logs as log}
+						<Timeline.Item class="flex flex-col gap-1 min-h-[100px] pb-8">
+							<h3 class="text-base font-semibold flex items-center gap-2">
+								{log.status}{#if log.status === 'Accepted'}
+									<PartyPopper class="size-4 text-mint-600 hover:animate-[ping_1s_ease-in-out]" />
+								{/if}
+							</h3>
+							<div class="text-muted-foreground">{toLongDate(log.date)}</div>
+							{#if log.comments}
+								<div class="pt-2 pr-4 text-muted-foreground">{log.comments}</div>
+							{/if}
+						</Timeline.Item>
+					{/each}
+				</Timeline.Root>
+			{/if}
+
+			<Button variant="outline" class="w-fit mt-4">New Status</Button>
 		</article>
 	</div>
 </Section>

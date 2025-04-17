@@ -69,7 +69,7 @@
 						{#if !hideYears}
 							<Table.Head class="font-semibold">Year</Table.Head>
 						{/if}
-						<Table.Head class="font-semibold">Student</Table.Head>
+						<Table.Head class="font-semibold min-w-[100px]">Student</Table.Head>
 						{#if showPrograms}
 							<Table.Head class="font-semibold">Program</Table.Head>
 						{/if}
@@ -85,7 +85,7 @@
 							{#if !hideYears}
 								<Table.Cell>{application.year}</Table.Cell>
 							{/if}
-							<Table.Cell class="font-medium">{application.student.fullname}</Table.Cell>
+							<Table.Cell class="font-medium truncate">{application.student.fullname}</Table.Cell>
 							{#if showPrograms}
 								<Table.Cell>{application.program.display_name}</Table.Cell>
 							{/if}

@@ -2,6 +2,7 @@
 	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
+	import * as HoverCard from '$lib/components/ui/hover-card/index';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Venus from 'lucide-svelte/icons/venus';
 	import Mars from 'lucide-svelte/icons/mars';
@@ -9,7 +10,11 @@
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import LayoutGrid from 'lucide-svelte/icons/layout-grid';
 	import List from 'lucide-svelte/icons/list';
+	import CalendarDays from 'lucide-svelte/icons/calendar-days';
+	import GraduationCap from 'lucide-svelte/icons/graduation-cap';
+	import BookCheck from 'lucide-svelte/icons/book-check';
 
+	import * as Timeline from '$lib/components/widgets/timeline/index';
 	import Section from '$lib/components/containers/Section.svelte';
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
@@ -23,6 +28,8 @@
 	import { formatLocation } from '$lib/util/studentUtils';
 	import { superForm } from 'sveltekit-superforms';
 	import { orderBySchoolName, orderByStatus, orderByYearDesc } from '$lib/util/applicationUtils';
+	import { toISOYearMonth } from '$lib/util/dateUtils';
+	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
 
 	export let data;
 
@@ -113,8 +120,53 @@
 </section>
 
 <Section id="education" title="Education">
-	<!-- TODO -->
-	<pre class="text-sm">{JSON.stringify(data.student.enrollments, null, 2)}</pre>
+	{#if data.student.enrollments.length}
+		<Timeline.Root class="mt-4">
+			{#each data.student.enrollments as enrollment}
+				<Timeline.Item class="min-h-[100px] pb-8 w-full">
+					<h3 class="text-base font-semibold flex items-center -translate-y-2">
+						<a href={`/school/${enrollment.school.id}`} class="text-inherit"
+							>{enrollment.school.name}</a
+						>
+						{#if canEdit}
+							<Button variant="link" class="ml-2">
+								<Pencil class="mr-1 h-3 w-3" />Edit
+							</Button>
+						{/if}
+					</h3>
+
+					<div class="flex flex-col gap-2">
+						<div class="text-muted-foreground flex items-center gap-1.5">
+							<CalendarDays class="size-4" />
+							{formatEnrollmentDates(enrollment, toISOYearMonth)}
+						</div>
+						{#if enrollment.curriculum}
+							<div class="text-muted-foreground flex items-center gap-1.5">
+								<GraduationCap class="size-4" />
+								{enrollment.curriculum}
+							</div>
+						{/if}
+						<!-- TODO -->
+						<div class="text-muted-foreground flex items-center gap-1.5">
+							<BookCheck class="size-4" />
+							<HoverCard.Root>
+								<HoverCard.Trigger>Latest GPA: (TODO)</HoverCard.Trigger>
+								<HoverCard.Content class="w-[480px]">
+									<pre
+										class="mt-1 text-sm bg-gray-100 rounded-md p-2 w-full max-h-[200px] overflow-auto">{JSON.stringify(
+											enrollment.grades,
+											null,
+											2
+										)}</pre>
+								</HoverCard.Content>
+							</HoverCard.Root>
+						</div>
+					</div>
+				</Timeline.Item>
+			{/each}
+		</Timeline.Root>
+	{/if}
+
 	{#if canEdit}
 		<div class="pt-4">
 			<ButtonDialog buttonText="Add Experience" dialogTitle="Add Educational Experience">
@@ -138,7 +190,6 @@
 </Section>
 
 <Section id="applications" title="Applications">
-	<!-- TODO -->
 	{#await data.applications}
 		<LoadingSign />
 	{:then applications}
@@ -147,6 +198,8 @@
 				<Tabs.List class="flex w-fit">
 					<Tabs.Trigger value="grid-layout"><LayoutGrid class="w-4 h-4" /></Tabs.Trigger>
 					<Tabs.Trigger value="table-layout"><List class="w-4 h-4" /></Tabs.Trigger>
+					<!-- TODO -->
+					<div class="bg-white p-1 ml-5 rounded-sm">(TODO filters)</div>
 				</Tabs.List>
 				<Tabs.Content value="grid-layout">
 					<div class="my-4 grid grid-cols-3 gap-4">

@@ -1,4 +1,4 @@
-import type { EnrollmentListItem } from '$lib/api/enrollment';
+import type { EnrollmentListItem, EnrollmentByStudent } from '$lib/api/enrollment';
 import type { StudentEnrollmentItem } from '$lib/api/student';
 
 export function formatEnrollments(enrollments: StudentEnrollmentItem[]): string {
@@ -6,7 +6,7 @@ export function formatEnrollments(enrollments: StudentEnrollmentItem[]): string 
 }
 
 export function formatEnrollment(e: StudentEnrollmentItem): string {
-	const dash = '\u2013';
+	const dash = '\u2013'; // n dash
 	let progression: string;
 
 	if (e.start_progression == e.end_progression) {
@@ -23,10 +23,25 @@ export function formatEnrollment(e: StudentEnrollmentItem): string {
 	return e.school_name + (extra ? ` (${extra})` : '');
 }
 
+export function formatEnrollmentDates(
+	e: EnrollmentListItem | EnrollmentByStudent,
+	dateFormatter: (dateString: string | null | undefined) => string
+): string {
+	return [
+		dateFormatter(e.start_date),
+		e.start_progression ? `(${e.start_progression})` : '',
+		'\u2013', // n dash
+		dateFormatter(e.end_date) || '?',
+		e.end_progression ? `(${e.end_progression})` : ''
+	]
+		.filter(Boolean)
+		.join(' ');
+}
+
 export function orderByDatesDesc(a: EnrollmentListItem, b: EnrollmentListItem): number {
 	if (a.end_date === b.end_date) {
-		return b.start_date.localeCompare(a.start_date)
+		return b.start_date.localeCompare(a.start_date);
 	}
 	// put the item with a non-null end date first
-	return a.end_date === null ? 1 : -1
+	return a.end_date === null ? 1 : -1;
 }
