@@ -85,7 +85,12 @@
 							{#if !hideYears}
 								<Table.Cell>{application.year}</Table.Cell>
 							{/if}
-							<Table.Cell class="font-medium truncate">{application.student.fullname}</Table.Cell>
+							<Table.Cell>
+								<a
+									href={`/student/${application.student.id}`}
+									class="text-inherit font-semibold truncate">{application.student.fullname}</a
+								>
+							</Table.Cell>
 							{#if showPrograms}
 								<Table.Cell>{application.program.display_name}</Table.Cell>
 							{/if}

@@ -7,6 +7,7 @@
 
 	export let application: ComposedApplication;
 	export let compact: boolean = false;
+	export let hideYear: boolean = false;
 	export let className: string = '';
 	export { className as class };
 </script>
@@ -20,7 +21,10 @@
 		</Card.Title>
 		<Card.Description class="pt-1 flex gap-2 flex-wrap">
 			<div class="text-muted-foreground font-semibold">{application.program.display_name}</div>
-			<Badge variant="outline" class="w-fit">{application.year} {application.round_name}</Badge>
+			<Badge variant="outline" class="w-fit"
+				>{#if !hideYear}{application.year}
+				{/if}{application.round_name}</Badge
+			>
 		</Card.Description>
 	</Card.Header>
 	{#if compact}

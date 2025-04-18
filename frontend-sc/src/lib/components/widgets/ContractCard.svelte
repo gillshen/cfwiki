@@ -16,7 +16,12 @@
 	<Card.Header class="py-4">
 		<Card.Title class="flex w-full justify-between items-center">
 			<div class="text-base font-bold">{contract.type} {contract.target_year}</div>
-			<Button href={`/contract/${contract.id}`} variant="ghost" size="icon" class="rounded-full">
+			<Button
+				href={`/contract/${contract.id}`}
+				variant="ghost"
+				size="icon"
+				class="rounded-full hover:bg-transparent"
+			>
 				<ChevronRight class="h-4 w-4" />
 			</Button>
 		</Card.Title>

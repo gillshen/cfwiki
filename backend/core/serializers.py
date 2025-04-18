@@ -337,7 +337,7 @@ class ApplicationTargetSerializer(serializers.ModelSerializer):
     class SchoolSerializer(serializers.ModelSerializer):
         class Meta:
             model = School
-            fields = ["name", "country", "rankings"]
+            fields = ["id", "name", "country", "rankings"]
 
         class RankingEntrySerializer(serializers.ModelSerializer):
             class Meta:

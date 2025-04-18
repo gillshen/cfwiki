@@ -28,7 +28,9 @@
 			<Table.Row>
 				<Table.Cell>
 					{#each application.schools as school}
-						<div class="font-semibold truncate">{school.name}</div>
+						<a href={`/school/${school.id}`} class="text-inherit font-semibold truncate"
+							>{school.name}</a
+						>
 					{/each}
 				</Table.Cell>
 				<Table.Cell class="truncate">{application.program.display_name}</Table.Cell>

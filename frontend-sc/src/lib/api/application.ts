@@ -31,6 +31,7 @@ type ApplicationTarget = {
 	name: string;
 	due_date: string;
 	schools: {
+		id: number;
 		name: string;
 		country: string;
 		rankings: { ranking_name: string; year: number; rank: number }[];
@@ -50,14 +51,18 @@ type ApplicantListItem = {
 type ApplicationContract = {
 	id: number;
 	student: ApplicantListItem;
-	services: Service[]
+	services: Service[];
 };
 
 export type ComposedApplication = {
 	id: number;
 	student: ApplicantListItem;
 	staff: string[]; // array of usernames
-	schools: { name: string; country: string }[];
+	schools: {
+		id: number;
+		name: string;
+		country: string;
+	}[];
 	program: { type: string; display_name: string };
 	year: number;
 	term: string;

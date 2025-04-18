@@ -209,7 +209,7 @@
 
 		<section class="text-sm flex flex-col gap-4 min-h-[120px]">
 			{#if applications.length}
-				<h2 class="text-xl font-bold pt-3">Already Applied</h2>
+				<h2 class="text-xl font-bold pt-3">Already Applied in {data.term} {data.year}</h2>
 
 				<ScrollArea class="max-h-[75vh] rounded-md border">
 					<div class="px-4">
@@ -218,7 +218,12 @@
 								<Separator />
 							{/if}
 							<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
-								<StudentApplicationCard {application} compact class="border-none shadow-none" />
+								<StudentApplicationCard
+									{application}
+									compact
+									hideYear
+									class="border-none shadow-none"
+								/>
 							</a>
 						{/each}
 					</div>
