@@ -37,7 +37,7 @@
 				<Table.Cell>{application.year}</Table.Cell>
 				<Table.Cell>{application.round_name}</Table.Cell>
 				<Table.Cell>
-					<div class="inline-block align-middle truncate text-muted-foreground">
+					<div class="inline-block align-middle truncate text-muted-foreground max-w-[300px]">
 						{#each application.majors as major, index}
 							{#if index}<span class="text-gray-300 mx-2">&bullet;</span>{/if}{major}
 						{/each}

@@ -14,9 +14,10 @@
 	export let buttonText: string = '';
 	export let contentClass: string = '';
 	export let dialogTitle: string = '';
+	export let open: boolean = false;
 </script>
 
-<Dialog.Root>
+<Dialog.Root bind:open>
 	<Dialog.Trigger class={buttonVariants({ variant: buttonVariant, size: buttonSize })}
 		>{buttonText}</Dialog.Trigger
 	>

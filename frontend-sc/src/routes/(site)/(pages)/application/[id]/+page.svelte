@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { superForm } from 'sveltekit-superforms';
+
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
+	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import PartyPopper from 'lucide-svelte/icons/party-popper';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
@@ -10,14 +12,35 @@
 	import CoApplicationsDisplay from '$lib/components/widgets/CoApplicationsDisplay.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import * as Timeline from '$lib/components/widgets/timeline/index';
-	import { toLongDate } from '$lib/util/dateUtils';
+	import ApplicationLogForm from '$lib/components/forms/ApplicationLogForm.svelte';
+	import ApplicationLogItem from '$lib/components/widgets/application-log/ApplicationLogItem.svelte';
+	import type { ApplicationLog } from '$lib/api/applicationLog';
 
 	export let data;
 
 	let canEdit: boolean = true;
+	let newLogModalOpen: boolean = false;
 
 	const { student, program_iteration, round, program, schools } = data.application;
 	const schoolNames = schools.map((s) => s.name).join(' + ');
+
+	const logForm = superForm(data.logForm, {
+		id: `log-form-new`,
+		onUpdated({ form }) {
+			if (form.valid) {
+				newLogModalOpen = false;
+			}
+		}
+	});
+	const { enhance: logFormEnhance } = logForm;
+
+	$: logs = data.application.logs.sort((a: ApplicationLog, b: ApplicationLog) => {
+		if (a.date !== b.date) {
+			return a.date.localeCompare(b.date);
+		} else {
+			return a.updated.localeCompare(b.updated);
+		}
+	});
 </script>
 
 <BreadcrumbContainer>
@@ -46,7 +69,7 @@
 
 <Section id="info">
 	<div class="grid grid-cols-2 gap-4">
-		<article class="mt-4 text-sm flex flex-col gap-2 bg-zinc-50 p-4 rounded-lg">
+		<article class="mt-4 text-sm flex flex-col gap-2 bg-zinc-50 px-8 pt-6 pb-8 rounded-lg">
 			<a href={`/student/${student.id}`}>{student.fullname}</a>
 			<div class="flex flex-col gap-2">
 				{#each schools as school}
@@ -74,28 +97,45 @@
 				)}</pre>
 		</article>
 
-		<article class="mt-4 text-sm flex flex-col gap-2 bg-zinc-50 p-4 rounded-lg">
+		<article class="mt-4 text-sm flex flex-col gap-2 bg-zinc-50 px-8 pt-6 pb-8 rounded-lg">
 			<h2 class="text-xl font-bold">Status History</h2>
 
 			{#if data.application.logs.length}
 				<Timeline.Root class="mt-4">
-					{#each data.application.logs as log}
-						<Timeline.Item class="flex flex-col gap-1 min-h-[100px] pb-8">
-							<h3 class="text-base font-semibold flex items-center gap-2">
-								{log.status}{#if log.status === 'Accepted'}
-									<PartyPopper class="size-4 text-mint-600 hover:animate-[ping_1s_ease-in-out]" />
-								{/if}
-							</h3>
-							<div class="text-muted-foreground">{toLongDate(log.date)}</div>
-							{#if log.comments}
-								<div class="pt-2 pr-4 text-muted-foreground">{log.comments}</div>
-							{/if}
-						</Timeline.Item>
-					{/each}
+					{#key logs}
+						{#each logs as log}
+							<ApplicationLogItem
+								{log}
+								application={data.application}
+								{canEdit}
+								updateForm={data.logForm}
+								deleteForm={data.deleteForm}
+							/>
+						{/each}
+					{/key}
 				</Timeline.Root>
 			{/if}
 
-			<Button variant="outline" class="w-fit mt-4">New Status</Button>
+			{#if canEdit}
+				<div class="mt-4">
+					<ButtonDialog
+						buttonText="New Status"
+						dialogTitle="New Application Status"
+						bind:open={newLogModalOpen}
+					>
+						<form
+							method="POST"
+							action="?/createOrUpdateApplicationLog"
+							class="max-w-prose space-y-4 my-4 mx-auto"
+							use:logFormEnhance
+							id="log-form-new"
+						>
+							<ApplicationLogForm form={logForm} application={data.application} />
+						</form>
+						<!-- <SuperDebug data={$logFormData} /> -->
+					</ButtonDialog>
+				</div>
+			{/if}
 		</article>
 	</div>
 </Section>

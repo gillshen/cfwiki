@@ -150,7 +150,9 @@
 						<div class="text-muted-foreground flex items-center gap-1.5">
 							<BookCheck class="size-4" />
 							<HoverCard.Root>
-								<HoverCard.Trigger>Latest GPA: (TODO)</HoverCard.Trigger>
+								<HoverCard.Trigger class="underline decoration-dotted hover:decoration-dotted"
+									>Latest GPA: (TODO)</HoverCard.Trigger
+								>
 								<HoverCard.Content class="w-[480px]">
 									<pre
 										class="mt-1 text-sm bg-gray-100 rounded-md p-2 w-full max-h-[200px] overflow-auto">{JSON.stringify(
