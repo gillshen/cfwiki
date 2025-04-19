@@ -56,7 +56,7 @@
 			<Badge variant="secondary" class="text-muted-foreground flex items-center space-x-2">
 				<Dialog.Root bind:open={updateDialogOpen}>
 					<Dialog.Trigger>
-						<Pencil class="size-3 hover:text-mint-700" />
+						<Pencil class="size-3 text-secondary-foreground hover:text-secondary-foreground/80" />
 					</Dialog.Trigger>
 					<Dialog.Content>
 						<Dialog.Header>
@@ -80,7 +80,7 @@
 				<Dialog.Root bind:open={deleteDialogOpen}>
 					<Dialog.Trigger>
 						<!-- <Badge variant="outline"> -->
-						<X class="size-3 hover:text-rose-700" />
+						<X class="size-3 text-secondary-foreground hover:text-rose-700" />
 						<!-- </Badge> -->
 					</Dialog.Trigger>
 					<Dialog.Content>

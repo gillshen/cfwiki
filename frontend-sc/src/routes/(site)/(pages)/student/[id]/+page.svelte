@@ -7,7 +7,7 @@
 	import Venus from 'lucide-svelte/icons/venus';
 	import Mars from 'lucide-svelte/icons/mars';
 	import NonBinary from 'lucide-svelte/icons/non-binary';
-	import Pencil from 'lucide-svelte/icons/pencil';
+	import Pencil from 'lucide-svelte/icons/pencil-line';
 	import LayoutGrid from 'lucide-svelte/icons/layout-grid';
 	import List from 'lucide-svelte/icons/list';
 	import CalendarDays from 'lucide-svelte/icons/calendar-days';
@@ -77,11 +77,11 @@
 	</h1>
 	<div class="flex flex-row gap-2 items-center text-sm">
 		{#if data.student.gender === 'female'}
-			<Venus class="w-4 h-4" />
+			<Venus class="size-4" />
 		{:else if data.student.gender === 'male'}
-			<Mars class="w-4 h-4" />
+			<Mars class="size-4" />
 		{:else}
-			<NonBinary class="w-4 h-4" />
+			<NonBinary class="size-4" />
 		{/if}
 		<div class="text-gray-400">&bullet;</div>
 		<div>{countryFlags[data.student.citizenship]}</div>
@@ -94,8 +94,11 @@
 		<div>@ {formatLocation(data.student)}</div>
 
 		{#if canEdit}
-			<Button variant="link" class="ml-2">
-				<Pencil class="mr-1 h-3 w-3" />Edit
+			<Button
+				variant="link"
+				class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80"
+			>
+				<Pencil class="mr-1 size-4" />Edit
 			</Button>
 		{/if}
 	</div>
@@ -129,8 +132,11 @@
 							>{enrollment.school.name}</a
 						>
 						{#if canEdit}
-							<Button variant="link" class="ml-2">
-								<Pencil class="mr-1 h-3 w-3" />Edit
+							<Button
+								variant="link"
+								class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80"
+							>
+								<Pencil class="mr-1 size-4" />Edit
 							</Button>
 						{/if}
 					</h3>

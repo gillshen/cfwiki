@@ -3,7 +3,7 @@
 
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import Pencil from 'lucide-svelte/icons/pencil';
+	import Pencil from 'lucide-svelte/icons/pencil-line';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
@@ -53,8 +53,11 @@
 				{/if}
 			</div>
 		{/if}
-		<Button variant="link" class="ml-2">
-			<Pencil class="mr-1 h-3 w-3" />Edit
+		<Button
+			variant="link"
+			class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80"
+		>
+			<Pencil class="mr-1 size-4" />Edit
 		</Button>
 	</div>
 </section>

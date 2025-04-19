@@ -69,9 +69,18 @@
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content>
 					<DropdownMenu.Group>
-						<DropdownMenu.Item>Universities</DropdownMenu.Item>
-						<DropdownMenu.Item>Secondary Schools</DropdownMenu.Item>
-						<DropdownMenu.Item>Other Institutions</DropdownMenu.Item>
+						<DropdownMenu.Item
+							href="/school/index/#universities"
+							class="text-inherit hover:no-underline">Universities</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/school/index/#secondary-schools"
+							class="text-inherit hover:no-underline">Secondary Schools</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/school/index/#other-institutions"
+							class="text-inherit hover:no-underline">Other Institutions</DropdownMenu.Item
+						>
 						<DropdownMenu.Separator />
 						<DropdownMenu.Item>Rankings</DropdownMenu.Item>
 					</DropdownMenu.Group>
@@ -84,10 +93,26 @@
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content>
 					<DropdownMenu.Group>
-						<DropdownMenu.Item>UG Freshman</DropdownMenu.Item>
-						<DropdownMenu.Item>UG Transfer</DropdownMenu.Item>
-						<DropdownMenu.Item>Graduate</DropdownMenu.Item>
-						<DropdownMenu.Item>Non-degree</DropdownMenu.Item>
+						<DropdownMenu.Item
+							href="/program/index/#ug-freshman"
+							class="text-inherit hover:no-underline">UG Freshman</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/program/index/#ug-transfer"
+							class="text-inherit hover:no-underline">UG Transfer</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/program/index/#masters"
+							class="text-inherit hover:no-underline">Master&rsquo;s</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/program/index/#doctorate"
+							class="text-inherit hover:no-underline">Doctorate</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/program/index/#non-degree"
+							class="text-inherit hover:no-underline">Non-degree</DropdownMenu.Item
+						>
 						<DropdownMenu.Separator />
 						<DropdownMenu.Item>Program Collections</DropdownMenu.Item>
 					</DropdownMenu.Group>
