@@ -1,12 +1,16 @@
 <script lang="ts">
-	import Button from '$lib/components/ui/button/button.svelte';
+	import { page } from '$app/stores';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import StudentSideList from '$lib/components/widgets/StudentSideList.svelte';
 
 	export let data;
+
+	$: dataGridPage =
+		$page.url.pathname.startsWith('/students') || $page.url.pathname.startsWith('/applications');
 </script>
 
-<div class="container w-full mx-auto pb-8 flex-grow-0">
+<div class={`container w-full ${dataGridPage ? 'max-w-full' : ''} mx-auto pb-8 flex-grow-0`}>
 	<div
 		class="fixed top-0 left-0 w-full h-[60px] backdrop-blur bg-white/70 shadow-sm z-40 flex flex-row justify-between items-center px-8"
 	>
@@ -137,13 +141,15 @@
 
 	<div class="mt-[84px] flex flex-col min-h-[calc(100vh-360px)] flex-grow">
 		<div class="flex">
-			<div class="w-[240px] min-w-[240px] h-full overflow-auto pt-2 py-4 pl-4 pr-8">
-				<slot name="sidebar" />
-				{#await data.students then students}
-					<StudentSideList {students} />
-				{/await}
-			</div>
-			<div class="flex flex-col pl-8 w-full">
+			{#if !dataGridPage}
+				<div class="w-[240px] min-w-[240px] h-full overflow-auto pt-2 py-4 pl-4 pr-8">
+					<slot name="sidebar" />
+					{#await data.students then students}
+						<StudentSideList {students} />
+					{/await}
+				</div>
+			{/if}
+			<div class="flex flex-col pl-4 w-full">
 				<slot />
 			</div>
 		</div>

@@ -1,4 +1,5 @@
 import type { Cookies } from '@sveltejs/kit';
+import type { CfUserListItem } from '$lib/api/user';
 import type { StudentDetail, Contract } from '$lib/api/student';
 
 export function defaultBanner(username: string): string {
@@ -67,4 +68,8 @@ export function canEditContract(username: string, contract: Contract): boolean {
 		}
 	}
 	return false;
+}
+
+export function orderByUsername(a: CfUserListItem, b: CfUserListItem): number {
+	return a.username.localeCompare(b.username);
 }

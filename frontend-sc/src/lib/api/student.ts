@@ -118,7 +118,12 @@ export type StudentDetail = BaseStudent & {
 	cf_academy_programs: AcademyProgramListItem[];
 };
 
-export async function fetchStudents(params?: Record<string, any>): Promise<StudentListItem[]> {
+export async function fetchStudents(params?: {
+	cfer?: string | null;
+	contract_type?: string | null;
+	target_year?: string | null;
+	contract_status?: string | null;
+}): Promise<StudentListItem[]> {
 	return await get(`students/${buildQuery(params)}`);
 }
 
