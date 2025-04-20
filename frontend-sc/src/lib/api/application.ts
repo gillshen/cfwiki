@@ -95,39 +95,49 @@ export type ApplicationDetail = {
 	logs: ApplicationLog[];
 };
 
-async function fetchApplicationsWithLogs(
-	params?: Record<string, any>
-): Promise<ApplicationWithLogs[]> {
+async function fetchApplicationsWithLogs(params?: {
+	student?: string | number | null;
+	cfer?: string | null;
+	school?: string | number | null;
+	school_attended?: string | number | null;
+	program?: string | number | null;
+	programs?: string | null;
+	program_iteration?: string | number | null;
+	year?: string | number | null;
+	application_type?: string | null;
+	status?: string | null;
+}): Promise<ApplicationWithLogs[]> {
 	return await get(`applications-logged/${buildQuery(params)}`);
 }
 
 async function fetchApplicationTargets(params?: {
-	year?: number;
-	school?: number;
-	program?: number;
-	programs?: string;
-	program_iteration?: number;
+	year?: number | string | null;
+	school?: number | string | null;
+	program?: number | string | null;
+	programs?: string | null;
+	program_iteration?: number | string | null;
 }): Promise<ApplicationTarget[]> {
 	return await get(`application-targets/${buildQuery(params)}`);
 }
 
 async function fetchApplicationContracts(params?: {
-	student?: number | undefined;
+	student?: number | string | null;
+	cfer?: string | null;
 }): Promise<ApplicationContract[]> {
 	return await get(`application-contracts/${buildQuery(params)}`);
 }
 
 export async function fetchComposedApplications(params?: {
-	cfer?: number;
-	year?: number;
-	application_type?: string;
-	student?: number;
-	school?: number;
-	school_attended?: number;
-	program?: number;
-	programs?: string;
-	program_iteration?: number;
-	status?: string;
+	cfer?: string | null;
+	year?: string | number | null;
+	application_type?: string | null;
+	student?: string | number | null;
+	school?: string | number | null;
+	school_attended?: string | number | null;
+	program?: string | number | null;
+	programs?: string | null;
+	program_iteration?: string | number | null;
+	status?: string | null;
 }): Promise<ComposedApplication[]> {
 	const [applications, targets, contracts] = await Promise.all([
 		fetchApplicationsWithLogs(params),
@@ -167,14 +177,29 @@ export async function fetchApplication(id: number): Promise<ApplicationDetail> {
 	return await get(`applications/${id}/`, 'Application not found');
 }
 
-export async function createApplication(data: any) {
+export async function createApplication(data: {
+	contract: number;
+	round: number;
+	major_1: string;
+	major_2: string;
+	major_3: string;
+	staff_names: string[];
+	default_log: string | null | undefined;
+}) {
 	return await post('applications/new/', data);
 }
 
-export async function updateApplication(data: any) {
+export async function updateApplication(data: {
+	id: number;
+	program_iteration: number;
+	major_1: string;
+	major_2: string;
+	major_3: string;
+	staff_names: string[];
+}) {
 	return await patch(`applications/${data.id}/update/`, data);
 }
 
-export async function deleteApplication(data: any) {
+export async function deleteApplication(data: { id: number }) {
 	return await destroy(`applications/${data.id}/update/`);
 }

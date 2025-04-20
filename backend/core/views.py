@@ -262,7 +262,7 @@ class ApplicationContractListView(ListAPIView):
 
         cfer = self.request.query_params.get("cfer")
         if cfer is not None:
-            q = q.filter(services__cfer=cfer)
+            q = q.filter(services__cfer__username=cfer)
 
         return q
 

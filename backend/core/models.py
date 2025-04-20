@@ -241,7 +241,7 @@ class Application(models.Model):
         if student is not None:
             q = q.filter(contract__student=student)
         if cfer is not None:
-            q = q.filter(contract__services__cfer=cfer)
+            q = q.filter(contract__services__cfer__username=cfer)
         if school is not None:
             q = q.filter(round__program_iteration__program__schools=school)
         if school_attended is not None:
