@@ -9,10 +9,11 @@
 	} from 'ag-grid-community';
 
 	import { page } from '$app/stores';
-	import { afterNavigate, goto } from '$app/navigation';
+	import { afterNavigate } from '$app/navigation';
 
 	import DismissibleBadge from '$lib/components/misc/DismissibleBadge.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
+	import { SearchParamsManager } from '$lib/util/dataGridUtils';
 	import { orderByUsername } from '$lib/util/userUtils';
 
 	ModuleRegistry.registerModules([AllCommunityModule]);
@@ -50,21 +51,7 @@
 		}
 	};
 
-	const updateFilter = (searchParam: string) => async (e: Event) => {
-		const target = e.target as HTMLSelectElement;
-		await setSearchParam(searchParam, target.value);
-	};
-
-	const setSearchParam = async (searchParam: string, value?: string) => {
-		const url = new URL($page.url);
-		if (value === 'All' || value === undefined) {
-			url.searchParams.delete(searchParam);
-		} else {
-			url.searchParams.set(searchParam, value);
-		}
-		goto(url);
-		await updateGrid();
-	};
+	const paramsManager = new SearchParamsManager(page, updateGrid);
 
 	const columnDefs = [
 		{ field: 'id' },
@@ -86,7 +73,7 @@
 		<select
 			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
 			value={cfer}
-			on:change={updateFilter('cfer')}
+			on:change={paramsManager.onSelectInputChange('cfer')}
 		>
 			<option value="All">Filter by CFer...</option>
 			{#each data.cfUsers.filter((u) => u.is_active).sort(orderByUsername) as cfUser}
@@ -96,7 +83,7 @@
 		<select
 			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
 			value={contractType}
-			on:change={updateFilter('contractType')}
+			on:change={paramsManager.onSelectInputChange('contractType')}
 		>
 			<option value="All">Filter by contract...</option>
 			<option value="UG Freshman">UG Freshman</option>
@@ -107,7 +94,7 @@
 		<select
 			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
 			value={targetYear}
-			on:change={updateFilter('targetYear')}
+			on:change={paramsManager.onSelectInputChange('targetYear')}
 		>
 			<option value="All">Filter by year...</option>
 			<option value="2023">2023</option>
@@ -117,7 +104,7 @@
 		<select
 			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
 			value={contractStatus}
-			on:change={updateFilter('contractStatus')}
+			on:change={paramsManager.onSelectInputChange('contractStatus')}
 		>
 			<option value="All">Filter by status</option>
 			<option value="In effect">In effect</option>
@@ -127,28 +114,25 @@
 	</div>
 	<div class="flex items-center gap-2">
 		{#if cfer !== 'All'}
-			<DismissibleBadge variant="secondary" onDismiss={async () => await setSearchParam('cfer')}
+			<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('cfer')}
 				>{cfer}</DismissibleBadge
 			>
 		{/if}
 		{#if contractType !== 'All'}
-			<DismissibleBadge
-				variant="secondary"
-				onDismiss={async () => await setSearchParam('contractType')}
+			<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('contractType')}
 				>{contractType}</DismissibleBadge
 			>
 		{/if}
 		{#if targetYear !== 'All'}
-			<DismissibleBadge
-				variant="secondary"
-				onDismiss={async () => await setSearchParam('targetYear')}>{targetYear}</DismissibleBadge
+			<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('targetYear')}
+				>{targetYear}</DismissibleBadge
 			>
 		{/if}
 		{#if contractStatus !== 'All'}
 			<DismissibleBadge
 				variant="secondary"
-				onDismiss={async () => await setSearchParam('contractStatus')}
-				>{contractStatus}</DismissibleBadge
+				onDismiss={paramsManager.onParamChange('contractStatus')}
+				>Contract: {contractStatus}</DismissibleBadge
 			>
 		{/if}
 	</div>
