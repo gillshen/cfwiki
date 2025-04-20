@@ -95,6 +95,7 @@ class StudentListView(ListAPIView):
 
         return Student.filter(
             q,
+            cfer=query_params.get('cfer'),
             target_year=query_params.get("target_year"),
             contract_type=query_params.get("contract_type"),
             contract_status=query_params.get("contract_status"),

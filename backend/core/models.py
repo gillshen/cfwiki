@@ -59,13 +59,13 @@ class Student(models.Model):
     @staticmethod
     def filter(
         q,
-        cfer: int = None,
+        cfer: str = None,
         contract_type: str = None,
         target_year: int = None,
         contract_status: str = None,
     ):
         if cfer is not None:
-            q = q.filter(contracts__services__cfer=cfer)
+            q = q.filter(contracts__services__cfer__username=cfer)
 
         if contract_type is not None and target_year is not None:
             q = q.filter(
