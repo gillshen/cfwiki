@@ -2,9 +2,12 @@ import type { ZodObject } from 'zod';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate, fail, message } from 'sveltekit-superforms';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const formAction = <T extends ZodObject<any>>(
 	schema: T,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	apiCall: (data: any) => Promise<Response>,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	onSuccess?: (resp?: any) => void
 ) => {
 	return async ({ request }: { request: Request }) => {

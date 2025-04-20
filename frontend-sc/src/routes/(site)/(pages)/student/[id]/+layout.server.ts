@@ -1,14 +1,7 @@
-import { error } from '@sveltejs/kit';
-import { fetchStudent, type StudentDetail } from '$lib/api/student';
+import { fetchStudent } from '$lib/api/student';
+import { base10Or400 } from '$lib/util/siteUtils';
 
 export async function load(event) {
-	const id = parseInt(event.params.id, 10);
-
-	if (isNaN(id)) {
-		throw error(404, 'Invalid student ID');
-	}
-
-	const student: StudentDetail = await fetchStudent(id);
-
-	return { student };
+	const id = base10Or400(event.params.id, 'Invalid student ID');
+	return { student: await fetchStudent(id) };
 }

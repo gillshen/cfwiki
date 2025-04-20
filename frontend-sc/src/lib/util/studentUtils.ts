@@ -16,10 +16,10 @@ import { compareAlevelGrade } from '$lib/util/scoresUtils';
 export function isCurrent(student: StudentOfCferListItem): boolean {
 	for (const contract of student.contracts) {
 		if (contract.status === 'In effect') {
-			return true
+			return true;
 		}
 	}
-	return false
+	return false;
 }
 
 export function formatGender(student: BaseStudent): string {
@@ -48,7 +48,7 @@ export function formatLocation(student: BaseStudent): string {
 		return base_city;
 	}
 	if (base_country === 'China') {
-		return `${base_subnational} ${base_city}`
+		return `${base_subnational} ${base_city}`;
 	}
 
 	let subnationalAbbr: string;

@@ -127,9 +127,12 @@ export async function fetchStudents(params?: {
 	return await get(`students/${buildQuery(params)}`);
 }
 
-export async function fetchStudentsByUser(
-	params?: Record<string, any>
-): Promise<StudentOfCferListItem[]> {
+export async function fetchStudentsByUser(params?: {
+	cfer: string;
+	contract_type?: string;
+	target_year?: string;
+	contract_status?: string;
+}): Promise<StudentOfCferListItem[]> {
 	return await get(`students/per-user/${buildQuery(params)}`);
 }
 
@@ -137,15 +140,40 @@ export async function fetchStudent(id: number): Promise<StudentDetail> {
 	return await get(`students/${id}/`, 'Student not found');
 }
 
-export async function createStudent(data: any) {
+export async function createStudent(data: {
+	surname: string;
+	given_name: string;
+	surname_first: boolean;
+	preferred_name: string;
+	gender: string;
+	citizenship: string;
+	date_of_birth: string;
+	base_country: string;
+	base_subnational: string;
+	base_city: string;
+	comments: string;
+}) {
 	return await post(`students/new/`, data);
 }
 
-export async function updateStudent(data: any) {
+export async function updateStudent(data: {
+	id: number;
+	surname: string;
+	given_name: string;
+	surname_first: boolean;
+	preferred_name: string;
+	gender: string;
+	citizenship: string;
+	date_of_birth: string;
+	base_country: string;
+	base_subnational: string;
+	base_city: string;
+	comments: string;
+}) {
 	return await patch(`students/${data.id}/update/`, data);
 }
 
-export async function deleteStudent(data: any) {
+export async function deleteStudent(data: { id: number }) {
 	return await destroy(`students/${data.id}/update/`);
 }
 

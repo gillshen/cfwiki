@@ -4,19 +4,22 @@ import type { ProgramType } from '$lib/api/program';
 import {
 	applicationStatusOrder,
 	type ApplicationStatus,
-	type ApplicationLogBrief,
+	type ApplicationLogBrief
 } from '$lib/api/applicationLog';
 
 import { sortedSchoolNames } from '$lib/api/school';
 import { blankStats, type ApplicationDataPoint, type ApplicationStats } from '$lib/api/stats';
-import { compareRoundName} from '$lib/util/applicationRoundUtils';
+import { compareRoundName } from '$lib/util/applicationRoundUtils';
 import { lexicalChineseLast } from '$lib/util/stringUtils';
 
-export function filterByType(applications: ComposedApplication[], type: ProgramType | 'Graduate'): ComposedApplication[] {
+export function filterByType(
+	applications: ComposedApplication[],
+	type: ProgramType | 'Graduate'
+): ComposedApplication[] {
 	if (type === 'Graduate') {
-		return applications.filter((application)=> isGraduate(application))
+		return applications.filter((application) => isGraduate(application));
 	} else {
-		return applications.filter(application => application.program.type === type)
+		return applications.filter((application) => application.program.type === type);
 	}
 }
 
@@ -64,7 +67,9 @@ function isIgnorable(status: ApplicationStatus) {
 	return status === 'Started' || status === 'Submitted' || status === 'Under Review';
 }
 
-export function getNotableStatuses(application: {logs: ApplicationLogBrief[]}): ApplicationStatus[] {
+export function getNotableStatuses(application: {
+	logs: ApplicationLogBrief[];
+}): ApplicationStatus[] {
 	const statuses = application.logs
 		.sort((a, b) => a.date.localeCompare(b.date))
 		.map((log) => log.status);
@@ -89,7 +94,7 @@ export function formatNotableStatuses(statuses: ApplicationStatus[]): string {
 				return 'WL';
 			} else if (status === 'On Waitlist') {
 				// shorten 'On Waitlist' to 'Waitlist'
-				return 'Waitlist'
+				return 'Waitlist';
 			}
 			// else return the status as is
 			return status;
@@ -312,12 +317,4 @@ export function getStatsByApplicationRound(
 	applications: ComposedApplication[]
 ): Record<string, ApplicationStats> {
 	return aggregateDataPointsByApplicationRound(toDataPoints(applications));
-}
-
-export function statusToClass(status: ApplicationStatus | null | undefined): string {
-	if (!status) {
-		return '';
-	} else {
-		return status.replace('.', '').replace(/ /, '-').toLowerCase();
-	}
 }

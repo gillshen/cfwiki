@@ -38,9 +38,9 @@ export function compareRoundName(nameA: string, nameB: string) {
 	}
 }
 
-export const orderByRoundName =  (a: ApplicationRoundListItem, b: ApplicationRoundListItem)  => {
-	return compareRoundName(a.name, b.name)
-}
+export const orderByRoundName = (a: ApplicationRoundListItem, b: ApplicationRoundListItem) => {
+	return compareRoundName(a.name, b.name);
+};
 
 export const orderByDueDate = (a: ApplicationRoundListItem, b: ApplicationRoundListItem) => {
 	if (a.due_date && b.due_date) {
@@ -52,8 +52,8 @@ export const orderByDueDate = (a: ApplicationRoundListItem, b: ApplicationRoundL
 
 export function filterSortRounds(
 	rounds: ApplicationRoundListItem[],
-	year: any,
-	term: any
+	year: number,
+	term: string
 ): ApplicationRoundListItem[] {
 	return rounds
 		.filter((r) => r.program_iteration.year === year && r.program_iteration.term === term)

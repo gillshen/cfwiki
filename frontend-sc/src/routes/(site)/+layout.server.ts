@@ -13,17 +13,17 @@ export async function load(event) {
 
 	const userId = parseInt(userIdString, 10);
 	const username = event.cookies.get('username');
-	
+
 	if (isNaN(userId) || !username) {
 		throw redirect(302, '/login');
 	}
-	
-	const host = await fetchUser(username)
-	
+
+	const host = await fetchUser(username);
+
 	return {
 		userId,
 		username,
 		cfUsers: await fetchCfUsers(),
-		students: fetchStudentsByUser({ cfer: host.id }),
+		students: fetchStudentsByUser({ cfer: host.username })
 	};
 }

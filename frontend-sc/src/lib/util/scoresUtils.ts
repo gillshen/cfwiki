@@ -145,11 +145,15 @@ export function lsatToPercentage(score: number | null): number {
 }
 
 function _superscore<T extends SatScore | ActScore>(scores: T[]): T {
-	const superScore: any = {};
+	const superScore: T = {} as unknown as T;
 
 	for (const score of scores) {
 		for (const key in score) {
-			if (superScore[key] === undefined || score[key] > superScore[key]) {
+			if (
+				superScore[key] === undefined ||
+				superScore[key] === null ||
+				score[key] > superScore[key]
+			) {
 				superScore[key] = score[key];
 			}
 		}

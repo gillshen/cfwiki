@@ -1,15 +1,9 @@
-import { error } from '@sveltejs/kit';
-
 import { fetchProgram, type ProgramDetail } from '$lib/api/program';
 import { fetchComposedApplications } from '$lib/api/application';
+import { base10Or400 } from '$lib/util/siteUtils';
 
 export async function load(event) {
-	const id = parseInt(event.params.id, 10);
-
-	if (isNaN(id)) {
-		throw error(404, 'Invalid program ID');
-	}
-
+	const id = base10Or400(event.params.id, 'Invalid program ID');
 	const program: ProgramDetail = await fetchProgram(id);
 
 	return {

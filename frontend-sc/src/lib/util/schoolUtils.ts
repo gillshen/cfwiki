@@ -41,11 +41,20 @@ export function formatLocation(school: School): string {
 	if (!region && !city) {
 		return country;
 	}
-	if (['China', 'United States', 'United Kingdom', 'Canada', 'Australia', 'Hong Kong', 'Singapore'].includes(country)) {
-
+	if (
+		[
+			'China',
+			'United States',
+			'United Kingdom',
+			'Canada',
+			'Australia',
+			'Hong Kong',
+			'Singapore'
+		].includes(country)
+	) {
 		return formatRegionCity(school);
 	}
-	return `${formatRegionCity(school)}, ${country}`
+	return `${formatRegionCity(school)}, ${country}`;
 }
 
 export function formatRegionCity(school: School): string {
@@ -57,7 +66,7 @@ export function formatRegionCity(school: School): string {
 		return city;
 	}
 	if (country === 'China') {
-		return `${region} ${city}`
+		return `${region} ${city}`;
 	}
 
 	let regionAbbr: string;
@@ -87,10 +96,10 @@ export function getLatestRanking(
 	school: School,
 	params?: { year?: number | undefined; rankingName?: string | undefined }
 ): RankingEntry | null {
-	let year = params?.year;
-	let rankingName = params?.rankingName;
+	const year = params?.year;
+	const rankingName = params?.rankingName;
 
-	let rankings = [...school.rankings].filter(
+	const rankings = [...school.rankings].filter(
 		(entry) =>
 			(year === undefined || entry.year <= year) &&
 			(rankingName === undefined || entry.ranking_name.startsWith(rankingName))
@@ -109,43 +118,32 @@ export function getLatestRanking(
 
 export function formatRanking(
 	entry: RankingEntry | null,
-	params?: { year?: boolean; rankingName?: boolean }
+	params: { showYear: boolean } = { showYear: true }
 ): string {
-	if (entry === null) {
+	if (!entry) {
 		return '';
 	}
+	const rankingName: string = _abbreviateRankingName(entry.ranking_name);
+	const year = params?.showYear ? `(${entry.year.toString()})` : '';
 
-	let rankingName = '';
-
-	if (params?.rankingName) {
-		switch (entry.ranking_name) {
-			case 'US News National Universities':
-			case 'US News Liberal Arts Colleges':
-				rankingName = 'US News';
-				break;
-			case 'QS World':
-				rankingName = 'QS';
-				break;
-			case 'Times Higher Education':
-				rankingName = 'Times';
-				break;
-			case 'Shanghai Ranking':
-				rankingName = 'Shanghai';
-				break;
-			default:
-				rankingName = entry.ranking_name;
-		}
-	}
-
-	const year = params?.year ? entry.year.toString() : '';
-
-	let nameAndYear = `${rankingName} ${year}`.trim();
-	if (nameAndYear) {
-		nameAndYear = ` (${nameAndYear})`;
-	}
-
-	return `${entry.rank}${nameAndYear}`;
+	return `${rankingName} #${entry.rank} ${year}`.trim();
 }
+
+const _abbreviateRankingName = (rankingName: string): string => {
+	switch (rankingName) {
+		case 'US News National Universities':
+		case 'US News Liberal Arts Colleges':
+			return 'US News';
+		case 'QS World':
+			return 'QS';
+		case 'Times Higher Education':
+			return 'Times';
+		case 'Shanghai Ranking':
+			return 'Shanghai';
+		default:
+			return rankingName;
+	}
+};
 
 export function orderByName(a: { name: string }, b: { name: string }): number {
 	return lexicalChineseLast(a.name, b.name);

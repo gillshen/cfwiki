@@ -8,7 +8,7 @@ export function isActive(service: Service): boolean {
 }
 
 export function leftEarly(service: Service): boolean {
-	return !!service.end_date
+	return !!service.end_date;
 }
 
 export function filterForActive(services: Service[]): Service[] {
@@ -16,23 +16,23 @@ export function filterForActive(services: Service[]): Service[] {
 }
 
 export function groupByCfPerson(services: Service[]): Record<string, Service[]> {
-	const grouped: Record<string, Service[]> = {}
+	const grouped: Record<string, Service[]> = {};
 
 	for (const service of services) {
-		const key = service.cf_username
+		const key = service.cf_username;
 		if (!grouped[key]) {
-			grouped[key] = []
+			grouped[key] = [];
 		}
-		grouped[key].push(service)
+		grouped[key].push(service);
 	}
 
-	return grouped
+	return grouped;
 }
 
 export function orderByRole(a: Service, b: Service): number {
 	const roles = Array.from(cfRoles) as string[];
-	let indexA = roles.indexOf(a.role) ?? 99;
-	let indexB = roles.indexOf(b.role) ?? 99;
+	const indexA = roles.indexOf(a.role) ?? 99;
+	const indexB = roles.indexOf(b.role) ?? 99;
 
 	if (indexA === indexB) {
 		return a.role.localeCompare(b.role);

@@ -5,7 +5,7 @@ import { studentSchema } from '$lib/schemas/student';
 import { createStudent } from '$lib/api/student';
 import { formAction } from '$lib/util/formUtils';
 
-export async function load(_) {
+export async function load() {
 	return { studentForm: await superValidate(zod(studentSchema)) };
 }
 

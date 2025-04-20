@@ -80,7 +80,7 @@
 	afterNavigate(initGrid);
 </script>
 
-<section class="py-2 flex items-center gap-4">
+<section class="py-3 flex items-center gap-4">
 	<h1 class="data-grid-title">Students</h1>
 	<div class="flex items-center gap-2 ml-4">
 		<select

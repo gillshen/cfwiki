@@ -16,12 +16,8 @@
 
 	export let data;
 
-	$: usNewsRank = formatRanking(getLatestRanking(data.school, { rankingName: 'US News' }), {
-		year: false
-	});
-	$: qsRank = formatRanking(getLatestRanking(data.school, { rankingName: 'QS World' }), {
-		year: false
-	});
+	$: usNewsRank = formatRanking(getLatestRanking(data.school, { rankingName: 'US News' }));
+	$: qsRank = formatRanking(getLatestRanking(data.school, { rankingName: 'QS World' }));
 </script>
 
 <BreadcrumbContainer>
@@ -46,10 +42,10 @@
 		{#if data.school.type === 'University' && (usNewsRank || qsRank)}
 			<div class="ml-2 flex flex-row gap-1">
 				{#if usNewsRank}
-					<Badge variant="secondary">US News #{usNewsRank}</Badge>
+					<Badge variant="secondary">{usNewsRank}</Badge>
 				{/if}
 				{#if qsRank}
-					<Badge variant="secondary">QS #{qsRank}</Badge>
+					<Badge variant="secondary">{qsRank}</Badge>
 				{/if}
 			</div>
 		{/if}
