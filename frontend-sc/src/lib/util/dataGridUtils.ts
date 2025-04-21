@@ -1,5 +1,6 @@
 import { goto } from '$app/navigation';
 import type { Page } from '@sveltejs/kit';
+import type { Selected } from 'bits-ui';
 import type { Readable } from 'svelte/store';
 
 export class SearchParamsManager {
@@ -15,10 +16,11 @@ export class SearchParamsManager {
 		return async () => await this._setSearchParam(searchParam, value);
 	}
 
-	onSelectInputChange(searchParam: string) {
-		return async (e: Event) => {
-			const target = e.target as HTMLSelectElement;
-			await this._setSearchParam(searchParam, target.value);
+	onScSelectChange(searchParam: string) {
+		return async (selected: Selected<string> | undefined) => {
+			if (selected) {
+				await this._setSearchParam(searchParam, selected.value);
+			}
 		};
 	}
 

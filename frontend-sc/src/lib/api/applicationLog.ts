@@ -14,8 +14,18 @@ export type ApplicationStatus =
 	| 'Withdrawn'
 	| 'Untracked';
 
+export const applicationStatusCategories = [
+	'pending',
+	'resolved',
+	'accepted',
+	'denied',
+	'neutral'
+] as const;
+
+export type ApplicationStatusCategory = (typeof applicationStatusCategories)[number];
+
 export const applicationStatusOrder: Record<ApplicationStatus, number> = {
-	Started:10,
+	Started: 10,
 	Submitted: 11,
 	'Under Review': 12,
 	Deferred: 20,

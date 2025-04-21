@@ -95,7 +95,7 @@
 	font-variant-numeric: tabular-nums;
 }
 .data-grid.full-page {
-	height: calc(100vh - 11rem);
+	height: calc(100vh - 60px - 12rem);
 }
 .data-grid .ag-input-field-input:not(:focus) {
 	border: solid 1px hsl(var(--primary) / 0.2);

@@ -11,10 +11,24 @@
 	import { page } from '$app/stores';
 	import { afterNavigate } from '$app/navigation';
 
+	import * as Select from '$lib/components/ui/select/index';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
+
+	import * as DataGridControl from '$lib/components/widgets/data-grid-control/index';
+	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import DismissibleBadge from '$lib/components/misc/DismissibleBadge.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
+	import RowCountLabel from '$lib/components/misc/RowCountLabel.svelte';
+	import { applicationStatusCategories } from '$lib/api/applicationLog';
 	import { SearchParamsManager } from '$lib/util/dataGridUtils';
-	import { orderByUsername } from '$lib/util/userUtils.js';
+	import { orderByUsername } from '$lib/util/userUtils';
+	import { applicationTypes } from '$lib/api/application';
+	import { activeYears } from '$lib/util/dateUtils';
+
+	import {
+		formatApplicationStatusCategory,
+		formatApplicationType
+	} from '$lib/util/applicationUtils';
 
 	ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -23,10 +37,10 @@
 	let gridApi: GridApi | null;
 	let gridElement: HTMLElement;
 
-	$: cfer = $page.url.searchParams.get('cfer') || 'All';
-	$: applicationType = $page.url.searchParams.get('applicationType') || 'All';
 	$: year = $page.url.searchParams.get('year') || 'All';
+	$: applicationType = $page.url.searchParams.get('applicationType') || 'All';
 	$: status = $page.url.searchParams.get('status') || 'All';
+	$: cfer = $page.url.searchParams.get('cfer') || 'All';
 
 	const initGrid = async () => {
 		gridElement = document.querySelector('#grid')!;
@@ -39,7 +53,8 @@
 			},
 			columnDefs,
 			rowData: applications,
-			theme: themeQuartz
+			theme: themeQuartz,
+			enableCellTextSelection: true
 		};
 		gridApi = createGrid(gridElement, gridOptions);
 	};
@@ -66,86 +81,104 @@
 	afterNavigate(initGrid);
 </script>
 
-<section class="py-3 flex items-center gap-4">
+<BreadcrumbContainer>
+	<Breadcrumb.Item>
+		<Breadcrumb.Link href="/data-grids/index">Data Grids</Breadcrumb.Link>
+	</Breadcrumb.Item>
+	<Breadcrumb.Separator />
+	<Breadcrumb.Item>
+		<Breadcrumb.Page>Applications</Breadcrumb.Page>
+	</Breadcrumb.Item>
+</BreadcrumbContainer>
+
+<section class="pb-2 flex flex-col gap-2">
 	<h1 class="data-grid-title">Applications</h1>
-	<div class="flex items-center gap-2 ml-4">
-		<select
-			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
-			value={cfer}
-			on:change={paramsManager.onSelectInputChange('cfer')}
-		>
-			<option value="All">Filter by CFer...</option>
-			{#each data.cfUsers.filter((u) => u.is_active).sort(orderByUsername) as cfUser}
-				<option value={cfUser.username}>{cfUser.username}</option>
-			{/each}
-		</select>
-		<select
-			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
-			value={applicationType}
-			on:change={paramsManager.onSelectInputChange('applicationType')}
-		>
-			<option value="All">Filter by type...</option>
-			<option value="freshman">UG Freshman</option>
-			<option value="transfer">UG Transfer</option>
-			<option value="masters">Master&rsquo;s</option>
-			<option value="doctorate">Doctorate</option>
-			<option value="graduate">Graduate</option>
-			<option value="nondegree">Non-degree</option>
-		</select>
-		<select
-			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
-			value={year}
-			on:change={paramsManager.onSelectInputChange('year')}
-		>
-			<option value="All">Filter by year...</option>
-			<option value="2023">2023</option>
-			<option value="2024">2024</option>
-			<option value="2025">2025</option>
-		</select>
-		<select
-			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
-			value={status}
-			on:change={paramsManager.onSelectInputChange('status')}
-		>
-			<option value="All">Filter by status</option>
-			<option value="pending">Pending</option>
-			<option value="resolved">Resolved</option>
-			<option value="accepted">Accepted</option>
-			<option value="denied">Denied</option>
-			<option value="neutral">Neutral</option>
-		</select>
-	</div>
-	<div class="flex items-center gap-2">
-		{#if cfer !== 'All'}
-			<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('cfer')}
-				>{cfer}</DismissibleBadge
-			>
-		{/if}
-		{#if applicationType !== 'All'}
-			<DismissibleBadge
-				variant="secondary"
-				onDismiss={paramsManager.onParamChange('applicationType')}
-				>{applicationType}</DismissibleBadge
-			>
-		{/if}
-		{#if year !== 'All'}
-			<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('year')}
-				>{year}</DismissibleBadge
-			>
-		{/if}
-		{#if status !== 'All'}
-			<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('status')}
-				>{status}</DismissibleBadge
-			>
-		{/if}
-	</div>
-	{#await data.applications then applications}
-		<div class="text-sm text-muted-foreground">{applications.length} records</div>
-	{/await}
+
+	<DataGridControl.Root rowData={data.applications} {gridApi} baseFileName="cf_applications">
+		<svelte:fragment slot="filter-units">
+			<DataGridControl.FilterUnit label="Year">
+				<Select.Root
+					selected={{ value: year, label: year }}
+					onSelectedChange={paramsManager.onScSelectChange('year')}
+				>
+					<DataGridControl.FilterBody
+						items={activeYears().map((year) => ({ value: year, label: year.toString() }))}
+					/>
+				</Select.Root>
+			</DataGridControl.FilterUnit>
+
+			<DataGridControl.FilterUnit label="Type">
+				<Select.Root
+					selected={{ value: applicationType, label: formatApplicationType(applicationType) }}
+					onSelectedChange={paramsManager.onScSelectChange('applicationType')}
+				>
+					<DataGridControl.FilterBody
+						items={applicationTypes.map((t) => ({ value: t, label: t }))}
+					/>
+				</Select.Root>
+			</DataGridControl.FilterUnit>
+
+			<DataGridControl.FilterUnit label="Status">
+				<Select.Root
+					selected={{ value: status, label: formatApplicationStatusCategory(status) }}
+					onSelectedChange={paramsManager.onScSelectChange('status')}
+				>
+					<DataGridControl.FilterBody
+						items={applicationStatusCategories.map((c) => ({
+							value: c,
+							label: formatApplicationStatusCategory(c)
+						}))}
+					/>
+				</Select.Root>
+			</DataGridControl.FilterUnit>
+
+			<DataGridControl.FilterUnit label="CFer">
+				<Select.Root
+					selected={{ value: cfer, label: cfer }}
+					onSelectedChange={paramsManager.onScSelectChange('cfer')}
+				>
+					<DataGridControl.FilterBody
+						items={data.cfUsers
+							.filter((u) => u.is_active)
+							.sort(orderByUsername)
+							.map((cfer) => ({ value: cfer.username, label: cfer.username }))}
+					/>
+				</Select.Root>
+			</DataGridControl.FilterUnit>
+		</svelte:fragment>
+
+		<svelte:fragment slot="filter-badges">
+			{#if year !== 'All'}
+				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('year')}
+					>{year}</DismissibleBadge
+				>
+			{/if}
+			{#if applicationType !== 'All'}
+				<DismissibleBadge
+					variant="secondary"
+					onDismiss={paramsManager.onParamChange('applicationType')}
+					>{formatApplicationType(applicationType)}</DismissibleBadge
+				>
+			{/if}
+
+			{#if status !== 'All'}
+				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('status')}
+					>{formatApplicationStatusCategory(status)}</DismissibleBadge
+				>
+			{/if}
+			{#if cfer !== 'All'}
+				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('cfer')}
+					>{cfer}</DismissibleBadge
+				>
+			{/if}
+		</svelte:fragment>
+	</DataGridControl.Root>
 </section>
 
 {#await data.applications}
 	<LoadingSign />
-{:then _}
+{:then applications}
 	<div id="grid" class="data-grid full-page" bind:this={gridElement} />
+
+	<RowCountLabel rowCount={applications.length} />
 {/await}

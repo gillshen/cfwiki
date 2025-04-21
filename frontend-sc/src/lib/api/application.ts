@@ -8,7 +8,14 @@ import type {
 
 import type { AcademicFields } from '$lib/api/student';
 
-export const applicationTypes = ['freshman', 'transfer', 'graduate', 'other'] as const;
+export const applicationTypes = [
+	'freshman',
+	'transfer',
+	'graduate',
+	'masters',
+	'doctorate',
+	'other'
+] as const;
 
 export type ApplicationType = (typeof applicationTypes)[number];
 

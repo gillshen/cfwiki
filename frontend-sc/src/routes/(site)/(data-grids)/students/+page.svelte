@@ -11,10 +11,18 @@
 	import { page } from '$app/stores';
 	import { afterNavigate } from '$app/navigation';
 
+	import * as Select from '$lib/components/ui/select/index';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
+
+	import * as DataGridControl from '$lib/components/widgets/data-grid-control/index';
+	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import DismissibleBadge from '$lib/components/misc/DismissibleBadge.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
+	import RowCountLabel from '$lib/components/misc/RowCountLabel.svelte';
+	import { contractStatuses, contractTypes } from '$lib/api/contract';
 	import { SearchParamsManager } from '$lib/util/dataGridUtils';
 	import { orderByUsername } from '$lib/util/userUtils';
+	import { activeYears } from '$lib/util/dateUtils';
 
 	ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -67,82 +75,99 @@
 	afterNavigate(initGrid);
 </script>
 
-<section class="py-3 flex items-center gap-4">
+<BreadcrumbContainer>
+	<Breadcrumb.Item>
+		<Breadcrumb.Link href="/data-grids/index">Data Grids</Breadcrumb.Link>
+	</Breadcrumb.Item>
+	<Breadcrumb.Separator />
+	<Breadcrumb.Item>
+		<Breadcrumb.Page>Students</Breadcrumb.Page>
+	</Breadcrumb.Item>
+</BreadcrumbContainer>
+
+<section class="pb-2 flex flex-col gap-2">
 	<h1 class="data-grid-title">Students</h1>
-	<div class="flex items-center gap-2 ml-4">
-		<select
-			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
-			value={cfer}
-			on:change={paramsManager.onSelectInputChange('cfer')}
-		>
-			<option value="All">Filter by CFer...</option>
-			{#each data.cfUsers.filter((u) => u.is_active).sort(orderByUsername) as cfUser}
-				<option value={cfUser.username}>{cfUser.username}</option>
-			{/each}
-		</select>
-		<select
-			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
-			value={contractType}
-			on:change={paramsManager.onSelectInputChange('contractType')}
-		>
-			<option value="All">Filter by contract...</option>
-			<option value="UG Freshman">UG Freshman</option>
-			<option value="UG Transfer">UG Transfer</option>
-			<option value="Graduate">Graduate</option>
-			<option value="Other">Other</option>
-		</select>
-		<select
-			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
-			value={targetYear}
-			on:change={paramsManager.onSelectInputChange('targetYear')}
-		>
-			<option value="All">Filter by year...</option>
-			<option value="2023">2023</option>
-			<option value="2024">2024</option>
-			<option value="2025">2025</option>
-		</select>
-		<select
-			class="px-4 py-1 text-sm rounded-md bg-white border-[1px]"
-			value={contractStatus}
-			on:change={paramsManager.onSelectInputChange('contractStatus')}
-		>
-			<option value="All">Filter by status</option>
-			<option value="In effect">In effect</option>
-			<option value="Fulfilled">Fulfilled</option>
-			<option value="Terminated">Terminated</option>
-		</select>
-	</div>
-	<div class="flex items-center gap-2">
-		{#if cfer !== 'All'}
-			<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('cfer')}
-				>{cfer}</DismissibleBadge
-			>
-		{/if}
-		{#if contractType !== 'All'}
-			<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('contractType')}
-				>{contractType}</DismissibleBadge
-			>
-		{/if}
-		{#if targetYear !== 'All'}
-			<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('targetYear')}
-				>{targetYear}</DismissibleBadge
-			>
-		{/if}
-		{#if contractStatus !== 'All'}
-			<DismissibleBadge
-				variant="secondary"
-				onDismiss={paramsManager.onParamChange('contractStatus')}
-				>Contract: {contractStatus}</DismissibleBadge
-			>
-		{/if}
-	</div>
-	{#await data.students then students}
-		<div class="text-sm text-muted-foreground">{students.length} records</div>
-	{/await}
+
+	<DataGridControl.Root rowData={data.students} {gridApi} baseFileName="cf_students">
+		<svelte:fragment slot="filter-units">
+			<DataGridControl.FilterUnit label="Target year">
+				<Select.Root
+					selected={{ value: targetYear, label: targetYear }}
+					onSelectedChange={paramsManager.onScSelectChange('targetYear')}
+				>
+					<DataGridControl.FilterBody
+						items={activeYears().map((year) => ({ value: year, label: year.toString() }))}
+					/>
+				</Select.Root>
+			</DataGridControl.FilterUnit>
+
+			<DataGridControl.FilterUnit label="Contract type">
+				<Select.Root
+					selected={{ value: contractType, label: contractType }}
+					onSelectedChange={paramsManager.onScSelectChange('contractType')}
+				>
+					<DataGridControl.FilterBody items={contractTypes.map((t) => ({ value: t, label: t }))} />
+				</Select.Root>
+			</DataGridControl.FilterUnit>
+
+			<DataGridControl.FilterUnit label="Contract status">
+				<Select.Root
+					selected={{ value: contractStatus, label: contractStatus }}
+					onSelectedChange={paramsManager.onScSelectChange('contractStatus')}
+				>
+					<DataGridControl.FilterBody
+						items={contractStatuses.map((t) => ({ value: t, label: t }))}
+					/>
+				</Select.Root>
+			</DataGridControl.FilterUnit>
+
+			<DataGridControl.FilterUnit label="CFer">
+				<Select.Root
+					selected={{ value: cfer, label: cfer }}
+					onSelectedChange={paramsManager.onScSelectChange('cfer')}
+				>
+					<DataGridControl.FilterBody
+						items={data.cfUsers
+							.filter((u) => u.is_active)
+							.sort(orderByUsername)
+							.map((cfer) => ({ value: cfer.username, label: cfer.username }))}
+					/>
+				</Select.Root>
+			</DataGridControl.FilterUnit>
+		</svelte:fragment>
+
+		<svelte:fragment slot="filter-badges">
+			{#if cfer !== 'All'}
+				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('cfer')}
+					>{cfer}</DismissibleBadge
+				>
+			{/if}
+			{#if contractType !== 'All'}
+				<DismissibleBadge
+					variant="secondary"
+					onDismiss={paramsManager.onParamChange('contractType')}>{contractType}</DismissibleBadge
+				>
+			{/if}
+			{#if targetYear !== 'All'}
+				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('targetYear')}
+					>{targetYear}</DismissibleBadge
+				>
+			{/if}
+			{#if contractStatus !== 'All'}
+				<DismissibleBadge
+					variant="secondary"
+					onDismiss={paramsManager.onParamChange('contractStatus')}
+					>Contract: {contractStatus}</DismissibleBadge
+				>
+			{/if}
+		</svelte:fragment>
+	</DataGridControl.Root>
 </section>
 
 {#await data.students}
 	<LoadingSign />
-{:then _}
+{:then students}
 	<div id="grid" class="data-grid full-page" bind:this={gridElement} />
+
+	<RowCountLabel rowCount={students.length} />
 {/await}

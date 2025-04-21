@@ -93,3 +93,7 @@ export function yearIsRelevant(applicationYear: number): boolean {
 	// 2024, for example, is no longer relevant past May 2024
 	return applicationYear > currentYear || (applicationYear === currentYear && today.getMonth() < 5);
 }
+
+export function timestamp(): string {
+	return format(new Date(), 'y-LL-dd_HHmmss');
+}

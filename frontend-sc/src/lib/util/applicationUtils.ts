@@ -4,7 +4,8 @@ import type { ProgramType } from '$lib/api/program';
 import {
 	applicationStatusOrder,
 	type ApplicationStatus,
-	type ApplicationLogBrief
+	type ApplicationLogBrief,
+	type ApplicationStatusCategory
 } from '$lib/api/applicationLog';
 
 import { sortedSchoolNames } from '$lib/api/school';
@@ -48,11 +49,22 @@ export function formatApplicationType(applicationType: ApplicationType | string)
 			return 'UG Transfer';
 		case 'graduate':
 			return 'Graduate';
+		case 'masters':
+			return "Master's";
+		case 'doctorate':
+			return 'Doctorate';
 		case 'other':
-			return 'Other';
+			return 'Non-degree';
 		default:
 			return applicationType;
 	}
+}
+
+export function formatApplicationStatusCategory(
+	category: ApplicationStatusCategory | string
+): string {
+	// Capitalize the first letter
+	return `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
 }
 
 export function getLatestLog(application: ComposedApplication): ApplicationLogBrief | null {
@@ -194,34 +206,33 @@ export function groupByType(
 	return sortedGroups;
 }
 
-function toDataPoint(application: ComposedApplication): ApplicationDataPoint {
-	let status: 'pending' | 'accepted' | 'denied' | 'neutral';
-
-	const latestStatus = getLatestLog(application)?.status;
-
-	switch (latestStatus) {
+export function foldStatus(
+	status: ApplicationStatus | null | undefined
+): Exclude<ApplicationStatusCategory, 'resolved'> {
+	switch (status) {
 		case 'Accepted':
-			status = 'accepted';
-			break;
+			return 'accepted';
 		case 'Rejected':
 		case 'Pres. Rejected':
 		case 'Offer Rescinded':
-			status = 'denied';
-			break;
+			return 'denied';
 		case 'Cancelled':
 		case 'Withdrawn':
 		case 'Untracked':
-			status = 'neutral';
-			break;
+			return 'neutral';
 		default:
-			status = 'pending';
+			return 'pending';
 	}
+}
+
+function toDataPoint(application: ComposedApplication): ApplicationDataPoint {
+	const latestStatus = getLatestLog(application)?.status;
 
 	return {
 		gender: application.student.gender,
 		year: application.year,
 		round_name: application.round_name,
-		status
+		status: foldStatus(latestStatus)
 	};
 }
 

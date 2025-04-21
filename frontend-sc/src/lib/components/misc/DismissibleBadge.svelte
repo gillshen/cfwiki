@@ -7,7 +7,7 @@
 	export let onDismiss: () => void = () => {};
 </script>
 
-<Badge {variant} class="flex items-center gap-1">
+<Badge {variant} class="flex items-center gap-1 shrink-0">
 	<slot />
 	<button class="bg-transparent p-0 m-0 border-none" on:click={onDismiss}
 		><X class="size-3" /></button
