@@ -8,7 +8,8 @@
 	export let data;
 
 	$: dataGridPage =
-		$page.url.pathname.startsWith('/students') || $page.url.pathname.startsWith('/applications');
+		$page.url.pathname.startsWith('/data-grids/students') ||
+		$page.url.pathname.startsWith('/data-grids/applications');
 </script>
 
 <div class={`container w-full ${dataGridPage ? 'max-w-full' : ''} mx-auto pb-8 flex-grow-0`}>
@@ -47,22 +48,22 @@
 								<DropdownMenu.SubTrigger>{year}</DropdownMenu.SubTrigger>
 								<DropdownMenu.SubContent>
 									<DropdownMenu.Item
-										href={`/students?targetYear=${year}&contractType=UG+Freshman`}
+										href={`/data-grids/students?targetYear=${year}&contractType=UG+Freshman`}
 										class="text-inherit hover:no-underline">UG Freshman</DropdownMenu.Item
 									>
 									<DropdownMenu.Item
-										href={`/students?targetYear=${year}&contractType=UG+Transfer`}
+										href={`/data-grids/students?targetYear=${year}&contractType=UG+Transfer`}
 										class="text-inherit hover:no-underline">UG Transfer</DropdownMenu.Item
 									>
 									<DropdownMenu.Item
-										href={`/students?targetYear=${year}&contractType=Graduate`}
+										href={`/data-grids/students?targetYear=${year}&contractType=Graduate`}
 										class="text-inherit hover:no-underline">Graduate</DropdownMenu.Item
 									>
 								</DropdownMenu.SubContent>
 							</DropdownMenu.Sub>
 						{/each}
 						<DropdownMenu.Separator />
-						<DropdownMenu.Item href="/students" class="text-inherit hover:no-underline"
+						<DropdownMenu.Item href="/data-grids/students" class="text-inherit hover:no-underline"
 							>All Students</DropdownMenu.Item
 						>
 					</DropdownMenu.Group>
@@ -81,34 +82,35 @@
 								<DropdownMenu.SubContent>
 									<DropdownMenu.Label>Undergraduate</DropdownMenu.Label>
 									<DropdownMenu.Item
-										href={`/applications?year=${year}&applicationType=freshman`}
+										href={`/data-grids/applications?year=${year}&applicationType=freshman`}
 										class="text-inherit hover:no-underline">Freshman</DropdownMenu.Item
 									>
 									<DropdownMenu.Item
-										href={`/applications?year=${year}&applicationType=transfer`}
+										href={`/data-grids/applications?year=${year}&applicationType=transfer`}
 										class="text-inherit hover:no-underline">Transfer</DropdownMenu.Item
 									>
 									<DropdownMenu.Separator />
 									<DropdownMenu.Label>Graduate</DropdownMenu.Label>
 									<DropdownMenu.Item
-										href={`/applications?year=${year}&applicationType=masters`}
+										href={`/data-grids/applications?year=${year}&applicationType=masters`}
 										class="text-inherit hover:no-underline">Master&rsquo;s</DropdownMenu.Item
 									>
 									<DropdownMenu.Item
-										href={`/applications?year=${year}&applicationType=doctorate`}
+										href={`/data-grids/applications?year=${year}&applicationType=doctorate`}
 										class="text-inherit hover:no-underline">Doctorate</DropdownMenu.Item
 									>
 									<DropdownMenu.Separator />
 									<DropdownMenu.Item
-										href={`/applications?year=${year}&applicationType=other`}
+										href={`/data-grids/applications?year=${year}&applicationType=other`}
 										class="text-inherit hover:no-underline">Non-degree</DropdownMenu.Item
 									>
 								</DropdownMenu.SubContent>
 							</DropdownMenu.Sub>
 						{/each}
 						<DropdownMenu.Separator />
-						<DropdownMenu.Item href="/applications" class="text-inherit hover:no-underline"
-							>All Applications</DropdownMenu.Item
+						<DropdownMenu.Item
+							href="/data-grids/applications"
+							class="text-inherit hover:no-underline">All Applications</DropdownMenu.Item
 						>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
