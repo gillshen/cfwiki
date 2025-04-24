@@ -53,7 +53,7 @@
 						<div class="text-xs flex text-muted-foreground">
 							{#each services as service, index}
 								{#if index}
-									<div class="mx-1 text-gray-300">&bullet;</div>
+									<div class="mx-1 text-gray-400">&bullet;</div>
 								{/if}
 								<div class={leftEarly(service) ? 'text-gray-300' : ''}>{service.role}</div>
 							{/each}

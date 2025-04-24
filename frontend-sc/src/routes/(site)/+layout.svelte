@@ -25,7 +25,7 @@
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="ghost" builders={[builder]}>CF People</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content>
+				<DropdownMenu.Content class="min-w-[160px]">
 					<DropdownMenu.Group>
 						<DropdownMenu.Label>TODO</DropdownMenu.Label>
 						<DropdownMenu.Separator />
@@ -41,7 +41,7 @@
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="ghost" builders={[builder]}>Students</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content>
+				<DropdownMenu.Content class="min-w-[160px]">
 					<DropdownMenu.Group>
 						{#each quickAccessYears() as year}
 							<DropdownMenu.Sub>
@@ -63,6 +63,10 @@
 							</DropdownMenu.Sub>
 						{/each}
 						<DropdownMenu.Separator />
+						<DropdownMenu.Item
+							href="/data-grids/students?contractStatus=In+effect"
+							class="text-inherit hover:no-underline">Current Students</DropdownMenu.Item
+						>
 						<DropdownMenu.Item href="/data-grids/students" class="text-inherit hover:no-underline"
 							>All Students</DropdownMenu.Item
 						>
@@ -74,7 +78,7 @@
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="ghost" builders={[builder]}>Applications</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content>
+				<DropdownMenu.Content class="min-w-[180px]">
 					<DropdownMenu.Group>
 						{#each quickAccessYears() as year}
 							<DropdownMenu.Sub>
@@ -109,6 +113,10 @@
 						{/each}
 						<DropdownMenu.Separator />
 						<DropdownMenu.Item
+							href="/data-grids/applications?status=pending"
+							class="text-inherit hover:no-underline">Pending Applications</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
 							href="/data-grids/applications"
 							class="text-inherit hover:no-underline">All Applications</DropdownMenu.Item
 						>
@@ -120,7 +128,7 @@
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="ghost" builders={[builder]}>Schools</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content>
+				<DropdownMenu.Content class="min-w-[180px]">
 					<DropdownMenu.Group>
 						<DropdownMenu.Item
 							href="/school/index/#universities"
@@ -144,7 +152,7 @@
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="ghost" builders={[builder]}>Programs</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content>
+				<DropdownMenu.Content class="min-w-[180px]">
 					<DropdownMenu.Group>
 						<DropdownMenu.Item
 							href="/program/index/#ug-freshman"
