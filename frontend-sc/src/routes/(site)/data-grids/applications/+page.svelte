@@ -3,7 +3,6 @@
 		ModuleRegistry,
 		AllCommunityModule,
 		createGrid,
-		themeQuartz,
 		type GridApi,
 		type GridOptions
 	} from 'ag-grid-community';
@@ -19,11 +18,17 @@
 	import DismissibleBadge from '$lib/components/misc/DismissibleBadge.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import RowCountLabel from '$lib/components/misc/RowCountLabel.svelte';
-	import { applicationStatusCategories } from '$lib/api/applicationLog';
-	import { SearchParamsManager } from '$lib/util/dataGridUtils';
-	import { orderByUsername } from '$lib/util/userUtils';
 	import { applicationTypes } from '$lib/api/application';
+	import { applicationStatusCategories } from '$lib/api/applicationLog';
+	import { orderByUsername } from '$lib/util/userUtils';
 	import { activeYears } from '$lib/util/dateUtils';
+	import { getColumnDefs } from '$lib/util/applicationsGridColumns';
+
+	import {
+		DEFAULT_COL_DEF,
+		DEFAULT_GRID_OPTIONS,
+		SearchParamsManager
+	} from '$lib/util/dataGridUtils';
 
 	import {
 		formatApplicationStatusCategory,
@@ -36,47 +41,43 @@
 
 	let gridApi: GridApi | null;
 	let gridElement: HTMLElement;
+	let rowCount: number = 0;
 
+	$: cfer = $page.url.searchParams.get('cfer') || 'All';
 	$: year = $page.url.searchParams.get('year') || 'All';
 	$: applicationType = $page.url.searchParams.get('applicationType') || 'All';
 	$: status = $page.url.searchParams.get('status') || 'All';
-	$: cfer = $page.url.searchParams.get('cfer') || 'All';
+
+	$: columnDefs = getColumnDefs({ year, applicationType, status });
 
 	const initGrid = async () => {
 		gridElement = document.querySelector('#grid')!;
-		const applications = await data.applications;
+		const rowData = await data.applications;
 		const gridOptions: GridOptions = {
-			defaultColDef: {
-				filter: true,
-				flex: 1,
-				minWidth: 100
-			},
+			defaultColDef: DEFAULT_COL_DEF,
 			columnDefs,
-			rowData: applications,
-			theme: themeQuartz,
-			enableCellTextSelection: true
+			rowData,
+			onFilterChanged: updateDisplayedRowCount,
+			onModelUpdated: updateDisplayedRowCount,
+			...DEFAULT_GRID_OPTIONS
 		};
 		gridApi = createGrid(gridElement, gridOptions);
 	};
 
 	const updateGrid = async () => {
-		const applications = await data.applications;
+		const rowData = await data.applications;
 		if (gridApi) {
-			gridApi.setGridOption('rowData', applications);
+			gridApi.setGridOption('rowData', rowData);
+		}
+	};
+
+	const updateDisplayedRowCount = () => {
+		if (gridApi) {
+			rowCount = gridApi.getDisplayedRowCount();
 		}
 	};
 
 	const paramsManager = new SearchParamsManager(page, updateGrid);
-
-	const columnDefs = [
-		{ field: 'id' },
-		{ field: 'student.fullname' },
-		{ field: 'schools' },
-		{ field: 'program.display_name' },
-		{ field: 'year' },
-		{ field: 'round_name' },
-		{ field: 'due_date' }
-	];
 
 	afterNavigate(initGrid);
 </script>
@@ -113,7 +114,7 @@
 					onSelectedChange={paramsManager.onScSelectChange('applicationType')}
 				>
 					<DataGridControl.FilterBody
-						items={applicationTypes.map((t) => ({ value: t, label: t }))}
+						items={applicationTypes.map((t) => ({ value: t, label: formatApplicationType(t) }))}
 					/>
 				</Select.Root>
 			</DataGridControl.FilterUnit>
@@ -177,8 +178,8 @@
 
 {#await data.applications}
 	<LoadingSign />
-{:then applications}
+{:then _}
 	<div id="grid" class="data-grid full-page" bind:this={gridElement} />
 
-	<RowCountLabel rowCount={applications.length} />
+	<RowCountLabel {rowCount} singular="application" />
 {/await}

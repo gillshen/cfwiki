@@ -3,7 +3,6 @@
 		ModuleRegistry,
 		AllCommunityModule,
 		createGrid,
-		themeQuartz,
 		type GridApi,
 		type GridOptions
 	} from 'ag-grid-community';
@@ -20,9 +19,15 @@
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import RowCountLabel from '$lib/components/misc/RowCountLabel.svelte';
 	import { contractStatuses, contractTypes } from '$lib/api/contract';
-	import { SearchParamsManager } from '$lib/util/dataGridUtils';
 	import { orderByUsername } from '$lib/util/userUtils';
 	import { activeYears } from '$lib/util/dateUtils';
+	import { getColumnDefs } from '$lib/util/studentsGridColumns';
+
+	import {
+		DEFAULT_COL_DEF,
+		DEFAULT_GRID_OPTIONS,
+		SearchParamsManager
+	} from '$lib/util/dataGridUtils';
 
 	ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -30,47 +35,54 @@
 
 	let gridApi: GridApi | null;
 	let gridElement: HTMLElement;
+	let rowCount: number = 0;
 
 	$: cfer = $page.url.searchParams.get('cfer') || 'All';
 	$: contractType = $page.url.searchParams.get('contractType') || 'All';
 	$: targetYear = $page.url.searchParams.get('targetYear') || 'All';
 	$: contractStatus = $page.url.searchParams.get('contractStatus') || 'All';
 
+	$: columnDefs = getColumnDefs({ targetYear, contractType, contractStatus });
+
 	const initGrid = async () => {
 		gridElement = document.querySelector('#grid')!;
-		const students = await data.students;
+		const rowData = await data.students;
 		const gridOptions: GridOptions = {
-			defaultColDef: {
-				filter: true,
-				flex: 1,
-				minWidth: 100
-			},
+			defaultColDef: DEFAULT_COL_DEF,
 			columnDefs,
-			rowData: students,
-			theme: themeQuartz
+			rowData,
+			onFilterChanged: updateDisplayedRowCount,
+			onModelUpdated: updateDisplayedRowCount,
+			...DEFAULT_GRID_OPTIONS
 		};
 		gridApi = createGrid(gridElement, gridOptions);
 	};
 
 	const updateGrid = async () => {
-		const students = await data.students;
+		const rowData = await data.students;
 		if (gridApi) {
-			gridApi.setGridOption('rowData', students);
+			gridApi.setGridOption('rowData', rowData);
+		}
+	};
+
+	const updateDisplayedRowCount = () => {
+		if (gridApi) {
+			rowCount = gridApi.getDisplayedRowCount();
 		}
 	};
 
 	const paramsManager = new SearchParamsManager(page, updateGrid);
 
-	const columnDefs = [
-		{ field: 'id' },
-		{ field: 'fullname' },
-		{ field: 'preferred_name' },
-		{ field: 'gender' },
-		{ field: 'citizenship' },
-		{ field: 'date_of_birth' },
-		{ field: 'base_country' },
-		{ field: 'base_city' }
-	];
+	// const columnDefs = [
+	// 	{ field: 'id' },
+	// 	{ field: 'fullname' },
+	// 	{ field: 'preferred_name' },
+	// 	{ field: 'gender' },
+	// 	{ field: 'citizenship' },
+	// 	{ field: 'date_of_birth' },
+	// 	{ field: 'base_country' },
+	// 	{ field: 'base_city' }
+	// ];
 
 	afterNavigate(initGrid);
 </script>
@@ -166,8 +178,8 @@
 
 {#await data.students}
 	<LoadingSign />
-{:then students}
+{:then _}
 	<div id="grid" class="data-grid full-page" bind:this={gridElement} />
 
-	<RowCountLabel rowCount={students.length} />
+	<RowCountLabel {rowCount} singular="student" />
 {/await}

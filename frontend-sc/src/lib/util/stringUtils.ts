@@ -12,6 +12,13 @@ export function splitAtChineseRuns(input: string): string[] {
 	return input.split(/([\u4E00-\u9FFF]+)/g).filter(Boolean);
 }
 
-export function addChinesePadding(input: string): string {
-	return splitAtChineseRuns(input).join('\u2009');
+export function padChineseRuns(input: string): string {
+	return splitAtChineseRuns(input).join('\u200a');
+}
+
+export function toTitleCase(s: string): string {
+	if (!s) {
+		return '';
+	}
+	return `${s[0].toUpperCase()}${s.slice(1)}`;
 }

@@ -12,5 +12,4 @@
 		<Select.Item value="All">All</Select.Item>
 		<Separator class="my-1" />
 	</svelte:fragment>
-	<slot />
 </SelectBody>

@@ -11,7 +11,7 @@ import {
 import { sortedSchoolNames } from '$lib/api/school';
 import { blankStats, type ApplicationDataPoint, type ApplicationStats } from '$lib/api/stats';
 import { compareRoundName } from '$lib/util/applicationRoundUtils';
-import { lexicalChineseLast } from '$lib/util/stringUtils';
+import { lexicalChineseLast, toTitleCase } from '$lib/util/stringUtils';
 
 export function filterByType(
 	applications: ComposedApplication[],
@@ -63,8 +63,7 @@ export function formatApplicationType(applicationType: ApplicationType | string)
 export function formatApplicationStatusCategory(
 	category: ApplicationStatusCategory | string
 ): string {
-	// Capitalize the first letter
-	return `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
+	return toTitleCase(category);
 }
 
 export function getLatestLog(application: ComposedApplication): ApplicationLogBrief | null {
