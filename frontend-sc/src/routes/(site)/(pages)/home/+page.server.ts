@@ -14,6 +14,6 @@ export async function load(event) {
 
 	return {
 		host,
-		applications: fetchComposedApplications({ cfer: host.id })
+		applications: fetchComposedApplications({ cfer: host.username })
 	};
 }
