@@ -15,6 +15,9 @@
 	export let showPrograms: boolean = false;
 	export let hideYears: boolean = false;
 	export let noDataMessage: undefined | string = undefined;
+
+	const hasMajor2 = !!applications.filter((a) => a.majors.length > 1).length;
+	const hasMajor3 = !!applications.filter((a) => a.majors.length > 2).length;
 </script>
 
 {#if applications.length}
@@ -63,7 +66,7 @@
 			</div>
 		</Tabs.Content>
 		<Tabs.Content value="table-layout">
-			<Table.Root class="w-full">
+			<Table.Root class="w-full max-w-[1080px]">
 				<Table.Header>
 					<Table.Row>
 						{#if !hideYears}
@@ -74,7 +77,15 @@
 							<Table.Head class="font-semibold">Program</Table.Head>
 						{/if}
 						<Table.Head class="font-semibold min-w-[100px]">Adm. Plan</Table.Head>
-						<Table.Head class="font-semibold min-w-[130px]">Majors/Tracks</Table.Head>
+						{#if hasMajor2}
+							<Table.Head class="font-semibold min-w-[130px]">Major/Track 1</Table.Head>
+							<Table.Head class="font-semibold min-w-[130px]">Major/Track 2</Table.Head>
+							{#if hasMajor3}
+								<Table.Head class="font-semibold min-w-[130px]">Major/Track 3</Table.Head>
+							{/if}
+						{:else}
+							<Table.Head class="font-semibold min-w-[130px]">Major/Track</Table.Head>
+						{/if}
 						<Table.Head class="font-semibold">Status</Table.Head>
 						<Table.Head class="font-semibold"></Table.Head>
 					</Table.Row>
@@ -95,11 +106,19 @@
 								<Table.Cell>{application.program.display_name}</Table.Cell>
 							{/if}
 							<Table.Cell>{application.round_name}</Table.Cell>
-							<Table.Cell class="inline-block truncate text-muted-foreground">
-								{#each application.majors as major, index}
-									{#if index}<span class="text-gray-300 mx-2">&bullet;</span>{/if}{major}
-								{/each}
-							</Table.Cell>
+							<Table.Cell class="truncate max-w-[180px] text-muted-foreground"
+								>{application.majors[0] || '-'}</Table.Cell
+							>
+							{#if hasMajor2}
+								<Table.Cell class="truncate max-w-[180px] text-muted-foreground"
+									>{application.majors[1] || '-'}</Table.Cell
+								>
+							{/if}
+							{#if hasMajor3}
+								<Table.Cell class="truncate max-w-[180px] text-muted-foreground"
+									>{application.majors[2] || '-'}</Table.Cell
+								>
+							{/if}
 							<Table.Cell>
 								<ApplicationStatusSign {application} />
 							</Table.Cell>
