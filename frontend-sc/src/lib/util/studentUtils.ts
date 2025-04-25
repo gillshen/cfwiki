@@ -13,14 +13,24 @@ import canadianProvinces from '$lib/constants/canadianProvinces';
 import { isActive } from '$lib/util/serviceUtils';
 import { compareAlevelGrade } from '$lib/util/scoresUtils';
 
-export function isCurrent(student: StudentOfCferListItem): boolean {
+export const isCurrentForCfUser = (params: {
+	student: { contracts: Contract[] };
+	username: string;
+}): boolean => {
+	const { student, username } = params;
+
 	for (const contract of student.contracts) {
-		if (contract.status === 'In effect') {
-			return true;
+		if (contract.status !== 'In effect') {
+			continue;
+		}
+		for (const service of contract.services) {
+			if (service.cf_username === username && isActive(service)) {
+				return true;
+			}
 		}
 	}
 	return false;
-}
+};
 
 export function formatGender(student: BaseStudent): string {
 	switch (student.gender) {

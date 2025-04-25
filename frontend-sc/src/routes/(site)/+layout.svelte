@@ -8,19 +8,24 @@
 	import CircleUser from 'lucide-svelte/icons/circle-user';
 	import LogOut from 'lucide-svelte/icons/log-out';
 
-	import StudentSideList from '$lib/components/widgets/StudentSideList.svelte';
+	import StudentSideList from '$lib/components/widgets/student-side-list/StudentSideList.svelte';
 	import UserDirectory from '$lib/components/widgets/UserDirectory.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { quickAccessYears } from '$lib/util/dateUtils';
 
 	export let data;
 
-	$: dataGridPage =
-		$page.url.pathname.startsWith('/data-grids/students') ||
-		$page.url.pathname.startsWith('/data-grids/applications');
+	$: isDataGridPage = !!$page.url.pathname.match('/data-grids/(students|applications)');
+
+	$: selectedStudentId = (() => {
+		const match = $page.url.pathname.match('/student/(\\d+)$');
+		if (match !== null) {
+			return parseInt(match[1]);
+		}
+	})();
 </script>
 
-<div class={cn('relative container w-full', dataGridPage ? 'max-w-full pb-4' : 'pb-0')}>
+<div class={cn('relative container w-full', isDataGridPage ? 'max-w-full pb-4' : 'pb-0')}>
 	<div
 		class="fixed top-0 left-0 w-full h-[60px] backdrop-blur bg-white/70 shadow-sm z-40 flex flex-row justify-between items-center px-8"
 	>
@@ -218,7 +223,7 @@
 	</div>
 
 	<div class="relative mt-[60px] min-h-[calc(100vh-340px)]">
-		{#if dataGridPage}
+		{#if isDataGridPage}
 			<div class="flex flex-col pl-4 pt-2 w-full">
 				<slot />
 			</div>
@@ -228,7 +233,7 @@
 					class="sticky top-[60px] left-8 max-w-[240px] min-w-[240px] h-[calc(100vh-60px)] overflow-auto pt-4 pb-8 pl-4 pr-8"
 				>
 					{#await data.students then students}
-						<StudentSideList {students} />
+						<StudentSideList username={data.username} {students} {selectedStudentId} />
 					{/await}
 				</aside>
 				<div class="flex flex-col w-full pt-2 pb-8">
