@@ -8,7 +8,7 @@ export async function load(event) {
 
 	return {
 		host,
-		students: fetchStudentsByUser({ cfer: host.id }),
-		applications: fetchComposedApplications({ cfer: host.id })
+		students: fetchStudentsByUser({ cfer: host.username }),
+		applications: fetchComposedApplications({ cfer: host.username })
 	};
 }

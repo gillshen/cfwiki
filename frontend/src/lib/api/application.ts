@@ -114,7 +114,7 @@ async function fetchApplicationContracts(params?: {
 }
 
 export async function fetchComposedApplications(params?: {
-	cfer?: number;
+	cfer?: string;
 	year?: number;
 	application_type?: string;
 	student?: number;
