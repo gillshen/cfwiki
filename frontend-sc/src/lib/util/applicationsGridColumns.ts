@@ -8,7 +8,7 @@ import type { School } from '$lib/api/school';
 import type { StudentEnrollmentItem } from '$lib/api/student';
 import ApplicationStatusSign from '$lib/components/misc/ApplicationStatusSign.svelte';
 import { lexicalChineseLast, padChineseRuns, toTitleCase } from '$lib/util/stringUtils';
-import { formatCfNames } from '$lib/util/serviceUtils';
+import { formatCfNames } from '$lib/util/dataGridUtils';
 import { formatEnrollments } from '$lib/util/enrollmentUtils';
 import { makeDate, toShortDate } from '$lib/util/dateUtils';
 

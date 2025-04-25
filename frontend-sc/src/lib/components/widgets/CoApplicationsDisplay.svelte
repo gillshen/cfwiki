@@ -120,7 +120,9 @@
 								>
 							{/if}
 							<Table.Cell>
-								<ApplicationStatusSign {application} />
+								<div>
+									<ApplicationStatusSign {application} />
+								</div>
 							</Table.Cell>
 							<Table.Cell class="max-w-[16px]">
 								<div class="flex justify-end">

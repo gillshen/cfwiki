@@ -1,8 +1,16 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
+
+	import { cn } from '$lib/utils';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import CircleUser from 'lucide-svelte/icons/circle-user';
+	import LogOut from 'lucide-svelte/icons/log-out';
+
 	import StudentSideList from '$lib/components/widgets/StudentSideList.svelte';
+	import UserDirectory from '$lib/components/widgets/UserDirectory.svelte';
+	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { quickAccessYears } from '$lib/util/dateUtils';
 
 	export let data;
@@ -12,7 +20,7 @@
 		$page.url.pathname.startsWith('/data-grids/applications');
 </script>
 
-<div class={`container w-full ${dataGridPage ? 'max-w-full' : ''} mx-auto pb-8 flex-grow-0`}>
+<div class={cn('relative container w-full', dataGridPage ? 'max-w-full pb-4' : 'pb-0')}>
 	<div
 		class="fixed top-0 left-0 w-full h-[60px] backdrop-blur bg-white/70 shadow-sm z-40 flex flex-row justify-between items-center px-8"
 	>
@@ -25,15 +33,19 @@
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="ghost" builders={[builder]}>CF People</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content class="min-w-[160px]">
-					<DropdownMenu.Group>
-						<DropdownMenu.Label>TODO</DropdownMenu.Label>
-						<DropdownMenu.Separator />
-						<DropdownMenu.Item>TODO</DropdownMenu.Item>
-						<DropdownMenu.Item>TODO</DropdownMenu.Item>
-						<DropdownMenu.Item>TODO</DropdownMenu.Item>
-						<DropdownMenu.Item>TODO</DropdownMenu.Item>
-					</DropdownMenu.Group>
+				<DropdownMenu.Content class="w-[800px] translate-x-10">
+					<div class="grid grid-cols-2 gap-8 py-4 px-8">
+						<div class="flex flex-col gap-2">
+							<h3 class="font-medium">文案部</h3>
+							<Separator />
+							<UserDirectory users={data.cfUsers} department="文案" hrefClass="text-sm" />
+						</div>
+						<div class="flex flex-col gap-2">
+							<h3 class="font-medium">咨询部</h3>
+							<Separator />
+							<UserDirectory users={data.cfUsers} department="咨询" hrefClass="text-sm" />
+						</div>
+					</div>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 
@@ -42,11 +54,11 @@
 					<Button variant="ghost" builders={[builder]}>Students</Button>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content class="min-w-[160px]">
-					<DropdownMenu.Group>
+					<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
 						{#each quickAccessYears() as year}
 							<DropdownMenu.Sub>
 								<DropdownMenu.SubTrigger>{year}</DropdownMenu.SubTrigger>
-								<DropdownMenu.SubContent>
+								<DropdownMenu.SubContent class="min-w-[160px]">
 									<DropdownMenu.Item
 										href={`/data-grids/students?targetYear=${year}&contractType=UG+Freshman`}
 										class="text-inherit hover:no-underline">UG Freshman</DropdownMenu.Item
@@ -79,11 +91,11 @@
 					<Button variant="ghost" builders={[builder]}>Applications</Button>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content class="min-w-[180px]">
-					<DropdownMenu.Group>
+					<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
 						{#each quickAccessYears() as year}
 							<DropdownMenu.Sub>
 								<DropdownMenu.SubTrigger>{year}</DropdownMenu.SubTrigger>
-								<DropdownMenu.SubContent>
+								<DropdownMenu.SubContent class="min-w-[180px]">
 									<DropdownMenu.Label>Undergraduate</DropdownMenu.Label>
 									<DropdownMenu.Item
 										href={`/data-grids/applications?year=${year}&applicationType=freshman`}
@@ -104,6 +116,7 @@
 										class="text-inherit hover:no-underline">Doctorate</DropdownMenu.Item
 									>
 									<DropdownMenu.Separator />
+									<DropdownMenu.Label>Other</DropdownMenu.Label>
 									<DropdownMenu.Item
 										href={`/data-grids/applications?year=${year}&applicationType=other`}
 										class="text-inherit hover:no-underline">Non-degree</DropdownMenu.Item
@@ -129,7 +142,7 @@
 					<Button variant="ghost" builders={[builder]}>Schools</Button>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content class="min-w-[180px]">
-					<DropdownMenu.Group>
+					<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
 						<DropdownMenu.Item
 							href="/school/index/#universities"
 							class="text-inherit hover:no-underline">Universities</DropdownMenu.Item
@@ -153,7 +166,7 @@
 					<Button variant="ghost" builders={[builder]}>Programs</Button>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content class="min-w-[180px]">
-					<DropdownMenu.Group>
+					<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
 						<DropdownMenu.Item
 							href="/program/index/#ug-freshman"
 							class="text-inherit hover:no-underline">UG Freshman</DropdownMenu.Item
@@ -183,34 +196,45 @@
 
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger asChild let:builder>
-				<Button variant="secondary" builders={[builder]}>My Account</Button>
+				<Button variant="secondary" class="w-10 h-10" builders={[builder]}
+					>{data.username[0].toUpperCase()}</Button
+				>
 			</DropdownMenu.Trigger>
-			<DropdownMenu.Content>
-				<DropdownMenu.Group>
-					<DropdownMenu.Label>{data.username}</DropdownMenu.Label>
+			<DropdownMenu.Content class="w-[160px] -translate-x-4">
+				<DropdownMenu.Group class="p-1 flex flex-col gap-1">
+					<DropdownMenu.Group>
+						<DropdownMenu.Label>{data.username}</DropdownMenu.Label>
+						<DropdownMenu.Item><CircleUser class="size-4 mr-1.5" />Account</DropdownMenu.Item>
+					</DropdownMenu.Group>
 					<DropdownMenu.Separator />
-					<DropdownMenu.Item>Settings</DropdownMenu.Item>
-					<DropdownMenu.Item href="/logout" class="text-inherit hover:no-underline"
-						>Log Out</DropdownMenu.Item
+					<DropdownMenu.Item
+						on:click={() => goto('/logout')}
+						class="text-inherit hover:no-underline"
+						><LogOut class="size-4 mr-1.5" />Log Out</DropdownMenu.Item
 					>
 				</DropdownMenu.Group>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</div>
 
-	<div class="mt-[76px] flex flex-col min-h-[calc(100vh-360px)] flex-grow">
-		<div class="flex">
-			{#if !dataGridPage}
-				<div class="w-[240px] min-w-[240px] h-full overflow-auto pt-2 py-4 pl-4 pr-8">
-					<slot name="sidebar" />
+	<div class="relative mt-[60px] min-h-[calc(100vh-340px)]">
+		{#if dataGridPage}
+			<div class="flex flex-col pl-4 pt-2 w-full">
+				<slot />
+			</div>
+		{:else}
+			<div class="flex gap-8">
+				<aside
+					class="sticky top-[60px] left-8 max-w-[240px] min-w-[240px] h-[calc(100vh-60px)] overflow-auto pt-4 pb-8 pl-4 pr-8"
+				>
 					{#await data.students then students}
 						<StudentSideList {students} />
 					{/await}
+				</aside>
+				<div class="flex flex-col w-full pt-2 pb-8">
+					<slot />
 				</div>
-			{/if}
-			<div class="flex flex-col pl-4 w-full">
-				<slot />
 			</div>
-		</div>
+		{/if}
 	</div>
 </div>

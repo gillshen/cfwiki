@@ -103,9 +103,14 @@ export function formatNotableStatuses(statuses: ApplicationStatus[]): string {
 			}
 			if (status === 'On Waitlist' && index < statuses.length - 1) {
 				return 'WL';
-			} else if (status === 'On Waitlist') {
+			}
+			if (status === 'On Waitlist') {
 				// shorten 'On Waitlist' to 'Waitlist'
 				return 'Waitlist';
+			}
+			if (status === 'Pres. Rejected') {
+				// shorten 'Pres. Rejected' to 'Pres. Rej.'
+				return 'Pres. Rej.';
 			}
 			// else return the status as is
 			return status;

@@ -34,7 +34,7 @@ export const DEFAULT_COL_DEF = {
 	minWidth: 100
 };
 
-export const SEPARATOR = '\u2004\u2022\u2004'; // a bullet surrounded by a thick space on each side
+export const SEPARATOR = ' \u2022 '; // a bullet surrounded by a space on each side
 
 export class SearchParamsManager {
 	constructor(
@@ -184,6 +184,16 @@ export const gradeValueGetter =
 		}
 		return '';
 	};
+
+export const formatCfNames = (
+	services: { role: string; cf_username: string }[],
+	role: string
+): string =>
+	services
+		.filter((service) => service.role === role)
+		.map((service) => service.cf_username)
+		.sort()
+		.join(SEPARATOR);
 
 export const getSatOrAct = (scores: { super_sat?: number; super_act?: number }): string => {
 	const { super_sat, super_act } = scores;

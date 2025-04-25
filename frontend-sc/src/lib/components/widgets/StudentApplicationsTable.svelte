@@ -1,10 +1,11 @@
 <script lang="ts">
 	import * as Table from '$lib/components/ui/table/index';
+	import { cn } from '$lib/utils';
+
 	import type { ComposedApplication } from '$lib/api/application';
 	import ApplicationStatusSign from '$lib/components/misc/ApplicationStatusSign.svelte';
 	import LinkIcon from '$lib/components/misc/LinkIcon.svelte';
 	import { orderBySchoolName, orderByStatus, orderByYearDesc } from '$lib/util/applicationUtils';
-	import { cn } from '$lib/utils';
 
 	export let applications: ComposedApplication[];
 
@@ -12,13 +13,12 @@
 	const hasMajor3 = !!applications.filter((a) => a.majors.length > 2).length;
 </script>
 
-<Table.Root class="w-full max-w-[1080px]">
+<Table.Root class="w-full max-w-[1080px] flex-grow-0">
 	<Table.Header>
 		<Table.Row>
 			<Table.Head class="font-semibold">School</Table.Head>
 			<Table.Head class="font-semibold">Program</Table.Head>
-			<Table.Head class="font-semibold">Year</Table.Head>
-			<Table.Head class="font-semibold min-w-[100px]">Adm. Plan</Table.Head>
+			<Table.Head class="font-semibold">Year & Plan</Table.Head>
 			{#if hasMajor2}
 				<Table.Head class="font-semibold min-w-[130px]">Major/Track 1</Table.Head>
 				<Table.Head class="font-semibold min-w-[130px]">Major/Track 2</Table.Head>
@@ -38,23 +38,27 @@
 			.sort(orderByStatus)
 			.sort(orderByYearDesc) as application}
 			<Table.Row>
-				<Table.Cell
-					class={cn(
-						'inline-flex flex-col',
-						hasMajor3 ? 'max-w-[220px]' : hasMajor2 ? 'max-w-[250px]' : 'max-w-[280px]'
-					)}
-				>
-					{#each application.schools as school}
-						<a href={`/school/${school.id}`} class="text-inherit font-semibold truncate"
-							>{school.name}</a
-						>
-					{/each}
+				<Table.Cell>
+					<div
+						class={cn(
+							'flex flex-col',
+							hasMajor3 ? 'max-w-[240px]' : hasMajor2 ? 'max-w-[270px]' : 'max-w-[300px]'
+						)}
+					>
+						{#each application.schools as school}
+							<a href={`/school/${school.id}`} class="text-inherit font-semibold truncate"
+								>{school.name}</a
+							>
+						{/each}
+					</div>
 				</Table.Cell>
 				<Table.Cell class="truncate">{application.program.display_name}</Table.Cell>
-				<Table.Cell>{application.year}</Table.Cell>
-				<Table.Cell>{application.round_name}</Table.Cell>
-				<Table.Cell class="truncate max-w-[160px] text-muted-foreground"
-					>{application.majors[0] || '-'}</Table.Cell
+				<Table.Cell>{application.year} {application.round_name}</Table.Cell>
+				<Table.Cell
+					class={cn(
+						'truncate text-muted-foreground',
+						hasMajor3 ? 'max-w-[130px]' : hasMajor2 ? 'max-w-[180px]' : ''
+					)}>{application.majors[0] || '-'}</Table.Cell
 				>
 				{#if hasMajor2}
 					<Table.Cell class="truncate max-w-[130px] text-muted-foreground"
@@ -67,7 +71,9 @@
 					>
 				{/if}
 				<Table.Cell>
-					<ApplicationStatusSign {application} />
+					<div class="flex">
+						<ApplicationStatusSign {application} />
+					</div>
 				</Table.Cell>
 				<Table.Cell class="max-w-[16px]">
 					<div class="flex justify-end">

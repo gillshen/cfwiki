@@ -40,14 +40,3 @@ export function orderByRole(a: Service, b: Service): number {
 		return indexA - indexB;
 	}
 }
-
-export function formatCfNames(
-	services: { role: string; cf_username: string }[],
-	role: string
-): string {
-	return services
-		.filter((service) => service.role === role)
-		.map((service) => service.cf_username)
-		.sort()
-		.join(', ');
-}

@@ -9,7 +9,7 @@ import type {
 import type { StudentListItem, ContractSummary, StudentEnrollmentItem } from '$lib/api/student';
 import countryFlags from '$lib/constants/countries';
 import { lexicalChineseLast, padChineseRuns, toTitleCase } from '$lib/util/stringUtils';
-import { filterForActive, formatCfNames } from '$lib/util/serviceUtils';
+import { filterForActive } from '$lib/util/serviceUtils';
 import { formatEnrollments } from '$lib/util/enrollmentUtils';
 
 import {
@@ -21,6 +21,7 @@ import {
 
 import {
 	citizenshipValueFormatter,
+	formatCfNames,
 	genderFilterParams,
 	getCfAcademyPrograms,
 	getEnglishProficiency,

@@ -36,7 +36,7 @@
 </script>
 
 {#if latestStatus}
-	<div class="flex items-center gap-1.5 shrink-0">
+	<div class="inline-flex items-center gap-1.5 truncate">
 		{#if icon === 'big-check'}
 			<CircleCheckBig class="text-mint-700 w-[16px] h-[16px] shrink-0" />
 		{:else if icon === 'clock'}

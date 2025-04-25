@@ -2,6 +2,22 @@ import type { Cookies } from '@sveltejs/kit';
 import type { CfUserListItem } from '$lib/api/user';
 import type { StudentDetail, Contract } from '$lib/api/student';
 
+export const filterSortCfUsers = (params: {
+	users: CfUserListItem[];
+	department: '文案' | '咨询';
+	employmentStatus?: 'current' | 'past' | 'all';
+}): CfUserListItem[] => {
+	const { users, department, employmentStatus } = params;
+	return users
+		.filter(
+			(user) =>
+				user.department === department &&
+				(employmentStatus !== 'current' || user.is_active) &&
+				(employmentStatus !== 'past' || !user.is_active)
+		)
+		.sort(orderByUsername);
+};
+
 export function defaultBanner(username: string): string {
 	return `${username}\u2019s Mojo Dojo Casa House`;
 }

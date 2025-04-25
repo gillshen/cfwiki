@@ -18,11 +18,18 @@
 
 <div class="flex flex-wrap items-center justify-between gap-4 w-full">
 	<div class="flex items-center gap-4">
-		<Button
-			variant="link"
-			class="flex items-center gap-1 p-0 hover:no-underline hover:text-primary/80"
-			><Settings class="size-4" />Columns</Button
-		>
+		<Popover.Root>
+			<Popover.Trigger>
+				<Button
+					variant="link"
+					class="flex items-center gap-1 p-0 hover:no-underline hover:text-primary/80"
+					><Settings class="size-4" />Columns</Button
+				>
+			</Popover.Trigger>
+			<Popover.Content class="flex flex-col gap-4 translate-x-9 w-fit min-w-[300px]">
+				<slot name="column-settings" />
+			</Popover.Content>
+		</Popover.Root>
 
 		<Popover.Root>
 			<Popover.Trigger>
@@ -30,10 +37,10 @@
 					variant="link"
 					class="flex items-center gap-1 p-0 hover:no-underline hover:text-primary/80"
 				>
-					<ListFilter class="size-4" />Filters
+					<ListFilter class="size-4" />Quick Filters
 				</Button>
 			</Popover.Trigger>
-			<Popover.Content class="flex flex-col gap-4 translate-y-2">
+			<Popover.Content class="flex flex-col gap-4 w-fit min-w-[300px]">
 				<slot name="filter-units" />
 			</Popover.Content>
 		</Popover.Root>
