@@ -4,8 +4,10 @@
 
 	import { cn } from '$lib/utils';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import * as Avatar from '$lib/components/ui/avatar/index';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import CircleUser from 'lucide-svelte/icons/circle-user';
+	import User from 'lucide-svelte/icons/user';
+	import Settings from 'lucide-svelte/icons/settings';
 	import LogOut from 'lucide-svelte/icons/log-out';
 
 	import StudentSideList from '$lib/components/widgets/student-side-list/StudentSideList.svelte';
@@ -201,17 +203,27 @@
 
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger asChild let:builder>
-				<Button variant="secondary" class="w-10 h-10" builders={[builder]}
-					>{data.username[0].toUpperCase()}</Button
+				<Button variant="outline" class="flex w-[40px] h-[40px] rounded-full" builders={[builder]}
+					><User class="size-5 text-muted-foreground shrink-0" /></Button
 				>
 			</DropdownMenu.Trigger>
-			<DropdownMenu.Content class="w-[160px] -translate-x-4">
-				<DropdownMenu.Group class="p-1 flex flex-col gap-1">
-					<DropdownMenu.Group>
-						<DropdownMenu.Label>{data.username}</DropdownMenu.Label>
-						<DropdownMenu.Item><CircleUser class="size-4 mr-1.5" />Account</DropdownMenu.Item>
-					</DropdownMenu.Group>
+			<DropdownMenu.Content class="min-w-[160px] w-fit -translate-x-6">
+				<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
+					<div class="flex items-center gap-2 py-2">
+						<Avatar.Root>
+							<Avatar.Fallback>
+								<span>{data.username.charAt(0)}</span>
+							</Avatar.Fallback>
+						</Avatar.Root>
+						<div class="flex flex-col">
+							<DropdownMenu.Label class="p-0">{data.username}</DropdownMenu.Label>
+							<div class="text-sm text-muted-foreground pr-4">{data.user.email}</div>
+						</div>
+					</div>
 					<DropdownMenu.Separator />
+					<DropdownMenu.Item href="/my-account" class="text-inherit hover:no-underline"
+						><Settings class="size-4 mr-1.5" />Account Settings</DropdownMenu.Item
+					>
 					<DropdownMenu.Item
 						on:click={() => goto('/logout')}
 						class="text-inherit hover:no-underline"
@@ -224,19 +236,19 @@
 
 	<div class="relative mt-[60px] min-h-[calc(100vh-340px)]">
 		{#if isDataGridPage}
-			<div class="flex flex-col pl-4 pt-2 w-full">
+			<div class="flex flex-col pl-4 pt-6 w-full">
 				<slot />
 			</div>
 		{:else}
 			<div class="flex gap-8">
 				<aside
-					class="sticky top-[60px] left-8 max-w-[240px] min-w-[240px] h-[calc(100vh-60px)] overflow-auto pt-4 pb-8 pl-4 pr-8"
+					class="sticky top-[60px] left-8 max-w-[240px] min-w-[240px] h-[calc(100vh-60px)] overflow-auto pt-8 pb-8 pl-4 pr-8"
 				>
 					{#await data.students then students}
 						<StudentSideList username={data.username} {students} {selectedStudentId} />
 					{/await}
 				</aside>
-				<div class="flex flex-col w-full pt-2 pb-8">
+				<div class="flex flex-col w-full pt-6 pb-8">
 					<slot />
 				</div>
 			</div>

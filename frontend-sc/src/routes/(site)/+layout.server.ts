@@ -18,12 +18,13 @@ export async function load(event) {
 		throw redirect(302, '/login');
 	}
 
-	const host = await fetchUser(username);
+	const user = await fetchUser(username);
 
 	return {
 		userId,
 		username,
+		user,
 		cfUsers: await fetchCfUsers(),
-		students: fetchStudentsByUser({ cfer: host.username })
+		students: fetchStudentsByUser({ cfer: user.username })
 	};
 }

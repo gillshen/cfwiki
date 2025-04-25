@@ -6,7 +6,7 @@
 	export let data;
 
 	const form = superForm(data.authForm);
-	const { form: formData, message, enhance } = form;
+	const { form: formData, enhance } = form;
 </script>
 
 <div class="mx-auto space-y-12 px-4 pt-4 pb-20">
