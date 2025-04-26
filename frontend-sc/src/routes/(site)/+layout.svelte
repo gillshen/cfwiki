@@ -221,13 +221,15 @@
 						</div>
 					</div>
 					<DropdownMenu.Separator />
-					<DropdownMenu.Item href="/my-account" class="text-inherit hover:no-underline"
-						><Settings class="size-4 mr-1.5" />Account Settings</DropdownMenu.Item
+					<DropdownMenu.Item
+						href="/my-account"
+						class="flex items-center text-inherit hover:no-underline"
+						><Settings class="size-4 mr-2.5" />Settings</DropdownMenu.Item
 					>
 					<DropdownMenu.Item
 						on:click={() => goto('/logout')}
-						class="text-inherit hover:no-underline"
-						><LogOut class="size-4 mr-1.5" />Log Out</DropdownMenu.Item
+						class="flex items-center text-inherit hover:no-underline"
+						><LogOut class="size-4 mr-2.5" />Log Out</DropdownMenu.Item
 					>
 				</DropdownMenu.Group>
 			</DropdownMenu.Content>

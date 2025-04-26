@@ -61,9 +61,9 @@
 	</h1>
 	<div class="flex gap-3 items-center">
 		<Badge variant="default">{program.type}</Badge>
-		<div class="text-sm">
+		{#key data.application.logs}
 			<ApplicationStatusSign application={data.application} />
-		</div>
+		{/key}
 	</div>
 </section>
 

@@ -13,6 +13,8 @@
 	import { formatLocation, formatRanking, getLatestRanking } from '$lib/util/schoolUtils';
 	import { groupByCategory, enhanceDisplayName } from '$lib/util/programUtils';
 	import { filterByType } from '$lib/util/applicationUtils';
+	import { toISOYearMonth } from '$lib/util/dateUtils';
+	import { orderByDatesDesc } from '$lib/util/enrollmentUtils';
 
 	export let data;
 
@@ -112,12 +114,13 @@
 	{#if enrollments.length}
 		<Section id="students-and-alumni" title="Students & Alumni">
 			<div class="flex flex-col gap-2">
-				{#each enrollments.sort() as enrollment}
+				{#each enrollments.sort(orderByDatesDesc) as enrollment}
 					{@const student = enrollment.student}
-					<a href={`/student/${student.id}`} class="inline-block">
-						{student.fullname}
-						<span class="mx-1 text-gray-400">@</span>
-						{enrollment.start_date} &ndash; {enrollment.end_date ?? '?'}
+					<a href={`/student/${student.id}`} class="inline-block w-fit">
+						<span class="text-primary">{student.fullname}</span>
+						<span class="mx-1">@</span>
+						{toISOYearMonth(enrollment.start_date)} &ndash; {toISOYearMonth(enrollment.end_date) ??
+							'?'}
 					</a>
 				{/each}
 			</div>
