@@ -10,10 +10,13 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from django.db.models import OuterRef, Subquery, Count, F, Q, Prefetch
+from django.core.cache import cache
 
 from core.models import CFUser, Student, Service, Contract, Application, ApplicationLog
 from target.models import School, ApplicationRound
 from academics.models import Enrollment
+
+from core.cache_utils import CacheResponseMixin
 
 from core.serializers import (
     CFUserSerializer,
@@ -64,8 +67,7 @@ class CFUserPasswordUpdateView(UpdateAPIView):
     serializer_class = CFUserPasswordResetSerializer
 
 
-class StudentListView(ListAPIView):
-
+class StudentListView(CacheResponseMixin, ListAPIView):
     serializer_class = StudentListSerializer
 
     def get_queryset(self):
@@ -102,7 +104,7 @@ class StudentListView(ListAPIView):
         )
 
 
-class StudentPerUserListView(ListAPIView):
+class StudentPerUserListView(CacheResponseMixin, ListAPIView):
     serializer_class = StudentPerUserSerializer
 
     def get_queryset(self):
@@ -177,7 +179,7 @@ class ServiceRUDView(RetrieveUpdateDestroyAPIView):
     serializer_class = ServiceCRUDSerializer
 
 
-class ApplicationWithLogsListView(ListAPIView):
+class ApplicationWithLogsListView(CacheResponseMixin, ListAPIView):
     serializer_class = ApplicationWithLogsSerializer
 
     def get_queryset(self):
@@ -207,7 +209,7 @@ class ApplicationWithLogsListView(ListAPIView):
         )
 
 
-class ApplicationTargetListView(ListAPIView):
+class ApplicationTargetListView(CacheResponseMixin, ListAPIView):
     serializer_class = ApplicationTargetSerializer
 
     def get_queryset(self):
@@ -230,7 +232,7 @@ class ApplicationTargetListView(ListAPIView):
         return q
 
 
-class ApplicationContractListView(ListAPIView):
+class ApplicationContractListView(CacheResponseMixin, ListAPIView):
     serializer_class = ApplicationContractSerializer
 
     def get_queryset(self):

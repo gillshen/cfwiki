@@ -187,7 +187,9 @@ class StudentListSerializer(serializers.ModelSerializer):
         return summary
 
     def get_ib_summary(self, student):
-        summary = defaultdict(lambda: defaultdict(int))
+ 
+        
+        summary = defaultdict(defaultdict_int)
 
         for ib in student.ib.all():
             if ib.grade is None:
@@ -202,10 +204,15 @@ class StudentListSerializer(serializers.ModelSerializer):
         return summary
 
     def get_alevel_summary(self, student):
-        summary = defaultdict(lambda: defaultdict(int))
+        summary = defaultdict(defaultdict_int)
         for alevel in [a for a in student.alevel.all() if a.grade is not None]:
             summary[alevel.type][alevel.grade] += 1
         return summary
+
+
+# Must be a top-level function or caching will not work
+def defaultdict_int():
+    return defaultdict(int)
 
 
 class StudentPerUserSerializer(serializers.ModelSerializer):

@@ -31,6 +31,8 @@ from target.serializers import (
     SchoolRankingEntryCRUDSerializer,
 )
 
+from core.cache_utils import CacheResponseMixin
+
 
 class SchoolListView(ListAPIView):
     serializer_class = SchoolSerializer
@@ -167,7 +169,7 @@ class SchoolRankingRUDView(RetrieveUpdateDestroyAPIView):
     serializer_class = SchoolRankingCRUDSerializer
 
 
-class SchoolRankingEntryListView(ListAPIView):
+class SchoolRankingEntryListView(CacheResponseMixin, ListAPIView):
     serializer_class = SchoolRankingEntrySerializer
 
     def get_queryset(self):

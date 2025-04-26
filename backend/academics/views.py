@@ -39,8 +39,10 @@ from academics.serializers import (
     LSATScoreCRUDSerializer,
 )
 
+from core.cache_utils import CacheResponseMixin
 
-class EnrollmentListView(ListAPIView):
+
+class EnrollmentListView(CacheResponseMixin, ListAPIView):
     serializer_class = EnrollmentListSerializer
 
     def get_queryset(self):
