@@ -182,6 +182,18 @@ class ServiceRUDView(RetrieveUpdateDestroyAPIView):
 class ApplicationWithLogsListView(CacheResponseMixin, ListAPIView):
     serializer_class = ApplicationWithLogsSerializer
 
+    cache_relevant_params = {
+        "student",
+        "cfer",
+        "school",
+        "school_attended",
+        "program",
+        "program_iteration",
+        "year",
+        "application_type",
+        "status",
+    }
+
     def get_queryset(self):
         query_params = self.request.query_params
 
@@ -212,6 +224,14 @@ class ApplicationWithLogsListView(CacheResponseMixin, ListAPIView):
 class ApplicationTargetListView(CacheResponseMixin, ListAPIView):
     serializer_class = ApplicationTargetSerializer
 
+    cache_relevant_params = {
+        "year",
+        "school",
+        "program",
+        "programs",
+        "program_iteration",
+    }
+
     def get_queryset(self):
         q = ApplicationRound.objects.select_related(
             "program_iteration__program",
@@ -234,6 +254,8 @@ class ApplicationTargetListView(CacheResponseMixin, ListAPIView):
 
 class ApplicationContractListView(CacheResponseMixin, ListAPIView):
     serializer_class = ApplicationContractSerializer
+
+    cache_relevant_params = {"student", "cfer"}
 
     def get_queryset(self):
         q = Contract.objects.select_related("student").prefetch_related(

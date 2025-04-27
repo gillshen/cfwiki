@@ -1,17 +1,30 @@
 import traceback
 
 from django.core.cache import cache
+from django.http import QueryDict
 from rest_framework.response import Response
 
 
 class CacheResponseMixin:
     cache_timeout = 60 * 15  # Default: 15 minutes
+    cache_relevant_params: str | set[str] = "__all__"
 
     def get_cache_key(self):
         """Generate unique cache key based on view class name and query parameters"""
         base_key = self.__class__.__name__
-        params = self.request.query_params.urlencode()
+        params = self.get_cache_params()
         return f"{base_key}({params})"
+
+    def get_cache_params(self):
+        if self.cache_relevant_params == "__all__":
+            return self.request.query_params.urlencode()
+
+        # Look only at the params explicitly declared as relevant
+        relevant_params = QueryDict(mutable=True)
+        for key, value_list in self.request.query_params.lists():
+            if key in self.cache_relevant_params:
+                relevant_params[key] = value_list
+        return relevant_params.urlencode()
 
     def list(self, request, *args, **kwargs):
         cache_key = self.get_cache_key()
