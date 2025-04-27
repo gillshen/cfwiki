@@ -15,7 +15,8 @@ import {
 	formatAlevelSummary,
 	formatApSummary,
 	formatIbSummary,
-	formatLocation
+	formatLocation,
+	formatNameWithPref
 } from '$lib/util/studentUtils';
 
 import {
@@ -106,7 +107,7 @@ export const getColumnDefs = (params: PageParams) => {
 		},
 		{
 			headerName: 'Name',
-			valueGetter: nameValueGetter,
+			valueGetter: (params: ValueGetterParams) => formatNameWithPref(params.data),
 			comparator: lexicalChineseLast,
 			width: 120,
 			pinned: true
@@ -303,18 +304,6 @@ export const getColumnDefs = (params: PageParams) => {
 class StudentIdRenderer extends IdRenderer {
 	path: string = '/student';
 }
-
-const _formatName = (student: StudentListItem): string => {
-	if (!student.preferred_name || student.preferred_name === student.given_name) {
-		return student.fullname;
-	} else {
-		return `${student.fullname} ${student.preferred_name}`;
-	}
-};
-
-const nameValueGetter = (params: ValueGetterParams): string => {
-	return _formatName(params.data);
-};
 
 const _getRelevantContract = (
 	student: StudentListItem,

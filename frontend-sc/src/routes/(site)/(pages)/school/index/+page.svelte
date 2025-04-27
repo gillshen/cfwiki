@@ -4,10 +4,34 @@
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
-	import SchoolDirectory from '$lib/components/widgets/SchoolDirectory.svelte';
+	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
+	import type { SchoolType } from '$lib/api/school';
+	import { groupByType, orderByName } from '$lib/util/schoolUtils';
 	import { scrollToHash } from '$lib/util/siteUtils';
 
 	export let data;
+
+	const schoolTypeToId = (schoolType: SchoolType | string): string => {
+		switch (schoolType) {
+			case 'University':
+				return 'universities';
+			case 'Secondary School':
+				return 'secondary-schools';
+			case 'Other':
+				return 'other-institutions';
+			default:
+				return schoolType;
+		}
+	};
+
+	const typeToIndex: Record<SchoolType | string, number> = {
+		University: 0,
+		'Secondary School': 1,
+		Other: 2
+	};
+
+	const compareSchoolTypes = (a: SchoolType | string, b: SchoolType | string): number =>
+		typeToIndex[a] - typeToIndex[b];
 
 	afterNavigate(scrollToHash);
 </script>
@@ -18,14 +42,18 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<Section id="universities" title="Universities" class="scroll-mt-[64px]">
-	<SchoolDirectory schools={data.schools} type="University" />
-</Section>
-
-<Section id="secondary-schools" title="Secondary Schools" class="scroll-mt-[64px]">
-	<SchoolDirectory schools={data.schools} type="Secondary School" />
-</Section>
-
-<Section id="other-institutions" title="Other Institutions" class="scroll-mt-[64px]">
-	<SchoolDirectory schools={data.schools} type="Other" />
-</Section>
+{#await data.schools}
+	<LoadingSign />
+{:then schools}
+	{#each Object.entries(groupByType(schools)).sort( ([typeA], [typeB]) => compareSchoolTypes(typeA, typeB) ) as [schoolType, schoolList]}
+		{#if schoolList.length}
+			<Section id={schoolTypeToId(schoolType)} title={schoolType} class="scroll-mt-[64px]">
+				<div class="grid lg:grid-cols-2 md:grid-cols-1 gap-2">
+					{#each schoolList.sort(orderByName) as school}
+						<a href={`/school/${school.id}`} class="w-fit">{school.name}</a>
+					{/each}
+				</div>
+			</Section>
+		{/if}
+	{/each}
+{/await}

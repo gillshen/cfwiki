@@ -1,8 +1,33 @@
-import type { ComposedSchoolListItem, School, SchoolStats, RankingEntry } from '$lib/api/school';
+import {
+	type ComposedSchoolListItem,
+	type School,
+	type SchoolStats,
+	type RankingEntry,
+	type SchoolType
+} from '$lib/api/school';
+
 import { blankStats } from '$lib/api/stats';
 import { lexicalChineseLast } from '$lib/util/stringUtils';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
+
+export const groupByType = (schools: School[]): { [t in SchoolType]?: School[] } => {
+	const grouped: { [t in SchoolType]?: School[] } = {};
+
+	for (const school of schools) {
+		const schoolType = school.type;
+		if (!(schoolType in grouped)) {
+			grouped[schoolType] = [];
+		}
+		console.log(schoolType, grouped[schoolType]?.length);
+		if (!grouped[schoolType]!.includes(school)) {
+			grouped[schoolType]!.push(school);
+		}
+	}
+
+	console.table(grouped);
+	return grouped;
+};
 
 export function combineWithStats(
 	schools: School[],

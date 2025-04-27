@@ -1,6 +1,6 @@
 import type {
 	BaseStudent,
-	StudentOfCferListItem,
+	StudentListItem,
 	Contract,
 	CohortMember,
 	ApSummary,
@@ -8,10 +8,12 @@ import type {
 	AlevelSummary
 } from '$lib/api/student';
 
+import type { ContractType } from '$lib/api/contract';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
 import { isActive } from '$lib/util/serviceUtils';
 import { compareAlevelGrade } from '$lib/util/scoresUtils';
+import { lexicalChineseLast } from './stringUtils';
 
 export const isCurrentForCfUser = (params: {
 	student: { contracts: Contract[] };
@@ -113,87 +115,66 @@ function _formatScoreDistribution(
 	return `${prefix}${formatted}`;
 }
 
-export function groupByTargetYear(
-	username: string,
-	students: StudentOfCferListItem[]
-): Record<string, CohortMember[]> {
-	const groupedStudents: Record<string, CohortMember[]> = {};
+export const groupByTargetYear = (
+	students: StudentListItem[]
+): Record<string, StudentListItem[]> => {
+	const grouped: Record<string, StudentListItem[]> = {};
 
 	for (const student of students) {
 		for (const contract of student.contracts) {
-			const status = _getServiceStatus(username, contract);
-
-			if (status !== 'never') {
-				const key = contract.target_year.toString();
-				if (!groupedStudents[key]) {
-					groupedStudents[key] = [];
-				}
-				groupedStudents[key].push({ student, contract, current: status === 'current' });
+			const key = contract.target_year.toString();
+			if (!(key in grouped)) {
+				grouped[key] = [];
+			}
+			if (!grouped[key].includes(student)) {
+				grouped[key].push(student);
 			}
 		}
 	}
 
-	const sortedGroups: Record<string, CohortMember[]> = {};
-	const sortedGroupKeys = Object.keys(groupedStudents).sort(
-		(a, b) => parseInt(b, 10) - parseInt(a, 10)
-	);
+	console.table(grouped);
+	return grouped;
+};
 
-	for (const key of sortedGroupKeys) {
-		// Add a trailing space to prevent JS from reordering the keys
-		sortedGroups[`${key} `] = groupedStudents[key];
-	}
-	return sortedGroups;
-}
+export const groupByContractType = (
+	students: StudentListItem[],
+	targetYear?: number
+): { [t in ContractType]?: StudentListItem[] } => {
+	const grouped: { [t in ContractType]?: StudentListItem[] } = {};
+	for (const student of students) {
+		for (const contract of student.contracts) {
+			// Exclude contracts of other years
+			if (targetYear !== undefined && contract.target_year !== targetYear) {
+				continue;
+			}
 
-function _getServiceStatus(username: string, contract: Contract): 'current' | 'past' | 'never' {
-	const statuses = [];
+			const contractType = contract.type;
 
-	// A cfer may work in multiple roles on the same contract,
-	// so the overall status would be 'past' only if all roles have ended
-	for (const service of contract.services) {
-		if (service.cf_username === username) {
-			const roleStatus = contract.status === 'In effect' && isActive(service) ? 'current' : 'past';
-			statuses.push(roleStatus);
+			if (!(contractType in grouped)) {
+				grouped[contractType] = [];
+			}
+			if (!grouped[contractType]!.includes(student)) {
+				grouped[contractType]!.push(student);
+			}
 		}
+		console.log('processed', student.fullname);
 	}
 
-	if (!statuses.length) {
-		return 'never';
+	console.table(grouped);
+
+	return grouped;
+};
+
+export const formatNameWithPref = (student: StudentListItem): string => {
+	if (!student.preferred_name || student.preferred_name === student.given_name) {
+		return student.fullname;
+	} else {
+		return `${student.fullname} ${student.preferred_name}`;
 	}
-	return statuses.includes('current') ? 'current' : 'past';
-}
-
-export function categorize(cohort: CohortMember[]): {
-	'UG Freshman': CohortMember[];
-	'UG Transfer': CohortMember[];
-	Graduate: CohortMember[];
-} {
-	const ugFreshman: CohortMember[] = [];
-	const ugTransfer: CohortMember[] = [];
-	const graduate: CohortMember[] = [];
-
-	for (const member of cohort) {
-		switch (member.contract.type) {
-			case 'UG Freshman':
-				ugFreshman.push(member);
-				break;
-			case 'UG Transfer':
-				ugTransfer.push(member);
-				break;
-			default:
-				graduate.push(member);
-		}
-	}
-
-	return {
-		'UG Freshman': ugFreshman,
-		'UG Transfer': ugTransfer,
-		Graduate: graduate
-	};
-}
+};
 
 export function orderByName(a: { fullname: string }, b: { fullname: string }) {
-	return a.fullname.localeCompare(b.fullname, 'zh-CN');
+	return lexicalChineseLast(a.fullname, b.fullname);
 }
 
 export function orderByStatusName(a: CohortMember, b: CohortMember) {

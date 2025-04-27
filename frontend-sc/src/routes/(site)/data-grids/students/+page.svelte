@@ -90,7 +90,7 @@
 	<h1 class="data-grid-title">Students</h1>
 
 	<DataGridControl.Root rowData={data.students} {gridApi} baseFileName="cf_students">
-		<svelte:fragment slot="filter-units">
+		<div slot="filter-units" class="flex flex-col gap-4">
 			<DataGridControl.FilterUnit label="Target year">
 				<Select.Root
 					selected={{ value: targetYear, label: targetYear }}
@@ -135,7 +135,7 @@
 					/>
 				</Select.Root>
 			</DataGridControl.FilterUnit>
-		</svelte:fragment>
+		</div>
 
 		<svelte:fragment slot="filter-badges">
 			{#if cfer !== 'All'}

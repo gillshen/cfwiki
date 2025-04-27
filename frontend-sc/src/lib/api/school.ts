@@ -8,11 +8,15 @@ export type RankingEntry = {
 	rank: number;
 };
 
+export const schoolTypes = ['University', 'Secondary School', 'Other'] as const;
+
+export type SchoolType = (typeof schoolTypes)[number];
+
 export type School = {
 	id: number;
 	name: string;
 	alt_name: string;
-	type: 'University' | 'Secondary School' | 'Other';
+	type: SchoolType;
 	country: string;
 	region: string;
 	city: string;

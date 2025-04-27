@@ -1,5 +1,5 @@
 import { get, patch, post, destroy, buildQuery } from '$lib/api/core';
-import type { Service } from '$lib/api/contract';
+import type { ContractType, Service } from '$lib/api/contract';
 import type { EnrollmentByStudent } from '$lib/api/enrollment';
 import type { BaseGrade } from '$lib/api/grade';
 import type { AcademyProgramListItem } from '$lib/api/academyProgram';
@@ -35,7 +35,7 @@ export type BaseStudent = {
 };
 
 export type ContractSummary = {
-	type: string;
+	type: ContractType;
 	target_year: number;
 	status: 'In effect' | 'Fulfilled' | 'Terminated';
 	services: Service[];

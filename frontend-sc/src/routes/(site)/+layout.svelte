@@ -63,6 +63,11 @@
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content class="min-w-[160px]">
 					<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
+						<DropdownMenu.Item
+							href="/data-grids/students?contractStatus=In+effect"
+							class="text-inherit hover:no-underline">Current Students</DropdownMenu.Item
+						>
+						<DropdownMenu.Separator />
 						{#each quickAccessYears() as year}
 							<DropdownMenu.Sub>
 								<DropdownMenu.SubTrigger>{year}</DropdownMenu.SubTrigger>
@@ -83,10 +88,6 @@
 							</DropdownMenu.Sub>
 						{/each}
 						<DropdownMenu.Separator />
-						<DropdownMenu.Item
-							href="/data-grids/students?contractStatus=In+effect"
-							class="text-inherit hover:no-underline">Current Students</DropdownMenu.Item
-						>
 						<DropdownMenu.Item href="/data-grids/students" class="text-inherit hover:no-underline"
 							>All Students</DropdownMenu.Item
 						>
@@ -100,6 +101,11 @@
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content class="min-w-[180px]">
 					<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
+						<DropdownMenu.Item
+							href="/data-grids/applications?status=pending"
+							class="text-inherit hover:no-underline">Pending Applications</DropdownMenu.Item
+						>
+						<DropdownMenu.Separator />
 						{#each quickAccessYears() as year}
 							<DropdownMenu.Sub>
 								<DropdownMenu.SubTrigger>{year}</DropdownMenu.SubTrigger>
@@ -133,10 +139,6 @@
 							</DropdownMenu.Sub>
 						{/each}
 						<DropdownMenu.Separator />
-						<DropdownMenu.Item
-							href="/data-grids/applications?status=pending"
-							class="text-inherit hover:no-underline">Pending Applications</DropdownMenu.Item
-						>
 						<DropdownMenu.Item
 							href="/data-grids/applications"
 							class="text-inherit hover:no-underline">All Applications</DropdownMenu.Item

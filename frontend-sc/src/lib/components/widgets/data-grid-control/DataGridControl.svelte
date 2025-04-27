@@ -30,7 +30,7 @@
 </script>
 
 <div class="flex flex-wrap items-center justify-between gap-4 w-full">
-	<div class="flex items-center gap-4">
+	<div class="flex items-center gap-4 flex-grow-1">
 		<Popover.Root>
 			<Popover.Trigger>
 				<Button
@@ -39,10 +39,14 @@
 					><Settings class="size-4" />Columns</Button
 				>
 			</Popover.Trigger>
-			<Popover.Content class="px-6 pb-6 flex flex-col gap-4 translate-x-9 w-fit min-w-[300px]">
-				<h2 class="text-base font-semibold">Choose columns to display</h2>
+			<Popover.Content class="p-0 flex flex-col gap-4 translate-x-9 w-fit min-w-[300px]">
+				<h2 class="px-6 pt-4 text-base font-semibold flex items-center gap-2">
+					<Settings class="size-4" />Choose columns to display
+				</h2>
 
-				<div class="grid grid-cols-4 gap-y-2 gap-x-4 max-h-[calc(100vh-310px)] overflow-auto">
+				<div
+					class="px-6 pb-6 grid grid-cols-4 gap-y-2 gap-x-4 max-h-[calc(100vh-288px)] overflow-auto"
+				>
 					{#each gridApi?.getColumns() ?? [] as column, index}
 						{@const headerName = column.getColDef().headerName || 'ID'}
 						<div class="flex items-center space-x-2">
@@ -74,8 +78,13 @@
 					<ListFilter class="size-4" />Quick Filters
 				</Button>
 			</Popover.Trigger>
-			<Popover.Content class="px-6 pt-5 pb-6 flex flex-col gap-4 w-fit min-w-[300px]">
-				<slot name="filter-units" />
+			<Popover.Content class="p-0 flex flex-col gap-4 w-fit min-w-[300px]">
+				<h2 class="px-6 pt-4 text-base font-semibold flex items-center gap-2">
+					<ListFilter class="size-4" />Filter by
+				</h2>
+				<div class="px-6 pb-6 max-h-[calc(100vh-288px)] overflow-auto">
+					<slot name="filter-units" />
+				</div>
 			</Popover.Content>
 		</Popover.Root>
 
@@ -95,7 +104,12 @@
 
 			<Tooltip.Root>
 				<Tooltip.Trigger>
-					<Button variant="outline" size="icon" class="flex items-center gap-1 w-[40px] h-[40px]">
+					<Button
+						variant="outline"
+						size="icon"
+						class="flex items-center gap-1 w-[40px] h-[40px]"
+						on:click={() => alert('TODO: stats')}
+					>
 						<ChartColumn class="size-4" />
 					</Button>
 				</Tooltip.Trigger>
