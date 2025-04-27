@@ -8,9 +8,23 @@ import type { School } from '$lib/api/school';
 import type { StudentEnrollmentItem } from '$lib/api/student';
 import ApplicationStatusSign from '$lib/components/misc/ApplicationStatusSign.svelte';
 import { lexicalChineseLast, padChineseRuns, toTitleCase } from '$lib/util/stringUtils';
-import { formatCfNames } from '$lib/util/dataGridUtils';
 import { formatEnrollments } from '$lib/util/enrollmentUtils';
 import { makeDate, toShortDate } from '$lib/util/dateUtils';
+
+import {
+	formatCfNames,
+	formatResidence,
+	getEnglishProficiency,
+	getGreOrGmat,
+	getSatOrAct
+} from '$lib/util/dataGridUtils';
+
+import {
+	formatAlevelSummary,
+	formatApSummary,
+	formatIbSummary,
+	formatLocation
+} from '$lib/util/studentUtils';
 
 import {
 	formatNotableStatuses,
@@ -106,7 +120,6 @@ export const getColumnDefs = (params: PageParams) => {
 		{
 			headerName: 'Year',
 			field: 'year',
-			type: 'numeric',
 			filter: 'agNumberColumnFilter',
 			flex: 0.8
 		},
@@ -147,6 +160,13 @@ export const getColumnDefs = (params: PageParams) => {
 			valueFormatter: citizenshipValueFormatter,
 			useValueFormatterForExport: false
 		},
+		{
+			headerName: 'Primary Residence',
+			valueGetter: (params: ValueGetterParams): string => formatLocation(params.data.student),
+			comparator: lexicalChineseLast,
+			valueFormatter: (params: ValueFormatterParams) => formatResidence(params.data.student),
+			useValueFormatterForExport: false
+		},
 
 		// educational history
 		{
@@ -158,6 +178,81 @@ export const getColumnDefs = (params: PageParams) => {
 
 		// grades
 		...gradeColumns,
+
+		// scores
+		{
+			headerName: 'SAT/ACT',
+			valueGetter: (params: ValueGetterParams) => getSatOrAct(params.data.student.scores)
+		},
+		{
+			headerName: 'SAT',
+			field: 'student.scores.super_sat',
+			type: ['rightAligned'],
+			filter: 'agNumberColumnFilter'
+		},
+		{
+			headerName: 'ACT',
+			field: 'student.scores.super_act',
+			type: ['rightAligned'],
+			filter: 'agNumberColumnFilter'
+		},
+		{
+			headerName: 'AP',
+			valueGetter: (params: ValueGetterParams) => formatApSummary(params.data.student.ap_summary)
+		},
+		{
+			headerName: 'IB',
+			valueGetter: (params: ValueGetterParams) => formatIbSummary(params.data.student.ib_summary)
+		},
+		{
+			headerName: 'A-level',
+			valueGetter: (params: ValueGetterParams) =>
+				formatAlevelSummary(params.data.student.alevel_summary)
+		},
+		{
+			headerName: 'GRE/GMAT',
+			valueGetter: (params: ValueGetterParams) => getGreOrGmat(params.data.student.scores)
+		},
+		{
+			headerName: 'GRE',
+			field: 'student.scores.best_gre',
+			type: ['rightAligned'],
+			filter: 'agNumberColumnFilter'
+		},
+		{
+			headerName: 'GMAT',
+			field: 'student.scores.best_gmat',
+			type: ['rightAligned'],
+			filter: 'agNumberColumnFilter'
+		},
+		{
+			headerName: 'LSAT',
+			field: 'student.scores.best_lsat',
+			type: ['rightAligned'],
+			filter: 'agNumberColumnFilter'
+		},
+		{
+			headerName: 'Eng. Proficiency',
+			valueGetter: (params: ValueGetterParams) => getEnglishProficiency(params.data.student.scores)
+		},
+		{
+			headerName: 'TOEFL',
+			field: 'student.scores.best_toefl',
+			type: ['rightAligned'],
+			filter: 'agNumberColumnFilter'
+		},
+		{
+			headerName: 'IELTS',
+			field: 'student.scores.best_ielts',
+			type: ['rightAligned'],
+			filter: 'agNumberColumnFilter'
+		},
+		{
+			headerName: 'Duolingo',
+			field: 'student.scores.best_duolingo',
+			type: ['rightAligned'],
+			filter: 'agNumberColumnFilter'
+		},
 
 		// targets
 		{

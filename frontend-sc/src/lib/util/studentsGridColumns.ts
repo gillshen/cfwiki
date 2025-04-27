@@ -7,7 +7,6 @@ import type {
 } from 'ag-grid-community';
 
 import type { StudentListItem, ContractSummary, StudentEnrollmentItem } from '$lib/api/student';
-import countryFlags from '$lib/constants/countries';
 import { lexicalChineseLast, padChineseRuns, toTitleCase } from '$lib/util/stringUtils';
 import { filterForActive } from '$lib/util/serviceUtils';
 import { formatEnrollments } from '$lib/util/enrollmentUtils';
@@ -22,6 +21,7 @@ import {
 import {
 	citizenshipValueFormatter,
 	formatCfNames,
+	formatResidence,
 	genderFilterParams,
 	getCfAcademyPrograms,
 	getEnglishProficiency,
@@ -108,7 +108,6 @@ export const getColumnDefs = (params: PageParams) => {
 		{
 			headerName: 'Target Year',
 			valueGetter: targetYearValueGetter(params),
-			type: 'numeric',
 			filter: 'agNumberColumnFilter',
 			flex: 0.8
 		},
@@ -162,17 +161,16 @@ export const getColumnDefs = (params: PageParams) => {
 		},
 		{
 			headerName: 'Primary Residence',
-			valueGetter: residenceValueGetter,
+			valueGetter: (params: ValueGetterParams) => formatLocation(params.data),
 			comparator: lexicalChineseLast,
-			valueFormatter: residenceValueFormatter,
+			valueFormatter: (params: ValueFormatterParams) => formatResidence(params.data),
 			useValueFormatterForExport: false
 		},
 
 		// educational history
 		{
 			headerName: 'Edu. History',
-			valueGetter: (params: ValueGetterParams): string =>
-				formatEnrollments(params.data.enrollments),
+			valueGetter: (params: ValueGetterParams) => formatEnrollments(params.data.enrollments),
 			flex: 2
 		},
 
@@ -187,13 +185,13 @@ export const getColumnDefs = (params: PageParams) => {
 		{
 			headerName: 'SAT',
 			field: 'scores.super_sat',
-			type: ['numeric', 'rightAligned'],
+			type: ['rightAligned'],
 			filter: 'agNumberColumnFilter'
 		},
 		{
 			headerName: 'ACT',
 			field: 'scores.super_act',
-			type: ['numeric', 'rightAligned'],
+			type: ['rightAligned'],
 			filter: 'agNumberColumnFilter'
 		},
 		{
@@ -215,19 +213,19 @@ export const getColumnDefs = (params: PageParams) => {
 		{
 			headerName: 'GRE',
 			field: 'scores.best_gre',
-			type: ['numeric', 'rightAligned'],
+			type: ['rightAligned'],
 			filter: 'agNumberColumnFilter'
 		},
 		{
 			headerName: 'GMAT',
 			field: 'scores.best_gmat',
-			type: ['numeric', 'rightAligned'],
+			type: ['rightAligned'],
 			filter: 'agNumberColumnFilter'
 		},
 		{
 			headerName: 'LSAT',
 			field: 'scores.best_lsat',
-			type: ['numeric', 'rightAligned'],
+			type: ['rightAligned'],
 			filter: 'agNumberColumnFilter'
 		},
 		{
@@ -237,19 +235,19 @@ export const getColumnDefs = (params: PageParams) => {
 		{
 			headerName: 'TOEFL',
 			field: 'scores.best_toefl',
-			type: ['numeric', 'rightAligned'],
+			type: ['rightAligned'],
 			filter: 'agNumberColumnFilter'
 		},
 		{
 			headerName: 'IELTS',
 			field: 'scores.best_ielts',
-			type: ['numeric', 'rightAligned'],
+			type: ['rightAligned'],
 			filter: 'agNumberColumnFilter'
 		},
 		{
 			headerName: 'Duolingo',
 			field: 'scores.best_duolingo',
-			type: ['numeric', 'rightAligned'],
+			type: ['rightAligned'],
 			filter: 'agNumberColumnFilter'
 		},
 
@@ -357,17 +355,6 @@ const serviceValueGetter =
 		const services = filterForActive(latestContract.services);
 		return formatCfNames(services, role);
 	};
-
-const residenceValueGetter = (params: ValueGetterParams): string => formatLocation(params.data);
-
-const residenceValueFormatter = (params: ValueFormatterParams): string => {
-	const residence = formatLocation(params.data);
-	if (!residence) {
-		return '';
-	}
-	const flag = countryFlags[params.data.base_country];
-	return `${flag}\xa0\xa0${residence}`;
-};
 
 const enrollmentsGetter = (params: ValueGetterParams): StudentEnrollmentItem[] =>
 	params.data.enrollments;

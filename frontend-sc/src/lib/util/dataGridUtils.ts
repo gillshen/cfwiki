@@ -16,12 +16,13 @@ import {
 } from 'ag-grid-community';
 
 import GridLinkIcon from '$lib/components/misc/GridLinkIcon.svelte';
-import type { StudentEnrollmentItem } from '$lib/api/student';
+import type { StudentEnrollmentItem, StudentListItem } from '$lib/api/student';
 import type { BaseGrade } from '$lib/api/grade';
 import type { AcademyProgramListItem } from '$lib/api/academyProgram';
 import { formatGradeValue, parseNum } from '$lib/util/gradeUtils';
 import { filterCfAcamdeyPrograms, formatCfAcamdeyPrograms } from '$lib/util/cfAcademyUtils';
 import countryFlags from '$lib/constants/countries';
+import { formatLocation } from './studentUtils';
 
 export const DEFAULT_GRID_OPTIONS = {
 	enableCellTextSelection: true,
@@ -158,6 +159,15 @@ export const genderFilterParams: ITextFilterParams = {
 
 export const citizenshipValueFormatter = (params: ValueFormatterParams): string =>
 	`${countryFlags[params.value]}\xa0\xa0${params.value}`;
+
+export const formatResidence = (student: StudentListItem): string => {
+	const residence = formatLocation(student);
+	if (!residence) {
+		return '';
+	}
+	const flag = countryFlags[student.base_country];
+	return `${flag}\xa0\xa0${residence}`;
+};
 
 export const gradeValueGetter =
 	(params: {

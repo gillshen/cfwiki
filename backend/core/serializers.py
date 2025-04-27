@@ -187,8 +187,7 @@ class StudentListSerializer(serializers.ModelSerializer):
         return summary
 
     def get_ib_summary(self, student):
- 
-        
+
         summary = defaultdict(defaultdict_int)
 
         for ib in student.ib.all():
@@ -393,6 +392,9 @@ class ApplicationContractSerializer(serializers.ModelSerializer):
                 "fullname",
                 "gender",
                 "citizenship",
+                "base_country",
+                "base_subnational",
+                "base_city",
                 "enrollments",
                 "scores",
                 "ap_summary",
