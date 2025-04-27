@@ -73,17 +73,6 @@
 
 	const paramsManager = new SearchParamsManager(page, updateGrid);
 
-	// const columnDefs = [
-	// 	{ field: 'id' },
-	// 	{ field: 'fullname' },
-	// 	{ field: 'preferred_name' },
-	// 	{ field: 'gender' },
-	// 	{ field: 'citizenship' },
-	// 	{ field: 'date_of_birth' },
-	// 	{ field: 'base_country' },
-	// 	{ field: 'base_city' }
-	// ];
-
 	afterNavigate(initGrid);
 </script>
 

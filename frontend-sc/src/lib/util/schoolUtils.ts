@@ -92,31 +92,31 @@ const _rankingOrder: Record<string, number> = {
 	Forbes: 4
 };
 
-export function getLatestRanking(
-	school: School,
-	params?: { year?: number | undefined; rankingName?: string | undefined }
-): RankingEntry | null {
-	const year = params?.year;
-	const rankingName = params?.rankingName;
+export function getSchoolRankingEntry(params: {
+	school: School;
+	year?: number | undefined;
+	rankingName?: string | undefined;
+}): RankingEntry | null {
+	const { school, year, rankingName } = params;
 
-	const rankings = [...school.rankings].filter(
+	const ranks = [...school.rankings].filter(
 		(entry) =>
-			(year === undefined || entry.year <= year) &&
+			(year === undefined || entry.year === year) &&
 			(rankingName === undefined || entry.ranking_name.startsWith(rankingName))
 	);
 
-	if (!rankings.length) {
+	if (!ranks.length) {
 		return null;
 	}
 
-	rankings
+	ranks
 		.sort((a, b) => (_rankingOrder[a.ranking_name] ?? 99) - (_rankingOrder[b.ranking_name] ?? 99))
 		.sort((a, b) => b.year - a.year);
 
-	return rankings[0];
+	return ranks[0];
 }
 
-export function formatRanking(
+export function formatSchoolRankingEntry(
 	entry: RankingEntry | null,
 	params: { showYear: boolean } = { showYear: true }
 ): string {

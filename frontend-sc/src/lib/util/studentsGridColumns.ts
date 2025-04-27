@@ -41,38 +41,46 @@ export const getColumnDefs = (params: PageParams) => {
 	const secondarySchoolGradeColumns = [
 		{
 			headerName: 'G9 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G9' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G9' }),
+			hide: true
 		},
 		{
 			headerName: 'G10 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G10' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G10' }),
+			hide: true
 		},
 		{
 			headerName: 'G11 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G11' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G11' }),
+			hide: true
 		},
 		{
 			headerName: 'G12 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G12' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G12' }),
+			hide: true
 		}
 	];
 
 	const universityGradeColumns = [
 		{
 			headerName: 'Year 1 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 1' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 1' }),
+			hide: true
 		},
 		{
 			headerName: 'Year 2 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 2' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 2' }),
+			hide: true
 		},
 		{
 			headerName: 'Year 3 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 3' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 3' }),
+			hide: true
 		},
 		{
 			headerName: 'Year 4 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 4' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 4' }),
+			hide: true
 		}
 	];
 
@@ -109,20 +117,24 @@ export const getColumnDefs = (params: PageParams) => {
 			headerName: 'Target Year',
 			valueGetter: targetYearValueGetter(params),
 			filter: 'agNumberColumnFilter',
-			flex: 0.8
+			flex: 0.8,
+			hide: params.targetYear !== 'All'
 		},
 		{
 			headerName: 'Contract Type',
-			valueGetter: contractTypeValueGetter(params)
+			valueGetter: contractTypeValueGetter(params),
+			hide: params.contractType !== 'All'
 		},
 		{
 			headerName: 'Contract Status',
 			valueGetter: contractStatusValueGetter(params),
-			filterParams: contractStatusFilterParams
+			filterParams: contractStatusFilterParams,
+			hide: params.contractStatus !== 'All'
 		},
 		{
 			headerName: '战略顾问',
-			valueGetter: serviceValueGetter('战略顾问', params)
+			valueGetter: serviceValueGetter('战略顾问', params),
+			hide: true
 		},
 		{
 			headerName: '顾问',
@@ -130,7 +142,8 @@ export const getColumnDefs = (params: PageParams) => {
 		},
 		{
 			headerName: '服务顾问',
-			valueGetter: serviceValueGetter('服务顾问', params)
+			valueGetter: serviceValueGetter('服务顾问', params),
+			hide: true
 		},
 		{
 			headerName: '文案',
@@ -157,10 +170,11 @@ export const getColumnDefs = (params: PageParams) => {
 		{
 			headerName: 'Date of Birth',
 			field: 'date_of_birth',
-			filter: 'agDateColumnFilter'
+			filter: 'agDateColumnFilter',
+			hide: true
 		},
 		{
-			headerName: 'Primary Residence',
+			headerName: 'Prim. Residence',
 			valueGetter: (params: ValueGetterParams) => formatLocation(params.data),
 			comparator: lexicalChineseLast,
 			valueFormatter: (params: ValueFormatterParams) => formatResidence(params.data),
@@ -180,53 +194,63 @@ export const getColumnDefs = (params: PageParams) => {
 		// scores
 		{
 			headerName: 'SAT/ACT',
-			valueGetter: (params: ValueGetterParams) => getSatOrAct(params.data.scores)
+			valueGetter: (params: ValueGetterParams) => getSatOrAct(params.data.scores),
+			hide: params.contractType === 'Graduate'
 		},
 		{
 			headerName: 'SAT',
 			field: 'scores.super_sat',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'ACT',
 			field: 'scores.super_act',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'AP',
-			valueGetter: (params: ValueGetterParams) => formatApSummary(params.data.ap_summary)
+			valueGetter: (params: ValueGetterParams) => formatApSummary(params.data.ap_summary),
+			hide: true
 		},
 		{
 			headerName: 'IB',
-			valueGetter: (params: ValueGetterParams) => formatIbSummary(params.data.ib_summary)
+			valueGetter: (params: ValueGetterParams) => formatIbSummary(params.data.ib_summary),
+			hide: true
 		},
 		{
 			headerName: 'A-level',
-			valueGetter: (params: ValueGetterParams) => formatAlevelSummary(params.data.alevel_summary)
+			valueGetter: (params: ValueGetterParams) => formatAlevelSummary(params.data.alevel_summary),
+			hide: true
 		},
 		{
 			headerName: 'GRE/GMAT',
-			valueGetter: (params: ValueGetterParams) => getGreOrGmat(params.data.scores)
+			valueGetter: (params: ValueGetterParams) => getGreOrGmat(params.data.scores),
+			hide: params.contractType === 'UG Freshman' || params.contractType === 'UG Transfer'
 		},
 		{
 			headerName: 'GRE',
 			field: 'scores.best_gre',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'GMAT',
 			field: 'scores.best_gmat',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'LSAT',
 			field: 'scores.best_lsat',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'Eng. Proficiency',
@@ -236,19 +260,22 @@ export const getColumnDefs = (params: PageParams) => {
 			headerName: 'TOEFL',
 			field: 'scores.best_toefl',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'IELTS',
 			field: 'scores.best_ielts',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'Duolingo',
 			field: 'scores.best_duolingo',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 
 		// cf academy/club involvement
@@ -258,7 +285,8 @@ export const getColumnDefs = (params: PageParams) => {
 				getCfAcademyPrograms({ student: params.data, category: '' }),
 			valueFormatter: (params: ValueFormatterParams) => padChineseRuns(params.value),
 			useValueFormatterForExport: false,
-			flex: 1.2
+			flex: 1.2,
+			hide: true
 		},
 		{
 			headerName: 'CF Clubs',
@@ -266,7 +294,8 @@ export const getColumnDefs = (params: PageParams) => {
 				getCfAcademyPrograms({ student: params.data, category: 'club' }),
 			valueFormatter: (params: ValueFormatterParams) => padChineseRuns(params.value),
 			useValueFormatterForExport: false,
-			flex: 1.2
+			flex: 1.2,
+			hide: true
 		}
 	];
 };

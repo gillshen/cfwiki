@@ -5,6 +5,8 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
+	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
+	import Label from '$lib/components/ui/label/label.svelte';
 
 	import ListFilter from 'lucide-svelte/icons/list-filter';
 	import ChartColumn from 'lucide-svelte/icons/chart-column';
@@ -16,6 +18,15 @@
 	export let rowData: Promise<any[]>;
 	export let gridApi: GridApi | null;
 	export let baseFileName: string;
+
+	let filterText: string = '';
+
+	const onFilterTextBoxChanged = () => {
+		if (gridApi) {
+			console.log('onFilterTextBoxChanged', filterText);
+			gridApi!.setGridOption('quickFilterText', filterText);
+		}
+	};
 </script>
 
 <div class="flex flex-wrap items-center justify-between gap-4 w-full">
@@ -28,8 +39,29 @@
 					><Settings class="size-4" />Columns</Button
 				>
 			</Popover.Trigger>
-			<Popover.Content class="flex flex-col gap-4 translate-x-9 w-fit min-w-[300px]">
-				<slot name="column-settings" />
+			<Popover.Content class="px-6 pb-6 flex flex-col gap-4 translate-x-9 w-fit min-w-[300px]">
+				<h2 class="text-base font-semibold">Choose columns to display</h2>
+
+				<div class="grid grid-cols-4 gap-y-2 gap-x-4 max-h-[calc(100vh-310px)] overflow-auto">
+					{#each gridApi?.getColumns() ?? [] as column, index}
+						{@const headerName = column.getColDef().headerName || 'ID'}
+						<div class="flex items-center space-x-2">
+							<Checkbox
+								id={`checkbox-${index}`}
+								aria-labelledby={`checkbox-${index}-label`}
+								checked={column.isVisible()}
+								on:click={() => {
+									gridApi?.setColumnsVisible([column], !column.isVisible());
+								}}
+							/>
+							<Label
+								id={`checkbox-${index}-label`}
+								for={`checkbox-${index}`}
+								class="text-sm font-normal">{headerName}</Label
+							>
+						</div>
+					{/each}
+				</div>
 			</Popover.Content>
 		</Popover.Root>
 
@@ -42,7 +74,7 @@
 					<ListFilter class="size-4" />Quick Filters
 				</Button>
 			</Popover.Trigger>
-			<Popover.Content class="flex flex-col gap-4 w-fit min-w-[300px]">
+			<Popover.Content class="px-6 pt-5 pb-6 flex flex-col gap-4 w-fit min-w-[300px]">
 				<slot name="filter-units" />
 			</Popover.Content>
 		</Popover.Root>
@@ -54,7 +86,12 @@
 
 	{#await rowData then _}
 		<div class="flex items-center gap-2">
-			<Input class="w-[300px]" placeholder="Search..." />
+			<Input
+				class="w-[300px]"
+				placeholder="Search..."
+				bind:value={filterText}
+				on:input={onFilterTextBoxChanged}
+			/>
 
 			<Tooltip.Root>
 				<Tooltip.Trigger>

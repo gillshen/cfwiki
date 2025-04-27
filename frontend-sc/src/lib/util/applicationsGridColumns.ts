@@ -9,6 +9,7 @@ import type { StudentEnrollmentItem } from '$lib/api/student';
 import ApplicationStatusSign from '$lib/components/misc/ApplicationStatusSign.svelte';
 import { lexicalChineseLast, padChineseRuns, toTitleCase } from '$lib/util/stringUtils';
 import { formatEnrollments } from '$lib/util/enrollmentUtils';
+import { getSchoolRankingEntry } from '$lib/util/schoolUtils';
 import { makeDate, toShortDate } from '$lib/util/dateUtils';
 
 import {
@@ -52,38 +53,46 @@ export const getColumnDefs = (params: PageParams) => {
 	const secondarySchoolGradeColumns = [
 		{
 			headerName: 'G9 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G9' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G9' }),
+			hide: true
 		},
 		{
 			headerName: 'G10 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G10' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G10' }),
+			hide: true
 		},
 		{
 			headerName: 'G11 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G11' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G11' }),
+			hide: true
 		},
 		{
 			headerName: 'G12 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G12' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'G12' }),
+			hide: true
 		}
 	];
 
 	const universityGradeColumns = [
 		{
 			headerName: 'Year 1 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 1' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 1' }),
+			hide: true
 		},
 		{
 			headerName: 'Year 2 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 2' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 2' }),
+			hide: true
 		},
 		{
 			headerName: 'Year 3 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 3' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 3' }),
+			hide: true
 		},
 		{
 			headerName: 'Year 4 GPA',
-			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 4' })
+			valueGetter: gradeValueGetter({ enrollmentsGetter, progression: 'Year 4' }),
+			hide: true
 		}
 	];
 
@@ -121,14 +130,16 @@ export const getColumnDefs = (params: PageParams) => {
 			headerName: 'Year',
 			field: 'year',
 			filter: 'agNumberColumnFilter',
-			flex: 0.8
+			flex: 0.8,
+			hide: params.year !== 'All'
 		},
-		{ headerName: 'Term', field: 'term' },
+		{ headerName: 'Term', field: 'term', hide: true },
 
 		// services
 		{
 			headerName: '战略顾问',
-			valueGetter: (params: ValueGetterParams) => formatCfNames(params.data.services, '战略顾问')
+			valueGetter: (params: ValueGetterParams) => formatCfNames(params.data.services, '战略顾问'),
+			hide: true
 		},
 		{
 			headerName: '顾问',
@@ -136,7 +147,8 @@ export const getColumnDefs = (params: PageParams) => {
 		},
 		{
 			headerName: '服务顾问',
-			valueGetter: (params: ValueGetterParams) => formatCfNames(params.data.services, '服务顾问')
+			valueGetter: (params: ValueGetterParams) => formatCfNames(params.data.services, '服务顾问'),
+			hide: true
 		},
 		{
 			headerName: '文案',
@@ -161,19 +173,21 @@ export const getColumnDefs = (params: PageParams) => {
 			useValueFormatterForExport: false
 		},
 		{
-			headerName: 'Primary Residence',
-			valueGetter: (params: ValueGetterParams): string => formatLocation(params.data.student),
+			headerName: 'Prim. Residence',
+			valueGetter: (params: ValueGetterParams) => formatLocation(params.data.student),
 			comparator: lexicalChineseLast,
 			valueFormatter: (params: ValueFormatterParams) => formatResidence(params.data.student),
-			useValueFormatterForExport: false
+			useValueFormatterForExport: false,
+			hide: true
 		},
 
 		// educational history
 		{
 			headerName: 'Edu. History',
-			valueGetter: (params: ValueGetterParams): string =>
+			valueGetter: (params: ValueGetterParams) =>
 				formatEnrollments(params.data.student.enrollments),
-			flex: 2
+			flex: 2,
+			hide: true
 		},
 
 		// grades
@@ -182,54 +196,67 @@ export const getColumnDefs = (params: PageParams) => {
 		// scores
 		{
 			headerName: 'SAT/ACT',
-			valueGetter: (params: ValueGetterParams) => getSatOrAct(params.data.student.scores)
+			valueGetter: (params: ValueGetterParams) => getSatOrAct(params.data.student.scores),
+			hide:
+				params.applicationType === 'graduate' ||
+				params.applicationType === 'masters' ||
+				params.applicationType === 'doctorate'
 		},
 		{
 			headerName: 'SAT',
 			field: 'student.scores.super_sat',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'ACT',
 			field: 'student.scores.super_act',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'AP',
-			valueGetter: (params: ValueGetterParams) => formatApSummary(params.data.student.ap_summary)
+			valueGetter: (params: ValueGetterParams) => formatApSummary(params.data.student.ap_summary),
+			hide: true
 		},
 		{
 			headerName: 'IB',
-			valueGetter: (params: ValueGetterParams) => formatIbSummary(params.data.student.ib_summary)
+			valueGetter: (params: ValueGetterParams) => formatIbSummary(params.data.student.ib_summary),
+			hide: true
 		},
 		{
 			headerName: 'A-level',
 			valueGetter: (params: ValueGetterParams) =>
-				formatAlevelSummary(params.data.student.alevel_summary)
+				formatAlevelSummary(params.data.student.alevel_summary),
+			hide: true
 		},
 		{
 			headerName: 'GRE/GMAT',
-			valueGetter: (params: ValueGetterParams) => getGreOrGmat(params.data.student.scores)
+			valueGetter: (params: ValueGetterParams) => getGreOrGmat(params.data.student.scores),
+			hide: params.applicationType === 'freshman' || params.applicationType === 'transfer'
 		},
 		{
 			headerName: 'GRE',
 			field: 'student.scores.best_gre',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'GMAT',
 			field: 'student.scores.best_gmat',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'LSAT',
 			field: 'student.scores.best_lsat',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'Eng. Proficiency',
@@ -239,19 +266,22 @@ export const getColumnDefs = (params: PageParams) => {
 			headerName: 'TOEFL',
 			field: 'student.scores.best_toefl',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'IELTS',
 			field: 'student.scores.best_ielts',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 		{
 			headerName: 'Duolingo',
 			field: 'student.scores.best_duolingo',
 			type: ['rightAligned'],
-			filter: 'agNumberColumnFilter'
+			filter: 'agNumberColumnFilter',
+			hide: true
 		},
 
 		// targets
@@ -262,12 +292,37 @@ export const getColumnDefs = (params: PageParams) => {
 				params.value.map((s: School) => s.name).join(SEPARATOR),
 			flex: 3
 		},
+		{
+			headerName: 'US News Rank',
+			valueGetter: (params: ValueGetterParams) =>
+				getHighestSchoolRank({
+					schools: params.data.schools,
+					year: params.data.year,
+					rankingName: 'US News'
+				}),
+			type: ['rightAligned'],
+			filter: 'agNumberColumnFilter',
+			hide: true
+		},
+		{
+			headerName: 'QS Rank',
+			valueGetter: (params: ValueGetterParams) =>
+				getHighestSchoolRank({
+					schools: params.data.schools,
+					year: params.data.year,
+					rankingName: 'QS World'
+				}),
+			type: ['rightAligned'],
+			filter: 'agNumberColumnFilter',
+			hide: true
+		},
 		{ headerName: 'Program', field: 'program.display_name', flex: 3 },
 		{
 			headerName: 'Majors/Tracks',
 			field: 'majors',
 			valueFormatter: (params: ValueFormatterParams) => params.value.join(SEPARATOR),
-			flex: 2
+			flex: 2,
+			hide: params.applicationType !== 'freshman' && params.applicationType !== 'transfer'
 		},
 		{ headerName: 'Adm. Plan', field: 'round_name' },
 		{
@@ -275,7 +330,8 @@ export const getColumnDefs = (params: PageParams) => {
 			field: 'due_date',
 			valueFormatter: (params: ValueFormatterParams) => toShortDate(params.value),
 			filter: 'agDateColumnFilter',
-			flex: 1.5
+			flex: 1.5,
+			hide: true
 		},
 		{
 			headerName: 'Status',
@@ -288,7 +344,8 @@ export const getColumnDefs = (params: PageParams) => {
 			headerName: 'Status Date',
 			valueGetter: (params: ValueGetterParams) => makeDate(getLatestLog(params.data)?.date),
 			valueFormatter: (params: ValueFormatterParams) => toShortDate(params.value),
-			filter: 'agDateColumnFilter'
+			filter: 'agDateColumnFilter',
+			hide: true
 		},
 
 		// cf academy/club involvement
@@ -298,7 +355,8 @@ export const getColumnDefs = (params: PageParams) => {
 				getCfAcademyPrograms({ student: params.data.student, category: '' }),
 			valueFormatter: (params: ValueFormatterParams) => padChineseRuns(params.value),
 			useValueFormatterForExport: false,
-			flex: 1.2
+			flex: 1.2,
+			hide: true
 		},
 		{
 			headerName: 'CF Clubs',
@@ -306,7 +364,8 @@ export const getColumnDefs = (params: PageParams) => {
 				getCfAcademyPrograms({ student: params.data.student, category: 'club' }),
 			valueFormatter: (params: ValueFormatterParams) => padChineseRuns(params.value),
 			useValueFormatterForExport: false,
-			flex: 1.2
+			flex: 1.2,
+			hide: true
 		}
 	];
 };
@@ -326,3 +385,16 @@ class ApplicationStatusRenderer extends SvelteCellRenderer {
 
 const enrollmentsGetter = (params: ValueGetterParams): StudentEnrollmentItem[] =>
 	params.data.student.enrollments;
+
+const getHighestSchoolRank = (params: {
+	schools: School[];
+	year: number;
+	rankingName: string;
+}): number | null => {
+	const { schools, year, rankingName } = params;
+	const ranks = schools
+		.map((school) => getSchoolRankingEntry({ school, year, rankingName })?.rank)
+		.filter(Boolean);
+	const highestRank = Math.min(...(ranks as number[]));
+	return highestRank === Infinity ? null : highestRank;
+};

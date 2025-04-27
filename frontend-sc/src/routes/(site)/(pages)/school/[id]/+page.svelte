@@ -10,7 +10,13 @@
 	import CoApplicationsDisplay from '$lib/components/widgets/CoApplicationsDisplay.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import countryFlags from '$lib/constants/countries';
-	import { formatLocation, formatRanking, getLatestRanking } from '$lib/util/schoolUtils';
+
+	import {
+		formatLocation,
+		formatSchoolRankingEntry,
+		getSchoolRankingEntry
+	} from '$lib/util/schoolUtils';
+
 	import { groupByCategory, enhanceDisplayName } from '$lib/util/programUtils';
 	import { filterByType } from '$lib/util/applicationUtils';
 	import { toISOYearMonth } from '$lib/util/dateUtils';
@@ -18,8 +24,12 @@
 
 	export let data;
 
-	$: usNewsRank = formatRanking(getLatestRanking(data.school, { rankingName: 'US News' }));
-	$: qsRank = formatRanking(getLatestRanking(data.school, { rankingName: 'QS World' }));
+	$: usNewsRank = formatSchoolRankingEntry(
+		getSchoolRankingEntry({ school: data.school, rankingName: 'US News' })
+	);
+	$: qsRank = formatSchoolRankingEntry(
+		getSchoolRankingEntry({ school: data.school, rankingName: 'QS World' })
+	);
 </script>
 
 <BreadcrumbContainer>
