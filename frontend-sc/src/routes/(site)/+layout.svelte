@@ -7,6 +7,7 @@
 	import * as Avatar from '$lib/components/ui/avatar/index';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import User from 'lucide-svelte/icons/user';
+	import Bookmark from 'lucide-svelte/icons/bookmark';
 	import Settings from 'lucide-svelte/icons/settings';
 	import LogOut from 'lucide-svelte/icons/log-out';
 
@@ -203,8 +204,11 @@
 
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger asChild let:builder>
-				<Button variant="outline" class="flex w-[40px] h-[40px] rounded-full" builders={[builder]}
-					><User class="size-5 text-muted-foreground shrink-0" /></Button
+				<Button
+					variant="outline"
+					size="icon"
+					class="flex w-[40px] h-[40px] rounded-full"
+					builders={[builder]}><User class="size-5 text-muted-foreground shrink-0" /></Button
 				>
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content class="min-w-[160px] w-fit -translate-x-6">
@@ -222,14 +226,20 @@
 					</div>
 					<DropdownMenu.Separator />
 					<DropdownMenu.Item
-						href="/my-account"
+						href="/my/bookmarks"
+						class="flex items-center text-inherit hover:no-underline"
+						><Bookmark class="size-4 mr-2.5" />Bookmarks</DropdownMenu.Item
+					>
+					<DropdownMenu.Item
+						href="/my/account"
 						class="flex items-center text-inherit hover:no-underline"
 						><Settings class="size-4 mr-2.5" />Settings</DropdownMenu.Item
 					>
+					<DropdownMenu.Separator />
 					<DropdownMenu.Item
 						on:click={() => goto('/logout')}
 						class="flex items-center text-inherit hover:no-underline"
-						><LogOut class="size-4 mr-2.5" />Log Out</DropdownMenu.Item
+						><LogOut class="size-4 mr-2.5 translate-x-[1px]" />Log Out</DropdownMenu.Item
 					>
 				</DropdownMenu.Group>
 			</DropdownMenu.Content>

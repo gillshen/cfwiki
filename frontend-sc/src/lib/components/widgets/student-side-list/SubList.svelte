@@ -14,10 +14,10 @@
 	<Collapsible.Trigger
 		class="w-full text-sm flex items-center gap-1 text-muted-foreground hover:text-inherit"
 	>
-		{year}<ChevronDown class="size-4" />
+		<ChevronDown class="size-4" />{year}
 	</Collapsible.Trigger>
 	<Collapsible.Content>
-		<div class="flex flex-col text-sm gap-2 pt-2">
+		<div class="flex flex-col text-sm gap-2 pt-2 pl-5">
 			{#each students as student}
 				{#if student.id === selectedStudentId}
 					<div class="font-medium">{student.fullname}</div>

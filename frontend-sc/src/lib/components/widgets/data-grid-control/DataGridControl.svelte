@@ -2,10 +2,12 @@
 	import type { GridApi } from 'ag-grid-community';
 
 	import * as Popover from '$lib/components/ui/popover';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 
 	import ListFilter from 'lucide-svelte/icons/list-filter';
+	import ChartColumn from 'lucide-svelte/icons/chart-column';
 	import ArrowDownToLine from 'lucide-svelte/icons/arrow-down-to-line';
 	import Settings from 'lucide-svelte/icons/settings-2';
 
@@ -52,15 +54,34 @@
 
 	{#await rowData then _}
 		<div class="flex items-center gap-2">
-			<Input class="w-[360px]" placeholder="Search..." />
+			<Input class="w-[300px]" placeholder="Search..." />
 
-			<Button
-				variant="default"
-				class="flex items-center gap-1 h-[40px]"
-				on:click={() =>
-					gridApi && gridApi.exportDataAsCsv({ fileName: `${baseFileName}_${timestamp()}` })}
-				><ArrowDownToLine class="size-4" />Download</Button
-			>
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					<Button variant="outline" size="icon" class="flex items-center gap-1 w-[40px] h-[40px]">
+						<ChartColumn class="size-4" />
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content>
+					<p>Statistics</p>
+				</Tooltip.Content>
+			</Tooltip.Root>
+
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					<Button
+						variant="outline"
+						size="icon"
+						class="flex items-center gap-1 w-[40px] h-[40px]"
+						on:click={() =>
+							gridApi && gridApi.exportDataAsCsv({ fileName: `${baseFileName}_${timestamp()}` })}
+						><ArrowDownToLine class="size-4" /></Button
+					>
+				</Tooltip.Trigger>
+				<Tooltip.Content>
+					<p>Download</p>
+				</Tooltip.Content>
+			</Tooltip.Root>
 		</div>
 	{/await}
 </div>
