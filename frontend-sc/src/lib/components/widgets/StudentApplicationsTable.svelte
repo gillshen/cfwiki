@@ -18,7 +18,7 @@
 		<Table.Row>
 			<Table.Head class="font-semibold">School</Table.Head>
 			<Table.Head class="font-semibold">Program</Table.Head>
-			<Table.Head class="font-semibold">Year & Plan</Table.Head>
+			<Table.Head class="font-semibold min-w-[110px]">Year & Plan</Table.Head>
 			{#if hasMajor2}
 				<Table.Head class="font-semibold min-w-[130px]">Major/Track 1</Table.Head>
 				<Table.Head class="font-semibold min-w-[130px]">Major/Track 2</Table.Head>
@@ -53,7 +53,7 @@
 					</div>
 				</Table.Cell>
 				<Table.Cell class="truncate">{application.program.display_name}</Table.Cell>
-				<Table.Cell>{application.year} {application.round_name}</Table.Cell>
+				<Table.Cell class="truncate">{application.year} {application.round_name}</Table.Cell>
 				<Table.Cell
 					class={cn(
 						'truncate text-muted-foreground',

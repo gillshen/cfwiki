@@ -338,6 +338,7 @@ export const getColumnDefs = (params: PageParams) => {
 			valueGetter: (params: ValueGetterParams) =>
 				formatNotableStatuses(getNotableStatuses(params.data)),
 			cellRenderer: ApplicationStatusRenderer,
+			minWidth: 120,
 			flex: 1.5
 		},
 		{
@@ -378,7 +379,7 @@ class ApplicationStatusRenderer extends SvelteCellRenderer {
 	createComponent(params: ICellRendererParams): void {
 		this.component = new ApplicationStatusSign({
 			target: this.eGui,
-			props: { application: params.data }
+			props: { application: params.data, height: '40px' }
 		});
 	}
 }

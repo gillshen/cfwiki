@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
 	import CircleCheckBig from 'lucide-svelte/icons/circle-check-big';
 	import CircleCheck from 'lucide-svelte/icons/circle-check';
 	import CircleX from 'lucide-svelte/icons/circle-x';
@@ -10,6 +11,7 @@
 	import { formatNotableStatuses, getNotableStatuses } from '$lib/util/applicationUtils';
 
 	export let application: { logs: ApplicationLogBrief[] };
+	export let height: string = '24px';
 
 	const statuses = getNotableStatuses(application);
 	const formattedStatuses = formatNotableStatuses(statuses);
@@ -36,7 +38,7 @@
 </script>
 
 {#if latestStatus}
-	<div class="text-sm inline-flex items-center gap-1.5 truncate">
+	<div class={cn('text-sm flex items-center gap-1.5', `h-[${height}]`)}>
 		{#if icon === 'big-check'}
 			<CircleCheckBig class="text-mint-700 w-[16px] h-[16px] shrink-0" />
 		{:else if icon === 'clock'}
@@ -50,6 +52,8 @@
 		{:else}
 			<CircleHelp class="text-orange-500 w-[16px] h-[16px] shrink-0" />
 		{/if}
-		<span class="font-medium truncate shrink-0">{formattedStatuses}</span>
+		<div class="flex-1 min-w-0">
+			<span class="font-medium block truncate">{formattedStatuses}</span>
+		</div>
 	</div>
 {/if}
