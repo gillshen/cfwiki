@@ -10,8 +10,10 @@
 
 <section {id} class={cn('pb-6 mb-2 space-y-2 text-sm', className)}>
 	{#if title}
-		<h2 class="text-xl font-bold pt-2">{title}</h2>
-		<hr class="text-stone-400 pb-2" />
+		<div class="sticky top-[102px] bg-white z-10">
+			<h2 class="text-xl font-bold pb-2">{title}</h2>
+			<hr class="text-stone-400 pb-2" />
+		</div>
 	{:else if hrule}
 		<hr class="text-stone-400 pb-2" />
 	{/if}

@@ -36,7 +36,7 @@
 							<h3 class="font-semibold pb-2">{contractType}</h3>
 							<div class="grid lg:grid-cols-4 md:grid-cols-3 gap-x-4 gap-y-2">
 								{#each typedCohort.sort(orderByName) as student}
-									<a href={`/student/${student.id}`} class="text-sm"
+									<a href={`/student/${student.id}`} class="text-sm w-fit"
 										>{formatNameWithPref(student)}</a
 									>
 								{/each}
