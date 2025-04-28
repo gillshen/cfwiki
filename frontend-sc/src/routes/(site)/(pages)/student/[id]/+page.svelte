@@ -10,7 +10,7 @@
 	import Pencil from 'lucide-svelte/icons/pencil-line';
 	import LayoutGrid from 'lucide-svelte/icons/layout-grid';
 	import List from 'lucide-svelte/icons/list';
-	import CalendarDays from 'lucide-svelte/icons/calendar-days';
+	import Calendar from 'lucide-svelte/icons/calendar';
 	import GraduationCap from 'lucide-svelte/icons/graduation-cap';
 	import BookCheck from 'lucide-svelte/icons/book-check';
 
@@ -143,7 +143,7 @@
 
 					<div class="flex flex-col gap-2">
 						<div class="text-muted-foreground flex items-center gap-1.5">
-							<CalendarDays class="size-4" />
+							<Calendar class="size-4" />
 							{formatEnrollmentDates(enrollment, toISOYearMonth)}
 						</div>
 						{#if enrollment.curriculum}
@@ -157,7 +157,7 @@
 							<BookCheck class="size-4" />
 							<HoverCard.Root>
 								<HoverCard.Trigger class="underline decoration-dotted hover:decoration-dotted"
-									>Latest GPA: (TODO)</HoverCard.Trigger
+									>GPA: (TODO)</HoverCard.Trigger
 								>
 								<HoverCard.Content class="w-[480px]">
 									<pre
