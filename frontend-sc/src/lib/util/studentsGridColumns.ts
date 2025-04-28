@@ -1,4 +1,5 @@
 import type {
+	ICellRendererParams,
 	IFilterOptionDef,
 	ITextFilterParams,
 	ValueFormatterParams,
@@ -29,8 +30,10 @@ import {
 	getGreOrGmat,
 	getSatOrAct,
 	gradeValueGetter,
-	IdRenderer
+	IdRenderer,
+	SvelteCellRenderer
 } from '$lib/util/dataGridUtils';
+import ContractStatusSign from '$lib/components/misc/ContractStatusSign.svelte';
 
 type PageParams = {
 	targetYear?: string | 'All';
@@ -130,6 +133,7 @@ export const getColumnDefs = (params: PageParams) => {
 			headerName: 'Contract Status',
 			valueGetter: contractStatusValueGetter(params),
 			filterParams: contractStatusFilterParams,
+			cellRenderer: getContractStatusRenderer(params),
 			hide: params.contractStatus !== 'All'
 		},
 		{
@@ -320,6 +324,19 @@ const _getRelevantContract = (
 	);
 	return contracts[0];
 };
+
+const getContractStatusRenderer = (pageParams: PageParams) =>
+	class ContractStatusRenderer extends SvelteCellRenderer {
+		createComponent(params: ICellRendererParams): void {
+			this.component = new ContractStatusSign({
+				target: this.eGui,
+				props: {
+					status: _getRelevantContract(params.data, pageParams)?.status,
+					height: '39px'
+				}
+			});
+		}
+	};
 
 const targetYearValueGetter =
 	(filterParams: PageParams): ValueGetterFunc =>

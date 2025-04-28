@@ -19,6 +19,7 @@
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import RowCountLabel from '$lib/components/misc/RowCountLabel.svelte';
 	import { contractStatuses, contractTypes } from '$lib/api/contract';
+	import { createTitle } from '$lib/util/siteUtils';
 	import { orderByUsername } from '$lib/util/userUtils';
 	import { activeYears } from '$lib/util/dateUtils';
 	import { getColumnDefs } from '$lib/util/studentsGridColumns';
@@ -75,6 +76,10 @@
 
 	afterNavigate(initGrid);
 </script>
+
+<svelte:head>
+	<title>{createTitle('Students Data')}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>

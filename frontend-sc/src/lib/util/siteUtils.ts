@@ -17,3 +17,5 @@ export const base10Or400 = (input: string | null | undefined, errorMessage: stri
 	}
 	return result;
 };
+
+export const createTitle = (title: string) => `CF | ${title}`;

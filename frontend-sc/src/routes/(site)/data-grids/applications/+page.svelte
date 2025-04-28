@@ -20,6 +20,7 @@
 	import RowCountLabel from '$lib/components/misc/RowCountLabel.svelte';
 	import { applicationTypes } from '$lib/api/application';
 	import { applicationStatusCategories } from '$lib/api/applicationLog';
+	import { createTitle } from '$lib/util/siteUtils';
 	import { orderByUsername } from '$lib/util/userUtils';
 	import { activeYears } from '$lib/util/dateUtils';
 	import { getColumnDefs } from '$lib/util/applicationsGridColumns';
@@ -81,6 +82,10 @@
 
 	afterNavigate(initGrid);
 </script>
+
+<svelte:head>
+	<title>{createTitle('Applications Data')}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>

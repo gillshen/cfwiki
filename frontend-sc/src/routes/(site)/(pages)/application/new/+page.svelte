@@ -21,6 +21,7 @@
 	import { enhanceDisplayName, orderByName as orderByProgramName } from '$lib/util/programUtils';
 	import { formatRound, orderByDueDate, orderByRoundName } from '$lib/util/applicationRoundUtils';
 	import { groupByCfPerson, leftEarly } from '$lib/util/serviceUtils';
+	import { createTitle } from '$lib/util/siteUtils';
 
 	export let data;
 
@@ -51,6 +52,10 @@
 		$formData.staff_names = selectedStaff.map((item) => item.value);
 	}
 </script>
+
+<svelte:head>
+	<title>{createTitle('Create Application')}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>Applications</Breadcrumb.Item>

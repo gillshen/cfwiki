@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ProgramListItem } from '$lib/api/program';
 	import { enhanceDisplayName, filterForType } from '$lib/util/programUtils';
+	import { joinNames } from '$lib/util/schoolUtils';
 
 	export let programs: ProgramListItem[];
 	export let type: "Master's" | 'Doctorate' | 'Non-degree';
@@ -9,7 +10,7 @@
 		const grouped: { [key: string]: ProgramListItem[] } = {};
 
 		for (const program of programs) {
-			const hostName: string = program.schools.map((s) => s.name).join(' + ');
+			const hostName: string = joinNames(program.schools);
 			if (!(hostName in grouped)) {
 				grouped[hostName] = [];
 			}

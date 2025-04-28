@@ -7,6 +7,7 @@
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 
+	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import RadioGroup from '$lib/components/forms/RadioGroup.svelte';
@@ -16,7 +17,7 @@
 	import canadianProvinces from '$lib/constants/canadianProvinces';
 	import chineseProvinces from '$lib/constants/chineseProvinces';
 	import { names } from '$lib/constants/fake';
-	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
+	import { createTitle } from '$lib/util/siteUtils';
 
 	export let data;
 
@@ -63,6 +64,10 @@
 		}
 	}
 </script>
+
+<svelte:head>
+	<title>{createTitle('Create Student Profile')}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>

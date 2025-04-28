@@ -8,7 +8,7 @@ import {
 	type ApplicationStatusCategory
 } from '$lib/api/applicationLog';
 
-import { sortedSchoolNames } from '$lib/api/school';
+import { joinNames } from '$lib/util/schoolUtils';
 import { blankStats, type ApplicationDataPoint, type ApplicationStats } from '$lib/api/stats';
 import { compareRoundName } from '$lib/util/applicationRoundUtils';
 import { lexicalChineseLast, toTitleCase } from '$lib/util/stringUtils';
@@ -147,8 +147,8 @@ export function orderByDueDate(a: ComposedApplication, b: ComposedApplication) {
 }
 
 export function orderBySchoolName(a: ComposedApplication, b: ComposedApplication) {
-	const aNames = sortedSchoolNames(a.schools);
-	const bNames = sortedSchoolNames(b.schools);
+	const aNames = joinNames(a.schools);
+	const bNames = joinNames(b.schools);
 
 	// since each application is associated with at most two schools
 	if (aNames[0] !== bNames[0]) {

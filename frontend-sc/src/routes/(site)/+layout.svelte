@@ -65,7 +65,7 @@
 					<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
 						<DropdownMenu.Item
 							href="/data-grids/students?contractStatus=In+effect"
-							class="text-inherit hover:no-underline">Current Students</DropdownMenu.Item
+							class="text-inherit hover:no-underline">Current</DropdownMenu.Item
 						>
 						<DropdownMenu.Separator />
 						{#each quickAccessYears() as year}
@@ -99,11 +99,11 @@
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="ghost" builders={[builder]}>Applications</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content class="min-w-[180px]">
+				<DropdownMenu.Content class="min-w-[160px]">
 					<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
 						<DropdownMenu.Item
 							href="/data-grids/applications?status=pending"
-							class="text-inherit hover:no-underline">Pending Applications</DropdownMenu.Item
+							class="text-inherit hover:no-underline">In Progress</DropdownMenu.Item
 						>
 						<DropdownMenu.Separator />
 						{#each quickAccessYears() as year}

@@ -379,7 +379,7 @@ class ApplicationStatusRenderer extends SvelteCellRenderer {
 	createComponent(params: ICellRendererParams): void {
 		this.component = new ApplicationStatusSign({
 			target: this.eGui,
-			props: { application: params.data, height: '40px' }
+			props: { application: params.data, height: '39px' }
 		});
 	}
 }

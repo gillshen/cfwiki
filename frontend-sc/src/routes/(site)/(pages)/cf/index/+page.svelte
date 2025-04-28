@@ -4,9 +4,14 @@
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import UserDirectory from '$lib/components/widgets/UserDirectory.svelte';
+	import { createTitle } from '$lib/util/siteUtils';
 
 	export let data;
 </script>
+
+<svelte:head>
+	<title>{createTitle('People')}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>

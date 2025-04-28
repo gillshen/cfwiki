@@ -5,6 +5,7 @@
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import { contractTypes } from '$lib/api/contract';
+	import { createTitle } from '$lib/util/siteUtils';
 
 	import {
 		formatNameWithPref,
@@ -15,6 +16,10 @@
 
 	export let data;
 </script>
+
+<svelte:head>
+	<title>{createTitle('Students')}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>

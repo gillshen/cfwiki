@@ -170,6 +170,15 @@ const _abbreviateRankingName = (rankingName: string): string => {
 	}
 };
 
+export const joinNames = (
+	schools: { name: string; alt_name?: string }[],
+	options: { joiner?: string; alt?: boolean } = { joiner: ' + ', alt: false }
+): string =>
+	schools
+		.map((school) => (options.alt ? (school.alt_name ?? school.name) : school.name))
+		.sort(lexicalChineseLast)
+		.join(options.joiner);
+
 export function orderByName(a: { name: string }, b: { name: string }): number {
 	return lexicalChineseLast(a.name, b.name);
 }

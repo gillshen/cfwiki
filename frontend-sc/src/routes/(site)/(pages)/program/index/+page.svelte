@@ -7,12 +7,16 @@
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import NamelessProgramDirectory from '$lib/components/widgets/NamelessProgramDirectory.svelte';
 	import NamedProgramDirectory from '$lib/components/widgets/NamedProgramDirectory.svelte';
-	import { scrollToHash } from '$lib/util/siteUtils';
+	import { createTitle, scrollToHash } from '$lib/util/siteUtils';
 
 	export let data;
 
 	afterNavigate(scrollToHash);
 </script>
+
+<svelte:head>
+	<title>{createTitle('Programs')}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>

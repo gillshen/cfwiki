@@ -7,7 +7,7 @@
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import type { SchoolType } from '$lib/api/school';
 	import { groupByType, orderByName } from '$lib/util/schoolUtils';
-	import { scrollToHash } from '$lib/util/siteUtils';
+	import { createTitle, scrollToHash } from '$lib/util/siteUtils';
 
 	export let data;
 
@@ -35,6 +35,10 @@
 
 	afterNavigate(scrollToHash);
 </script>
+
+<svelte:head>
+	<title>{createTitle('Schools & Institutions')}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>

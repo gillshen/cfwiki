@@ -15,6 +15,8 @@
 	import ApplicationLogForm from '$lib/components/forms/ApplicationLogForm.svelte';
 	import ApplicationLogItem from '$lib/components/widgets/application-log/ApplicationLogItem.svelte';
 	import type { ApplicationLog } from '$lib/api/applicationLog';
+	import { createTitle } from '$lib/util/siteUtils';
+	import { joinNames } from '$lib/util/schoolUtils';
 
 	export let data;
 
@@ -22,7 +24,8 @@
 	let newLogModalOpen: boolean = false;
 
 	const { student, program_iteration, round, program, schools } = data.application;
-	const schoolNames = schools.map((s) => s.name).join(' + ');
+	const schoolNames = joinNames(data.application.schools);
+	const title = `${data.application.student.fullname} \u2022 ${schoolNames}`;
 
 	const logForm = superForm(data.logForm, {
 		id: `log-form-new`,
@@ -43,11 +46,15 @@
 	});
 </script>
 
+<svelte:head>
+	<title>{createTitle(title)}</title>
+</svelte:head>
+
 <BreadcrumbContainer>
 	<Breadcrumb.Item>Applications</Breadcrumb.Item>
 	<Breadcrumb.Separator />
 	<Breadcrumb.Item>
-		<Breadcrumb.Page>{data.application.student.fullname} &bullet; {schoolNames}</Breadcrumb.Page>
+		<Breadcrumb.Page>{title}</Breadcrumb.Page>
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 

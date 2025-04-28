@@ -12,6 +12,7 @@
 	import americanStates from '$lib/constants/americanStates';
 	import canadianProvinces from '$lib/constants/canadianProvinces';
 	import chineseProvinces from '$lib/constants/chineseProvinces';
+	import { createTitle } from '$lib/util/siteUtils';
 
 	export let data;
 
@@ -55,6 +56,10 @@
 		}
 	}
 </script>
+
+<svelte:head>
+	<title>{createTitle('Create School Profile')}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>

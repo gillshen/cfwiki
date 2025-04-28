@@ -5,9 +5,18 @@
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import CoApplicationsDisplay from '$lib/components/widgets/CoApplicationsDisplay.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
+	import { createTitle } from '$lib/util/siteUtils';
+	import { joinNames } from '$lib/util/schoolUtils';
 
 	export let data;
+
+	const schoolNames = joinNames(data.program.schools, { alt: true });
+	const title = `${schoolNames} | ${data.program.display_name}`;
 </script>
+
+<svelte:head>
+	<title>{createTitle(title)}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>
@@ -15,7 +24,7 @@
 	</Breadcrumb.Item>
 	<Breadcrumb.Separator />
 	<Breadcrumb.Item>
-		<Breadcrumb.Page>(TODO this program)</Breadcrumb.Page>
+		<Breadcrumb.Page>{title}</Breadcrumb.Page>
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 

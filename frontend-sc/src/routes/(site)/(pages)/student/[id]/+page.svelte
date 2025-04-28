@@ -30,6 +30,7 @@
 	import { orderBySchoolName, orderByStatus, orderByYearDesc } from '$lib/util/applicationUtils';
 	import { toISOYearMonth } from '$lib/util/dateUtils';
 	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
+	import { createTitle } from '$lib/util/siteUtils';
 
 	export let data;
 
@@ -57,6 +58,10 @@
 		label: value
 	}));
 </script>
+
+<svelte:head>
+	<title>{createTitle(data.student.fullname)}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>

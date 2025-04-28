@@ -21,6 +21,7 @@
 	import { filterByType } from '$lib/util/applicationUtils';
 	import { toISOYearMonth } from '$lib/util/dateUtils';
 	import { orderByDatesDesc } from '$lib/util/enrollmentUtils';
+	import { createTitle } from '$lib/util/siteUtils';
 
 	export let data;
 
@@ -31,6 +32,10 @@
 		getSchoolRankingEntry({ school: data.school, rankingName: 'QS World' })
 	);
 </script>
+
+<svelte:head>
+	<title>{createTitle(data.school.name)}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>

@@ -3,17 +3,15 @@
 	import * as HoverCard from '$lib/components/ui/hover-card/index';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import FilePan from 'lucide-svelte/icons/file-pen';
-	import CircleCheckBig from 'lucide-svelte/icons/circle-check-big';
-	import Clock from 'lucide-svelte/icons/clock';
-	import Ban from 'lucide-svelte/icons/ban';
 	import Pencil from 'lucide-svelte/icons/pencil-line';
 
 	import type { Contract } from '$lib/api/student';
+	import ContractStatusSign from '$lib/components/misc/ContractStatusSign.svelte';
 	import { groupByCfPerson, leftEarly, orderByRole } from '$lib/util/serviceUtils';
 	import { toISOYearMonth } from '$lib/util/dateUtils';
 
 	export let contract: Contract;
-	export let canEdit: boolean = false;
+	export let canEdit: boolean = true;
 </script>
 
 <Card.Root>
@@ -26,30 +24,21 @@
 				<Button
 					variant="link"
 					size="icon"
-					class="font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80"
+					class="font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80 size-6"
 				>
 					<Pencil class="mr-1 size-4" />
 				</Button>
 			{/if}</Card.Title
 		>
 		<Card.Description class="flex gap-4 items-center">
-			<div class="text-sm flex gap-1 items-center">
-				{#if contract.status === 'Fulfilled'}
-					<CircleCheckBig class="size-4" />
-				{:else if contract.status === 'In effect'}
-					<Clock class="size-4" />
-				{:else}
-					<Ban class="size-4" />
-				{/if}
-				{contract.status === 'In effect' ? 'In Effect' : contract.status}
-			</div>
+			<ContractStatusSign status={contract.status} />
 		</Card.Description>
 	</Card.Header>
 
-	<Card.Content class="min-w-[240px] pt-2 flex flex-col gap-4 text-sm">
+	<Card.Content class="pt-2 pb-8 flex flex-col gap-4 text-sm">
 		{#each Object.entries(groupByCfPerson(contract.services.sort(orderByRole))) as [cfUsername, services]}
 			{@const stayedTillEnd = services.map((s) => !leftEarly(s)).some(Boolean)}
-			<div class="flex items-center gap-4 min-w-[240px] bg-muted px-4 py-2 rounded-lg">
+			<div class="flex items-center gap-4 min-w-[200px] bg-muted px-4 py-2 rounded-lg">
 				<HoverCard.Root>
 					<HoverCard.Trigger class="flex-grow-1 w-full hover:no-underline">
 						<div class="flex flex-col">
@@ -72,8 +61,8 @@
 							</div>
 						</div>
 					</HoverCard.Trigger>
-					<HoverCard.Content>
-						<pre class="text-sm max-h-[50vh] overflow-auto">{JSON.stringify(
+					<HoverCard.Content class={canEdit ? 'translate-x-[17px]' : ''}>
+						<pre class="text-sm bg-muted max-h-[50vh] overflow-auto">{JSON.stringify(
 								services,
 								null,
 								2

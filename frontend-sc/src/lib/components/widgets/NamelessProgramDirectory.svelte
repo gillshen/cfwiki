@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ProgramListItem } from '$lib/api/program';
 	import { filterForType } from '$lib/util/programUtils';
+	import { joinNames } from '$lib/util/schoolUtils';
 
 	export let programs: ProgramListItem[];
 	export let type: 'UG Freshman' | 'UG Transfer';
@@ -9,8 +10,7 @@
 		return hostName(a).localeCompare(hostName(b));
 	};
 
-	const hostName = (program: ProgramListItem): string =>
-		program.schools.map((s) => s.name).join(' + ');
+	const hostName = (program: ProgramListItem): string => joinNames(program.schools);
 </script>
 
 {#if programs.length}

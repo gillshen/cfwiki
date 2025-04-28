@@ -2,7 +2,12 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
+	import { createTitle } from '$lib/util/siteUtils';
 </script>
+
+<svelte:head>
+	<title>{createTitle('Data Center')}</title>
+</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>

@@ -70,7 +70,3 @@ export async function updateSchool(data: any) {
 export async function deleteSchool(data: any) {
 	return await destroy(`schools/${data.id}/update/`);
 }
-
-export function sortedSchoolNames(schools: { name: string }[]): string[] {
-	return schools.map((s) => s.name).sort();
-}
