@@ -11,6 +11,14 @@
 
 <div class="grid grid-cols-2 gap-x-4 gap-y-2">
 	{#each filterSortCfUsers({ users, department, employmentStatus }) as { username }}
-		<a href={`/cf/${username}`} class={cn('w-fit', hrefClass)}>{username}</a>
+		<a
+			href={`/cf/${username}`}
+			class={cn(
+				'w-fit',
+				// for better visual alignment
+				username[0] === 'J' ? '-translate-x-[1.5px]' : '',
+				hrefClass
+			)}>{username}</a
+		>
 	{/each}
 </div>

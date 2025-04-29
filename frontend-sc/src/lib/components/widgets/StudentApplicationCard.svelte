@@ -19,20 +19,23 @@
 				<div>{school.name}</div>
 			{/each}
 		</Card.Title>
-		<Card.Description class="pt-1 flex gap-2 flex-wrap">
-			<div class="text-muted-foreground font-semibold">{application.program.display_name}</div>
-			<Badge variant="outline" class="w-fit"
-				>{#if !hideYear}{application.year}
-				{/if}{application.round_name}</Badge
-			>
+		<Card.Description class="flex flex-col gap-2">
+			<div class="text-muted-foreground">{application.program.display_name}</div>
+			{#if hideYear}
+				<Badge variant="outline" class="w-fit -translate-x-[1px]">{application.round_name}</Badge>
+			{:else}
+				<Badge variant="outline" class="w-fit -translate-x-[1px]"
+					>{application.year} {application.round_name}</Badge
+				>
+			{/if}
 		</Card.Description>
 	</Card.Header>
 	{#if compact}
-		<Card.Content class="pt-2 flex flex-col gap-2 flex-grow">
+		<Card.Content class="pt-4 flex flex-col gap-2 flex-grow">
 			<ApplicationStatusSign {application} />
 		</Card.Content>
 	{:else}
-		<Card.Content class="pt-2 flex flex-col gap-2 flex-grow">
+		<Card.Content class="pt-4 flex flex-col gap-2 flex-grow">
 			<ul class="list-disc ml-3.5 flex flex-col gap-1 text-muted-foreground">
 				{#each application.majors as major}
 					<li>{major}</li>

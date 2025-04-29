@@ -208,20 +208,24 @@
 	{:then applications}
 		{#if applications.length}
 			<Tabs.Root value="grid-layout">
-				<Tabs.List class="flex w-fit">
-					<Tabs.Trigger value="grid-layout"><LayoutGrid class="w-4 h-4" /></Tabs.Trigger>
-					<Tabs.Trigger value="table-layout"><List class="w-4 h-4" /></Tabs.Trigger>
+				<Tabs.List class="flex w-fit gap-1">
+					<Tabs.Trigger value="grid-layout" class="size-7"
+						><LayoutGrid class="size-4 shrink-0" /></Tabs.Trigger
+					>
+					<Tabs.Trigger value="table-layout" class="size-7"
+						><List class="size-4 shrink-0" /></Tabs.Trigger
+					>
 					<!-- TODO -->
-					<div class="bg-white p-1 ml-5 rounded-sm">(TODO filters)</div>
+					<div class="bg-white p-1 rounded-sm">(TODO filters)</div>
 				</Tabs.List>
 				<Tabs.Content value="grid-layout">
-					<div class="my-4 grid grid-cols-3 gap-4">
+					<div class="my-4 grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-4 w-fit">
 						{#each applications
 							.sort(orderBySchoolName)
 							.sort(orderByStatus)
 							.sort(orderByYearDesc) as application}
 							<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
-								<StudentApplicationCard {application} />
+								<StudentApplicationCard {application} class="max-w-[360px]" />
 							</a>
 						{/each}
 					</div>

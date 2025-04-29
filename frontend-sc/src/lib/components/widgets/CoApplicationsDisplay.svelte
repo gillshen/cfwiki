@@ -22,15 +22,19 @@
 
 {#if applications.length}
 	<Tabs.Root value="grid-layout">
-		<Tabs.List class="flex w-fit">
-			<Tabs.Trigger value="grid-layout"><LayoutGrid class="w-4 h-4" /></Tabs.Trigger>
-			<Tabs.Trigger value="table-layout"><List class="w-4 h-4" /></Tabs.Trigger>
+		<Tabs.List class="flex w-fit gap-1">
+			<Tabs.Trigger value="grid-layout" class="size-7"
+				><LayoutGrid class="size-4 shrink-0" /></Tabs.Trigger
+			>
+			<Tabs.Trigger value="table-layout" class="size-7"
+				><List class="size-4 shrink-0" /></Tabs.Trigger
+			>
 		</Tabs.List>
 		<Tabs.Content value="grid-layout">
-			<div class="my-4 grid grid-cols-4 gap-4">
+			<div class="my-4 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-1 gap-4">
 				{#each applications.sort(orderByStatus).sort(orderByYearDesc) as application}
 					<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
-						<Card.Root class="h-full flex flex-col min-h-[200px]">
+						<Card.Root class="h-full flex flex-col min-h-[200px] max-w-[320px]">
 							<Card.Header>
 								<Card.Title>
 									{application.student.fullname}
@@ -42,9 +46,11 @@
 										</div>
 									{/if}
 									{#if hideYears}
-										<Badge variant="outline" class="w-fit">{application.round_name}</Badge>
+										<Badge variant="outline" class="w-fit -translate-x-[1px]"
+											>{application.round_name}</Badge
+										>
 									{:else}
-										<Badge variant="outline" class="w-fit"
+										<Badge variant="outline" class="w-fit -translate-x-[1px]"
 											>{application.year} {application.round_name}</Badge
 										>
 									{/if}

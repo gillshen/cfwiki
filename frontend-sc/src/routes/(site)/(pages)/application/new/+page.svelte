@@ -9,7 +9,6 @@
 	import * as Select from '$lib/components/ui/select/index';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
@@ -206,33 +205,32 @@
 
 				<Form.Button class="w-fit min-w-24">Submit</Form.Button>
 			</form>
-
-			<!-- <div class="mt-12 max-w-prose w-fit">
-				<SuperDebug data={$formData} />
-			</div> -->
 		</section>
 
-		<section class="text-sm flex flex-col gap-4 min-h-[120px]">
+		<section class="text-sm flex flex-col min-h-[120px]">
 			{#if applications.length}
-				<h2 class="text-xl font-bold pt-3">Already Applied in {data.term} {data.year}</h2>
-
-				<ScrollArea class="max-h-[75vh] rounded-md border">
-					<div class="px-4">
-						{#each applications.sort().reverse() as application, index}
-							{#if index}
-								<Separator />
-							{/if}
-							<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
-								<StudentApplicationCard
-									{application}
-									compact
-									hideYear
-									class="border-none shadow-none"
-								/>
-							</a>
-						{/each}
-					</div>
-				</ScrollArea>
+				<!-- Workaround for a Firefox bug: backdrop-blur does not work with rounded corners  -->
+				<h2
+					class="text-base font-semibold py-4 px-8 border rounded-t-lg backdrop-blur bg-white/70 shadow-sm z-40"
+				>
+					Already Applied in {data.term}
+					{data.year}
+				</h2>
+				<div class="max-h-[75vh] -translate-y-[56px] rounded-lg border overflow-auto px-2">
+					{#each applications.sort().reverse() as application, index}
+						{#if index}
+							<Separator />
+						{/if}
+						<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
+							<StudentApplicationCard
+								{application}
+								compact
+								hideYear
+								class="border-none shadow-none"
+							/>
+						</a>
+					{/each}
+				</div>
 			{/if}
 		</section>
 	</div>

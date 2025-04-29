@@ -125,7 +125,7 @@
 	</section>
 
 	<section>
-		<h2 class="text-xl font-bold pt-5 pb-2 border-b">Important Dates</h2>
+		<h2 class="text-lg font-medium pt-5 pb-2 border-b">Important Dates</h2>
 		<div class="text-zinc-300 py-2">(TODO)</div>
 	</section>
 </div>

@@ -19,7 +19,7 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<div class="grid grid-cols-2 gap-16">
+<div class="grid grid-cols-3 gap-16">
 	<Section id="dept-wenan" title="文案部">
 		<UserDirectory users={data.cfUsers} department="文案" employmentStatus="current" />
 

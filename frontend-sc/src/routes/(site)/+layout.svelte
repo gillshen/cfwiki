@@ -57,7 +57,7 @@
 					<DropdownMenu.Trigger asChild let:builder>
 						<Button variant="ghost" builders={[builder]}>CF People</Button>
 					</DropdownMenu.Trigger>
-					<DropdownMenu.Content class="w-[800px] translate-x-10">
+					<DropdownMenu.Content class="w-[600px] translate-x-10">
 						<div class="grid grid-cols-2 gap-8 py-4 px-8">
 							<div class="flex flex-col gap-2">
 								<h3 class="font-medium">文案部</h3>
