@@ -36,7 +36,7 @@ export async function load(event: PageServerLoadEvent) {
 		majorsUpdateForm: await superValidate(zod(majorsUpdateSchema)),
 		commentsUpdateForm: await superValidate(zod(commentsUpdateSchema)),
 		logForm: await superValidate(zod(applicationLogSchema)),
-		deleteForm: await superValidate(zod(deleteSchema))
+		deleteForm: await superValidate(application, zod(deleteSchema))
 	};
 }
 

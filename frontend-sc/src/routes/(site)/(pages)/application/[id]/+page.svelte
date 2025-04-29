@@ -4,6 +4,7 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import FormButton from '$lib/components/ui/form/form-button.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
@@ -21,11 +22,15 @@
 	export let data;
 
 	let canEdit: boolean = true;
+	let deleteModalOpen = false;
 	let newLogModalOpen: boolean = false;
 
 	const { student, program_iteration, round, program, schools } = data.application;
 	const schoolNames = joinNames(data.application.schools);
 	const title = `${data.application.student.fullname} \u2022 ${schoolNames}`;
+
+	const deleteForm = superForm(data.deleteForm, { id: 'delete-form' });
+	const { form: delFormData, enhance: delFormEnhance } = deleteForm;
 
 	const logForm = superForm(data.logForm, {
 		id: `log-form-new`,
@@ -139,7 +144,6 @@
 						>
 							<ApplicationLogForm form={logForm} application={data.application} />
 						</form>
-						<!-- <SuperDebug data={$logFormData} /> -->
 					</ButtonDialog>
 				</div>
 			{/if}
@@ -160,7 +164,27 @@
 
 {#if canEdit}
 	<Section id="delete" hrule>
-		<Button variant="destructive" class="mt-4">Delete Application</Button>
+		<ButtonDialog
+			buttonText="Delete Application"
+			buttonVariant="destructive"
+			dialogTitle="Delete this application?"
+			bind:open={deleteModalOpen}
+		>
+			<svelte:fragment slot="description">This action cannot be undone.</svelte:fragment>
+			<form
+				method="POST"
+				action="?/deleteApplication"
+				class="max-w-prose space-y-4 pb-2"
+				use:delFormEnhance
+				id="delete-form"
+			>
+				<input type="number" name="id" bind:value={$delFormData.id} hidden />
+				<FormButton variant="destructive">Delete</FormButton>
+				<Button variant="ghost" class="mr-4" on:click={() => (deleteModalOpen = false)}
+					>Cancel</Button
+				>
+			</form>
+		</ButtonDialog>
 	</Section>
 {/if}
 
