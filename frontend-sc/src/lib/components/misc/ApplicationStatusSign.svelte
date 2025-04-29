@@ -40,17 +40,17 @@
 {#if latestStatus}
 	<div class={cn('text-sm flex items-center gap-1.5', `h-[${height}]`)}>
 		{#if icon === 'big-check'}
-			<CircleCheckBig class="text-mint-700 w-[16px] h-[16px] shrink-0" />
+			<CircleCheckBig class="text-mint-700 size-4 translate-y-[0.5px] shrink-0" />
 		{:else if icon === 'clock'}
-			<Clock class="text-sky-600 w-[16px] h-[16px] shrink-0" />
+			<Clock class="text-sky-600 size-4 translate-y-[0.5px] shrink-0" />
 		{:else if icon === 'check'}
-			<CircleCheck class="text-sky-600 w-[16px] h-[16px] shrink-0" />
+			<CircleCheck class="text-sky-600 size-4 translate-y-[0.5px] shrink-0" />
 		{:else if icon === 'x'}
-			<CircleX class="text-rose-700 w-[16px] h-[16px] shrink-0" />
+			<CircleX class="text-rose-700 size-4 translate-y-[0.5px] shrink-0" />
 		{:else if icon === 'ban'}
-			<Ban class="text-zinc-400 w-[16px] h-[16px] shrink-0" />
+			<Ban class="text-muted-foreground size-4 translate-y-[0.5px] shrink-0" />
 		{:else}
-			<CircleHelp class="text-orange-500 w-[16px] h-[16px] shrink-0" />
+			<CircleHelp class="text-orange-500 size-4 translate-y-[0.5px] shrink-0" />
 		{/if}
 		<div class="flex-1 min-w-0">
 			<span class="font-medium block truncate">{formattedStatuses}</span>

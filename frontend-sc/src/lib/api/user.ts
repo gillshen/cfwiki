@@ -12,7 +12,7 @@ export type CfUserListItem = {
 	is_active: boolean;
 	department: Departments.SALES | Departments.WORK;
 	public_banner: string;
-	private_banner: string;
+	avatar: string;
 };
 
 export type CfUserDetail = CfUserListItem;

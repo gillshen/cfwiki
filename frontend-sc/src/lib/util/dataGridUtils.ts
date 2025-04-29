@@ -126,7 +126,7 @@ export class IdRenderer extends SvelteCellRenderer {
 			target: this.eGui,
 			props: {
 				href: `${this.path}/${params.data.id}`,
-				target: '_blank'
+				target: '_self'
 			}
 		});
 	}

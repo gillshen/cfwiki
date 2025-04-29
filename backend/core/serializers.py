@@ -31,7 +31,7 @@ class CFUserSerializer(serializers.ModelSerializer):
             "is_staff",
             "department",
             "public_banner",
-            "private_banner",
+            "avatar",
         ]
 
 

@@ -12,7 +12,7 @@ class CFUser(AbstractUser):
     # Additional fields
     department = models.CharField(max_length=100)
     public_banner = models.CharField(max_length=100, blank=True)
-    private_banner = models.CharField(max_length=100, blank=True)
+    avatar = models.CharField(max_length=100, blank=True)
 
     objects = CFUserManager()
 

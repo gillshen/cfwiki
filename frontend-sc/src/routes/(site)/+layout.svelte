@@ -15,8 +15,15 @@
 	import UserDirectory from '$lib/components/widgets/UserDirectory.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { quickAccessYears } from '$lib/util/dateUtils';
+	import { randomAvatar } from '$lib/assets/avatars/index';
 
 	export let data;
+
+	// TODO remove after backend update
+	data.cfUsers.forEach((user) => {
+		// the authenticated user already had their avatar assigned in +page.server.ts
+		user.avatar = user.username === data.username ? data.user.avatar : randomAvatar();
+	});
 
 	$: isDataGridPage = !!$page.url.pathname.match('/data-grids/(students|applications)');
 
@@ -210,13 +217,29 @@
 					variant="outline"
 					size="icon"
 					class="flex w-[40px] h-[40px] rounded-full"
-					builders={[builder]}><User class="size-5 text-muted-foreground shrink-0" /></Button
+					builders={[builder]}
 				>
+					<Avatar.Root class="flex bg-primary/5">
+						<Avatar.Image
+							src={data.user.avatar}
+							class="size-7 m-auto"
+							alt={`${data.username}-avatar`}
+						/>
+						<Avatar.Fallback>
+							<User class="size-[22px] text-muted-foreground shrink-0" />
+						</Avatar.Fallback>
+					</Avatar.Root>
+				</Button>
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content class="min-w-[160px] w-fit -translate-x-6">
 				<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
-					<div class="flex items-center gap-2 py-2">
-						<Avatar.Root>
+					<div class="flex items-center gap-2 py-2 px-1">
+						<Avatar.Root class="flex bg-primary/5">
+							<Avatar.Image
+								src={data.user.avatar}
+								class="size-7 m-auto"
+								alt={`${data.username}-avatar`}
+							/>
 							<Avatar.Fallback>
 								<span>{data.username.charAt(0)}</span>
 							</Avatar.Fallback>
