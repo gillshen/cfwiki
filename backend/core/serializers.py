@@ -4,6 +4,8 @@ import datetime
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.db import IntegrityError, transaction
+from django.contrib.auth.password_validation import validate_password
+
 from core.models import CFUser, Student, Contract, Service, Application, ApplicationLog
 
 from cf.models import AcademyProgram
@@ -44,12 +46,45 @@ class CFUserUpdateSerializer(serializers.ModelSerializer):
 class CFUserPasswordResetSerializer(serializers.ModelSerializer):
     class Meta:
         model = CFUser
-        fields = ["password"]
+        fields = ["current_password", "new_password", "confirm_new_password"]
 
-    password = serializers.CharField(write_only=True, required=True)
+    current_password = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={"input_type": "password"},
+    )
+    new_password = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={"input_type": "password"},
+        validators=[validate_password],
+    )
+    confirm_new_password = serializers.CharField(
+        required=True, write_only=True, style={"input_type": "password"}
+    )
+
+    def validate_current_password(self, value):
+        user = self.instance
+        if not user.check_password(value):
+            raise serializers.ValidationError("Current password is incorrect")
+        return value
+
+    def validate(self, data):
+        # Ensure the two new passwords match
+        if data["new_password"] != data["confirm_new_password"]:
+            raise serializers.ValidationError(
+                {"confirm_new_password": "Passwords do not match"}
+            )
+        # Make sure the new password is different from the current one
+        if data["current_password"] == data["new_password"]:
+            raise serializers.ValidationError(
+                {"new_password": "New password must be different from current password"}
+            )
+
+        return data
 
     def update(self, instance, validated_data):
-        instance.set_password(validated_data["password"])
+        instance.set_password(validated_data["new_password"])
         instance.save()
         return instance
 

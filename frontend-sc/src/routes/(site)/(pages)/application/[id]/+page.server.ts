@@ -45,7 +45,8 @@ export const actions = {
 	updateMajors: formAction(majorsUpdateSchema, updateApplication),
 	updateComments: formAction(commentsUpdateSchema, updateApplication),
 
-	deleteApplication: formAction(deleteSchema, deleteApplication, (student) => {
+	deleteApplication: formAction(deleteSchema, deleteApplication, async ({ response }) => {
+		const student = await response?.json();
 		throw redirect(303, `/student/${student.id}`);
 	}),
 

@@ -40,8 +40,9 @@ export async function updateUser(data: {
 
 export async function updatePassword(data: {
 	id: number;
-	password: string;
-	repeat_password: string;
+	current_password: string;
+	new_password: string;
+	confirm_new_password: string;
 }) {
 	return await patch(`users/${data.id}/password/`, data);
 }
