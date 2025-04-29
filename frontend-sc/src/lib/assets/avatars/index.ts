@@ -15,7 +15,9 @@ import Monster2 from './monster2.png';
 import Octopus from './octopus.png';
 import Penguin from './penguin.png';
 import Porcupine from './porcupine.png';
+import PufferFish from './puffer-fish.png';
 import Rat from './rat.png';
+import Shell from './shell.png';
 import Snail from './snail.png';
 import Snake from './snake.png';
 import Tiger from './tiger.png';
@@ -38,7 +40,9 @@ export const avatars = {
 	Monster2,
 	Penguin,
 	Porcupine,
+	PufferFish,
 	Rat,
+	Shell,
 	Snail,
 	Snake,
 	Octopus,

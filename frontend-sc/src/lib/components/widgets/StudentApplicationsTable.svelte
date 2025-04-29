@@ -29,7 +29,7 @@
 				<Table.Head class="font-semibold min-w-[130px]">Major/Track</Table.Head>
 			{/if}
 			<Table.Head class="font-semibold">Status</Table.Head>
-			<Table.Head class="font-semibold"></Table.Head>
+			<Table.Head class="font-semibold pr-2"></Table.Head>
 		</Table.Row>
 	</Table.Header>
 	<Table.Body>
@@ -70,12 +70,12 @@
 						>{application.majors[2] || '-'}</Table.Cell
 					>
 				{/if}
-				<Table.Cell>
-					<div class="flex">
+				<Table.Cell class="flex max-w-[130px]">
+					<div class="min-w-0">
 						<ApplicationStatusSign {application} />
 					</div>
 				</Table.Cell>
-				<Table.Cell class="max-w-[16px]">
+				<Table.Cell class="max-w-[16px] pr-2">
 					<div class="flex justify-end">
 						<LinkIcon href={`/application/${application.id}`} />
 					</div>
