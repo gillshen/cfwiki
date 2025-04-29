@@ -18,15 +18,15 @@
 		<Table.Row>
 			<Table.Head class="font-semibold">School</Table.Head>
 			<Table.Head class="font-semibold">Program</Table.Head>
-			<Table.Head class="font-semibold min-w-[110px]">Year & Plan</Table.Head>
+			<Table.Head class="font-semibold min-w-[100px]">Year & Plan</Table.Head>
 			{#if hasMajor2}
-				<Table.Head class="font-semibold min-w-[130px]">Major/Track 1</Table.Head>
-				<Table.Head class="font-semibold min-w-[130px]">Major/Track 2</Table.Head>
+				<Table.Head class="font-semibold min-w-[128px]">Major/Track 1</Table.Head>
+				<Table.Head class="font-semibold min-w-[128px]">Major/Track 2</Table.Head>
 				{#if hasMajor3}
-					<Table.Head class="font-semibold min-w-[130px]">Major/Track 3</Table.Head>
+					<Table.Head class="font-semibold min-w-[128px]">Major/Track 3</Table.Head>
 				{/if}
 			{:else}
-				<Table.Head class="font-semibold min-w-[130px]">Major/Track</Table.Head>
+				<Table.Head class="font-semibold min-w-[128px]">Major/Track</Table.Head>
 			{/if}
 			<Table.Head class="font-semibold">Status</Table.Head>
 			<Table.Head class="font-semibold pr-2"></Table.Head>
@@ -42,7 +42,7 @@
 					<div
 						class={cn(
 							'flex flex-col',
-							hasMajor3 ? 'max-w-[240px]' : hasMajor2 ? 'max-w-[270px]' : 'max-w-[300px]'
+							hasMajor3 ? 'max-w-[232px]' : hasMajor2 ? 'max-w-[270px]' : 'max-w-[300px]'
 						)}
 					>
 						{#each application.schools as school}
@@ -57,20 +57,20 @@
 				<Table.Cell
 					class={cn(
 						'truncate text-muted-foreground',
-						hasMajor3 ? 'max-w-[130px]' : hasMajor2 ? 'max-w-[180px]' : ''
+						hasMajor3 ? 'max-w-[128px]' : hasMajor2 ? 'max-w-[180px]' : ''
 					)}>{application.majors[0] || '-'}</Table.Cell
 				>
 				{#if hasMajor2}
-					<Table.Cell class="truncate max-w-[130px] text-muted-foreground"
+					<Table.Cell class="truncate max-w-[128px] text-muted-foreground"
 						>{application.majors[1] || '-'}</Table.Cell
 					>
 				{/if}
 				{#if hasMajor3}
-					<Table.Cell class="truncate max-w-[130px] text-muted-foreground"
+					<Table.Cell class="truncate max-w-[128px] text-muted-foreground"
 						>{application.majors[2] || '-'}</Table.Cell
 					>
 				{/if}
-				<Table.Cell class="flex max-w-[130px]">
+				<Table.Cell class="flex max-w-[120px]">
 					<div class="min-w-0">
 						<ApplicationStatusSign {application} />
 					</div>

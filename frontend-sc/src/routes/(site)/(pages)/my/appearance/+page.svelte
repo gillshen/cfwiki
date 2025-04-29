@@ -11,7 +11,7 @@
 	import FormField from '$lib/components/ui/form/form-field.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import { createTitle } from '$lib/util/siteUtils';
-	import { defaultBanner } from '$lib/util/userUtils.js';
+	import { defaultBanner } from '$lib/util/userUtils';
 	import { avatars } from '$lib/assets/avatars';
 
 	export let data;
@@ -21,7 +21,7 @@
 </script>
 
 <svelte:head>
-	<title>{createTitle('My Account')}</title>
+	<title>{createTitle('Manage Appearance')}</title>
 </svelte:head>
 
 <BreadcrumbContainer>
@@ -58,14 +58,11 @@
 		<FormField {form} name="avatar">
 			<Form.Control>
 				<Form.Label>Avatar</Form.Label>
-				<RadioGroup.Root
-					bind:value={$formData.avatar}
-					class="pt-1 w-[360px] grid grid-cols-5 space-between gap-4"
-				>
-					{#each Object.entries(avatars) as [avatarKey, avatarPath]}
+				<RadioGroup.Root bind:value={$formData.avatar} class="pt-1 w-fit grid grid-cols-5 gap-4">
+					{#each Object.entries(avatars).concat([['__null__', '']]) as [avatarKey, avatarPath]}
 						<Label
 							for={avatarKey}
-							class="size-12 rounded-md flex border-2 bg-popover hover:bg-accent [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5"
+							class="size-12 rounded-md flex border-2 bg-popover hover:bg-accent [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-accent"
 						>
 							<RadioGroup.Item
 								value={avatarPath}
@@ -73,7 +70,9 @@
 								aria-label={avatarKey}
 								class="sr-only"
 							/>
-							<img src={avatarPath} alt={avatarKey} class="size-7 m-auto" />
+							{#if avatarPath}
+								<img src={avatarPath} alt={avatarKey} class="size-7 m-auto" />
+							{/if}
 						</Label>
 					{/each}
 					<RadioGroup.Input name="avatar" />

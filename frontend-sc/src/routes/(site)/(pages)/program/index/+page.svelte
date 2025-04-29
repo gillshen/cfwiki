@@ -27,23 +27,23 @@
 {#await data.programs}
 	<LoadingSign />
 {:then programs}
-	<Section id="ug-freshman" title="UG Freshman" class="scroll-mt-[96px]">
+	<Section id="ug-freshman" title="UG Freshman" class="scroll-mt-[112px]">
 		<NamelessProgramDirectory {programs} type="UG Freshman" />
 	</Section>
 
-	<Section id="ug-transfer" title="UG Transfer" class="scroll-mt-[96px]">
+	<Section id="ug-transfer" title="UG Transfer" class="scroll-mt-[112px]">
 		<NamelessProgramDirectory {programs} type="UG Transfer" />
 	</Section>
 
-	<Section id="masters" title="Master&rsquo;s" class="scroll-mt-[96px]">
+	<Section id="masters" title="Master&rsquo;s" class="scroll-mt-[112px]">
 		<NamedProgramDirectory {programs} type="Master's" />
 	</Section>
 
-	<Section id="doctorate" title="Doctorate" class="scroll-mt-[96px]">
+	<Section id="doctorate" title="Doctorate" class="scroll-mt-[112px]">
 		<NamedProgramDirectory {programs} type="Doctorate" />
 	</Section>
 
-	<Section id="non-degree" title="Non-degree" class="scroll-mt-[96px]">
+	<Section id="non-degree" title="Non-degree" class="scroll-mt-[112px]">
 		<NamedProgramDirectory {programs} type="Non-degree" />
 	</Section>
 {/await}

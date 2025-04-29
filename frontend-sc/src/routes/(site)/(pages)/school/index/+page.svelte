@@ -51,7 +51,7 @@
 {:then schools}
 	{#each Object.entries(groupByType(schools)).sort( ([typeA], [typeB]) => compareSchoolTypes(typeA, typeB) ) as [schoolType, schoolList]}
 		{#if schoolList.length}
-			<Section id={schoolTypeToId(schoolType)} title={schoolType} class="scroll-mt-[96px]">
+			<Section id={schoolTypeToId(schoolType)} title={schoolType} class="scroll-mt-[116px]">
 				<div class="grid lg:grid-cols-2 md:grid-cols-1 gap-2">
 					{#each schoolList.sort(orderByName) as school}
 						<a href={`/school/${school.id}`} class="w-fit">{school.name}</a>

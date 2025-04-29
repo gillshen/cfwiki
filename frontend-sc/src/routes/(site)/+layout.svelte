@@ -8,6 +8,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import User from 'lucide-svelte/icons/user';
 	import Bookmark from 'lucide-svelte/icons/bookmark';
+	import KeyRound from 'lucide-svelte/icons/key-round';
 	import Settings from 'lucide-svelte/icons/settings';
 	import LogOut from 'lucide-svelte/icons/log-out';
 
@@ -263,10 +264,16 @@
 							class="flex items-center text-inherit hover:no-underline"
 							><Bookmark class="size-4 mr-2.5" />Bookmarks</DropdownMenu.Item
 						>
+						<DropdownMenu.Separator />
 						<DropdownMenu.Item
-							href="/my/account"
+							href="/my/appearance"
 							class="flex items-center text-inherit hover:no-underline"
-							><Settings class="size-4 mr-2.5" />Settings</DropdownMenu.Item
+							><Settings class="size-4 mr-2.5" />Appearance</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/my/password"
+							class="flex items-center text-inherit hover:no-underline"
+							><KeyRound class="size-4 mr-2.5" />Change Password</DropdownMenu.Item
 						>
 						<DropdownMenu.Separator />
 						<DropdownMenu.Item
@@ -280,21 +287,21 @@
 		</div>
 	</div>
 
-	<div class="mt-[60px] min-h-[calc(100vh-340px)] flex">
+	<div class="mt-[68px] min-h-[calc(100vh-340px)] flex">
 		{#if isDataGridPage}
 			<div class="flex flex-col pt-6 w-full">
 				<slot />
 			</div>
 		{:else}
-			<div class="flex mx-auto gap-8 w-full">
+			<div class="flex mx-auto gap-12 w-full">
 				<aside
-					class="sticky top-[60px] bg-muted/50 max-w-[230px] min-w-[230px] h-[calc(100vh-60px)] overflow-auto py-8 pr-8 pl-4"
+					class="sticky top-[68px] bg-muted/50 max-w-[240px] min-w-[240px] h-[calc(100vh-76px)] overflow-auto py-6 mb-2 px-6 rounded-lg"
 				>
 					{#await data.students then students}
 						<StudentSideList username={data.username} {students} {selectedStudentId} />
 					{/await}
 				</aside>
-				<div class="flex flex-col w-full pt-6 pb-8 pr-4">
+				<div class="flex flex-col w-full pt-2 pb-8 pr-4">
 					<slot />
 				</div>
 			</div>
