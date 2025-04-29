@@ -3,7 +3,6 @@ import { redirect } from '@sveltejs/kit';
 import { fetchCfUsers } from '$lib/api/user';
 import { fetchUser } from '$lib/api/user';
 import { fetchStudentsByUser } from '$lib/api/student';
-import { randomAvatar } from '$lib/assets/avatars/index';
 
 export async function load(event) {
 	const userIdString = event.cookies.get('user_id');
@@ -24,7 +23,7 @@ export async function load(event) {
 	return {
 		userId,
 		username,
-		user: { ...user, avatar: randomAvatar() },
+		user,
 		cfUsers: await fetchCfUsers(),
 		students: fetchStudentsByUser({ cfer: user.username })
 	};

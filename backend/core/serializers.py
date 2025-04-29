@@ -38,7 +38,7 @@ class CFUserSerializer(serializers.ModelSerializer):
 class CFUserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CFUser
-        fields = ["public_banner"]
+        fields = ["public_banner", "avatar"]
 
 
 class CFUserPasswordResetSerializer(serializers.ModelSerializer):
