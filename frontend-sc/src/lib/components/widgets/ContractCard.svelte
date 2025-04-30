@@ -15,7 +15,7 @@
 	import { toShortYearMonth } from '$lib/util/dateUtils';
 
 	export let contract: Contract;
-	export let canEdit: boolean = true;
+	export let canEdit: boolean;
 
 	const cfUsers = $page.data.cfUsers as CfUserListItem[];
 
@@ -32,7 +32,7 @@
 			{#if canEdit}
 				<Button
 					variant="link"
-					href="/contract/{contract.id}"
+					href="/student/{contract.student}/contract/{contract.id}"
 					size="icon"
 					class="font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80 size-6"
 				>

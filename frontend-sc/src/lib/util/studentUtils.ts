@@ -11,6 +11,7 @@ import type {
 import type { ContractType } from '$lib/api/contract';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
+import { canEdit as canEditContract } from '$lib/util/contractUtils';
 import { isActive } from '$lib/util/serviceUtils';
 import { compareAlevelGrade } from '$lib/util/scoresUtils';
 import { lexicalChineseLast } from '$lib/util/stringUtils';
@@ -29,12 +30,11 @@ export const canEdit = (params: {
 	// 	return true;
 	// }
 
-	// if no contract exists, anyone can edit
-	if (!student.contracts.length) {
-		return true;
-	}
-
-	return isCurrentForUser({ student, username: user.username });
+	// return true if there is no contract or if the user can edit some of them
+	return (
+		!student.contracts.length! ||
+		student.contracts.some((contract) => canEditContract({ user, contract }))
+	);
 };
 
 export const isCurrentForUser = (params: {

@@ -10,7 +10,7 @@ import { createOrUpdateService, deleteService } from '$lib/api/service';
 import { base10Or400 } from '$lib/util/siteUtils';
 
 export async function load(event: PageServerLoadEvent) {
-	const id = base10Or400(event.params.id, 'Invalid contract ID');
+	const id = base10Or400(event.params.contractId, 'Invalid contract ID');
 
 	return {
 		contract: await fetchContract(id),
