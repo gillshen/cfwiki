@@ -28,6 +28,7 @@
 
 	import countryFlags from '$lib/constants/countries';
 	import { formatLocation } from '$lib/util/studentUtils';
+	import { canEdit as canEditContract } from '$lib/util/contractUtils';
 	import { orderBySchoolName, orderByStatus, orderByYearDesc } from '$lib/util/applicationUtils';
 	import { activeYears, toISOYearMonth } from '$lib/util/dateUtils';
 	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
@@ -37,13 +38,32 @@
 	export let data;
 
 	const form = superForm(data.newApplicationPrepForm);
-	const { enhance } = form;
+	const { form: formData, enhance } = form;
 
-	$: contractItems = data.student.contracts.map((contract) => ({
-		value: contract.id.toString(),
-		label: `${contract.type} ${contract.target_year}`
-	}));
-	const applicationTypes = ['UG Freshman', 'UG Transfer', 'Graduate', 'Non-degree'];
+	$: contractItems = data.student.contracts
+		.filter((contract) => canEditContract({ user: data.user, contract }))
+		.map((contract) => ({
+			value: contract.id.toString(),
+			label: `${contract.type} ${contract.target_year}`
+		}));
+
+	const applicationTypeMap: Record<string, string[]> = {
+		'': [],
+		'UG Freshman': ['UG Freshman', 'Non-degree'],
+		'UG Transfer': ['UG Transfer', 'Non-degree'],
+		Graduate: ['Graduate', 'Non-degree'],
+		Other: ['Non-degree']
+	};
+
+	let relevantApplicationTypes: string[] = [];
+	let relevantYears: number[] = [];
+
+	const onContractSelection = () => {
+		const selectedContractId = parseInt($formData.contract as unknown as string);
+		const selectedContract = data.student.contracts.find((c) => c.id === selectedContractId);
+		relevantApplicationTypes = applicationTypeMap[selectedContract?.type ?? ''];
+		relevantYears = activeYears().filter((y) => y <= (selectedContract?.target_year ?? 9999));
+	};
 </script>
 
 <svelte:head>
@@ -98,9 +118,9 @@
 		<div class="text-sm pb-2 text-stone-600 max-w-[40ch]">{data.student.comments}</div>
 	{/if}
 
-	<div class="flex gap-4 flex-wrap pt-2">
+	<div class="flex gap-4 flex-wrap pt-4">
 		{#each data.student.contracts as contract}
-			<ContractCard {contract} />
+			<ContractCard {contract} canEdit={canEditContract({ user: data.user, contract })} />
 		{/each}
 	</div>
 
@@ -237,9 +257,15 @@
 				>
 					<input name="username" value={data.username} hidden />
 					<input type="number" name="student" value={data.student.id} hidden />
-					<Combobox {form} name="contract" label="Contract" items={contractItems} />
-					<Combobox {form} name="type" label="Application type" items={applicationTypes} />
-					<Combobox {form} name="year" label="Year of admission" items={activeYears()} />
+					<Combobox
+						{form}
+						name="contract"
+						label="Contract"
+						items={contractItems}
+						postSelect={onContractSelection}
+					/>
+					<Combobox {form} name="type" label="Application type" items={relevantApplicationTypes} />
+					<Combobox {form} name="year" label="Year of admission" items={relevantYears} />
 					<Combobox {form} name="term" label="Term" items={academicTerms} />
 					<Form.Button class="w-fit min-w-24">Next</Form.Button>
 				</form>

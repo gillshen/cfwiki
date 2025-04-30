@@ -23,6 +23,7 @@
 	export let isOptional: boolean = false;
 	export let disableSearch: boolean = false;
 	export let onSelect: () => void = () => {};
+	export let postSelect: () => void = () => {};
 
 	const { form: formData } = form;
 
@@ -86,6 +87,7 @@
 								closeAndFocusTrigger(ids.trigger);
 								onSelect();
 								$formData[name] = item.value;
+								postSelect();
 							}}
 						>
 							<Check

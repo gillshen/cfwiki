@@ -10,6 +10,7 @@
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
+	import Badge from '$lib/components/ui/badge/badge.svelte';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
@@ -207,13 +208,15 @@
 
 		<section class="text-sm flex flex-col min-h-[120px]">
 			{#if applications.length}
-				<!-- Workaround for a Firefox bug: backdrop-blur does not work with rounded corners  -->
-				<h2
-					class="text-base font-semibold py-4 px-8 border rounded-t-lg backdrop-blur bg-white/70 shadow-sm z-40"
+				<div
+					class="py-4 px-8 border rounded-t-lg backdrop-blur bg-white/70 shadow-sm z-10 flex items-center"
 				>
-					Applied in {data.term}
-					{data.year}
-				</h2>
+					<h2 class="text-base font-semibold">Applied in {data.term} {data.year}</h2>
+					<Badge variant="outline" class="ml-4 min-w-8 h-5 justify-center"
+						>{applications.length}</Badge
+					>
+				</div>
+				<!-- Workaround for a Firefox bug where backdrop-blur does not work with rounded corners  -->
 				<div
 					class="max-h-[calc(100vh-168px)] -translate-y-[56px] pt-[56px] flex flex-col rounded-lg border overflow-auto px-2"
 				>
