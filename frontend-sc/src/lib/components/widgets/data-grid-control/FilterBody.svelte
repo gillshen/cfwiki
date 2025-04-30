@@ -1,10 +1,10 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select/index';
-
-	import SelectBody from '$lib/components/containers/SelectBody.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
+	import SelectBody from '$lib/components/containers/SelectBody.svelte';
+	import type { SelectOption } from '$lib/util/formUtils';
 
-	export let items: { value: any; label: string }[];
+	export let items: (SelectOption | string | number)[];
 </script>
 
 <SelectBody {items}>

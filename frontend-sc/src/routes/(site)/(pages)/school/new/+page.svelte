@@ -8,7 +8,13 @@
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
-	import countryFlags, { orderMostAppliedFirst } from '$lib/constants/countries';
+
+	import countryFlags, {
+		isCityState,
+		isDirectlyAdministered,
+		orderMostAppliedFirst
+	} from '$lib/constants/countries';
+
 	import americanStates from '$lib/constants/americanStates';
 	import canadianProvinces from '$lib/constants/canadianProvinces';
 	import chineseProvinces from '$lib/constants/chineseProvinces';
@@ -24,34 +30,8 @@
 		.map(([country, flag]) => ({ label: `${flag}\xa0\xa0${country}`, value: country }))
 		.sort((a, b) => orderMostAppliedFirst(a.value, b.value));
 
-	const americanStateItems = Object.keys(americanStates).map((key) => ({ label: key, value: key }));
-
-	const chineseProvinceItems = Object.keys(chineseProvinces).map((key) => ({
-		label: key,
-		value: key
-	}));
-
-	const canadianProvinceItems = Object.keys(canadianProvinces).map((key) => ({
-		label: key,
-		value: key
-	}));
-
-	const bigThreeOrCityStates = [
-		'China',
-		'United States',
-		'Canada',
-		'Hong Kong',
-		'Macau',
-		'Monaco',
-		'Singapore',
-		'Vatican City'
-	];
-
 	$: {
-		if (
-			$formData.country === 'China' &&
-			['北京', '上海', '天津', '重庆'].includes($formData.region)
-		) {
+		if ($formData.country === 'China' && isDirectlyAdministered($formData.region)) {
 			$formData.city = $formData.region;
 		}
 	}
@@ -92,7 +72,7 @@
 			]}
 		/>
 
-		<FormField {form} name="name">
+		<FormField {form} name="name" class="pb-1">
 			<Form.Control let:attrs>
 				<Form.Label>Full name</Form.Label>
 				<Input
@@ -106,7 +86,7 @@
 			<Form.FieldErrors />
 		</FormField>
 
-		<FormField {form} name="alt_name">
+		<FormField {form} name="alt_name" class="pb-1">
 			<Form.Control let:attrs>
 				<Form.Label class="optional-field">Abbreviation</Form.Label>
 				<Input
@@ -136,7 +116,7 @@
 				{form}
 				name="region"
 				label="Region"
-				items={chineseProvinceItems}
+				items={Object.keys(chineseProvinces)}
 				isOptional
 				onSelect={() => ($formData.city = '')}
 			/>
@@ -145,7 +125,7 @@
 				{form}
 				name="region"
 				label="Region"
-				items={americanStateItems}
+				items={Object.keys(americanStates)}
 				isOptional
 				onSelect={() => ($formData.city = '')}
 			/>
@@ -154,7 +134,7 @@
 				{form}
 				name="region"
 				label="Region"
-				items={canadianProvinceItems}
+				items={Object.keys(canadianProvinces)}
 				isOptional
 				onSelect={() => ($formData.city = '')}
 			/>
@@ -165,13 +145,10 @@
 				{form}
 				name="city"
 				label="City"
-				items={chineseProvinces[$formData.region].map((city) => ({
-					label: city,
-					value: city
-				}))}
+				items={chineseProvinces[$formData.region]}
 				isOptional
 			/>
-		{:else if $formData.country && ($formData.region || !bigThreeOrCityStates.includes($formData.country))}
+		{:else if $formData.country && ($formData.region || !isCityState($formData.country))}
 			<FormField {form} name="city">
 				<Form.Control let:attrs>
 					<Form.Label class="optional-field">City</Form.Label>

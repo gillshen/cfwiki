@@ -36,3 +36,15 @@ export const formAction = <T extends ZodObject<any>>(
 		return onSuccess({ event, response });
 	};
 };
+
+export type SelectOption = { label: string; value: string };
+
+export const normalizeSelectItems = (item: SelectOption | string | number): SelectOption => {
+	if (typeof item === 'string') {
+		return { label: item, value: item };
+	}
+	if (typeof item === 'number') {
+		return { label: item.toString(), value: item.toString() };
+	}
+	return item;
+};

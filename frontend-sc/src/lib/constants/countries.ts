@@ -203,16 +203,6 @@ const countryFlags: { [key: string]: string } = {
 
 export default countryFlags;
 
-export function sortUnitedStatesFirst(a: string, b: string) {
-	if (a === 'United States') {
-		return -1;
-	} else if (b === 'United States') {
-		return 1;
-	} else {
-		return a.localeCompare(b);
-	}
-}
-
 const _citizenshipOrder: Record<string, number> = {
 	China: 0,
 	'United States': 1,
@@ -239,4 +229,12 @@ export function orderMostAppliedFirst(a: string, b: string) {
 	const indexA = _orderMostApplied[a] ?? 99;
 	const indexB = _orderMostApplied[b] ?? 99;
 	return indexA - indexB || a.localeCompare(b);
+}
+
+export function isCityState(country: string): boolean {
+	return ['Hong Kong', 'Macau', 'Monaco', 'Singapore', 'Vatican City'].includes(country);
+}
+
+export function isDirectlyAdministered(region: string): boolean {
+	return ['北京', '上海', '天津', '重庆'].includes(region);
 }

@@ -107,9 +107,7 @@
 					selected={{ value: year, label: year }}
 					onSelectedChange={paramsManager.onScSelectChange('year')}
 				>
-					<DataGridControl.FilterBody
-						items={activeYears().map((year) => ({ value: year, label: year.toString() }))}
-					/>
+					<DataGridControl.FilterBody items={activeYears()} />
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 
@@ -147,7 +145,7 @@
 						items={data.cfUsers
 							.filter((u) => u.is_active)
 							.sort(orderByUsername)
-							.map((cfer) => ({ value: cfer.username, label: cfer.username }))}
+							.map((cfer) => cfer.username)}
 					/>
 				</Select.Root>
 			</DataGridControl.FilterUnit>

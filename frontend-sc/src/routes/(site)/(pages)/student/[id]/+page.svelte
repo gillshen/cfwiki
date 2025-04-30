@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { superForm } from 'sveltekit-superforms';
+
 	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
@@ -26,37 +28,22 @@
 
 	import countryFlags from '$lib/constants/countries';
 	import { formatLocation } from '$lib/util/studentUtils';
-	import { superForm } from 'sveltekit-superforms';
 	import { orderBySchoolName, orderByStatus, orderByYearDesc } from '$lib/util/applicationUtils';
-	import { toISOYearMonth } from '$lib/util/dateUtils';
+	import { activeYears, toISOYearMonth } from '$lib/util/dateUtils';
 	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
+	import { academicTerms } from '$lib/constants/progressions';
 	import { createTitle } from '$lib/util/siteUtils';
 
 	export let data;
 
-	let canEdit: boolean = true;
-
 	const form = superForm(data.newApplicationPrepForm);
 	const { enhance } = form;
 
-	const contractItems = data.student.contracts.map((contract) => ({
+	$: contractItems = data.student.contracts.map((contract) => ({
 		value: contract.id.toString(),
 		label: `${contract.type} ${contract.target_year}`
 	}));
 	const applicationTypes = ['UG Freshman', 'UG Transfer', 'Graduate', 'Non-degree'];
-	const applicationTypeItems = applicationTypes.map((value) => ({
-		value,
-		label: value
-	}));
-	const yearItems = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029] // TODO
-		.map((year) => ({
-			value: year.toString(),
-			label: year.toString()
-		}));
-	const termItems = ['Fall', 'Spring', 'Summer', 'Winter'].map((value) => ({
-		value,
-		label: value
-	}));
 </script>
 
 <svelte:head>
@@ -98,7 +85,7 @@
 		<div class="text-gray-400">&bullet;</div>
 		<div>@ {formatLocation(data.student)}</div>
 
-		{#if canEdit}
+		{#if data.userCanEdit}
 			<Button
 				variant="link"
 				class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80"
@@ -117,12 +104,13 @@
 		{/each}
 	</div>
 
-	{#if canEdit}
+	{#if data.userCanEdit}
 		<div class="pt-2">
-			<ButtonDialog buttonText="Add Contract" dialogTitle="Add Contract">
-				<div slot="description">You can staff later</div>
-				<div>Dialog body</div>
-			</ButtonDialog>
+			<Button
+				variant="outline"
+				href="/student/{data.student.id}/contract/new"
+				class="text-primary hover:no-underline">Add Contract</Button
+			>
 		</div>
 	{/if}
 </section>
@@ -133,10 +121,10 @@
 			{#each data.student.enrollments as enrollment}
 				<Timeline.Item class="min-h-[100px] pb-8 w-full">
 					<h3 class="text-base font-semibold flex items-center -translate-y-2">
-						<a href={`/school/${enrollment.school.id}`} class="text-inherit"
+						<a href="/school/{enrollment.school.id}" class="text-inherit"
 							>{enrollment.school.name}</a
 						>
-						{#if canEdit}
+						{#if data.userCanEdit}
 							<Button
 								variant="link"
 								class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80"
@@ -180,7 +168,7 @@
 		</Timeline.Root>
 	{/if}
 
-	{#if canEdit}
+	{#if data.userCanEdit}
 		<div class="pt-4">
 			<ButtonDialog buttonText="Add Experience" dialogTitle="Add Educational Experience">
 				<div>Dialog body</div>
@@ -193,7 +181,7 @@
 	<!-- TODO -->
 	<pre class="text-sm">{JSON.stringify(data.student.act, null, 2)}</pre>
 	<pre class="text-sm">{JSON.stringify(data.student.toefl, null, 2)}</pre>
-	{#if canEdit}
+	{#if data.userCanEdit}
 		<div class="pt-4">
 			<ButtonDialog buttonText="Add Test" dialogTitle="Add Test">
 				<div>Dialog body</div>
@@ -224,7 +212,7 @@
 							.sort(orderBySchoolName)
 							.sort(orderByStatus)
 							.sort(orderByYearDesc) as application}
-							<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
+							<a href="/application/{application.id}" target="_self" class="hover:no-underline">
 								<StudentApplicationCard {application} class="max-w-[360px]" />
 							</a>
 						{/each}
@@ -237,7 +225,7 @@
 		{/if}
 	{/await}
 
-	{#if canEdit}
+	{#if data.userCanEdit}
 		<div class="pt-4">
 			<ButtonDialog buttonText="Create Applications" dialogTitle="Create Applications">
 				<form
@@ -250,9 +238,9 @@
 					<input name="username" value={data.username} hidden />
 					<input type="number" name="student" value={data.student.id} hidden />
 					<Combobox {form} name="contract" label="Contract" items={contractItems} />
-					<Combobox {form} name="type" label="Application type" items={applicationTypeItems} />
-					<Combobox {form} name="year" label="Year of admission" items={yearItems} />
-					<Combobox {form} name="term" label="Term" items={termItems} />
+					<Combobox {form} name="type" label="Application type" items={applicationTypes} />
+					<Combobox {form} name="year" label="Year of admission" items={activeYears()} />
+					<Combobox {form} name="term" label="Term" items={academicTerms} />
 					<Form.Button class="w-fit min-w-24">Next</Form.Button>
 				</form>
 			</ButtonDialog>
@@ -260,7 +248,7 @@
 	{/if}
 </Section>
 
-{#if canEdit}
+{#if data.userCanEdit}
 	<Section id="delete" hrule>
 		<Button variant="destructive" class="mt-4">Delete Profile</Button>
 	</Section>

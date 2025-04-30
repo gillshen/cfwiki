@@ -91,9 +91,7 @@
 					name="_school"
 					label="School"
 					width="w-[480px]"
-					items={schools
-						.sort(orderByName)
-						.map((school) => ({ value: school.name, label: school.name }))}
+					items={schools.sort(orderByName).map((school) => school.name)}
 					onSelect={() => {
 						$formData._program = '';
 						$formData.round = 0;
@@ -213,10 +211,12 @@
 				<h2
 					class="text-base font-semibold py-4 px-8 border rounded-t-lg backdrop-blur bg-white/70 shadow-sm z-40"
 				>
-					Already Applied in {data.term}
+					Applied in {data.term}
 					{data.year}
 				</h2>
-				<div class="max-h-[75vh] -translate-y-[56px] rounded-lg border overflow-auto px-2">
+				<div
+					class="max-h-[calc(100vh-168px)] -translate-y-[56px] pt-[56px] flex flex-col rounded-lg border overflow-auto px-2"
+				>
 					{#each applications.sort().reverse() as application, index}
 						{#if index}
 							<Separator />

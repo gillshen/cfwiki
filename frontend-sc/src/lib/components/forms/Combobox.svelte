@@ -12,10 +12,12 @@
 
 	import type { SuperForm } from 'sveltekit-superforms';
 
+	import { normalizeSelectItems, type SelectOption } from '$lib/util/formUtils';
+
 	export let form: SuperForm<any>;
 	export let name: string;
 	export let label: string;
-	export let items: { label: string; value: string }[];
+	export let items: (SelectOption | string | number)[];
 	export let width: string = 'w-[360px]';
 	export let description: string = '';
 	export let isOptional: boolean = false;
@@ -23,6 +25,8 @@
 	export let onSelect: () => void = () => {};
 
 	const { form: formData } = form;
+
+	$: normalizedItems = items.map(normalizeSelectItems);
 
 	let open = false;
 
@@ -55,7 +59,8 @@
 				{...attrs}
 			>
 				<span class="truncate"
-					>{items.find((item) => item.value === $formData[name])?.label || 'Select an option'}</span
+					>{normalizedItems.find((item) => item.value === $formData[name])?.label ||
+						'Select an option'}</span
 				>
 				<ChevronDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
 			</Popover.Trigger>
@@ -70,7 +75,7 @@
 					>{disableSearch ? 'No available options' : 'No matching options found'}</Command.Empty
 				>
 				<Command.List>
-					{#each items as item}
+					{#each normalizedItems as item}
 						<Command.Item
 							{...form}
 							class="flex gap-2 items-center"

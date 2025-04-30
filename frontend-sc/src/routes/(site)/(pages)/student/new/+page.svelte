@@ -12,7 +12,12 @@
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import RadioGroup from '$lib/components/forms/RadioGroup.svelte';
 
-	import countryFlags, { orderChinaUnitedStatesFirst } from '$lib/constants/countries';
+	import countryFlags, {
+		isCityState,
+		isDirectlyAdministered,
+		orderChinaUnitedStatesFirst
+	} from '$lib/constants/countries';
+
 	import americanStates from '$lib/constants/americanStates';
 	import canadianProvinces from '$lib/constants/canadianProvinces';
 	import chineseProvinces from '$lib/constants/chineseProvinces';
@@ -32,34 +37,8 @@
 
 	const countryItems = citizenshipItems.filter((item) => item.value !== 'United States Green Card');
 
-	const americanStateItems = Object.keys(americanStates).map((key) => ({ label: key, value: key }));
-
-	const chineseProvinceItems = Object.keys(chineseProvinces).map((key) => ({
-		label: key,
-		value: key
-	}));
-
-	const canadianProvinceItems = Object.keys(canadianProvinces).map((key) => ({
-		label: key,
-		value: key
-	}));
-
-	const bigThreeOrCityStates = [
-		'China',
-		'United States',
-		'Canada',
-		'Hong Kong',
-		'Macau',
-		'Monaco',
-		'Singapore',
-		'Vatican City'
-	];
-
 	$: {
-		if (
-			$formData.base_country === 'China' &&
-			['北京', '上海', '天津', '重庆'].includes($formData.base_subnational)
-		) {
+		if ($formData.base_country === 'China' && isDirectlyAdministered($formData.base_subnational)) {
 			$formData.base_city = $formData.base_subnational;
 		}
 	}
@@ -176,7 +155,7 @@
 				{form}
 				name="base_subnational"
 				label="Home province"
-				items={chineseProvinceItems}
+				items={Object.keys(chineseProvinces)}
 				isOptional
 				onSelect={() => ($formData.base_city = '')}
 			/>
@@ -185,7 +164,7 @@
 				{form}
 				name="base_subnational"
 				label="Home state"
-				items={americanStateItems}
+				items={Object.keys(americanStates)}
 				isOptional
 				onSelect={() => ($formData.base_city = '')}
 			/>
@@ -194,7 +173,7 @@
 				{form}
 				name="base_subnational"
 				label="Home province"
-				items={canadianProvinceItems}
+				items={Object.keys(canadianProvinces)}
 				isOptional
 				onSelect={() => ($formData.base_city = '')}
 			/>
@@ -205,13 +184,10 @@
 				{form}
 				name="base_city"
 				label="Home city"
-				items={chineseProvinces[$formData.base_subnational].map((city) => ({
-					label: city,
-					value: city
-				}))}
+				items={chineseProvinces[$formData.base_subnational]}
 				isOptional
 			/>
-		{:else if $formData.base_country && ($formData.base_subnational || !bigThreeOrCityStates.includes($formData.base_country))}
+		{:else if $formData.base_country && ($formData.base_subnational || !isCityState($formData.base_country))}
 			<FormField {form} name="base_city">
 				<Form.Control let:attrs>
 					<Form.Label class="optional-field">Home city</Form.Label>
