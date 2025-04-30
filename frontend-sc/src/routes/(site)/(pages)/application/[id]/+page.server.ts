@@ -23,13 +23,17 @@ import { deleteSchema } from '$lib/schemas/delete';
 import { formAction } from '$lib/util/formUtils';
 import { createOrUpdateApplicationLog, deleteApplicationLog } from '$lib/api/applicationLog';
 import { base10Or400 } from '$lib/util/siteUtils';
+import { canEdit } from '$lib/util/applicationUtils';
 
 export async function load(event: PageServerLoadEvent) {
 	const id = base10Or400(event.params.id, 'Invalid application ID');
+
+	const { user } = await event.parent();
 	const application: ApplicationDetail = await fetchApplication(id);
 
 	return {
 		application,
+		userCanEdit: canEdit({ user, application }),
 		promisedRounds: fetchApplicationRounds({ program: application.program.id }),
 		coApplications: fetchCoApplications(application),
 		roundChangeForm: await superValidate(zod(roundChangeSchema)),

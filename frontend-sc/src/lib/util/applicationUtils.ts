@@ -13,6 +13,22 @@ import { blankStats, type ApplicationDataPoint, type ApplicationStats } from '$l
 import { compareRoundName } from '$lib/util/applicationRoundUtils';
 import { lexicalChineseLast, toTitleCase } from '$lib/util/stringUtils';
 
+export const canEdit = (params: {
+	user: { username: string; is_staff: boolean; is_active: boolean };
+	application: { staff: string[] };
+}): boolean => {
+	const { application, user } = params;
+
+	if (!user.is_active) {
+		return false;
+	}
+	// TODO uncomment in production
+	// if (user.is_staff) {
+	// 	return true;
+	// }
+	return application.staff.includes(user.username);
+};
+
 export function filterByType(
 	applications: ComposedApplication[],
 	type: ProgramType | 'Graduate'

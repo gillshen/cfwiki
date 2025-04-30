@@ -13,9 +13,31 @@ import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
 import { isActive } from '$lib/util/serviceUtils';
 import { compareAlevelGrade } from '$lib/util/scoresUtils';
-import { lexicalChineseLast } from './stringUtils';
+import { lexicalChineseLast } from '$lib/util/stringUtils';
 
-export const isCurrentForCfUser = (params: {
+export const canEdit = (params: {
+	user: { username: string; is_staff: boolean; is_active: boolean };
+	student: { contracts: Contract[] };
+}): boolean => {
+	const { user, student } = params;
+
+	if (!user.is_active) {
+		return false;
+	}
+	// TODO uncomment in production
+	// if (user.is_staff) {
+	// 	return true;
+	// }
+
+	// if no contract exists, anyone can edit
+	if (!student.contracts.length) {
+		return true;
+	}
+
+	return isCurrentForUser({ student, username: user.username });
+};
+
+export const isCurrentForUser = (params: {
 	student: { contracts: Contract[] };
 	username: string;
 }): boolean => {

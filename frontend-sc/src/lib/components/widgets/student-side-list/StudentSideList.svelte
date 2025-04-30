@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type { StudentOfCferListItem } from '$lib/api/student';
-	import { isCurrentForCfUser } from '$lib/util/studentUtils';
+	import { isCurrentForUser } from '$lib/util/studentUtils';
 	import SubList from './SubList.svelte';
 
 	export let username: string;
 	export let students: StudentOfCferListItem[];
 	export let selectedStudentId: number | undefined = undefined;
 
-	const currentStudents = students.filter((student) => isCurrentForCfUser({ student, username }));
-	const pastStudents = students.filter((student) => !isCurrentForCfUser({ student, username }));
+	const currentStudents = students.filter((student) => isCurrentForUser({ student, username }));
+	const pastStudents = students.filter((student) => !isCurrentForUser({ student, username }));
 
 	const groupByTargetYear = (
 		students: StudentOfCferListItem[]

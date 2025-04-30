@@ -21,7 +21,6 @@
 
 	export let data;
 
-	let canEdit: boolean = true;
 	let deleteModalOpen = false;
 	let newLogModalOpen: boolean = false;
 
@@ -119,7 +118,7 @@
 							<ApplicationLogItem
 								{log}
 								application={data.application}
-								{canEdit}
+								canEdit={data.userCanEdit}
 								updateForm={data.logForm}
 								deleteForm={data.deleteForm}
 							/>
@@ -128,7 +127,7 @@
 				</Timeline.Root>
 			{/if}
 
-			{#if canEdit}
+			{#if data.userCanEdit}
 				<div class="mt-4">
 					<ButtonDialog
 						buttonText="New Status"
@@ -162,7 +161,7 @@
 	{/await}
 </Section>
 
-{#if canEdit}
+{#if data.userCanEdit}
 	<Section id="delete" hrule>
 		<ButtonDialog
 			buttonText="Delete Application"
