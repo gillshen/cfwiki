@@ -72,7 +72,7 @@
 			<h1 class="page-title mb-2">Create Application</h1>
 
 			<div class="text-sm flex gap-2 pt-2 pb-6">
-				<div><a href={`/student/${data.studentId}`}>{data.contract.student_name}</a></div>
+				<div><a href="/student/{data.studentId}">{data.contract.student_name}</a></div>
 				<div class="text-gray-400">&bullet;</div>
 				<div>{data.programType}</div>
 				<div class="text-gray-400">&bullet;</div>
@@ -221,7 +221,7 @@
 						{#if index}
 							<Separator />
 						{/if}
-						<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
+						<a href="/application/{application.id}" target="_self" class="hover:no-underline">
 							<StudentApplicationCard
 								{application}
 								compact

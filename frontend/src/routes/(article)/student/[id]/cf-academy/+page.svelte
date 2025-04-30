@@ -78,7 +78,7 @@
 
 {#if canEdit}
 	<Breadcrumb class="mb-8">
-		<BreadcrumbLink text={data.student.fullname} href={`/student/${data.student.id}`} />
+		<BreadcrumbLink text={data.student.fullname} href="/student/{data.student.id}" />
 		<BreadcrumbItem>CF Academy</BreadcrumbItem>
 	</Breadcrumb>
 

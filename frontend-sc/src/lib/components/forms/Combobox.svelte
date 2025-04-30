@@ -66,7 +66,7 @@
 			</Popover.Trigger>
 			<input hidden value={$formData[name]} name={attrs.name} />
 		</Form.Control>
-		<Popover.Content class={`${width} p-0`}>
+		<Popover.Content class="{width} p-0">
 			<Command.Root>
 				{#if !disableSearch}
 					<Command.Input placeholder="Search..." />

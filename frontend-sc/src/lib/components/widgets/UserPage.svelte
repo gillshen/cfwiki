@@ -66,7 +66,7 @@
 													>
 													<Table.Cell>{contract.status}</Table.Cell>
 													<Table.Cell>
-														<LinkIcon href={`/student/${student.id}`} />
+														<LinkIcon href="/student/{student.id}" />
 													</Table.Cell>
 												</Table.Row>
 											{/if}
@@ -111,7 +111,7 @@
 												{/if}
 											</Table.Cell>
 											<Table.Cell>
-												<LinkIcon href={`/application/${application.id}`} />
+												<LinkIcon href="/application/{application.id}" />
 											</Table.Cell>
 										</Table.Row>
 									{/each}

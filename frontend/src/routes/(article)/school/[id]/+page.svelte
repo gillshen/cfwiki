@@ -79,7 +79,7 @@
 					<ApplicationStatsDoughnut
 						stats={getStats(applications.filter(isUndergraduate))}
 						title="Undergraduate Statistics"
-						href={`/school/${data.school.id}/stats/undergraduate`}
+						href="/school/{data.school.id}/stats/undergraduate"
 					/>
 				</div>
 
@@ -87,7 +87,7 @@
 					<ApplicationStatsDoughnut
 						stats={getStats(applications.filter(isGraduate))}
 						title="Graduate Statistics"
-						href={`/school/${data.school.id}/stats/graduate`}
+						href="/school/{data.school.id}/stats/graduate"
 					/>
 				</div>
 			{:else}
@@ -95,7 +95,7 @@
 					<ApplicationStatsDoughnut
 						stats={getStats(applications)}
 						title="Student & Alumni Statistics"
-						href={`/school/${data.school.id}/stats/alumni`}
+						href="/school/{data.school.id}/stats/alumni"
 					/>
 				</div>
 			{/if}

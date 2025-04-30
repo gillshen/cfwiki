@@ -89,15 +89,15 @@
 									<DropdownMenu.SubTrigger>{year}</DropdownMenu.SubTrigger>
 									<DropdownMenu.SubContent class="min-w-[160px]">
 										<DropdownMenu.Item
-											href={`/data-grids/students?targetYear=${year}&contractType=UG+Freshman`}
+											href="/data-grids/students?targetYear={year}&contractType=UG+Freshman"
 											class="text-inherit hover:no-underline">UG Freshman</DropdownMenu.Item
 										>
 										<DropdownMenu.Item
-											href={`/data-grids/students?targetYear=${year}&contractType=UG+Transfer`}
+											href="/data-grids/students?targetYear={year}&contractType=UG+Transfer"
 											class="text-inherit hover:no-underline">UG Transfer</DropdownMenu.Item
 										>
 										<DropdownMenu.Item
-											href={`/data-grids/students?targetYear=${year}&contractType=Graduate`}
+											href="/data-grids/students?targetYear={year}&contractType=Graduate"
 											class="text-inherit hover:no-underline">Graduate</DropdownMenu.Item
 										>
 									</DropdownMenu.SubContent>
@@ -128,27 +128,27 @@
 									<DropdownMenu.SubContent class="min-w-[180px]">
 										<DropdownMenu.Label>Undergraduate</DropdownMenu.Label>
 										<DropdownMenu.Item
-											href={`/data-grids/applications?year=${year}&applicationType=freshman`}
+											href="/data-grids/applications?year={year}&applicationType=freshman"
 											class="text-inherit hover:no-underline">Freshman</DropdownMenu.Item
 										>
 										<DropdownMenu.Item
-											href={`/data-grids/applications?year=${year}&applicationType=transfer`}
+											href="/data-grids/applications?year={year}&applicationType=transfer"
 											class="text-inherit hover:no-underline">Transfer</DropdownMenu.Item
 										>
 										<DropdownMenu.Separator />
 										<DropdownMenu.Label>Graduate</DropdownMenu.Label>
 										<DropdownMenu.Item
-											href={`/data-grids/applications?year=${year}&applicationType=masters`}
+											href="/data-grids/applications?year={year}&applicationType=masters"
 											class="text-inherit hover:no-underline">Master&rsquo;s</DropdownMenu.Item
 										>
 										<DropdownMenu.Item
-											href={`/data-grids/applications?year=${year}&applicationType=doctorate`}
+											href="/data-grids/applications?year={year}&applicationType=doctorate"
 											class="text-inherit hover:no-underline">Doctorate</DropdownMenu.Item
 										>
 										<DropdownMenu.Separator />
 										<DropdownMenu.Label>Other</DropdownMenu.Label>
 										<DropdownMenu.Item
-											href={`/data-grids/applications?year=${year}&applicationType=other`}
+											href="/data-grids/applications?year={year}&applicationType=other"
 											class="text-inherit hover:no-underline">Non-degree</DropdownMenu.Item
 										>
 									</DropdownMenu.SubContent>
@@ -232,7 +232,7 @@
 							<Avatar.Image
 								src={data.user.avatar}
 								class="size-7 m-auto"
-								alt={`${data.username}-avatar`}
+								alt="{data.username}-avatar"
 							/>
 							<Avatar.Fallback>
 								<User class="size-[22px] text-muted-foreground shrink-0" />
@@ -247,7 +247,7 @@
 								<Avatar.Image
 									src={data.user.avatar}
 									class="size-7 m-auto"
-									alt={`${data.username}-avatar`}
+									alt="{data.username}-avatar"
 								/>
 								<Avatar.Fallback>
 									<span>{data.username.charAt(0)}</span>

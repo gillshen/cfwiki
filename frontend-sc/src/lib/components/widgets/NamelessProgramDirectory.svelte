@@ -16,7 +16,7 @@
 {#if programs.length}
 	<div class="grid lg:grid-cols-2 md:grid-cols-1 gap-2">
 		{#each filterForType(programs, type).sort(orderByName) as program}
-			<a href={`/program/${program.id}`}>{hostName(program)}</a>
+			<a href="/program/{program.id}">{hostName(program)}</a>
 		{/each}
 	</div>
 {/if}

@@ -47,21 +47,19 @@
 				<div
 					class="px-6 pb-6 grid grid-cols-4 gap-y-2 gap-x-4 max-h-[calc(100vh-288px)] overflow-auto"
 				>
-					{#each gridApi?.getColumns() ?? [] as column, index}
+					{#each gridApi?.getColumns() ?? [] as column, i}
 						{@const headerName = column.getColDef().headerName || 'ID'}
 						<div class="flex items-center space-x-2">
 							<Checkbox
-								id={`checkbox-${index}`}
-								aria-labelledby={`checkbox-${index}-label`}
+								id="checkbox-{i}"
+								aria-labelledby="checkbox-{i}-label"
 								checked={column.isVisible()}
 								on:click={() => {
 									gridApi?.setColumnsVisible([column], !column.isVisible());
 								}}
 							/>
-							<Label
-								id={`checkbox-${index}-label`}
-								for={`checkbox-${index}`}
-								class="text-sm font-normal">{headerName}</Label
+							<Label id="checkbox-{i}-label" for="checkbox-{i}" class="text-sm font-normal"
+								>{headerName}</Label
 							>
 						</div>
 					{/each}

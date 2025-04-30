@@ -32,7 +32,7 @@
 {:then students}
 	{#each Object.entries(groupByTargetYear(students)).sort().reverse() as [year, cohort]}
 		{@const cohortGroupedByContractType = groupByContractType(cohort, parseInt(year))}
-		<Section id={`cohort-${year}`} title={year}>
+		<Section id="cohort-{year}" title={year}>
 			<div class="flex flex-col gap-4">
 				{#each contractTypes as contractType}
 					{@const typedCohort = cohortGroupedByContractType[contractType]}
@@ -41,7 +41,7 @@
 							<h3 class="font-semibold pb-2">{contractType}</h3>
 							<div class="grid lg:grid-cols-4 md:grid-cols-3 gap-x-4 gap-y-2">
 								{#each typedCohort.sort(orderByName) as student}
-									<a href={`/student/${student.id}`} class="text-sm w-fit"
+									<a href="/student/{student.id}" class="text-sm w-fit"
 										>{formatNameWithPref(student)}</a
 									>
 								{/each}

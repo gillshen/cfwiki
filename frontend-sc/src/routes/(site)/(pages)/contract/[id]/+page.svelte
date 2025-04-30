@@ -7,9 +7,9 @@
 </script>
 
 <BreadcrumbContainer>
-	<Breadcrumb.Link href={`/student/index`}>Students</Breadcrumb.Link>
+	<Breadcrumb.Link href="/student/index">Students</Breadcrumb.Link>
 	<Breadcrumb.Separator />
-	<Breadcrumb.Link href={`/student/${data.contract.student}`}
+	<Breadcrumb.Link href="/student/{data.contract.student}"
 		>{data.contract.student_name}</Breadcrumb.Link
 	>
 	<Breadcrumb.Separator />

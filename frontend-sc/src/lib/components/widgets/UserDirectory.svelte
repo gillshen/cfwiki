@@ -12,7 +12,7 @@
 <div class="grid grid-cols-2 gap-x-4 gap-y-2">
 	{#each filterSortCfUsers({ users, department, employmentStatus }) as { username }}
 		<a
-			href={`/cf/${username}`}
+			href="/cf/{username}"
 			class={cn(
 				'w-fit',
 				// for better visual alignment

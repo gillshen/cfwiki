@@ -67,7 +67,7 @@
 							action="?/createOrUpdateApplicationLog"
 							class="max-w-prose space-y-4 my-4 mx-auto"
 							use:enhance
-							id={`log-form-${log.id}`}
+							id="log-form-{log.id}"
 						>
 							<ApplicationLogForm {form} {application} />
 						</form>
@@ -93,7 +93,7 @@
 							action="?/deleteApplicationLog"
 							class="max-w-prose space-y-4 pb-2"
 							use:delEnhance
-							id={`log-delete-form-${log.id}`}
+							id="log-delete-form-{log.id}"
 						>
 							<input type="number" name="id" bind:value={$delFormData.id} hidden />
 							<FormButton variant="destructive">Delete</FormButton>

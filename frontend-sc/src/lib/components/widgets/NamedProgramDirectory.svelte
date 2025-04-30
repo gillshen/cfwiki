@@ -27,7 +27,7 @@
 				<h3 class="font-semibold pb-2">{host}</h3>
 				<div class="flex flex-col gap-2">
 					{#each groupedPrograms as program}
-						<a href={`/program/${program.id}`}>{enhanceDisplayName(program)}</a>
+						<a href="/program/{program.id}">{enhanceDisplayName(program)}</a>
 					{/each}
 				</div>
 			</hgroup>

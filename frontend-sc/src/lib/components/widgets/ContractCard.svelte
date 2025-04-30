@@ -32,7 +32,7 @@
 			{#if canEdit}
 				<Button
 					variant="link"
-					href={`/contract/${contract.id}`}
+					href="/contract/{contract.id}"
 					size="icon"
 					class="font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80 size-6"
 				>
@@ -54,7 +54,7 @@
 						<Avatar.Image
 							src={findAvatar(cfUsername)}
 							class="size-7 m-auto"
-							alt={`${cfUsername}-avatar`}
+							alt="{cfUsername}-avatar"
 						/>
 						<Avatar.Fallback>{cfUsername[0].toUpperCase()}</Avatar.Fallback>
 					</Avatar.Root>

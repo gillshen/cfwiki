@@ -46,7 +46,7 @@
 						)}
 					>
 						{#each application.schools as school}
-							<a href={`/school/${school.id}`} class="text-inherit font-semibold truncate"
+							<a href="/school/{school.id}" class="text-inherit font-semibold truncate"
 								>{school.name}</a
 							>
 						{/each}
@@ -77,7 +77,7 @@
 				</Table.Cell>
 				<Table.Cell class="max-w-[16px] pr-2">
 					<div class="flex justify-end">
-						<LinkIcon href={`/application/${application.id}`} />
+						<LinkIcon href="/application/{application.id}" />
 					</div>
 				</Table.Cell>
 			</Table.Row>

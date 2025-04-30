@@ -82,19 +82,19 @@
 <Section id="info">
 	<div class="grid grid-cols-2 gap-4">
 		<article class="mt-4 text-sm flex flex-col gap-2 bg-zinc-50 px-8 pt-6 pb-8 rounded-lg">
-			<a href={`/student/${student.id}`}>{student.fullname}</a>
+			<a href="/student/{student.id}">{student.fullname}</a>
 			<div class="flex flex-col gap-2">
 				{#each schools as school}
-					<a href={`/school/${school.id}`}>{school.name}</a>
+					<a href="/school/{school.id}">{school.name}</a>
 				{/each}
 			</div>
-			<a href={`/program/${program.id}`}>{program.display_name}</a>
+			<a href="/program/{program.id}">{program.display_name}</a>
 			<div>{program_iteration.year} {program_iteration.term}</div>
 			<div>{round.name} {round.due_date ?? ''} {round.due_time ?? ''} {round.timezone ?? ''}</div>
 
 			<pre>{JSON.stringify({ services: data.application.services }, null, 2)}</pre>
 			{#each data.application.staff.sort() as staff}
-				<a href={`/cf/${staff}`}>{staff}</a>
+				<a href="/cf/{staff}">{staff}</a>
 			{/each}
 
 			<pre>{JSON.stringify(
@@ -153,7 +153,7 @@
 
 <Section
 	id="coapplications"
-	title={`Other Applicants of ${program_iteration.term} ${program_iteration.year}`}
+	title="Other Applicants of {program_iteration.term} {program_iteration.year}"
 >
 	{#await data.coApplications}
 		<LoadingSign />

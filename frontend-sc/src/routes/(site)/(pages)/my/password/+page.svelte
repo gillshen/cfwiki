@@ -143,7 +143,7 @@
 			</Form.Control>
 		</FormField>
 
-		<Form.Button>Submit</Form.Button>
+		<Form.Button class="w-fit min-w-24">Submit</Form.Button>
 		<!-- <SuperDebug data={$formData} /> -->
 	</form>
 </Section>

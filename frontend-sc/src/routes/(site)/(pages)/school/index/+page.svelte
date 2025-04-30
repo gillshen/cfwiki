@@ -54,7 +54,7 @@
 			<Section id={schoolTypeToId(schoolType)} title={schoolType} class="scroll-mt-[116px]">
 				<div class="grid lg:grid-cols-2 md:grid-cols-1 gap-2">
 					{#each schoolList.sort(orderByName) as school}
-						<a href={`/school/${school.id}`} class="w-fit">{school.name}</a>
+						<a href="/school/{school.id}" class="w-fit">{school.name}</a>
 					{/each}
 				</div>
 			</Section>

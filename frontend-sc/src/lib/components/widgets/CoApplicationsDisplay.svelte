@@ -33,7 +33,7 @@
 		<Tabs.Content value="grid-layout">
 			<div class="my-4 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-1 gap-4">
 				{#each applications.sort(orderByStatus).sort(orderByYearDesc) as application}
-					<a href={`/application/${application.id}`} target="_self" class="hover:no-underline">
+					<a href="/application/{application.id}" target="_self" class="hover:no-underline">
 						<Card.Root class="h-full flex flex-col min-h-[200px] max-w-[320px]">
 							<Card.Header>
 								<Card.Title>
@@ -104,7 +104,7 @@
 							{/if}
 							<Table.Cell>
 								<a
-									href={`/student/${application.student.id}`}
+									href="/student/{application.student.id}"
 									class="text-inherit font-semibold truncate">{application.student.fullname}</a
 								>
 							</Table.Cell>
@@ -132,7 +132,7 @@
 							</Table.Cell>
 							<Table.Cell class="max-w-[16px] pr-2">
 								<div class="flex justify-end">
-									<LinkIcon href={`/application/${application.id}`} />
+									<LinkIcon href="/application/{application.id}" />
 								</div>
 							</Table.Cell>
 						</Table.Row>

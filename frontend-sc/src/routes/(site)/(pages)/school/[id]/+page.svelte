@@ -87,7 +87,7 @@
 							<div class="flex flex-col gap-2">
 								<h4 class="text-base font-bold">{category}</h4>
 								{#each filteredPrograms as program}
-									<a class="w-fit" href={`/program/${program.id}`}>{enhanceDisplayName(program)}</a>
+									<a class="w-fit" href="/program/{program.id}">{enhanceDisplayName(program)}</a>
 								{/each}
 							</div>
 						{/if}
@@ -131,7 +131,7 @@
 			<div class="flex flex-col gap-2">
 				{#each enrollments.sort(orderByDatesDesc) as enrollment}
 					{@const student = enrollment.student}
-					<a href={`/student/${student.id}`} class="inline-block w-fit">
+					<a href="/student/{student.id}" class="inline-block w-fit">
 						<span class="text-primary">{student.fullname}</span>
 						<span class="mx-1">@</span>
 						{toISOYearMonth(enrollment.start_date)} &ndash; {toISOYearMonth(enrollment.end_date) ??

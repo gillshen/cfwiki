@@ -22,7 +22,7 @@
 				{#if student.id === selectedStudentId}
 					<div class="font-medium">{student.fullname}</div>
 				{:else}
-					<a href={`/student/${student.id}`}>{student.fullname}</a>
+					<a href="/student/{student.id}">{student.fullname}</a>
 				{/if}
 			{/each}
 		</div>
