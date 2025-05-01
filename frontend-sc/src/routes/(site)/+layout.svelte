@@ -39,9 +39,10 @@
 	})();
 </script>
 
-<div class={cn('relative container w-full', isDataGridPage ? 'max-w-full' : '')}>
+<div class={cn('relative container w-[100vw]', isDataGridPage ? 'max-w-full' : '')}>
 	<div
-		class="fixed top-0 left-0 w-full h-[60px] backdrop-blur bg-white/70 shadow-sm z-40 flex px-4"
+		id="navbar"
+		class="fixed top-0 left-0 w-[100vw] h-[60px] backdrop-blur bg-white/70 shadow-sm z-40 flex px-4"
 	>
 		<div
 			class={cn(
