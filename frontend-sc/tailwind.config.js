@@ -48,19 +48,34 @@ const config = {
 					DEFAULT: "hsl(var(--card) / <alpha-value>)",
 					foreground: "hsl(var(--card-foreground) / <alpha-value>)"
 				},
-				// custom color
+				// custom colors
 				mint: {
-					50: '#f5fdf6',
-					100: '#e6f9eb',
-					200: '#d3f6db',
-					300: '#b7f0c6',
-					400: '#9eebb3',
-					500: '#adebb3',  // mint green
-					600: '#8dce93',
-					700: '#6eb074',
-					800: '#529358',
-					900: '#3a7540',
+					'50': '#f3faf3',
+					'100': '#e4f4e5',
+					'200': '#c9e9cb',
+					'300': '#8dce93',
+					'400': '#6dbb75',
+					'500': '#499e51',
+					'600': '#38813f',
+					'700': '#2f6634',
+					'800': '#29522e',
+					'900': '#234427',
+					'950': '#0f2412'
 				},
+				cultured: {
+					50: '#f6f7ef',
+					100: '#e8e9d7',
+					200: '#dadbbf',
+					300: '#cbcea7',
+					400: '#bcc090',
+					500: '#adb379',
+					600: '#8d9664',
+					700: '#6e7850',
+					800: '#4f5b3c',
+					900: '#313f28',
+				},
+				rejected: '#f55f69',
+				deferred: '#dea466'
 			},
 			borderRadius: {
 				lg: "var(--radius)",
