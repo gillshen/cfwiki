@@ -3,7 +3,7 @@
 
 	import * as Card from '$lib/components/ui/card/index';
 	import * as Avatar from '$lib/components/ui/avatar/index';
-	import * as Popover from '$lib/components/ui/popover/index';
+	import * as HoverCard from '$lib/components/ui/hover-card/index';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Pencil from 'lucide-svelte/icons/pencil-line';
 	import Chevron from 'lucide-svelte/icons/chevron-right';
@@ -79,20 +79,20 @@
 					</div>
 				</div>
 
-				<Popover.Root>
-					<Popover.Trigger>
+				<HoverCard.Root>
+					<HoverCard.Trigger>
 						<Button variant="ghost" class="hover:bg-inherit" size="icon">
 							<Chevron class="size-4" />
 						</Button>
-					</Popover.Trigger>
-					<Popover.Content>
+					</HoverCard.Trigger>
+					<HoverCard.Content>
 						<pre class="text-sm bg-muted max-h-[50vh] overflow-auto">{JSON.stringify(
 								services,
 								null,
 								2
 							)}</pre>
-					</Popover.Content>
-				</Popover.Root>
+					</HoverCard.Content>
+				</HoverCard.Root>
 			</div>
 		{/each}
 	</Card.Content>

@@ -31,10 +31,12 @@
 			>
 		</Tabs.List>
 		<Tabs.Content value="grid-layout">
-			<div class="my-4 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-1 gap-4">
+			<div class="my-4 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-1 gap-6">
 				{#each applications.sort(orderByStatus).sort(orderByYearDesc) as application}
 					<a href="/application/{application.id}" target="_self" class="hover:no-underline">
-						<Card.Root class="h-full flex flex-col min-h-[200px] max-w-[320px]">
+						<Card.Root
+							class="h-full flex flex-col min-h-[200px] max-w-[320px] hover:shadow-lg hover:scale-[101%] duration-500 ease-out"
+						>
 							<Card.Header>
 								<Card.Title>
 									{application.student.fullname}

@@ -15,6 +15,7 @@ import { canEdit as canEditContract } from '$lib/util/contractUtils';
 import { isActive } from '$lib/util/serviceUtils';
 import { compareAlevelGrade } from '$lib/util/scoresUtils';
 import { lexicalChineseLast } from '$lib/util/stringUtils';
+import { isDirectlyAdministered } from '$lib/constants/countries';
 
 export const canEdit = (params: {
 	user: { username: string; is_staff: boolean; is_active: boolean };
@@ -78,7 +79,7 @@ export function formatLocation(student: BaseStudent): string {
 	if (!base_city) {
 		return base_subnational;
 	}
-	if (!base_subnational || ['上海', '北京', '天津', '重庆'].includes(base_city)) {
+	if (!base_subnational || isDirectlyAdministered(base_city)) {
 		return base_city;
 	}
 	if (base_country === 'China') {
@@ -154,7 +155,6 @@ export const groupByTargetYear = (
 		}
 	}
 
-	console.table(grouped);
 	return grouped;
 };
 
@@ -181,8 +181,6 @@ export const groupByContractType = (
 		}
 		console.log('processed', student.fullname);
 	}
-
-	console.table(grouped);
 
 	return grouped;
 };

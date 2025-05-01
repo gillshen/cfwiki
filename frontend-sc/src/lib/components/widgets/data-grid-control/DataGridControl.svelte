@@ -73,7 +73,7 @@
 					variant="link"
 					class="flex items-center gap-1 p-0 hover:no-underline hover:text-primary/80"
 				>
-					<ListFilter class="size-4" />Quick Filters
+					<ListFilter class="size-4" />Primary Filters
 				</Button>
 			</Popover.Trigger>
 			<Popover.Content class="p-0 flex flex-col gap-4 w-fit min-w-[300px]">

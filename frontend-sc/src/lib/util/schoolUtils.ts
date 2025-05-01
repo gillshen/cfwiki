@@ -8,6 +8,7 @@ import {
 
 import { blankStats } from '$lib/api/stats';
 import { lexicalChineseLast } from '$lib/util/stringUtils';
+import { isDirectlyAdministered } from '$lib/constants/countries';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
 
@@ -87,7 +88,7 @@ export function formatRegionCity(school: School): string {
 	if (!city) {
 		return region;
 	}
-	if (!region || ['上海', '北京', '天津', '重庆'].includes(city)) {
+	if (!region || isDirectlyAdministered(city)) {
 		return city;
 	}
 	if (country === 'China') {

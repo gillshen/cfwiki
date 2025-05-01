@@ -111,27 +111,30 @@ export function getNotableStatuses(application: {
 }
 
 export function formatNotableStatuses(statuses: ApplicationStatus[]): string {
-	return statuses
-		.map((status, index) => {
-			// if 'Deferred' or 'On Waitlist' is not the latest status, use abbreviation
-			if (status === 'Deferred' && index < statuses.length - 1) {
-				return 'D';
-			}
-			if (status === 'On Waitlist' && index < statuses.length - 1) {
-				return 'WL';
-			}
-			if (status === 'On Waitlist') {
-				// shorten 'On Waitlist' to 'Waitlist'
-				return 'Waitlist';
-			}
-			if (status === 'Pres. Rejected') {
-				// shorten 'Pres. Rejected' to 'Pres. Rej.'
-				return 'Pres. Rej.';
-			}
-			// else return the status as is
-			return status;
-		})
-		.join(' - ');
+	return (
+		statuses
+			.map((status, index) => {
+				// if 'Deferred' or 'On Waitlist' is not the latest status, use abbreviation
+				if (status === 'Deferred' && index < statuses.length - 1) {
+					return 'D';
+				}
+				if (status === 'On Waitlist' && index < statuses.length - 1) {
+					return 'WL';
+				}
+				if (status === 'On Waitlist') {
+					// shorten 'On Waitlist' to 'Waitlist'
+					return 'Waitlist';
+				}
+				if (status === 'Pres. Rejected') {
+					// shorten 'Pres. Rejected' to 'Pres. Rej.'
+					return 'Pres. Rej.';
+				}
+				// else return the status as is
+				return status;
+			})
+			// join with a hyphen surrounded by hair spaces
+			.join('\u200a-\u200a')
+	);
 }
 
 export function orderByRoundName(a: ComposedApplication, b: ComposedApplication) {

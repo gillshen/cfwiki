@@ -68,7 +68,7 @@
 {#await Promise.all([data.schools, data.programs, data.applicationRounds, data.applications])}
 	<LoadingSign />
 {:then [schools, programs, applicationRounds, applications]}
-	<div class="grid grid-cols-[1fr_400px] gap-12">
+	<div class="flex justify-between space-between gap-12">
 		<section>
 			<h1 class="page-title mb-2">Create Application</h1>
 
@@ -209,16 +209,16 @@
 		<section class="text-sm flex flex-col min-h-[120px]">
 			{#if applications.length}
 				<div
-					class="py-4 px-8 border rounded-t-lg backdrop-blur bg-white/70 shadow-sm z-10 flex items-center"
+					class="py-4 px-8 border rounded-t-lg backdrop-blur bg-muted/70 shadow-sm z-10 flex items-center"
 				>
-					<h2 class="text-base font-semibold">Applied in {data.term} {data.year}</h2>
-					<Badge variant="outline" class="ml-4 min-w-8 h-5 justify-center"
+					<h2 class="text-base font-semibold">{data.term} {data.year} Applications</h2>
+					<Badge variant="outline" class="ml-4 min-w-8 h-5 justify-center bg-popover"
 						>{applications.length}</Badge
 					>
 				</div>
 				<!-- Workaround for a Firefox bug where backdrop-blur does not work with rounded corners  -->
 				<div
-					class="max-h-[calc(100vh-168px)] -translate-y-[56px] pt-[56px] flex flex-col rounded-lg border overflow-auto px-2"
+					class="max-h-[calc(100vh-168px)] -mt-[56px] pt-[56px] flex flex-col rounded-lg border overflow-auto overscroll-none px-2"
 				>
 					{#each applications.sort().reverse() as application, index}
 						{#if index}

@@ -12,6 +12,7 @@
 	import Settings from 'lucide-svelte/icons/settings';
 	import LogOut from 'lucide-svelte/icons/log-out';
 
+	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import StudentSideList from '$lib/components/widgets/student-side-list/StudentSideList.svelte';
 	import UserDirectory from '$lib/components/widgets/UserDirectory.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
@@ -38,17 +39,17 @@
 	})();
 </script>
 
-<div class={cn('relative container w-full', isDataGridPage ? 'max-w-full pb-4' : 'pb-0')}>
+<div class={cn('relative container w-full', isDataGridPage ? 'max-w-full' : '')}>
 	<div
 		class="fixed top-0 left-0 w-full h-[60px] backdrop-blur bg-white/70 shadow-sm z-40 flex px-4"
 	>
 		<div
 			class={cn(
-				'mx-auto flex items-center justify-between',
+				'mx-auto flex items-center justify-between space-between',
 				isDataGridPage ? 'w-full' : 'w-[1500px]'
 			)}
 		>
-			<nav class="flex gap-4 my-2">
+			<nav class="flex gap-4 my-2 flex-grow-1">
 				<Button variant="ghost" href="/home" class="text-black font-medium hover:no-underline"
 					>Home</Button
 				>
@@ -57,7 +58,7 @@
 					<DropdownMenu.Trigger asChild let:builder>
 						<Button variant="ghost" builders={[builder]}>CF People</Button>
 					</DropdownMenu.Trigger>
-					<DropdownMenu.Content class="w-[600px] translate-x-10">
+					<DropdownMenu.Content class="w-[600px]">
 						<div class="grid grid-cols-2 gap-8 py-4 px-8">
 							<div class="flex flex-col gap-2">
 								<h3 class="font-medium">文案部</h3>
@@ -240,7 +241,7 @@
 						</Avatar.Root>
 					</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content class="min-w-[160px] w-fit -translate-x-6">
+				<DropdownMenu.Content class="min-w-[160px] w-fit">
 					<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
 						<div class="flex items-center gap-2 py-2 px-1">
 							<Avatar.Root class="flex bg-primary/5">
@@ -287,21 +288,23 @@
 		</div>
 	</div>
 
-	<div class="mt-[68px] min-h-[calc(100vh-340px)] flex">
+	<div class="mt-[60px] min-h-[calc(100vh-340px)] flex">
 		{#if isDataGridPage}
-			<div class="flex flex-col pt-6 w-full">
+			<div class="flex flex-col pt-4 w-full">
 				<slot />
 			</div>
 		{:else}
 			<div class="flex mx-auto gap-12 w-full">
 				<aside
-					class="sticky top-[68px] bg-muted/50 max-w-[240px] min-w-[240px] h-[calc(100vh-76px)] overflow-auto py-6 mb-2 px-6 rounded-lg"
+					class="sticky top-[60px] max-w-[240px] min-w-[240px] h-[calc(100vh-60px)] overflow-auto px-6 py-8"
 				>
-					{#await data.students then students}
+					{#await data.students}
+						<LoadingSign text="" />
+					{:then students}
 						<StudentSideList username={data.username} {students} {selectedStudentId} />
 					{/await}
 				</aside>
-				<div class="flex flex-col w-full pt-2 pb-8 pr-4">
+				<div class="flex flex-col w-full pt-4 pb-8 pr-4">
 					<slot />
 				</div>
 			</div>

@@ -227,13 +227,16 @@
 					<div class="bg-white p-1 rounded-sm">(TODO filters)</div>
 				</Tabs.List>
 				<Tabs.Content value="grid-layout">
-					<div class="my-4 grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-4 w-fit">
+					<div class="my-4 grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-6 w-fit">
 						{#each applications
 							.sort(orderBySchoolName)
 							.sort(orderByStatus)
 							.sort(orderByYearDesc) as application}
 							<a href="/application/{application.id}" target="_self" class="hover:no-underline">
-								<StudentApplicationCard {application} class="max-w-[360px]" />
+								<StudentApplicationCard
+									{application}
+									class="max-w-[360px] hover:shadow-lg hover:scale-[101%] duration-500 ease-out"
+								/>
 							</a>
 						{/each}
 					</div>

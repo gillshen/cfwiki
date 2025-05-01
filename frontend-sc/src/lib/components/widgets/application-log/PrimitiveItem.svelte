@@ -11,7 +11,7 @@
 	<h3 class="text-base font-semibold flex items-center gap-2">
 		{log.status === 'Pres. Rejected' ? 'Presumed Rejected' : log.status}
 		{#if log.status === 'Accepted'}
-			<PartyPopper class="size-4 text-mint-700 hover:animate-[ping_1s_ease-in-out]" />
+			<PartyPopper class="size-4 text-mint-400 hover:animate-[ping_1s_ease-in-out]" />
 		{/if}
 		<slot name="buttons" />
 	</h3>

@@ -79,7 +79,7 @@
 </section>
 
 <Section id="info">
-	<div class="grid grid-cols-2 gap-4">
+	<div class="grid grid-cols-2 gap-6">
 		<article class="mt-4 text-sm flex flex-col gap-2 bg-zinc-50 px-8 pt-6 pb-8 rounded-lg">
 			<a href="/student/{student.id}">{student.fullname}</a>
 			<div class="flex flex-col gap-2">

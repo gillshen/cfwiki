@@ -10,6 +10,10 @@
 	export let hideYear: boolean = false;
 	export let className: string = '';
 	export { className as class };
+
+	const badgeText = hideYear
+		? application.round_name
+		: `${application.year} ${application.round_name}`;
 </script>
 
 <Card.Root class={cn('h-full flex flex-col', className)}>
@@ -19,19 +23,15 @@
 				<div>{school.name}</div>
 			{/each}
 		</Card.Title>
-		<Card.Description class="flex flex-col gap-2">
+		<Card.Description
+			class={compact ? 'inline-flex flex-wrap items-center gap-2' : 'flex flex-col gap-2'}
+		>
 			<div class="text-muted-foreground">{application.program.display_name}</div>
-			{#if hideYear}
-				<Badge variant="outline" class="w-fit -translate-x-[1px]">{application.round_name}</Badge>
-			{:else}
-				<Badge variant="outline" class="w-fit -translate-x-[1px]"
-					>{application.year} {application.round_name}</Badge
-				>
-			{/if}
+			<Badge variant="outline" class="w-fit h-5 bg-muted -translate-x-[1px]">{badgeText}</Badge>
 		</Card.Description>
 	</Card.Header>
 	{#if compact}
-		<Card.Content class="pt-4 flex flex-col gap-2 flex-grow">
+		<Card.Content class="pt-2 flex flex-col gap-2 flex-grow">
 			<ApplicationStatusSign {application} />
 		</Card.Content>
 	{:else}
