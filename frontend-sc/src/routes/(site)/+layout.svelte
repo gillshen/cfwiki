@@ -295,7 +295,7 @@
 				<slot />
 			</div>
 		{:else}
-			<div class="flex mx-auto gap-12 w-full">
+			<div class="flex mx-auto gap-8 w-full">
 				<aside
 					class="sticky top-[60px] max-w-[240px] min-w-[240px] h-[calc(100vh-60px)] overflow-auto px-6 py-8"
 				>
@@ -305,7 +305,7 @@
 						<StudentSideList username={data.username} {students} {selectedStudentId} />
 					{/await}
 				</aside>
-				<div class="flex flex-col w-full pt-4 pb-8 pr-4">
+				<div class="flex flex-col w-full pt-4 pb-8 px-4 max-w-[1032px]">
 					<slot />
 				</div>
 			</div>

@@ -218,6 +218,7 @@
 				</div>
 				<!-- Workaround for a Firefox bug where backdrop-blur does not work with rounded corners  -->
 				<div
+					id="existing-applications-list"
 					class="max-h-[calc(100vh-168px)] -mt-[56px] pt-[56px] flex flex-col rounded-lg border overflow-auto overscroll-none px-2"
 				>
 					{#each applications.sort().reverse() as application, index}
@@ -238,3 +239,9 @@
 		</section>
 	</div>
 {/await}
+
+<style>
+	#existing-applications-list::-webkit-scrollbar-track {
+		margin-block-start: calc(56px + 2px);
+	}
+</style>
