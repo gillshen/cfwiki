@@ -288,7 +288,12 @@
 		</div>
 	</header>
 
-	<div class="mt-[60px] min-h-[calc(100vh-340px)] flex">
+	<div
+		class={cn(
+			'mt-[60px] min-h-[calc(100vh-340px)] flex w-[100vw] items-center justify-center',
+			isDataGridPage ? 'max-w-full' : ''
+		)}
+	>
 		{#if isDataGridPage}
 			<article class="flex flex-col pt-4 w-full">
 				<slot />
