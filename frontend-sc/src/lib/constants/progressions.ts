@@ -12,11 +12,11 @@ export const termOrder: Record<string, number> = {
 	Year: 4
 } as const;
 
-export const defaultProgressions = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+export const universityProgressions = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
 
-export const highSchoolProgressions = ['G7', 'G8', 'G9', 'G10', 'G11', 'G12'];
+export const secondarySchoolProgressions = ['G7', 'G8', 'G9', 'G10', 'G11', 'G12'];
 
-export const allProgressions = highSchoolProgressions.concat(defaultProgressions);
+export const allProgressions = secondarySchoolProgressions.concat(universityProgressions);
 
 export const defaultProgressionsT = [
 	'Year 1 Fall',
@@ -36,7 +36,7 @@ export const defaultProgressionsT = [
 	'Year 5 Summer'
 ];
 
-export const highSchoolProgressionsT = [
+export const secondarySchoolProgressionsT = [
 	'G7 Fall',
 	'G7 Spring',
 	'G7 Summer',
@@ -57,7 +57,7 @@ export const highSchoolProgressionsT = [
 	'G12 Summer'
 ];
 
-export const allProgressionsT = highSchoolProgressionsT.concat(defaultProgressionsT);
+export const allProgressionsT = secondarySchoolProgressionsT.concat(defaultProgressionsT);
 
 export const defaultGradingPeriods = [
 	'Year 1 Fall',
@@ -87,7 +87,7 @@ export const defaultGradingPeriods = [
 	'Year 5 Year'
 ];
 
-export const highSchoolGradingPeriods = [
+export const secondarySchoolGradingPeriods = [
 	'G7 Fall',
 	'G7 Winter',
 	'G7 Spring',

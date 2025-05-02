@@ -8,6 +8,7 @@
 	export let name: string;
 	export let label: string;
 	export let items: { label: string; value: any }[];
+	export let onValueChange: (value?: string | undefined) => void = () => {};
 
 	const { form: formData } = form;
 </script>
@@ -15,7 +16,7 @@
 <Form.Fieldset {form} {name}>
 	<Form.Legend class="pb-1">{label}</Form.Legend>
 	<Form.Control>
-		<RadioGroup.Root bind:value={$formData[name]}>
+		<RadioGroup.Root bind:value={$formData[name]} {onValueChange}>
 			{#each items as item}
 				<div class="flex items-center space-x-3">
 					<Form.Control let:attrs>
