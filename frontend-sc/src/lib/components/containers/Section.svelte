@@ -4,6 +4,7 @@
 	export let id: string;
 	export let title: string = '';
 	export let hrule: boolean = false;
+	export let hruleClass: string = '';
 	export let className: string = '';
 	export { className as class };
 </script>
@@ -12,10 +13,10 @@
 	{#if title}
 		<div class="sticky top-[112px] bg-white z-10">
 			<h2 class="text-xl font-bold pb-2">{title}</h2>
-			<hr class="text-stone-400" />
+			<hr class={cn('pb-2', hruleClass)} />
 		</div>
 	{:else if hrule}
-		<hr class="text-stone-400" />
+		<hr class={cn('pb-2', hruleClass)} />
 	{/if}
 	<slot />
 </section>

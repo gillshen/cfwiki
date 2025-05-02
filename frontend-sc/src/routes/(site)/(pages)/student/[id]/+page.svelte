@@ -91,7 +91,7 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-6">
+<section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-8">
 	<h1 class="page-title">
 		{data.student.fullname}
 		{#if data.student.preferred_name}
@@ -165,6 +165,7 @@
 							{#if data.userCanEdit}
 								<Button
 									variant="link"
+									href="/student/{data.student.id}/edu/{enrollment.id}"
 									class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80 h-6"
 								>
 									<Pencil class="mr-1 size-4" />Edit
@@ -208,29 +209,27 @@
 	{/key}
 
 	{#if data.userCanEdit}
-		<div class="pt-4">
-			<ButtonDialog buttonText="Add Experience" dialogTitle="Add Educational Experience">
-				<div>Dialog body</div>
-			</ButtonDialog>
+		<div class="pt-2">
+			<Button
+				variant="outline"
+				href="/student/{data.student.id}/edu/new"
+				class="text-primary hover:no-underline">Add Experience</Button
+			>
 		</div>
 	{/if}
 </Section>
 
-<Section id="test-scores" title="Test Scores" class="gap-6">
-	<div class="flex gap-6 flex-wrap items-stretch">
-		<!-- Ensure bars are re-drawn for each student -->
-		{#key data.student}
-			{#each data.student.act as score}
+<Section id="test-scores" title="Test Scores">
+	<div class="flex gap-6 flex-wrap items-stretch pt-2 empty:pt-0">
+		{#key data.student}{#each data.student.act as score}
 				<ScoreCard.Root testName="ACT" testDate={score.date} scoreValue={actOverall(score)}>
 					<ScoreCard.ActBarSet {score} />
 				</ScoreCard.Root>
-			{/each}
-			{#each data.student.toefl as score}
+			{/each}{#each data.student.toefl as score}
 				<ScoreCard.Root testName="TOEFL" testDate={score.date} scoreValue={toeflOverall(score)}>
 					<ScoreCard.ToeflBarSet {score} />
 				</ScoreCard.Root>
-			{/each}
-			{#each data.student.ielts as score}
+			{/each}{#each data.student.ielts as score}
 				<ScoreCard.Root
 					testName="IELTS"
 					testDate={score.date}
@@ -238,15 +237,11 @@
 				>
 					<ScoreCard.IeltsBarSet {score} />
 				</ScoreCard.Root>
-			{/each}
-			{#each data.student.duolingo as score}
+			{/each}{#each data.student.duolingo as score}
 				<ScoreCard.Root testName="Duolingo" testDate={score.date} scoreValue={score.overall}>
 					<ScoreCard.DuolingoBarSet {score} />
 				</ScoreCard.Root>
-			{/each}
-			<!-- TODO -->
-		{/key}
-		{#if data.userCanEdit}
+			{/each}{/key}{#if data.userCanEdit}
 			<div class="w-full">
 				<ButtonDialog buttonText="Add Test" dialogTitle="Add Test">
 					<div>Dialog body</div>
@@ -261,7 +256,7 @@
 		<LoadingSign />
 	{:then applications}
 		{#if applications.length}
-			<Tabs.Root value="grid-layout" class="pt-2">
+			<Tabs.Root value="grid-layout">
 				<Tabs.List class="flex w-fit gap-1">
 					<Tabs.Trigger value="grid-layout" class="size-7"
 						><LayoutGrid class="size-4 shrink-0" /></Tabs.Trigger
@@ -294,7 +289,7 @@
 		{/if}
 
 		{#if data.userCanEdit}
-			<div class={applications.length ? '' : 'pt-4'}>
+			<div class={applications.length ? '' : 'mt-2'}>
 				<ButtonDialog
 					buttonText="Create Applications"
 					dialogTitle="Create Applications"
@@ -334,6 +329,6 @@
 
 {#if data.userCanEdit}
 	<Section id="delete" hrule>
-		<Button variant="destructive" class="mt-4 w-fit">Delete Profile</Button>
+		<Button variant="destructive" class="w-fit">Delete Profile</Button>
 	</Section>
 {/if}

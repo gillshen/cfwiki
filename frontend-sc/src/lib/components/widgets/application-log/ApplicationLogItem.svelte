@@ -96,10 +96,11 @@
 							id="log-delete-form-{log.id}"
 						>
 							<input type="number" name="id" bind:value={$delFormData.id} hidden />
-							<FormButton variant="destructive">Delete</FormButton>
-							<Button variant="ghost" class="mr-4" on:click={() => (deleteDialogOpen = false)}
-								>Cancel</Button
-							>
+
+							<div class="mx-auto mt-4 w-fit">
+								<FormButton variant="destructive">Delete</FormButton>
+								<Button variant="ghost" on:click={() => (deleteDialogOpen = false)}>Cancel</Button>
+							</div>
 						</form>
 					</Dialog.Content>
 				</Dialog.Root>

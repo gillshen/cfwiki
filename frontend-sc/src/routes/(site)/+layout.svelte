@@ -290,7 +290,7 @@
 
 	<div
 		class={cn(
-			'mt-[60px] min-h-[calc(100vh-340px)] flex w-[100vw] items-center justify-center',
+			'mt-[60px] min-h-[calc(100vh-340px)] flex w-[100vw] justify-center',
 			isDataGridPage ? 'max-w-full' : ''
 		)}
 	>

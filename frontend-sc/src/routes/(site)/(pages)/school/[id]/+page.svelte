@@ -134,8 +134,11 @@
 					<a href="/student/{student.id}" class="inline-block w-fit">
 						<span class="text-primary">{student.fullname}</span>
 						<span class="mx-1">@</span>
-						{toISOYearMonth(enrollment.start_date)} &ndash; {toISOYearMonth(enrollment.end_date) ??
-							'?'}
+						<span class="tabular-nums">
+							{toISOYearMonth(enrollment.start_date)} &ndash; {toISOYearMonth(
+								enrollment.end_date
+							) ?? '?'}
+						</span>
 					</a>
 				{/each}
 			</div>

@@ -109,7 +109,7 @@
 		</article>
 
 		<article class="mt-4 text-sm flex flex-col gap-2 bg-zinc-50 px-8 pt-6 pb-8 rounded-lg">
-			<h2 class="text-xl font-bold">Status History</h2>
+			<h2 class="text-xl font-bold">History</h2>
 
 			{#if data.application.logs.length}
 				<Timeline.Root class="mt-4">
@@ -163,27 +163,30 @@
 
 {#if data.userCanEdit}
 	<Section id="delete" hrule>
-		<ButtonDialog
-			buttonText="Delete Application"
-			buttonVariant="destructive"
-			dialogTitle="Delete this application?"
-			bind:open={deleteModalOpen}
-		>
-			<svelte:fragment slot="description">This action cannot be undone.</svelte:fragment>
-			<form
-				method="POST"
-				action="?/deleteApplication"
-				class="max-w-prose space-y-4 pb-2"
-				use:delFormEnhance
-				id="delete-form"
+		<div>
+			<ButtonDialog
+				buttonText="Delete Application"
+				buttonVariant="destructive"
+				dialogTitle="Delete this application?"
+				bind:open={deleteModalOpen}
 			>
-				<input type="number" name="id" bind:value={$delFormData.id} hidden />
-				<FormButton variant="destructive">Delete</FormButton>
-				<Button variant="ghost" class="mr-4" on:click={() => (deleteModalOpen = false)}
-					>Cancel</Button
+				<svelte:fragment slot="description">This action cannot be undone.</svelte:fragment>
+				<form
+					method="POST"
+					action="?/deleteApplication"
+					class="max-w-prose space-y-4 pb-2"
+					use:delFormEnhance
+					id="delete-form"
 				>
-			</form>
-		</ButtonDialog>
+					<input type="number" name="id" bind:value={$delFormData.id} hidden />
+
+					<div class="mx-auto mt-4 w-fit">
+						<FormButton variant="destructive">Delete</FormButton>
+						<Button variant="ghost" on:click={() => (deleteModalOpen = false)}>Cancel</Button>
+					</div>
+				</form>
+			</ButtonDialog>
+		</div>
 	</Section>
 {/if}
 
