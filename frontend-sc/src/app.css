@@ -130,18 +130,18 @@ html {
 
 
 .font-serif {
-	font-family: 'Geist', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, sans-serif;
+	font-family: 'Twemoji Country Flags', 'Geist', 'Noto Sans SC', Roboto, sans-serif;
 }
 
 .font-heading {
-	font-family: 'Geist', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, sans-serif;
+	font-family: 'Twemoji Country Flags', 'Geist', 'Noto Sans SC', Roboto, sans-serif;
 }
 
 .data-grid {
-	--ag-font-family: 'Geist', 'Twemoji Country Flags', Roboto, Arial, 'Noto Sans SC', sans-serif;
+	--ag-font-family: 'Twemoji Country Flags', 'Geist', 'Noto Sans SC', Roboto, sans-serif;
 	/* --ag-borders: none; */
-	--ag-header-background-color: #fff;
-	--ag-row-hover-color: rgb(244, 244, 245);
+	--ag-header-background-color: rgb(244, 244, 245);
+	--ag-row-hover-color: rgba(244, 244, 245, 0.7);
 	--ag-accent-color: hsl(var(--primary) / 0.9);
 	--ag-checkbox-checked-background-color: hsl(var(--primary) / 0.9);
 	--ag-focus-shadow: none;
@@ -188,8 +188,4 @@ a {
 
 a:hover {
 	text-decoration: underline;
-}
-
-form .hidden {
-	display: none;
 }

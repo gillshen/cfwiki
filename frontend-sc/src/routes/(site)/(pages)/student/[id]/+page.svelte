@@ -5,6 +5,7 @@
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as HoverCard from '$lib/components/ui/hover-card/index';
+	import * as Alert from '$lib/components/ui/alert';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Venus from 'lucide-svelte/icons/venus';
 	import Mars from 'lucide-svelte/icons/mars';
@@ -15,6 +16,7 @@
 	import Calendar from 'lucide-svelte/icons/calendar';
 	import GraduationCap from 'lucide-svelte/icons/graduation-cap';
 	import BookCheck from 'lucide-svelte/icons/book-check';
+	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 
 	import * as Timeline from '$lib/components/widgets/timeline/index';
 	import * as ScoreCard from '$lib/components/widgets/score-card/index';
@@ -34,8 +36,8 @@
 	import { activeYears, toISOYearMonth } from '$lib/util/dateUtils';
 	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
 	import { academicTerms } from '$lib/constants/progressions';
-	import { createTitle } from '$lib/util/siteUtils';
 	import { actOverall, ieltsOverall, toeflOverall } from '$lib/util/scoresUtils';
+	import { createTitle } from '$lib/util/siteUtils';
 
 	export let data;
 
@@ -120,36 +122,48 @@
 		<div class="text-sm pb-2 text-stone-600 max-w-[40ch]">{data.student.comments}</div>
 	{/if}
 
-	<div class="flex gap-4 flex-wrap pt-4">
-		{#each data.student.contracts as contract}
-			<ContractCard {contract} canEdit={canEditContract({ user: data.user, contract })} />
-		{/each}
-	</div>
-
-	{#if data.userCanEdit}
-		<div class="pt-2">
-			<Button
-				variant="outline"
-				href="/student/{data.student.id}/contract/new"
-				class="text-primary hover:no-underline">Add Contract</Button
-			>
+	{#if data.student.contracts.length}
+		<div class="flex gap-4 flex-wrap pt-4">
+			{#each data.student.contracts as contract}
+				<ContractCard {contract} canEdit={canEditContract({ user: data.user, contract })} />
+			{/each}
 		</div>
+		{#if data.userCanEdit}
+			<div class="pt-4">
+				<Button
+					variant="outline"
+					href="/student/{data.student.id}/contract/new"
+					class="text-primary hover:no-underline">Add Contract</Button
+				>
+			</div>
+		{/if}
+	{:else}
+		<Alert.Root class="w-fit pr-6 max-w-prose border-none bg-yellow-300">
+			<TriangleAlert class="size-4" />
+			<Alert.Title>We need a contract!</Alert.Title>
+			<Alert.Description>
+				<p>This student is not associated with any contract. Add one below.</p>
+				<Button href="/student/{data.student.id}/contract/new" class="hover:no-underline mt-4"
+					>Add Contract</Button
+				>
+			</Alert.Description>
+		</Alert.Root>
 	{/if}
 </section>
 
 <Section id="education" title="Education">
 	{#if data.student.enrollments.length}
-		<Timeline.Root class="mt-4">
+		<Timeline.Root class="pb-2">
 			{#each data.student.enrollments as enrollment}
-				<Timeline.Item class="min-h-[100px] pb-8 w-full">
-					<h3 class="text-base font-semibold flex items-center -translate-y-2">
+				<Timeline.Item class="min-h-[100px] mt-2 pb-4 w-full">
+					<h3 class="text-base font-semibold flex items-center pb-2">
 						<a href="/school/{enrollment.school.id}" class="text-inherit"
 							>{enrollment.school.name}</a
 						>
 						{#if data.userCanEdit}
 							<Button
 								variant="link"
-								class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80"
+								class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80 h-6"
 							>
 								<Pencil class="mr-1 size-4" />Edit
 							</Button>
@@ -199,8 +213,8 @@
 	{/if}
 </Section>
 
-<Section id="test-scores" title="Test Scores">
-	<div class="flex gap-6 items-stretch pt-2">
+<Section id="test-scores" title="Test Scores" class="gap-6">
+	<div class="flex gap-6 flex-wrap items-stretch">
 		<!-- Ensure bars are re-drawn for each student -->
 		{#key data.student}
 			{#each data.student.act as score}
@@ -229,15 +243,14 @@
 			{/each}
 			<!-- TODO -->
 		{/key}
+		{#if data.userCanEdit}
+			<div class="w-full">
+				<ButtonDialog buttonText="Add Test" dialogTitle="Add Test">
+					<div>Dialog body</div>
+				</ButtonDialog>
+			</div>
+		{/if}
 	</div>
-
-	{#if data.userCanEdit}
-		<div class="pt-2">
-			<ButtonDialog buttonText="Add Test" dialogTitle="Add Test">
-				<div>Dialog body</div>
-			</ButtonDialog>
-		</div>
-	{/if}
 </Section>
 
 <Section id="applications" title="Applications">
@@ -245,7 +258,7 @@
 		<LoadingSign />
 	{:then applications}
 		{#if applications.length}
-			<Tabs.Root value="grid-layout">
+			<Tabs.Root value="grid-layout" class="pt-2">
 				<Tabs.List class="flex w-fit gap-1">
 					<Tabs.Trigger value="grid-layout" class="size-7"
 						><LayoutGrid class="size-4 shrink-0" /></Tabs.Trigger
@@ -276,35 +289,44 @@
 				</Tabs.Content>
 			</Tabs.Root>
 		{/if}
-	{/await}
 
-	{#if data.userCanEdit}
-		<div class="pt-4">
-			<ButtonDialog buttonText="Create Applications" dialogTitle="Create Applications">
-				<form
-					method="POST"
-					action="?/startApplication"
-					class="max-w-prose space-y-4 my-4 mx-auto"
-					id="new-application-prep-form"
-					use:enhance
+		{#if data.userCanEdit}
+			<div class={applications.length ? '' : 'pt-4'}>
+				<ButtonDialog
+					buttonText="Create Applications"
+					dialogTitle="Create Applications"
+					disabled={!data.student.contracts.length}
 				>
-					<input name="username" value={data.username} hidden />
-					<input type="number" name="student" value={data.student.id} hidden />
-					<Combobox
-						{form}
-						name="contract"
-						label="Contract"
-						items={contractItems}
-						postSelect={onContractSelection}
-					/>
-					<Combobox {form} name="type" label="Application type" items={relevantApplicationTypes} />
-					<Combobox {form} name="year" label="Year of admission" items={relevantYears} />
-					<Combobox {form} name="term" label="Term" items={academicTerms} />
-					<Form.Button class="w-fit min-w-24">Next</Form.Button>
-				</form>
-			</ButtonDialog>
-		</div>
-	{/if}
+					<form
+						method="POST"
+						action="?/startApplication"
+						class="max-w-prose space-y-4 my-4 mx-auto"
+						id="new-application-prep-form"
+						use:enhance
+					>
+						<input name="username" value={data.username} hidden />
+						<input type="number" name="student" value={data.student.id} hidden />
+						<Combobox
+							{form}
+							name="contract"
+							label="Contract"
+							items={contractItems}
+							postSelect={onContractSelection}
+						/>
+						<Combobox
+							{form}
+							name="type"
+							label="Application type"
+							items={relevantApplicationTypes}
+						/>
+						<Combobox {form} name="year" label="Year of admission" items={relevantYears} />
+						<Combobox {form} name="term" label="Term" items={academicTerms} />
+						<Form.Button class="w-fit min-w-24">Next</Form.Button>
+					</form>
+				</ButtonDialog>
+			</div>
+		{/if}
+	{/await}
 </Section>
 
 {#if data.userCanEdit}

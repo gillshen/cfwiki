@@ -10,15 +10,16 @@
 		| 'ghost'
 		| 'link'
 		| undefined = 'outline';
-	export let buttonSize: 'sm' | 'default' | 'lg' | 'icon' | undefined = 'sm';
+	export let buttonSize: 'sm' | 'default' | 'lg' | 'icon' | undefined = 'default';
 	export let buttonText: string = '';
 	export let contentClass: string = '';
 	export let dialogTitle: string = '';
 	export let open: boolean = false;
+	export let disabled: boolean = false;
 </script>
 
 <Dialog.Root bind:open>
-	<Dialog.Trigger class={buttonVariants({ variant: buttonVariant, size: buttonSize })}
+	<Dialog.Trigger class={buttonVariants({ variant: buttonVariant, size: buttonSize })} {disabled}
 		>{buttonText}</Dialog.Trigger
 	>
 	<Dialog.Content class={contentClass}>

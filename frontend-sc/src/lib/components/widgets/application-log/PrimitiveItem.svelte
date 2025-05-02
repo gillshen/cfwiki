@@ -7,16 +7,18 @@
 	export let log: ApplicationLog;
 </script>
 
-<Timeline.Item class="flex flex-col gap-1 min-h-[100px] pb-8">
-	<h3 class="text-base font-semibold flex items-center gap-2">
-		{log.status === 'Pres. Rejected' ? 'Presumed Rejected' : log.status}
-		{#if log.status === 'Accepted'}
-			<PartyPopper class="size-4 text-mint-400 hover:animate-[ping_1s_ease-in-out]" />
+<Timeline.Item class="min-h-[100px] pb-6">
+	<div class="flex flex-col gap-1">
+		<h3 class="text-base font-semibold flex items-center gap-2">
+			{log.status === 'Pres. Rejected' ? 'Presumed Rejected' : log.status}
+			{#if log.status === 'Accepted'}
+				<PartyPopper class="size-4 text-mint-400 hover:animate-[ping_1s_ease-in-out]" />
+			{/if}
+			<slot name="buttons" />
+		</h3>
+		<div class="text-muted-foreground">{toLongDate(log.date)}</div>
+		{#if log.comments}
+			<div class="pt-2 pr-4 text-muted-foreground">{log.comments}</div>
 		{/if}
-		<slot name="buttons" />
-	</h3>
-	<div class="text-muted-foreground">{toLongDate(log.date)}</div>
-	{#if log.comments}
-		<div class="pt-2 pr-4 text-muted-foreground">{log.comments}</div>
-	{/if}
+	</div>
 </Timeline.Item>

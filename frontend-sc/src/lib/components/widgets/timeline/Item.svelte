@@ -5,14 +5,14 @@
 	export { className as class };
 </script>
 
-<div class="flex">
+<div class={cn('flex items-start', className)}>
 	<!-- Node and line -->
-	<div class="border-r w-2 shrink-0 mt-6 pt-2 mr-4">
-		<div class="w-2 h-2 bg-cultured-400 rounded-full -translate-y-6 translate-x-1" />
+	<div class="border-r border-primary/40 w-2 h-full shrink-0 mt-8 mr-4 relative">
+		<div class="absolute left-1 -top-4 w-2 h-2 bg-primary rounded-full" />
 	</div>
 
 	<!-- Content -->
-	<div class={cn('pb-4', className)}>
+	<div class="mt-2">
 		<slot />
 	</div>
 </div>

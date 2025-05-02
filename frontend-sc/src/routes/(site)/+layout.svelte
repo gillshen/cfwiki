@@ -40,7 +40,7 @@
 </script>
 
 <div class={cn('relative container w-[100vw]', isDataGridPage ? 'max-w-full' : '')}>
-	<div
+	<header
 		id="navbar"
 		class="fixed top-0 left-0 w-[100vw] h-[60px] backdrop-blur bg-white/70 shadow-sm z-40 flex px-4"
 	>
@@ -287,13 +287,13 @@
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</div>
-	</div>
+	</header>
 
 	<div class="mt-[60px] min-h-[calc(100vh-340px)] flex">
 		{#if isDataGridPage}
-			<div class="flex flex-col pt-4 w-full">
+			<article class="flex flex-col pt-4 w-full">
 				<slot />
-			</div>
+			</article>
 		{:else}
 			<div class="flex mx-auto gap-8 w-full">
 				<aside
@@ -305,9 +305,9 @@
 						<StudentSideList username={data.username} {students} {selectedStudentId} />
 					{/await}
 				</aside>
-				<div class="flex flex-col w-full pt-4 pb-8 px-4 max-w-[1032px]">
+				<article class="flex flex-col w-full pt-4 pb-8 px-4 max-w-[1032px]">
 					<slot />
-				</div>
+				</article>
 			</div>
 		{/if}
 	</div>
