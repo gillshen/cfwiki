@@ -17,6 +17,7 @@
 	import BookCheck from 'lucide-svelte/icons/book-check';
 
 	import * as Timeline from '$lib/components/widgets/timeline/index';
+	import * as ScoreCard from '$lib/components/widgets/score-card/index';
 	import Section from '$lib/components/containers/Section.svelte';
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
@@ -34,6 +35,7 @@
 	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
 	import { academicTerms } from '$lib/constants/progressions';
 	import { createTitle } from '$lib/util/siteUtils';
+	import { actOverall, ieltsOverall, toeflOverall } from '$lib/util/scoresUtils';
 
 	export let data;
 
@@ -198,11 +200,39 @@
 </Section>
 
 <Section id="test-scores" title="Test Scores">
-	<!-- TODO -->
-	<pre class="text-sm">{JSON.stringify(data.student.act, null, 2)}</pre>
-	<pre class="text-sm">{JSON.stringify(data.student.toefl, null, 2)}</pre>
+	<div class="flex gap-6 items-stretch pt-2">
+		<!-- Ensure bars are re-drawn for each student -->
+		{#key data.student}
+			{#each data.student.act as score}
+				<ScoreCard.Root testName="ACT" testDate={score.date} scoreValue={actOverall(score)}>
+					<ScoreCard.ActBarSet {score} />
+				</ScoreCard.Root>
+			{/each}
+			{#each data.student.toefl as score}
+				<ScoreCard.Root testName="TOEFL" testDate={score.date} scoreValue={toeflOverall(score)}>
+					<ScoreCard.ToeflBarSet {score} />
+				</ScoreCard.Root>
+			{/each}
+			{#each data.student.ielts as score}
+				<ScoreCard.Root
+					testName="IELTS"
+					testDate={score.date}
+					scoreValue={ieltsOverall(score)?.toFixed(1)}
+				>
+					<ScoreCard.IeltsBarSet {score} />
+				</ScoreCard.Root>
+			{/each}
+			{#each data.student.duolingo as score}
+				<ScoreCard.Root testName="Duolingo" testDate={score.date} scoreValue={score.overall}>
+					<ScoreCard.DuolingoBarSet {score} />
+				</ScoreCard.Root>
+			{/each}
+			<!-- TODO -->
+		{/key}
+	</div>
+
 	{#if data.userCanEdit}
-		<div class="pt-4">
+		<div class="pt-2">
 			<ButtonDialog buttonText="Add Test" dialogTitle="Add Test">
 				<div>Dialog body</div>
 			</ButtonDialog>
@@ -279,6 +309,6 @@
 
 {#if data.userCanEdit}
 	<Section id="delete" hrule>
-		<Button variant="destructive" class="mt-4">Delete Profile</Button>
+		<Button variant="destructive" class="mt-4 w-fit">Delete Profile</Button>
 	</Section>
 {/if}
