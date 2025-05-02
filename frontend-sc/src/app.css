@@ -79,10 +79,6 @@
 	}
 }
 
-html {
-	scrollbar-gutter: stable both-edges;
-}
-
 /* Apply styles to selected text */
 ::selection {
 	@apply bg-cultured-100;

@@ -12,7 +12,6 @@
 	import Settings from 'lucide-svelte/icons/settings';
 	import LogOut from 'lucide-svelte/icons/log-out';
 
-	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import StudentSideList from '$lib/components/widgets/student-side-list/StudentSideList.svelte';
 	import UserDirectory from '$lib/components/widgets/UserDirectory.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
@@ -299,9 +298,7 @@
 				<aside
 					class="sticky top-[60px] max-w-[240px] min-w-[240px] h-[calc(100vh-60px)] overflow-auto px-6 py-8"
 				>
-					{#await data.students}
-						<LoadingSign text="" />
-					{:then students}
+					{#await data.students then students}
 						<StudentSideList username={data.username} {students} {selectedStudentId} />
 					{/await}
 				</aside>

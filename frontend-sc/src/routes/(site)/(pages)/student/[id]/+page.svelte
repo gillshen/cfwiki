@@ -38,8 +38,15 @@
 	import { academicTerms } from '$lib/constants/progressions';
 	import { actOverall, ieltsOverall, toeflOverall } from '$lib/util/scoresUtils';
 	import { createTitle } from '$lib/util/siteUtils';
+	import type { ComponentType } from 'svelte';
 
 	export let data;
+
+	const genderMap: Record<'male' | 'female' | 'other', ComponentType> = {
+		male: Mars,
+		female: Venus,
+		other: NonBinary
+	};
 
 	const form = superForm(data.newApplicationPrepForm);
 	const { form: formData, enhance } = form;
@@ -92,13 +99,7 @@
 		{/if}
 	</h1>
 	<div class="flex flex-row gap-2 items-center text-sm">
-		{#if data.student.gender === 'female'}
-			<Venus class="size-4" />
-		{:else if data.student.gender === 'male'}
-			<Mars class="size-4" />
-		{:else}
-			<NonBinary class="size-4" />
-		{/if}
+		<svelte:component this={genderMap[data.student.gender]} class="size-4" />
 		<div class="text-gray-400">&bullet;</div>
 		<div>{countryFlags[data.student.citizenship]}</div>
 		<div>{data.student.citizenship}</div>
@@ -152,57 +153,59 @@
 </section>
 
 <Section id="education" title="Education">
-	{#if data.student.enrollments.length}
-		<Timeline.Root class="pb-2">
-			{#each data.student.enrollments as enrollment}
-				<Timeline.Item class="min-h-[100px] mt-2 pb-4 w-full">
-					<h3 class="text-base font-semibold flex items-center pb-2">
-						<a href="/school/{enrollment.school.id}" class="text-inherit"
-							>{enrollment.school.name}</a
-						>
-						{#if data.userCanEdit}
-							<Button
-								variant="link"
-								class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80 h-6"
+	{#key data.student}
+		{#if data.student.enrollments.length}
+			<Timeline.Root class="pb-2">
+				{#each data.student.enrollments as enrollment}
+					<Timeline.Item class="min-h-[100px] mt-2 pb-4 w-full">
+						<h3 class="text-base font-semibold flex items-center pb-2">
+							<a href="/school/{enrollment.school.id}" class="text-inherit"
+								>{enrollment.school.name}</a
 							>
-								<Pencil class="mr-1 size-4" />Edit
-							</Button>
-						{/if}
-					</h3>
-
-					<div class="flex flex-col gap-2">
-						<div class="text-muted-foreground flex items-center gap-1.5">
-							<Calendar class="size-4" />
-							{formatEnrollmentDates(enrollment, toISOYearMonth)}
-						</div>
-						{#if enrollment.curriculum}
-							<div class="text-muted-foreground flex items-center gap-1.5">
-								<GraduationCap class="size-4" />
-								{enrollment.curriculum}
-							</div>
-						{/if}
-						<!-- TODO -->
-						<div class="text-muted-foreground flex items-center gap-1.5">
-							<BookCheck class="size-4" />
-							<HoverCard.Root>
-								<HoverCard.Trigger class="underline decoration-dotted hover:decoration-dotted"
-									>GPA: (TODO)</HoverCard.Trigger
+							{#if data.userCanEdit}
+								<Button
+									variant="link"
+									class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80 h-6"
 								>
-								<HoverCard.Content class="w-[480px]">
-									<pre
-										class="mt-1 text-sm bg-gray-100 rounded-md p-2 w-full max-h-[200px] overflow-auto">{JSON.stringify(
-											enrollment.grades,
-											null,
-											2
-										)}</pre>
-								</HoverCard.Content>
-							</HoverCard.Root>
+									<Pencil class="mr-1 size-4" />Edit
+								</Button>
+							{/if}
+						</h3>
+
+						<div class="flex flex-col gap-2">
+							<div class="text-muted-foreground flex items-center gap-1.5">
+								<Calendar class="size-4" />
+								{formatEnrollmentDates(enrollment, toISOYearMonth)}
+							</div>
+							{#if enrollment.curriculum}
+								<div class="text-muted-foreground flex items-center gap-1.5">
+									<GraduationCap class="size-4" />
+									{enrollment.curriculum}
+								</div>
+							{/if}
+							<!-- TODO -->
+							<div class="text-muted-foreground flex items-center gap-1.5">
+								<BookCheck class="size-4" />
+								<HoverCard.Root>
+									<HoverCard.Trigger class="underline decoration-dotted hover:decoration-dotted"
+										>GPA: (TODO)</HoverCard.Trigger
+									>
+									<HoverCard.Content class="w-[480px]">
+										<pre
+											class="mt-1 text-sm bg-gray-100 rounded-md p-2 w-full max-h-[200px] overflow-auto">{JSON.stringify(
+												enrollment.grades,
+												null,
+												2
+											)}</pre>
+									</HoverCard.Content>
+								</HoverCard.Root>
+							</div>
 						</div>
-					</div>
-				</Timeline.Item>
-			{/each}
-		</Timeline.Root>
-	{/if}
+					</Timeline.Item>
+				{/each}
+			</Timeline.Root>
+		{/if}
+	{/key}
 
 	{#if data.userCanEdit}
 		<div class="pt-4">

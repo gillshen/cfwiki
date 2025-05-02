@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { ComponentType } from 'svelte';
+
 	import { cn } from '$lib/utils';
 	import CircleCheckBig from 'lucide-svelte/icons/circle-check-big';
-	import CircleCheck from 'lucide-svelte/icons/circle-check';
 	import CircleX from 'lucide-svelte/icons/circle-x';
 	import CircleHelp from 'lucide-svelte/icons/circle-help';
 	import Clock from 'lucide-svelte/icons/clock';
@@ -13,45 +14,43 @@
 	export let application: { logs: ApplicationLogBrief[] };
 	export let height: string = '24px';
 
+	type Icon = {
+		icon: ComponentType;
+		className: string;
+	};
+
+	const inProgressIcon: Icon = { icon: Clock, className: 'text-sky-600/70' };
+	const acceptedIcon: Icon = { icon: CircleCheckBig, className: 'text-mint-400' };
+	const rejectedIcon: Icon = { icon: CircleX, className: 'text-rejected' };
+	const deferredIcon: Icon = { icon: CircleHelp, className: 'text-deferred' };
+	const neutralIcon: Icon = { icon: Ban, className: 'text-muted-foreground/70 ' };
+
+	const statusMap: Record<ApplicationStatus, Icon> = {
+		Started: inProgressIcon,
+		Submitted: inProgressIcon,
+		'Under Review': inProgressIcon,
+		Accepted: acceptedIcon,
+		Deferred: deferredIcon,
+		'On Waitlist': deferredIcon,
+		Rejected: rejectedIcon,
+		'Pres. Rejected': rejectedIcon,
+		'Offer Rescinded': rejectedIcon,
+		Cancelled: neutralIcon,
+		Withdrawn: neutralIcon,
+		Untracked: neutralIcon
+	};
+
 	const statuses = getNotableStatuses(application);
 	const formattedStatuses = formatNotableStatuses(statuses);
 	const latestStatus = statuses[statuses.length - 1];
-
-	type Icon = 'clock' | 'check' | 'big-check' | 'x' | 'ban' | 'question';
-
-	const statusToIcon: Record<ApplicationStatus, Icon> = {
-		Started: 'clock',
-		Submitted: 'clock',
-		'Under Review': 'clock',
-		Accepted: 'big-check',
-		Deferred: 'question',
-		'On Waitlist': 'question',
-		Rejected: 'x',
-		'Pres. Rejected': 'x',
-		'Offer Rescinded': 'x',
-		Cancelled: 'ban',
-		Withdrawn: 'ban',
-		Untracked: 'ban'
-	};
-
-	const icon = statusToIcon[latestStatus];
 </script>
 
 {#if latestStatus}
 	<div class={cn('text-sm flex items-center gap-1.5', `h-[${height}]`)}>
-		{#if icon === 'big-check'}
-			<CircleCheckBig class="text-mint-400 size-4 translate-y-[0.5px] shrink-0" />
-		{:else if icon === 'clock'}
-			<Clock class="text-sky-600/70 size-4 translate-y-[0.5px] shrink-0" />
-		{:else if icon === 'check'}
-			<CircleCheck class="text-sky-600/70 size-4 translate-y-[0.5px] shrink-0" />
-		{:else if icon === 'x'}
-			<CircleX class="text-rejected size-4 translate-y-[0.5px] shrink-0" />
-		{:else if icon === 'question'}
-			<CircleHelp class="text-deferred size-4 translate-y-[0.5px] shrink-0" />
-		{:else if icon === 'ban'}
-			<Ban class="text-muted-foreground/70 size-4 translate-y-[0.5px] shrink-0" />
-		{/if}
+		<svelte:component
+			this={statusMap[latestStatus].icon}
+			class={cn('size-4 translate-y-[0.5px] shrink-0', statusMap[latestStatus].className)}
+		/>
 		<div class="flex-1 min-w-0">
 			<span class="font-medium block truncate">{formattedStatuses}</span>
 		</div>
