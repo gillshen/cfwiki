@@ -33,7 +33,7 @@
 	import { formatLocation } from '$lib/util/studentUtils';
 	import { canEdit as canEditContract } from '$lib/util/contractUtils';
 	import { orderBySchoolName, orderByStatus, orderByYearDesc } from '$lib/util/applicationUtils';
-	import { activeYears, toISOYearMonth } from '$lib/util/dateUtils';
+	import { activeYears, toShortDate, toShortYearMonth } from '$lib/util/dateUtils';
 	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
 	import { academicTerms } from '$lib/constants/progressions';
 	import { actOverall, ieltsOverall, toeflOverall } from '$lib/util/scoresUtils';
@@ -105,7 +105,7 @@
 		<div>{data.student.citizenship}</div>
 		{#if data.student.date_of_birth}
 			<div class="text-gray-400">&bullet;</div>
-			<div>b. {data.student.date_of_birth}</div>
+			<div>b. {toShortDate(data.student.date_of_birth)}</div>
 		{/if}
 		<div class="text-gray-400">&bullet;</div>
 		<div>@ {formatLocation(data.student)}</div>
@@ -157,7 +157,7 @@
 		{#if data.student.enrollments.length}
 			<Timeline.Root class="pb-2">
 				{#each data.student.enrollments as enrollment}
-					<Timeline.Item class="min-h-[100px] mt-2 pb-4 w-full">
+					<Timeline.Item class="min-h-[120px] w-full">
 						<h3 class="text-base font-semibold flex items-center pb-2">
 							<a href="/school/{enrollment.school.id}" class="text-inherit"
 								>{enrollment.school.name}</a
@@ -175,7 +175,7 @@
 						<div class="flex flex-col gap-2">
 							<div class="text-muted-foreground flex items-center gap-1.5">
 								<Calendar class="size-4" />
-								{formatEnrollmentDates(enrollment, toISOYearMonth)}
+								{formatEnrollmentDates(enrollment, toShortYearMonth)}
 							</div>
 							{#if enrollment.curriculum}
 								<div class="text-muted-foreground flex items-center gap-1.5">

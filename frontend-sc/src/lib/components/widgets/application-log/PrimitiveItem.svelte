@@ -7,7 +7,7 @@
 	export let log: ApplicationLog;
 </script>
 
-<Timeline.Item class="min-h-[100px] pb-6">
+<Timeline.Item class="min-h-[100px]">
 	<div class="flex flex-col gap-1">
 		<h3 class="text-base font-semibold flex items-center gap-2">
 			{log.status === 'Pres. Rejected' ? 'Presumed Rejected' : log.status}
