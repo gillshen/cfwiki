@@ -10,8 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>{createTitle(`${student.fullname} \u2022 ${contract.type} ${contract.target_year}`)}</title
-	>
+	<title>{createTitle(`${student.fullname} | ${contract.type} ${contract.target_year}`)}</title>
 </svelte:head>
 
 <BreadcrumbContainer>

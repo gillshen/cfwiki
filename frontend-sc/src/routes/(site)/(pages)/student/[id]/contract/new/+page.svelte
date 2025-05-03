@@ -20,7 +20,7 @@
 </script>
 
 <svelte:head>
-	<title>{createTitle(`${data.student.fullname} \u2022 Create Contract`)}</title>
+	<title>{createTitle(`${data.student.fullname} | Create Contract`)}</title>
 </svelte:head>
 
 <BreadcrumbContainer>

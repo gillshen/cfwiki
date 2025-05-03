@@ -11,7 +11,7 @@
 	export let data;
 
 	const schoolNames = joinNames(data.program.schools, { alt: true });
-	const title = `${schoolNames} | ${data.program.display_name}`;
+	const title = `${schoolNames} \u2022 ${data.program.display_name}`;
 </script>
 
 <svelte:head>

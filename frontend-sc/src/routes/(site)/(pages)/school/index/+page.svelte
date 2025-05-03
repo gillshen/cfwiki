@@ -40,7 +40,7 @@
 	<title>{createTitle('Schools & Institutions')}</title>
 </svelte:head>
 
-<BreadcrumbContainer>
+<BreadcrumbContainer includeHome>
 	<Breadcrumb.Item>
 		<Breadcrumb.Page>Schools</Breadcrumb.Page>
 	</Breadcrumb.Item>

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as Form from '$lib/components/ui/form/index';
 	import type { SuperForm, Infer } from 'sveltekit-superforms';
+	import * as Form from '$lib/components/ui/form/index';
 
 	import type { SchoolSchema } from '$lib/schemas/school';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
@@ -99,7 +99,7 @@
 {#if $formData.country === 'China' && $formData.region}
 	<Combobox {form} name="city" label="City" items={chineseProvinces[$formData.region]} optional />
 {:else if showCityInput}
-	<Input {form} name="city" label="City" optional class="text-left" />
+	<Input {form} name="city" label="City" maxlength={100} optional class="text-left" />
 {/if}
 
 <Form.Button class="w-fit min-w-24">Submit</Form.Button>

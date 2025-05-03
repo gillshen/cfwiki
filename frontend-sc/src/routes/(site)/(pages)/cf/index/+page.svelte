@@ -13,7 +13,7 @@
 	<title>{createTitle('People')}</title>
 </svelte:head>
 
-<BreadcrumbContainer>
+<BreadcrumbContainer includeHome>
 	<Breadcrumb.Item>
 		<Breadcrumb.Page>CF People</Breadcrumb.Page>
 	</Breadcrumb.Item>

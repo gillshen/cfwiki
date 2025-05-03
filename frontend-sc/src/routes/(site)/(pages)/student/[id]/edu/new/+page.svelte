@@ -57,7 +57,7 @@
 </script>
 
 <svelte:head>
-	<title>{createTitle(`${data.student.fullname} \u2022 Create Educational Experience`)}</title>
+	<title>{createTitle(`${data.student.fullname} | Create Educational Experience`)}</title>
 </svelte:head>
 
 <BreadcrumbContainer>

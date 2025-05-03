@@ -80,7 +80,7 @@
 
 <Section id="info">
 	<div class="grid grid-cols-2 gap-6">
-		<article class="mt-4 text-sm flex flex-col gap-2 bg-zinc-50 px-8 pt-6 pb-8 rounded-lg">
+		<article class="mt-4 text-sm flex flex-col gap-2 bg-muted/50 px-8 pt-6 pb-8 rounded-lg">
 			<a href="/student/{student.id}">{student.fullname}</a>
 			<div class="flex flex-col gap-2">
 				{#each schools as school}
@@ -108,7 +108,7 @@
 				)}</pre>
 		</article>
 
-		<article class="mt-4 text-sm flex flex-col gap-2 bg-zinc-50 px-8 pt-6 pb-8 rounded-lg">
+		<article class="mt-4 text-sm flex flex-col gap-2 bg-muted/50 px-8 pt-6 pb-8 rounded-lg">
 			<h2 class="text-xl font-bold">History</h2>
 
 			{#if data.application.logs.length}

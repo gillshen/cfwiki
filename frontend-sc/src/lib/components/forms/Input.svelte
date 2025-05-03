@@ -35,7 +35,7 @@
 			bind:value={$formData[name]}
 		/>
 		{#if description}
-			<Form.Description>
+			<Form.Description class="text-xs">
 				{#if typeof description === 'string'}
 					{description}
 				{/if}

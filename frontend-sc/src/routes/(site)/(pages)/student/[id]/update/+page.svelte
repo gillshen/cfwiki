@@ -1,21 +1,15 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
-
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import StudentForm from '$lib/components/forms/StudentForm.svelte';
-	import { createTitle } from '$lib/util/siteUtils';
 
 	export let data;
 
-	const form = superForm(data.studentForm);
+	const form = superForm(data.form);
 	const { enhance } = form;
 </script>
-
-<svelte:head>
-	<title>{createTitle('Create Student Profile')}</title>
-</svelte:head>
 
 <BreadcrumbContainer>
 	<Breadcrumb.Item>
@@ -23,17 +17,21 @@
 	</Breadcrumb.Item>
 	<Breadcrumb.Separator />
 	<Breadcrumb.Item>
-		<Breadcrumb.Page>New</Breadcrumb.Page>
+		<Breadcrumb.Link href="/student/{data.student.id}">{data.student.fullname}</Breadcrumb.Link>
+	</Breadcrumb.Item>
+	<Breadcrumb.Separator />
+	<Breadcrumb.Item>
+		<Breadcrumb.Page>Update</Breadcrumb.Page>
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<h1 class="page-title mb-2">Create Student Profile</h1>
+<h1 class="page-title mb-2">Update Student Profile</h1>
 
 <Section id="student-form-section">
 	<form
 		method="POST"
 		class="max-w-prose space-y-6 mt-4"
-		action="?/createStudent"
+		action="?/updateStudent"
 		use:enhance
 		id="student-form"
 	>

@@ -113,6 +113,7 @@
 		{#if data.userCanEdit}
 			<Button
 				variant="link"
+				href="/student/{data.student.id}/update"
 				class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80"
 			>
 				<Pencil class="mr-1 size-4" />Edit
@@ -276,7 +277,7 @@
 							<a href="/application/{application.id}" target="_self" class="hover:no-underline">
 								<StudentApplicationCard
 									{application}
-									class="max-w-[360px] hover:shadow-lg hover:scale-[101%] duration-500 ease-out"
+									class="max-w-[360px] shadow-none hover:bg-muted/50"
 								/>
 							</a>
 						{/each}

@@ -23,7 +23,7 @@
 		cfUsers.find((user) => user.username === username)?.avatar;
 </script>
 
-<Card.Root>
+<Card.Root class="shadow-none">
 	<Card.Header class="py-4">
 		<Card.Title
 			class="text-base font-semibold tracking-normal pb-2 flex items-center gap-4 w-full justify-between pr-2"

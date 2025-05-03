@@ -18,7 +18,7 @@
 	<title>{createTitle('Programs')}</title>
 </svelte:head>
 
-<BreadcrumbContainer>
+<BreadcrumbContainer includeHome>
 	<Breadcrumb.Item>
 		<Breadcrumb.Page>Programs</Breadcrumb.Page>
 	</Breadcrumb.Item>

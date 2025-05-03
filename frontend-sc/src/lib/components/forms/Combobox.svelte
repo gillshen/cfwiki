@@ -21,13 +21,18 @@
 	export let label: string;
 	export let items: (SelectOption | string | number)[];
 	export let width: string = 'w-[360px]';
-	export let description: string = '';
+	export let description: string | boolean = false;
+	export let labelClass: string = '';
+	export let inputClass: string = '';
+	export let placeholder: string = 'Search\u200a...';
 	export let optional: boolean = false;
 	export let disableSearch: boolean = false;
 	export let emptyText: string | undefined = undefined;
 	export let searchDisabledEmptyText: string | undefined = undefined;
 	export let onSelect: () => void = () => {};
 	export let postSelect: () => void = () => {};
+	export let className: string = '';
+	export { className as class };
 
 	const { form: formData } = form;
 
@@ -46,15 +51,18 @@
 	}
 </script>
 
-<Form.Field {form} {name} class="flex flex-col text-left">
+<Form.Field {form} {name} class={cn('flex flex-col text-left', className)}>
 	<Popover.Root bind:open let:ids>
 		<Form.Control let:attrs>
-			<Form.Label class={cn('pb-0.5', optional ? 'optional-field' : '')}>{label}</Form.Label>
+			<Form.Label class={cn('pb-0.5', optional ? 'optional-field' : '', labelClass)}
+				>{label}</Form.Label
+			>
 			<Popover.Trigger
 				role="combobox"
 				class={cn(
 					buttonVariants({ variant: 'outline' }),
-					`${width} justify-between font-normal`,
+					'justify-between font-normal',
+					width,
 					!$formData[name] && 'text-muted-foreground'
 				)}
 				{...attrs}
@@ -67,10 +75,10 @@
 			</Popover.Trigger>
 			<input hidden value={$formData[name]} name={attrs.name} />
 		</Form.Control>
-		<Popover.Content class="{width} p-0">
+		<Popover.Content class={cn('p-0', inputClass, width)}>
 			<Command.Root>
 				{#if !disableSearch}
-					<Command.Input placeholder="Search..." />
+					<Command.Input {placeholder} />
 				{/if}
 				<Command.Empty>
 					<p>
@@ -110,7 +118,12 @@
 		</Popover.Content>
 	</Popover.Root>
 	{#if description}
-		<Form.Description>{description}</Form.Description>
+		<Form.Description class="text-xs">
+			{#if typeof description === 'string'}
+				{description}
+			{/if}
+			<slot name="description" />
+		</Form.Description>
 	{/if}
 	<Form.FieldErrors />
 </Form.Field>

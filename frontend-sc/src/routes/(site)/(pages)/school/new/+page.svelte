@@ -39,5 +39,4 @@
 	>
 		<SchoolForm {form} />
 	</form>
-	<!-- <SuperDebug data={$formData} /> -->
 </Section>
