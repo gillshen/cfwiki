@@ -1,11 +1,10 @@
 <script lang="ts">
 	import * as Form from '$lib/components/ui/form/index';
-	import FormField from '$lib/components/ui/form/form-field.svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
-
 	import type { SuperForm, Infer } from 'sveltekit-superforms';
+
 	import type { SchoolSchema } from '$lib/schemas/school';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
+	import Input from '$lib/components/forms/Input.svelte';
 	import americanStates from '$lib/constants/americanStates';
 	import canadianProvinces from '$lib/constants/canadianProvinces';
 	import chineseProvinces from '$lib/constants/chineseProvinces';
@@ -52,33 +51,26 @@
 	<Combobox {form} name="type" label="Type" items={['University', 'Secondary School', 'Other']} />
 {/if}
 
-<FormField {form} name="name" class="pb-1 text-left">
-	<Form.Control let:attrs>
-		<Form.Label>Full name</Form.Label>
-		<Input
-			placeholder="Clayton University"
-			class="w-[480px]"
-			maxlength={100}
-			{...attrs}
-			bind:value={$formData.name}
-		/>
-	</Form.Control>
-	<Form.FieldErrors />
-</FormField>
+<Input
+	{form}
+	name="name"
+	label="Full name"
+	placeholder="Clayton University"
+	inputClass="w-[480px]"
+	maxlength={100}
+	class="text-left pb-0.5"
+/>
 
-<FormField {form} name="alt_name" class="pb-1 text-left">
-	<Form.Control let:attrs>
-		<Form.Label class="optional-field">Abbreviation</Form.Label>
-		<Input
-			placeholder="Clayton"
-			class="w-[360px]"
-			maxlength={20}
-			{...attrs}
-			bind:value={$formData.alt_name}
-		/>
-	</Form.Control>
-	<Form.FieldErrors />
-</FormField>
+<Input
+	{form}
+	name="alt_name"
+	label="Abbreviation"
+	placeholder="Clayton"
+	inputClass="w-[480px]"
+	maxlength={20}
+	optional
+	class="text-left pb-0.5"
+/>
 
 <Combobox
 	{form}
@@ -98,22 +90,16 @@
 			name="region"
 			label="Region"
 			items={regionMap[$formData.country]}
-			isOptional
+			optional
 			onSelect={() => ($formData.city = '')}
 		/>
 	{/if}
 {/key}
 
 {#if $formData.country === 'China' && $formData.region}
-	<Combobox {form} name="city" label="City" items={chineseProvinces[$formData.region]} isOptional />
+	<Combobox {form} name="city" label="City" items={chineseProvinces[$formData.region]} optional />
 {:else if showCityInput}
-	<FormField {form} name="city" class="text-left">
-		<Form.Control let:attrs>
-			<Form.Label class="optional-field">City</Form.Label>
-			<Input class="w-[360px]" {...attrs} bind:value={$formData.city} />
-		</Form.Control>
-		<Form.FieldErrors />
-	</FormField>
+	<Input {form} name="city" label="City" optional class="text-left" />
 {/if}
 
 <Form.Button class="w-fit min-w-24">Submit</Form.Button>

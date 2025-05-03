@@ -4,12 +4,12 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as RadioGroup from '$lib/components/ui/radio-group/index';
-	import Input from '$lib/components/ui/input/input.svelte';
+	import FormField from '$lib/components/ui/form/form-field.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
-	import FormField from '$lib/components/ui/form/form-field.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
+	import Input from '$lib/components/forms/Input.svelte';
 	import { createTitle } from '$lib/util/siteUtils';
 	import { defaultBanner } from '$lib/util/userUtils';
 	import { avatars } from '$lib/assets/avatars';
@@ -42,18 +42,14 @@
 	>
 		<input name="id" bind:value={data.user.id} hidden />
 
-		<FormField {form} name="public_banner">
-			<Form.Control let:attrs>
-				<Form.Label>Homepage title</Form.Label>
-				<Input
-					placeholder={defaultBanner(data.username)}
-					class="w-[360px]"
-					maxlength={100}
-					{...attrs}
-					bind:value={$formData.public_banner}
-				/>
-			</Form.Control>
-		</FormField>
+		<Input
+			{form}
+			name="public_banner"
+			label="Homepage title"
+			placeholder={defaultBanner(data.username)}
+			maxlength={100}
+			optional
+		/>
 
 		<FormField {form} name="avatar">
 			<Form.Control>

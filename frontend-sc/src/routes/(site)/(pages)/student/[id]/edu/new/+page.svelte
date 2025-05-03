@@ -2,13 +2,12 @@
 	import { superForm } from 'sveltekit-superforms';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
-	import FormField from '$lib/components/ui/form/form-field.svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
+	import Input from '$lib/components/forms/Input.svelte';
 	import RadioGroup from '$lib/components/forms/RadioGroup.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
@@ -157,38 +156,26 @@
 				searchDisabledEmptyText="You need to specify a school type first"
 			/>
 
-			<FormField {form} name="start_date" class="pb-1">
-				<Form.Control let:attrs>
-					<Form.Label>Start date</Form.Label>
-					<Input type="date" class="w-[360px]" {...attrs} bind:value={$formData.start_date} />
-				</Form.Control>
-				<Form.FieldErrors />
-			</FormField>
+			<Input {form} name="start_date" label="Start date" type="date" class="pb-0.5" />
 
 			<Combobox
 				{form}
 				name="start_progression"
 				label="Entering as"
 				items={progressions}
-				isOptional
+				optional
 				searchDisabledEmptyText="You need to specify a school type first"
 				disableSearch
 			/>
 
-			<FormField {form} name="end_date" class="pb-1">
-				<Form.Control let:attrs>
-					<Form.Label class="optional-field">End date</Form.Label>
-					<Input type="date" class="w-[360px]" {...attrs} bind:value={$formData.end_date} />
-				</Form.Control>
-				<Form.FieldErrors />
-			</FormField>
+			<Input {form} name="end_date" label="End date" type="date" class="pb-0.5" optional />
 
 			<Combobox
 				{form}
 				name="end_progression"
 				label="Leaving as"
 				items={progressions}
-				isOptional
+				optional
 				disableSearch
 				searchDisabledEmptyText="You need to specify a school type first"
 			/>
@@ -199,17 +186,11 @@
 					name="curriculum"
 					label="Curriculum"
 					items={['A-level', 'AP', 'IB', 'Other']}
-					isOptional
+					optional
 					disableSearch
 				/>
 			{:else if $formData._school_type === 'University'}
-				<FormField {form} name="curriculum">
-					<Form.Control let:attrs>
-						<Form.Label class="optional-field">Program or major</Form.Label>
-						<Input class="w-[360px]" maxlength={50} {...attrs} bind:value={$formData.curriculum} />
-					</Form.Control>
-					<Form.FieldErrors />
-				</FormField>
+				<Input {form} name="curriculum" label="Program or major" maxlength={50} optional />
 			{/if}
 
 			<Form.Button class="w-fit min-w-24">Submit</Form.Button>

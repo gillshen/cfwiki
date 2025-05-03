@@ -6,7 +6,6 @@
 	import FormField from '$lib/components/ui/form/form-field.svelte';
 	import * as Select from '$lib/components/ui/select/index';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 
@@ -14,6 +13,7 @@
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import StudentApplicationCard from '$lib/components/widgets/StudentApplicationCard.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
+	import Input from '$lib/components/forms/Input.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
 
@@ -192,33 +192,34 @@
 					<Form.FieldErrors />
 				</FormField>
 
-				<FormField {form} name="major_1">
-					<Form.Control let:attrs>
-						<Form.Label class="optional-field">First-choice major or track</Form.Label>
-						<Input maxlength={100} class="w-[480px]" {...attrs} bind:value={$formData.major_1} />
-					</Form.Control>
-				</FormField>
+				<Input
+					{form}
+					name="major_1"
+					label="First-choice major or track"
+					maxlength={100}
+					inputClass="w-[480px]"
+					optional
+				/>
 
 				{#if $formData.major_1.trim()}
-					<FormField {form} name="major_2">
-						<Form.Control let:attrs>
-							<Form.Label class="optional-field">Second-choice major or track</Form.Label>
-							<Input maxlength={100} class="w-[480px]" {...attrs} bind:value={$formData.major_2} />
-						</Form.Control>
-					</FormField>
+					<Input
+						{form}
+						name="major_2"
+						label="Second-choice major or track"
+						maxlength={100}
+						inputClass="w-[480px]"
+						optional
+					/>
 
 					{#if $formData.major_2.trim()}
-						<FormField {form} name="major_3">
-							<Form.Control let:attrs>
-								<Form.Label class="optional-field">Third-choice major or track</Form.Label>
-								<Input
-									maxlength={100}
-									class="w-[480px]"
-									{...attrs}
-									bind:value={$formData.major_3}
-								/>
-							</Form.Control>
-						</FormField>
+						<Input
+							{form}
+							name="major_3"
+							label="Third-choice major or track"
+							maxlength={100}
+							inputClass="w-[480px]"
+							optional
+						/>
 					{/if}
 				{/if}
 

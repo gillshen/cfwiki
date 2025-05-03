@@ -1,15 +1,14 @@
 <script lang="ts">
-	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Form from '$lib/components/ui/form/index';
-	import FormField from '$lib/components/ui/form/form-field.svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
+	import Input from '$lib/components/forms/Input.svelte';
 	import RadioGroup from '$lib/components/forms/RadioGroup.svelte';
 
 	import countryFlags, {
@@ -68,33 +67,21 @@
 		use:enhance
 		id="student-form"
 	>
-		<FormField {form} name="surname">
-			<Form.Control let:attrs>
-				<Form.Label>Surname</Form.Label>
-				<Input
-					placeholder={fakeName.surname ?? ''}
-					class="w-[360px]"
-					maxlength={100}
-					{...attrs}
-					bind:value={$formData.surname}
-				/>
-			</Form.Control>
-			<Form.FieldErrors />
-		</FormField>
+		<Input
+			{form}
+			name="surname"
+			label="Surname"
+			placeholder={fakeName.surname ?? ''}
+			maxlength={100}
+		/>
 
-		<FormField {form} name="given_name">
-			<Form.Control let:attrs>
-				<Form.Label>Given name</Form.Label>
-				<Input
-					placeholder={fakeName.givenName ?? ''}
-					class="w-[360px]"
-					maxlength={100}
-					{...attrs}
-					bind:value={$formData.given_name}
-				/>
-			</Form.Control>
-			<Form.FieldErrors />
-		</FormField>
+		<Input
+			{form}
+			name="given_name"
+			label="Given name"
+			placeholder={fakeName.givenName ?? ''}
+			maxlength={100}
+		/>
 
 		<Form.Field {form} name="surname_first" class="flex flex-row items-start space-x-3 space-y-0">
 			<Form.Control let:attrs>
@@ -109,13 +96,7 @@
 			</Form.Control>
 		</Form.Field>
 
-		<FormField {form} name="preferred_name">
-			<Form.Control let:attrs>
-				<Form.Label class="optional-field">Preferred name</Form.Label>
-				<Input class="w-[360px]" maxlength={50} {...attrs} bind:value={$formData.preferred_name} />
-			</Form.Control>
-			<Form.FieldErrors />
-		</FormField>
+		<Input {form} name="preferred_name" label="Preferred name" maxlength={50} optional />
 
 		<RadioGroup
 			{form}
@@ -130,13 +111,7 @@
 
 		<Combobox {form} name="citizenship" label="Citizenship" items={citizenshipItems} />
 
-		<FormField {form} name="date_of_birth" class="pb-1">
-			<Form.Control let:attrs>
-				<Form.Label class="optional-field">Date of birth</Form.Label>
-				<Input type="date" class="w-[360px]" {...attrs} bind:value={$formData.date_of_birth} />
-			</Form.Control>
-			<Form.FieldErrors />
-		</FormField>
+		<Input {form} name="date_of_birth" label="Date of birth" type="date" class="pb-0.5" optional />
 
 		<Combobox
 			{form}
@@ -156,7 +131,7 @@
 				name="base_subnational"
 				label="Home province"
 				items={Object.keys(chineseProvinces)}
-				isOptional
+				optional
 				onSelect={() => ($formData.base_city = '')}
 			/>
 		{:else if $formData.base_country === 'United States'}
@@ -165,7 +140,7 @@
 				name="base_subnational"
 				label="Home state"
 				items={Object.keys(americanStates)}
-				isOptional
+				optional
 				onSelect={() => ($formData.base_city = '')}
 			/>
 		{:else if $formData.base_country === 'Canada'}
@@ -174,7 +149,7 @@
 				name="base_subnational"
 				label="Home province"
 				items={Object.keys(canadianProvinces)}
-				isOptional
+				optional
 				onSelect={() => ($formData.base_city = '')}
 			/>
 		{/if}
@@ -185,16 +160,10 @@
 				name="base_city"
 				label="Home city"
 				items={chineseProvinces[$formData.base_subnational]}
-				isOptional
+				optional
 			/>
 		{:else if $formData.base_country && ($formData.base_subnational || !isCityState($formData.base_country))}
-			<FormField {form} name="base_city">
-				<Form.Control let:attrs>
-					<Form.Label class="optional-field">Home city</Form.Label>
-					<Input class="w-[360px]" {...attrs} bind:value={$formData.base_city} />
-				</Form.Control>
-				<Form.FieldErrors />
-			</FormField>
+			<Input {form} name="base_city" label="Home city" maxlength={100} optional />
 		{/if}
 
 		<Form.Field {form} name="comments">
@@ -207,9 +176,6 @@
 		</Form.Field>
 
 		<Form.Button class="w-fit min-w-24">Submit</Form.Button>
+		<!-- <SuperDebug data={$formData} /> -->
 	</form>
 </Section>
-
-<div class="mt-12 max-w-prose">
-	<SuperDebug data={$formData} />
-</div>

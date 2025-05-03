@@ -1,26 +1,28 @@
 <script lang="ts">
 	import { tick } from 'svelte';
+	import type { FormPath, SuperForm } from 'sveltekit-superforms';
 
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Popover from '$lib/components/ui/popover/index';
 	import * as Command from '$lib/components/ui/command/index';
-
 	import { cn } from '$lib/utils';
 	import { buttonVariants } from '$lib/components/ui/button/index';
 	import ChevronDown from 'lucide-svelte/icons/chevron-down';
 	import Check from 'lucide-svelte/icons/check';
 
-	import type { SuperForm } from 'sveltekit-superforms';
-
+	import { updateStore } from '$lib/util/siteUtils';
 	import { normalizeSelectItems, type SelectOption } from '$lib/util/formUtils';
 
-	export let form: SuperForm<any>;
-	export let name: string;
+	type AnySchema = Record<string, unknown>;
+	type T = $$Generic<AnySchema>;
+
+	export let form: SuperForm<T>;
+	export let name: FormPath<T>;
 	export let label: string;
 	export let items: (SelectOption | string | number)[];
 	export let width: string = 'w-[360px]';
 	export let description: string = '';
-	export let isOptional: boolean = false;
+	export let optional: boolean = false;
 	export let disableSearch: boolean = false;
 	export let emptyText: string | undefined = undefined;
 	export let searchDisabledEmptyText: string | undefined = undefined;
@@ -47,7 +49,7 @@
 <Form.Field {form} {name} class="flex flex-col text-left">
 	<Popover.Root bind:open let:ids>
 		<Form.Control let:attrs>
-			<Form.Label class={cn('pb-1', isOptional ? 'optional-field' : '')}>{label}</Form.Label>
+			<Form.Label class={cn('pb-0.5', optional ? 'optional-field' : '')}>{label}</Form.Label>
 			<Popover.Trigger
 				role="combobox"
 				class={cn(
@@ -85,11 +87,12 @@
 							class="flex gap-2 items-center"
 							value={item.value}
 							onSelect={() => {
-								// Order of operation critical;
-								// changing order results in UI failing to update properly
+								// Order of operation critical:
 								closeAndFocusTrigger(ids.trigger);
 								onSelect();
-								$formData[name] = item.value;
+								// Update form data (calling a function as TS would complain
+								// about writing "$formData[name] = item.value" here directly
+								updateStore(form.form, name, item.value);
 								postSelect();
 							}}
 						>
@@ -106,8 +109,8 @@
 			</Command.Root>
 		</Popover.Content>
 	</Popover.Root>
-	<Form.FieldErrors />
 	{#if description}
 		<Form.Description>{description}</Form.Description>
 	{/if}
+	<Form.FieldErrors />
 </Form.Field>

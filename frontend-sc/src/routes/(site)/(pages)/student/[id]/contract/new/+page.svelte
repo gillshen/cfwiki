@@ -2,12 +2,11 @@
 	import { superForm } from 'sveltekit-superforms';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
-	import FormField from '$lib/components/ui/form/form-field.svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
+	import Input from '$lib/components/forms/Input.svelte';
 
 	import { activeYears } from '$lib/util/dateUtils';
 	import { contractStatuses, contractTypes } from '$lib/api/contract';
@@ -17,7 +16,7 @@
 	export let data;
 
 	const form = superForm(data.newContractForm);
-	const { form: formData, enhance } = form;
+	const { enhance } = form;
 </script>
 
 <svelte:head>
@@ -47,24 +46,15 @@
 		<Combobox {form} name="type" label="Type" items={Array.from(contractTypes)} />
 		<Combobox {form} name="target_year" label="Target year" items={activeYears()} />
 		<Combobox {form} name="status" label="Status" items={Array.from(contractStatuses)} />
-
-		<FormField {form} name="date" class="pb-1">
-			<Form.Control let:attrs>
-				<Form.Label class="optional-field">Date signed</Form.Label>
-				<Input type="date" class="w-[360px]" {...attrs} bind:value={$formData.date} />
-			</Form.Control>
-			<Form.FieldErrors />
-		</FormField>
-
+		<Input {form} name="date" label="Date signed" type="date" class="pb-0.5" optional />
 		<Combobox
 			{form}
 			name="student_progression_when_signed"
 			label="Student progression"
 			items={allProgressionsT}
-			isOptional
+			optional
 		/>
-
 		<Form.Button class="w-fit min-w-24">Submit</Form.Button>
-		<!-- <SuperDebug data={$formData} /> -->
+		<!-- <SuperDebug data={form.form} /> -->
 	</form>
 </Section>
