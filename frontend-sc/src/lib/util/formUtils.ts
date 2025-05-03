@@ -8,7 +8,7 @@ export const formAction = <T extends ZodObject<any>>(
 	schema: T,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	apiCall: (data: any) => Promise<Response>,
-	onSuccess?: (params: { event?: RequestEvent; response?: Response }) => void
+	onSuccess?: (params: { event?: RequestEvent; response?: Response }) => Promise<any>
 ) => {
 	return async (event: RequestEvent) => {
 		const form = await superValidate(event.request, zod(schema));
@@ -24,16 +24,10 @@ export const formAction = <T extends ZodObject<any>>(
 			return message(form, 'Sorry, an error occurred', { status: 400 });
 		}
 
-		if (onSuccess === undefined) {
-			return message(form, 'success');
+		if (onSuccess) {
+			await onSuccess({ event, response });
 		}
-
-		if (response.status === 204) {
-			// DELETE successful
-			return onSuccess({ event });
-		}
-
-		return onSuccess({ event, response });
+		return message(form, 'success');
 	};
 };
 

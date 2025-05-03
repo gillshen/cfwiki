@@ -1,6 +1,8 @@
 <script lang="ts">
+	import type { ComponentType } from 'svelte';
 	import * as Dialog from '$lib/components/ui/dialog/index';
 	import { buttonVariants } from '$lib/components/ui/button/index';
+	import { cn } from '$lib/utils';
 
 	export let buttonVariant:
 		| 'outline'
@@ -12,6 +14,9 @@
 		| undefined = 'outline';
 	export let buttonSize: 'sm' | 'default' | 'lg' | 'icon' | undefined = 'default';
 	export let buttonText: string = '';
+	export let buttonIcon: ComponentType | undefined = undefined;
+	export let buttonIconClass: string = '';
+	export let buttonClass: string = '';
 	export let contentClass: string = '';
 	export let dialogTitle: string = '';
 	export let open: boolean = false;
@@ -19,10 +24,20 @@
 </script>
 
 <Dialog.Root bind:open>
-	<Dialog.Trigger class={buttonVariants({ variant: buttonVariant, size: buttonSize })} {disabled}
-		>{buttonText}</Dialog.Trigger
+	<Dialog.Trigger
+		class={cn(
+			buttonVariants({ variant: buttonVariant, size: buttonSize }),
+			'flex items-center',
+			buttonClass
+		)}
+		{disabled}
 	>
-	<Dialog.Content class={contentClass}>
+		{#if buttonIcon}
+			<svelte:component this={buttonIcon} class={buttonIconClass} />
+		{/if}
+		{buttonText}
+	</Dialog.Trigger>
+	<Dialog.Content class={cn('max-h-[calc(100vh-48px)] overflow-auto', contentClass)}>
 		<Dialog.Header>
 			{#if dialogTitle}
 				<Dialog.Title>{dialogTitle}</Dialog.Title>

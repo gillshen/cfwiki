@@ -22,6 +22,8 @@
 	export let description: string = '';
 	export let isOptional: boolean = false;
 	export let disableSearch: boolean = false;
+	export let emptyText: string | undefined = undefined;
+	export let searchDisabledEmptyText: string | undefined = undefined;
 	export let onSelect: () => void = () => {};
 	export let postSelect: () => void = () => {};
 
@@ -42,14 +44,10 @@
 	}
 </script>
 
-<Form.Field {form} {name} class="flex flex-col">
+<Form.Field {form} {name} class="flex flex-col text-left">
 	<Popover.Root bind:open let:ids>
 		<Form.Control let:attrs>
-			{#if isOptional}
-				<Form.Label class="pb-1 optional-field">{label}</Form.Label>
-			{:else}
-				<Form.Label class="pb-1">{label}</Form.Label>
-			{/if}
+			<Form.Label class={cn('pb-1', isOptional ? 'optional-field' : '')}>{label}</Form.Label>
 			<Popover.Trigger
 				role="combobox"
 				class={cn(
@@ -72,9 +70,14 @@
 				{#if !disableSearch}
 					<Command.Input placeholder="Search..." />
 				{/if}
-				<Command.Empty
-					>{disableSearch ? 'No available options' : 'No matching options found'}</Command.Empty
-				>
+				<Command.Empty>
+					<p>
+						{disableSearch
+							? (searchDisabledEmptyText ?? 'No options available')
+							: (emptyText ?? 'No matching options found')}
+					</p>
+					<slot name="if-not-found" />
+				</Command.Empty>
 				<Command.List>
 					{#each normalizedItems as item}
 						<Command.Item
@@ -103,8 +106,8 @@
 			</Command.Root>
 		</Popover.Content>
 	</Popover.Root>
+	<Form.FieldErrors />
 	{#if description}
 		<Form.Description>{description}</Form.Description>
 	{/if}
-	<Form.FieldErrors />
 </Form.Field>

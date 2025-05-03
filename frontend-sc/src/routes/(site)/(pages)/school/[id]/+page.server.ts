@@ -1,4 +1,3 @@
-import type { PageServerLoadEvent } from './$types';
 import { redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
@@ -10,7 +9,7 @@ import { deleteSchema } from '$lib/schemas/delete';
 import { formAction } from '$lib/util/formUtils';
 import { fetchEnrollments } from '$lib/api/enrollment';
 
-export async function load(event: PageServerLoadEvent) {
+export async function load(event) {
 	const { school } = await event.parent();
 
 	return {
@@ -24,7 +23,7 @@ export async function load(event: PageServerLoadEvent) {
 export const actions = {
 	updateSchool: formAction(schoolSchema, updateSchool),
 
-	deleteSchool: formAction(deleteSchema, deleteSchool, () => {
+	deleteSchool: formAction(deleteSchema, deleteSchool, async () => {
 		throw redirect(303, '/home');
 	})
 };

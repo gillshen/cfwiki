@@ -1,7 +1,6 @@
 <script lang="ts">
+	import { superForm } from 'sveltekit-superforms';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
-
-	import Button from '$lib/components/ui/button/button.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Pencil from 'lucide-svelte/icons/pencil-line';
 
@@ -9,6 +8,8 @@
 	import Section from '$lib/components/containers/Section.svelte';
 	import CoApplicationsDisplay from '$lib/components/widgets/CoApplicationsDisplay.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
+	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
+	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
 	import countryFlags from '$lib/constants/countries';
 
 	import {
@@ -31,6 +32,19 @@
 	$: qsRank = formatSchoolRankingEntry(
 		getSchoolRankingEntry({ school: data.school, rankingName: 'QS World' })
 	);
+
+	let schoolFormOpen = false;
+
+	const schoolForm = superForm(data.schoolForm, {
+		resetForm: false,
+		onUpdated({ form }) {
+			if (form.valid) {
+				console.log(form);
+				schoolFormOpen = false;
+			}
+		}
+	});
+	const { enhance: schoolFormEnhance } = schoolForm;
 </script>
 
 <svelte:head>
@@ -47,7 +61,7 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<section class="w-fit min-w-[60ch] mb-2 space-y-2">
+<section class="w-fit min-w-[60ch] mb-4 space-y-2">
 	<h1 class="page-title">{data.school.name}</h1>
 	<div class="flex flex-row gap-2 items-center text-sm">
 		{#if data.school.alt_name}
@@ -66,12 +80,29 @@
 				{/if}
 			</div>
 		{/if}
-		<Button
-			variant="link"
-			class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80"
-		>
-			<Pencil class="mr-1 size-4" />Edit
-		</Button>
+		{#key data.school}
+			<ButtonDialog
+				buttonVariant="link"
+				buttonSize="sm"
+				buttonText="Edit"
+				buttonClass="font-normal text-muted-foreground hover:no-underline hover:text-primary"
+				buttonIcon={Pencil}
+				buttonIconClass="size-4 mr-1"
+				contentClass="min-w-[529px]"
+				dialogTitle="Edit School Profile"
+				open={schoolFormOpen}
+			>
+				<form
+					method="POST"
+					action="?/updateSchool"
+					class="flex flex-col gap-4 items-start justify-start"
+					use:schoolFormEnhance
+					id="school-form"
+				>
+					<SchoolForm form={schoolForm} hideSchoolType />
+				</form>
+			</ButtonDialog>
+		{/key}
 	</div>
 </section>
 

@@ -51,7 +51,7 @@
 	<form
 		method="POST"
 		action="?/updatePassword"
-		class="max-w-prose space-y-6 mt-4"
+		class="max-w-prose space-y-6"
 		id="password-form"
 		use:enhance
 	>
