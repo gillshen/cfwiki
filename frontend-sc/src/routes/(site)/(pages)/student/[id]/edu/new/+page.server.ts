@@ -3,8 +3,8 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { enrollmentSchema } from '$lib/schemas/enrollment';
 import { schoolSchema } from '$lib/schemas/school';
-import { createSchool, fetchSchools, type School } from '$lib/api/school';
-import { formAction } from '$lib/util/formUtils.js';
+import { createSchool, fetchSchools } from '$lib/api/school';
+import { formAction } from '$lib/util/formUtils';
 import { createOrUpdateEnrollment } from '$lib/api/enrollment';
 
 export async function load() {

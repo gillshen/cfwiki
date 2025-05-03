@@ -19,14 +19,14 @@
 
 	export let data;
 
-	const enrollmentForm = superForm(data.newEnrollmentForm);
-	const { form: enrollmentFormData, enhance: enrollmentFormEnhance } = enrollmentForm;
+	const form = superForm(data.newEnrollmentForm);
+	const { form: formData, enhance } = form;
 
 	const schoolForm = superForm(data.newSchoolForm, {
 		onUpdated({ form }) {
 			// restore school type selection and set school selection
-			$enrollmentFormData._school_type = form.data.type;
-			$enrollmentFormData._school = form.data.name;
+			$formData._school_type = form.data.type;
+			$formData._school = form.data.name;
 		}
 	});
 	const { form: schoolFormData, enhance: schoolFormEnhance } = schoolForm;
@@ -35,16 +35,16 @@
 	let progressions: string[];
 
 	$: {
-		if ($enrollmentFormData._school_type === 'Secondary School') {
+		if ($formData._school_type === 'Secondary School') {
 			programTypeItems = ['Secondary School'];
 			progressions = secondarySchoolProgressions;
-			$enrollmentFormData.program_type = 'Secondary School';
+			$formData.program_type = 'Secondary School';
 			$schoolFormData.type = 'Secondary School';
-		} else if ($enrollmentFormData._school_type === 'University') {
+		} else if ($formData._school_type === 'University') {
 			programTypeItems = ['UG Freshman', 'UG Transfer', "Master's"];
 			progressions = universityProgressions;
-			if ($enrollmentFormData.program_type === 'Secondary School') {
-				$enrollmentFormData.program_type = '';
+			if ($formData.program_type === 'Secondary School') {
+				$formData.program_type = '';
 			}
 			$schoolFormData.type = 'University';
 		} else {
@@ -85,13 +85,13 @@
 			method="POST"
 			action="?/createEnrollment"
 			class="max-w-prose space-y-6 mt-4"
-			use:enrollmentFormEnhance
+			use:enhance
 			id="enrollment-form"
 		>
 			<input type="number" name="student" bind:value={data.student.id} hidden />
 
 			<RadioGroup
-				form={enrollmentForm}
+				{form}
 				name="_school_type"
 				label="School type"
 				items={[
@@ -99,31 +99,30 @@
 					{ label: 'Secondary School', value: 'Secondary School' }
 				]}
 				onValueChange={() => {
-					$enrollmentFormData._school = '';
-					$enrollmentFormData.curriculum = '';
+					$formData._school = '';
+					$formData.curriculum = '';
 				}}
 			/>
 
 			<Combobox
-				form={enrollmentForm}
+				{form}
 				name="_school"
 				label="School"
 				items={schools
-					.filter((school) => school.type === $enrollmentFormData._school_type)
+					.filter((school) => school.type === $formData._school_type)
 					.sort(orderByName)
 					.map((school) => school.name)}
 				width="w-[480px]"
-				disableSearch={!$enrollmentFormData._school_type}
-				searchDisabledEmptyText={$enrollmentFormData._school_type
+				disableSearch={!$formData._school_type}
+				searchDisabledEmptyText={$formData._school_type
 					? undefined
-					: 'Have you specified a school type?'}
+					: 'You need to specify a school type first'}
 				postSelect={() => {
-					$enrollmentFormData.school =
-						schools.find((school) => school.name === $enrollmentFormData._school)?.id ?? 0;
+					$formData.school = schools.find((school) => school.name === $formData._school)?.id ?? 0;
 				}}
 			>
 				<div slot="if-not-found">
-					{#if $enrollmentFormData._school_type}
+					{#if $formData._school_type}
 						<ButtonDialog
 							buttonVariant="secondary"
 							buttonText="Add School"
@@ -147,80 +146,67 @@
 				</div>
 			</Combobox>
 
-			<input type="number" name="school" bind:value={$enrollmentFormData.school} hidden />
+			<input type="number" name="school" bind:value={$formData.school} hidden />
 
 			<Combobox
-				form={enrollmentForm}
+				{form}
 				name="program_type"
 				label="Program type"
 				items={programTypeItems}
 				disableSearch
-				searchDisabledEmptyText="Have you specified a school type?"
+				searchDisabledEmptyText="You need to specify a school type first"
 			/>
 
-			<FormField form={enrollmentForm} name="start_date" class="pb-1">
+			<FormField {form} name="start_date" class="pb-1">
 				<Form.Control let:attrs>
 					<Form.Label>Start date</Form.Label>
-					<Input
-						type="date"
-						class="w-[360px]"
-						{...attrs}
-						bind:value={$enrollmentFormData.start_date}
-					/>
+					<Input type="date" class="w-[360px]" {...attrs} bind:value={$formData.start_date} />
 				</Form.Control>
 				<Form.FieldErrors />
 			</FormField>
 
 			<Combobox
-				form={enrollmentForm}
+				{form}
 				name="start_progression"
 				label="Entering as"
 				items={progressions}
 				isOptional
+				searchDisabledEmptyText="You need to specify a school type first"
 				disableSearch
 			/>
 
-			<FormField form={enrollmentForm} name="end_date" class="pb-1">
+			<FormField {form} name="end_date" class="pb-1">
 				<Form.Control let:attrs>
 					<Form.Label class="optional-field">End date</Form.Label>
-					<Input
-						type="date"
-						class="w-[360px]"
-						{...attrs}
-						bind:value={$enrollmentFormData.end_date}
-					/>
+					<Input type="date" class="w-[360px]" {...attrs} bind:value={$formData.end_date} />
 				</Form.Control>
 				<Form.FieldErrors />
 			</FormField>
 
 			<Combobox
-				form={enrollmentForm}
+				{form}
 				name="end_progression"
 				label="Leaving as"
 				items={progressions}
 				isOptional
 				disableSearch
+				searchDisabledEmptyText="You need to specify a school type first"
 			/>
 
-			{#if $enrollmentFormData._school_type === 'Secondary School'}
+			{#if $formData._school_type === 'Secondary School'}
 				<Combobox
-					form={enrollmentForm}
+					{form}
 					name="curriculum"
 					label="Curriculum"
 					items={['A-level', 'AP', 'IB', 'Other']}
 					isOptional
 					disableSearch
 				/>
-			{:else if $enrollmentFormData._school_type === 'University'}
-				<FormField form={enrollmentForm} name="curriculum">
+			{:else if $formData._school_type === 'University'}
+				<FormField {form} name="curriculum">
 					<Form.Control let:attrs>
 						<Form.Label class="optional-field">Program or major</Form.Label>
-						<Input
-							class="w-[360px]"
-							maxlength={50}
-							{...attrs}
-							bind:value={$enrollmentFormData.curriculum}
-						/>
+						<Input class="w-[360px]" maxlength={50} {...attrs} bind:value={$formData.curriculum} />
 					</Form.Control>
 					<Form.FieldErrors />
 				</FormField>

@@ -3,7 +3,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { contractSchema } from '$lib/schemas/contract';
-import { formAction } from '$lib/util/formUtils.js';
+import { formAction } from '$lib/util/formUtils';
 import { createOrUpdateContract } from '$lib/api/contract';
 
 export async function load() {

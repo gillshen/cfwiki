@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-
 	import { superForm } from 'sveltekit-superforms';
 	import { type Selected } from 'bits-ui';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
@@ -16,6 +14,8 @@
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import StudentApplicationCard from '$lib/components/widgets/StudentApplicationCard.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
+	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
+	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
 
 	import { orderByName } from '$lib/util/schoolUtils';
 	import { enhanceDisplayName, orderByName as orderByProgramName } from '$lib/util/programUtils';
@@ -27,6 +27,14 @@
 
 	const form = superForm(data.newApplicationForm);
 	const { form: formData, enhance } = form;
+
+	const schoolForm = superForm(data.newSchoolForm, {
+		onUpdated({ form }) {
+			// set school selection
+			$formData._school = form.data.name;
+		}
+	});
+	const { enhance: schoolFormEnhance } = schoolForm;
 
 	const groupedServices = Object.entries(groupByCfPerson(data.contract.services)).sort();
 
@@ -47,10 +55,12 @@
 
 	// Runs on initial load AND whenever the page URL changes
 	$: {
-		console.log('Page URL changed:', $page.url);
-		console.table(data.contract);
+		// console.log('Page URL changed:', $page.url);
+		// console.table(data.contract);
 		$formData.staff_names = selectedStaff.map((item) => item.value);
 	}
+
+	let schoolFormOpen = false;
 </script>
 
 <svelte:head>
@@ -97,7 +107,28 @@
 						$formData._program = '';
 						$formData.round = 0;
 					}}
-				/>
+				>
+					<div slot="if-not-found">
+						<ButtonDialog
+							buttonVariant="secondary"
+							buttonText="Add School"
+							buttonClass="mt-4 mx-auto"
+							contentClass="min-w-[529px]"
+							dialogTitle="Create School Profile"
+							open={schoolFormOpen}
+						>
+							<form
+								method="POST"
+								action="?/createSchool"
+								class="flex flex-col gap-4 items-start justify-start"
+								use:schoolFormEnhance
+								id="school-form"
+							>
+								<SchoolForm form={schoolForm} />
+							</form>
+						</ButtonDialog>
+					</div>
+				</Combobox>
 
 				<Combobox
 					{form}
