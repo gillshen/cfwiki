@@ -20,13 +20,13 @@
 	<Card.Header>
 		<Card.Title>
 			{#each application.schools as school}
-				<div>{school.name}</div>
+				<p class="text-pretty leading-5">{school.name}</p>
 			{/each}
 		</Card.Title>
 		<Card.Description
-			class={compact ? 'inline-flex flex-wrap items-center gap-2' : 'flex flex-col gap-2'}
+			class={compact ? 'inline-flex flex-wrap items-center gap-2' : 'flex flex-col gap-2 pt-2'}
 		>
-			<div class="text-muted-foreground">{application.program.display_name}</div>
+			<p class="text-muted-foreground text-pretty">{application.program.display_name}</p>
 			<Badge variant="outline" class="w-fit h-5 bg-muted -translate-x-[1px]">{badgeText}</Badge>
 		</Card.Description>
 	</Card.Header>
@@ -38,7 +38,7 @@
 		<Card.Content class="pt-4 flex flex-col gap-2 flex-grow">
 			<ul class="list-disc ml-3.5 flex flex-col gap-1 text-muted-foreground">
 				{#each application.majors as major}
-					<li>{major}</li>
+					<li class="text-pretty">{major}</li>
 				{/each}
 			</ul>
 		</Card.Content>

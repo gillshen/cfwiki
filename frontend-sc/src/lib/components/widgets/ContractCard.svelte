@@ -7,6 +7,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Pencil from 'lucide-svelte/icons/pencil-line';
 	import Chevron from 'lucide-svelte/icons/chevron-right';
+	import Signature from 'lucide-svelte/icons/signature';
 
 	import type { CfUserListItem } from '$lib/api/user';
 	import type { Contract } from '$lib/api/student';
@@ -98,7 +99,8 @@
 	</Card.Content>
 
 	{#if contract.date || contract.student_progression_when_signed}
-		<Card.Footer class="pb-5 flex items-center gap-1 text-muted-foreground text-xs">
+		<Card.Footer class="pb-5 flex items-center gap-1 text-muted-foreground text-xs justify-center">
+			<Signature class="size-3" />
 			{#if contract.student_progression_when_signed}
 				<div>{contract.student_progression_when_signed}</div>
 			{/if}

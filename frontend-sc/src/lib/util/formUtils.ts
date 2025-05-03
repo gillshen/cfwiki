@@ -8,7 +8,7 @@ export const formAction = <T extends ZodObject<any>>(
 	schema: T,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	apiCall: (data: any) => Promise<Response>,
-	onSuccess?: (params: { event?: RequestEvent; response?: Response }) => Promise<any>
+	onSuccess?: (params: { event?: RequestEvent; response?: Response }) => Promise<unknown>
 ) => {
 	return async (event: RequestEvent) => {
 		const form = await superValidate(event.request, zod(schema));

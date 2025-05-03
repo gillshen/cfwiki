@@ -8,15 +8,35 @@
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import Input from '$lib/components/forms/Input.svelte';
 
+	import { createTitle } from '$lib/util/siteUtils';
 	import { activeYears } from '$lib/util/dateUtils';
 	import { contractStatuses, contractTypes } from '$lib/api/contract';
-	import { allProgressionsT } from '$lib/constants/progressions';
-	import { createTitle } from '$lib/util/siteUtils';
+
+	import {
+		allProgsWithContractTerms,
+		secondaryProgsWithContractTerms,
+		universityProgsWithContractTerms
+	} from '$lib/constants/progressions';
 
 	export let data;
 
 	const form = superForm(data.newContractForm);
-	const { enhance } = form;
+	const { form: formData, enhance } = form;
+
+	let progressions: string[];
+
+	$: {
+		if ($formData.type.startsWith('UG')) {
+			progressions = [...secondaryProgsWithContractTerms];
+		} else if ($formData.type === 'Graduate') {
+			progressions = [...universityProgsWithContractTerms];
+		} else {
+			progressions = [...allProgsWithContractTerms];
+		}
+		if (!progressions.includes($formData.student_progression_when_signed)) {
+			$formData.student_progression_when_signed = '';
+		}
+	}
 </script>
 
 <svelte:head>
@@ -51,7 +71,7 @@
 			{form}
 			name="student_progression_when_signed"
 			label="Student progression"
-			items={allProgressionsT}
+			items={progressions}
 			optional
 		/>
 		<Form.Button class="w-fit min-w-24">Submit</Form.Button>

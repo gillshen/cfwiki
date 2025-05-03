@@ -52,7 +52,7 @@
 						{/each}
 					</div>
 				</Table.Cell>
-				<Table.Cell class="truncate">{application.program.display_name}</Table.Cell>
+				<Table.Cell class="max-w-[270px] truncate">{application.program.display_name}</Table.Cell>
 				<Table.Cell class="truncate">{application.year} {application.round_name}</Table.Cell>
 				<Table.Cell
 					class={cn(

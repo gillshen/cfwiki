@@ -14,7 +14,7 @@
 
 	import { createTitle } from '$lib/util/siteUtils';
 	import { orderByName } from '$lib/util/schoolUtils';
-	import { universityProgressions, secondarySchoolProgressions } from '$lib/constants/progressions';
+	import { universityProgressions, secondaryProgressions } from '$lib/constants/progressions';
 
 	export let data;
 
@@ -36,7 +36,7 @@
 	$: {
 		if ($formData._school_type === 'Secondary School') {
 			programTypeItems = ['Secondary School'];
-			progressions = secondarySchoolProgressions;
+			progressions = secondaryProgressions;
 			$formData.program_type = 'Secondary School';
 			$schoolFormData.type = 'Secondary School';
 		} else if ($formData._school_type === 'University') {

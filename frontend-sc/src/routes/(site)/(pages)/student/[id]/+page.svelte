@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { type ComponentType } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
 	import { superForm } from 'sveltekit-superforms';
 
 	import * as Tabs from '$lib/components/ui/tabs/index';
@@ -38,7 +40,6 @@
 	import { academicTerms } from '$lib/constants/progressions';
 	import { actOverall, ieltsOverall, toeflOverall } from '$lib/util/scoresUtils';
 	import { createTitle } from '$lib/util/siteUtils';
-	import type { ComponentType } from 'svelte';
 
 	export let data;
 
@@ -75,6 +76,20 @@
 		relevantApplicationTypes = applicationTypeMap[selectedContract?.type ?? ''];
 		relevantYears = activeYears().filter((y) => y <= (selectedContract?.target_year ?? 9999));
 	};
+
+	afterNavigate(() => {
+		// simplify contract creation by writing in likely values
+		const contractsInEffect = data.student.contracts.filter(
+			(contract) => contract.status === 'In effect'
+		);
+		if (contractsInEffect.length === 1) {
+			const { id, type, target_year } = contractsInEffect[0];
+			$formData.contract = id.toString() as unknown as number;
+			$formData.type = type;
+			$formData.year = target_year.toString() as unknown as number;
+			onContractSelection();
+		}
+	});
 </script>
 
 <svelte:head>

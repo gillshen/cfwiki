@@ -25,7 +25,7 @@ export const newApplicationPrepSchema = z.object({
 	contract: z.number().min(1, 'This field is required'),
 	type: z.string().min(1, 'This field is required'),
 	year: z.number().min(1, 'This field is required'),
-	term: z.string().min(1, 'This field is required')
+	term: z.string().min(1, 'This field is required').default('Fall')
 });
 
 export type NewApplicationPrepSchema = typeof newApplicationPrepSchema;
@@ -37,7 +37,7 @@ export type NewApplicationPrepToken = {
 	type: 'UG Freshman' | 'UG Transfer' | 'Graduate' | 'Non-degree';
 	year: string;
 	term: string;
-}
+};
 
 export const roundChangeSchema = z.object({
 	id: z.number(),

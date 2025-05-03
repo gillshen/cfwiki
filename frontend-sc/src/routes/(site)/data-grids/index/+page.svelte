@@ -9,7 +9,7 @@
 	<title>{createTitle('Data Center')}</title>
 </svelte:head>
 
-<BreadcrumbContainer>
+<BreadcrumbContainer includeHome>
 	<Breadcrumb.Item>
 		<Breadcrumb.Page>Data Grids</Breadcrumb.Page>
 	</Breadcrumb.Item>

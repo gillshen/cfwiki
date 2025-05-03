@@ -3,19 +3,19 @@ import { toLongDate } from '$lib/util/dateUtils';
 import { termOrder } from '$lib/constants/progressions';
 
 const _roundOrder: Record<string, number> = {
-	'ED\\s*1?': 0,
-	REA: 1,
-	'EA\\s*1?': 2,
-	'ED\\s*2': 3,
-	'EA\\s*2': 4,
-	Priority: 5,
-	RD: 6,
-	Regular: 6,
-	'Round\\s*1': 7,
-	'Round\\s*2': 8,
-	'Round\\s*3': 9,
-	'Round\\s*4': 10,
-	'Round\\s*5': 11,
+	'ED\\s*1?': 1,
+	REA: 2,
+	'EA\\s*1?': 3,
+	'ED\\s*2': 11,
+	'EA\\s*2': 12,
+	Priority: 21,
+	RD: 31,
+	Regular: 32,
+	'Round\\s*1': 41,
+	'Round\\s*2': 42,
+	'Round\\s*3': 43,
+	'Round\\s*4': 44,
+	'Round\\s*5': 45,
 	Rolling: 99
 };
 
@@ -31,58 +31,47 @@ export function compareRoundName(nameA: string, nameB: string) {
 	const indexA = _index(nameA);
 	const indexB = _index(nameB);
 
-	if (indexA === indexB || indexA === undefined || indexB === undefined) {
-		return nameA.localeCompare(nameB);
-	} else {
-		return indexA - indexB;
-	}
+	return indexA && indexB && indexA !== indexB ? indexA - indexB : nameA.localeCompare(nameB);
 }
 
-export const orderByRoundName = (a: ApplicationRoundListItem, b: ApplicationRoundListItem) => {
-	return compareRoundName(a.name, b.name);
-};
+export const orderByRoundName = (a: ApplicationRoundListItem, b: ApplicationRoundListItem) =>
+	compareRoundName(a.name, b.name);
 
-export const orderByDueDate = (a: ApplicationRoundListItem, b: ApplicationRoundListItem) => {
-	if (a.due_date && b.due_date) {
-		return a.due_date.localeCompare(b.due_date);
-	} else {
-		return 0;
-	}
-};
+export const orderByDueDate = (a: ApplicationRoundListItem, b: ApplicationRoundListItem) =>
+	a.due_date && b.due_date ? a.due_date.localeCompare(b.due_date) : 0;
 
-export function filterSortRounds(
+export const filterSortRounds = (
 	rounds: ApplicationRoundListItem[],
 	year: number,
 	term: string
-): ApplicationRoundListItem[] {
-	return rounds
+): ApplicationRoundListItem[] =>
+	rounds
 		.filter((r) => r.program_iteration.year === year && r.program_iteration.term === term)
-		.sort((a, b) => compareRoundName(a.name, b.name))
+		.sort(orderByRoundName)
 		.sort(orderByDueDate);
-}
 
-export function formatRound(applRound: ApplicationRoundListItem): string {
-	if (applRound.due_date) {
-		return `${applRound.name} - ${toLongDate(applRound.due_date)}`;
+export function formatRound(round: ApplicationRoundListItem): string {
+	if (round.due_date) {
+		return `${round.name} - ${toLongDate(round.due_date)}`;
 	} else {
-		return applRound.name;
+		return round.name;
 	}
 }
 
 const _joiner = '\uffff';
 
 export function groupByYearTerm(
-	applRounds: ApplicationRoundListItem[]
+	rounds: ApplicationRoundListItem[]
 ): Record<string, ApplicationRoundListItem[]> {
 	const grouped: Record<string, ApplicationRoundListItem[]> = {};
 
-	for (const applRound of applRounds) {
-		const { year, term } = applRound.program_iteration;
+	for (const round of rounds) {
+		const { year, term } = round.program_iteration;
 		const key = `${term}${_joiner}${year}`;
 		if (!grouped[key]) {
 			grouped[key] = [];
 		}
-		grouped[key].push(applRound);
+		grouped[key].push(round);
 	}
 
 	const sortedGroups: Record<string, ApplicationRoundListItem[]> = {};
