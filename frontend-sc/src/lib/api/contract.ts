@@ -1,4 +1,6 @@
-import { createOrUpdate, get, patch, destroy } from '$lib/api/core';
+import { z } from 'zod';
+import type { ContractSchema } from '$lib/schemas/contract';
+import { createOrUpdate, get, destroy } from '$lib/api/core';
 
 export const contractTypes = ['UG Freshman', 'UG Transfer', 'Graduate', 'Other'] as const;
 export type ContractType = (typeof contractTypes)[number];
@@ -34,14 +36,10 @@ export async function fetchContract(id: number): Promise<ContractDetail> {
 	return await get(`contracts/${id}/`, 'Contract not found');
 }
 
-export async function createOrUpdateContract(data: any) {
+export async function createOrUpdateContract(data: z.infer<ContractSchema>) {
 	return await createOrUpdate(data, 'contracts');
 }
 
-export async function updateContract(data: any) {
-	return await patch(`contracts/${data.id}/update/`, data);
-}
-
-export async function deleteContract(data: any) {
+export async function deleteContract(data: { id: number }) {
 	return await destroy(`contracts/${data.id}/update/`);
 }

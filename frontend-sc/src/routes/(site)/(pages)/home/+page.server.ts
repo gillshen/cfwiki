@@ -1,6 +1,5 @@
 import { redirect } from '@sveltejs/kit';
 
-import { fetchUser } from '$lib/api/user';
 import { fetchComposedApplications } from '$lib/api/application';
 
 export async function load(event) {
@@ -10,10 +9,7 @@ export async function load(event) {
 		throw redirect(303, '/login');
 	}
 
-	const host = await fetchUser(username);
-
 	return {
-		host,
-		applications: fetchComposedApplications({ cfer: host.username })
+		applications: fetchComposedApplications({ cfer: username })
 	};
 }

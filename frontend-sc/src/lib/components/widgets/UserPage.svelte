@@ -13,7 +13,7 @@
 	import type { ComposedApplication } from '$lib/api/application';
 	import { defaultBanner } from '$lib/util/userUtils';
 
-	export let host: CfUserDetail;
+	export let user: CfUserDetail;
 	export let students: Promise<StudentOfCferListItem[]>;
 	export let applications: Promise<ComposedApplication[]>;
 </script>
@@ -24,12 +24,12 @@
 	</Breadcrumb.Item>
 	<Breadcrumb.Separator />
 	<Breadcrumb.Item>
-		<Breadcrumb.Page>{host.username}</Breadcrumb.Page>
+		<Breadcrumb.Page>{user.username}</Breadcrumb.Page>
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
 <section class="w-fit min-w-[60ch] mb-4 space-y-2">
-	<h1 class="page-title">{host.public_banner || defaultBanner(host.username)}</h1>
+	<h1 class="page-title">{user.public_banner || defaultBanner(user.username)}</h1>
 </section>
 
 <div class="w-full grid grid-cols-[minmax(480px,1fr)_240px]">
@@ -58,7 +58,7 @@
 								<Table.Body>
 									{#each students as student}
 										{#each student.contracts as contract}
-											{#if contract.services.map((s) => s.cf_username).includes(host.username)}
+											{#if contract.services.map((s) => s.cf_username).includes(user.username)}
 												<Table.Row>
 													<Table.Cell class="font-medium">{student.fullname}</Table.Cell>
 													<Table.Cell class="truncate"

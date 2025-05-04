@@ -1,4 +1,7 @@
+import { z } from 'zod';
+
 import { get, buildQuery, post, patch, destroy } from '$lib/api/core';
+import type { EnrollmentUpdateSchema, NewEnrollmentSchema } from '$lib/schemas/enrollment';
 import type { Grade } from '$lib/api/grade';
 import type { ContractStatus } from '$lib/api/contract';
 
@@ -44,27 +47,11 @@ export async function fetchEnrollment(id: number): Promise<EnrollmentDetail> {
 	return await get(`enrollments/${id}/`, 'Educational experience not found');
 }
 
-export async function createEnrollment(data: {
-	student: number;
-	school: number;
-	program_type: string;
-	start_date: string;
-	start_progression: string;
-	end_date: string;
-	end_progression: string;
-	curriculum: string;
-}) {
+export async function createEnrollment(data: z.infer<NewEnrollmentSchema>) {
 	return await post(`enrollments/new/`, data);
 }
 
-export async function updateEnrollment(data: {
-	id: number;
-	start_date: string;
-	start_progression: string;
-	end_date: string;
-	end_progression: string;
-	curriculum: string;
-}) {
+export async function updateEnrollment(data: z.infer<EnrollmentUpdateSchema>) {
 	return await patch(`enrollments/${data.id}/update/`, data);
 }
 

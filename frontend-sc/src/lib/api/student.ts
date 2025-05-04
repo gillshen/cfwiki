@@ -1,4 +1,7 @@
-import { get, patch, post, destroy, buildQuery } from '$lib/api/core';
+import { z } from 'zod';
+
+import { get, destroy, buildQuery, createOrUpdate } from '$lib/api/core';
+import type { StudentSchema } from '$lib/schemas/student';
 import type { ContractType, Service } from '$lib/api/contract';
 import type { EnrollmentByStudent } from '$lib/api/enrollment';
 import type { BaseGrade } from '$lib/api/grade';
@@ -140,37 +143,8 @@ export async function fetchStudent(id: number): Promise<StudentDetail> {
 	return await get(`students/${id}/`, 'Student not found');
 }
 
-export async function createStudent(data: {
-	surname: string;
-	given_name: string;
-	surname_first: boolean;
-	preferred_name: string;
-	gender: string;
-	citizenship: string;
-	date_of_birth: string;
-	base_country: string;
-	base_subnational: string;
-	base_city: string;
-	comments: string;
-}) {
-	return await post(`students/new/`, data);
-}
-
-export async function updateStudent(data: {
-	id: number;
-	surname: string;
-	given_name: string;
-	surname_first: boolean;
-	preferred_name: string;
-	gender: string;
-	citizenship: string;
-	date_of_birth: string;
-	base_country: string;
-	base_subnational: string;
-	base_city: string;
-	comments: string;
-}) {
-	return await patch(`students/${data.id}/update/`, data);
+export async function createOrUpdateStudent(data: z.infer<StudentSchema>) {
+	return await createOrUpdate(data, 'students');
 }
 
 export async function deleteStudent(data: { id: number }) {

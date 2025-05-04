@@ -1,4 +1,7 @@
+import { z } from 'zod';
+
 import { get, patch, post, destroy, buildQuery } from '$lib/api/core';
+import type { SchoolSchema } from '$lib/schemas/school';
 import type { ApplicationStats } from '$lib/api/stats';
 import type { RecognizedRanking } from '$lib/api/ranking';
 
@@ -59,14 +62,14 @@ export async function fetchSchool(id: number): Promise<School> {
 	return await get(`schools/${id}/`, 'School not found');
 }
 
-export async function createSchool(data: any) {
+export async function createSchool(data: z.infer<SchoolSchema>) {
 	return await post('schools/new/', data);
 }
 
-export async function updateSchool(data: any) {
+export async function updateSchool(data: z.infer<SchoolSchema> & { id: number }) {
 	return await patch(`schools/${data.id}/update/`, data);
 }
 
-export async function deleteSchool(data: any) {
+export async function deleteSchool(data: { id: number }) {
 	return await destroy(`schools/${data.id}/update/`);
 }

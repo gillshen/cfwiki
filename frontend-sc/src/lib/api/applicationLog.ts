@@ -1,3 +1,5 @@
+import { z } from 'zod';
+import type { ApplicationLogSchema } from '$lib/schemas/applicationLog';
 import { createOrUpdate, destroy } from '$lib/api/core';
 
 export type ApplicationStatus =
@@ -52,10 +54,10 @@ export type ApplicationLog = ApplicationLogBrief & {
 	updated: string;
 };
 
-export async function createOrUpdateApplicationLog(data: any) {
+export async function createOrUpdateApplicationLog(data: z.infer<ApplicationLogSchema>) {
 	return await createOrUpdate(data, 'application-logs');
 }
 
-export async function deleteApplicationLog(data: any) {
+export async function deleteApplicationLog(data: { id: number }) {
 	return await destroy(`application-logs/${data.id}/update/`);
 }

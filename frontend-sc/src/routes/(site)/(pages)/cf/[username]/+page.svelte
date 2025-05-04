@@ -9,4 +9,4 @@
 	<title>{createTitle(data.host.username)}</title>
 </svelte:head>
 
-<UserPage host={data.host} students={data.hostStudents} applications={data.hostApplications} />
+<UserPage user={data.host} students={data.hostStudents} applications={data.hostApplications} />

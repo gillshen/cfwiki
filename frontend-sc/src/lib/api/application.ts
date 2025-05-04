@@ -1,4 +1,6 @@
+import { z } from 'zod';
 import { get, post, patch, buildQuery, destroy } from '$lib/api/core';
+import type { ApplicationSchema } from '$lib/schemas/application';
 
 import type {
 	ApplicationLog,
@@ -184,18 +186,13 @@ export async function fetchApplication(id: number): Promise<ApplicationDetail> {
 	return await get(`applications/${id}/`, 'Application not found');
 }
 
-export async function createApplication(data: {
-	contract: number;
-	round: number;
-	major_1: string;
-	major_2: string;
-	major_3: string;
-	staff_names: string[];
-	default_log: string | null | undefined;
-}) {
+export async function createApplication(
+	data: z.infer<ApplicationSchema> & { default_log: string | null | undefined }
+) {
 	return await post('applications/new/', data);
 }
 
+// TODO make the form
 export async function updateApplication(data: {
 	id: number;
 	program_iteration: number;
@@ -205,6 +202,11 @@ export async function updateApplication(data: {
 	staff_names: string[];
 }) {
 	return await patch(`applications/${data.id}/update/`, data);
+}
+
+// TODO
+export async function switchRound() {
+	//
 }
 
 export async function deleteApplication(data: { id: number }) {
