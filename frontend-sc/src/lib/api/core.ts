@@ -17,7 +17,7 @@ export async function get(url: string, notFoundMessage?: string) {
 	}
 }
 
-export async function post(url: string, data: any) {
+export async function post(url: string, data: unknown) {
 	return await fetch(`${BASE}${url}`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
@@ -25,7 +25,7 @@ export async function post(url: string, data: any) {
 	});
 }
 
-export async function patch(url: string, data: any) {
+export async function patch(url: string, data: unknown) {
 	return await fetch(`${BASE}${url}`, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
@@ -33,7 +33,7 @@ export async function patch(url: string, data: any) {
 	});
 }
 
-export async function createOrUpdate(data: any, url: string) {
+export async function createOrUpdate(data: { id?: number }, url: string) {
 	if (data.id) {
 		return await patch(`${url}/${data.id}/update/`, data);
 	} else {
@@ -45,7 +45,7 @@ export async function destroy(url: string) {
 	return await fetch(`${BASE}${url}`, { method: 'DELETE' });
 }
 
-export function buildQuery(params?: Record<string, any>): string {
+export function buildQuery(params?: Record<string, unknown>): string {
 	if (!params) {
 		return '';
 	}

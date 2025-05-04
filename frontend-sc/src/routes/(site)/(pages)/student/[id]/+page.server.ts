@@ -1,4 +1,3 @@
-import type { PageServerLoadEvent } from './$types';
 import { redirect } from '@sveltejs/kit';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
@@ -6,12 +5,11 @@ import { zod } from 'sveltekit-superforms/adapters';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '$env/static/private';
 
+import { fetchComposedApplications } from '$lib/api/application';
+import { deleteSchema } from '$lib/schemas/delete';
+import { newApplicationPrepSchema } from '$lib/schemas/application';
 import { formAction } from '$lib/util/formUtils';
 import { deleteStudent } from '$lib/api/student';
-import { fetchComposedApplications } from '$lib/api/application';
-import { fetchSchools } from '$lib/api/school';
-import { contractSchema } from '$lib/schemas/contract';
-import { enrollmentSchema } from '$lib/schemas/enrollment';
 
 import {
 	toeflSchema,
@@ -26,11 +24,6 @@ import {
 	gmatScoreSchema,
 	lsatScoreSchema
 } from '$lib/schemas/scores';
-
-import { deleteSchema } from '$lib/schemas/delete';
-import { createOrUpdateContract, deleteContract } from '$lib/api/contract';
-import { createOrUpdateEnrollment, deleteEnrollment } from '$lib/api/enrollment';
-import { newApplicationPrepSchema } from '$lib/schemas/application';
 
 import {
 	createOrUpdateToeflScore,
@@ -57,16 +50,13 @@ import {
 	deleteLsatScore
 } from '$lib/api/scores';
 
-export async function load(event: PageServerLoadEvent) {
+export async function load(event) {
 	const { student } = await event.parent();
 
 	return {
-		student,
-		promisedSchools: fetchSchools(),
 		applications: fetchComposedApplications({ student: student.id }),
-		contractForm: await superValidate(zod(contractSchema)),
-		enrollmentForm: await superValidate(zod(enrollmentSchema)),
 		newApplicationPrepForm: await superValidate(zod(newApplicationPrepSchema)),
+		// TODO
 		scoreForms: {
 			toefl: await superValidate(zod(toeflSchema)),
 			ielts: await superValidate(zod(ieltschema)),
@@ -85,9 +75,6 @@ export async function load(event: PageServerLoadEvent) {
 }
 
 export const actions = {
-	createOrUpdateContract: formAction(contractSchema, createOrUpdateContract),
-	createOrUpdateEnrollment: formAction(enrollmentSchema, createOrUpdateEnrollment),
-
 	startApplication: async ({ request }) => {
 		const form = await superValidate(request, zod(newApplicationPrepSchema));
 		console.log(form.data);
@@ -115,8 +102,6 @@ export const actions = {
 		throw redirect(303, '/home');
 	}),
 
-	deleteContract: formAction(deleteSchema, deleteContract),
-	deleteEnrollment: formAction(deleteSchema, deleteEnrollment),
 	deleteToeflScore: formAction(deleteSchema, deleteToeflScore),
 	deleteIeltsScore: formAction(deleteSchema, deleteIeltsScore),
 	deleteDuolingoScore: formAction(deleteSchema, deleteDuolingoScore),

@@ -1,4 +1,4 @@
-import { get, createOrUpdate, destroy, buildQuery } from '$lib/api/core';
+import { get, buildQuery, post, patch, destroy } from '$lib/api/core';
 import type { Grade } from '$lib/api/grade';
 import type { ContractStatus } from '$lib/api/contract';
 
@@ -32,9 +32,10 @@ export type EnrollmentDetail = EnrollmentByStudent & {
 	student: { id: number; fullname: string };
 };
 
-export async function fetchEnrollments(
-	params?: Record<string, any>
-): Promise<EnrollmentListItem[]> {
+export async function fetchEnrollments(params?: {
+	school?: number;
+	program_type?: string;
+}): Promise<EnrollmentListItem[]> {
 	const queryString = buildQuery(params);
 	return await get(`enrollments/${queryString}`);
 }
@@ -43,24 +44,30 @@ export async function fetchEnrollment(id: number): Promise<EnrollmentDetail> {
 	return await get(`enrollments/${id}/`, 'Educational experience not found');
 }
 
-export async function createOrUpdateEnrollment(data: any) {
-	return await createOrUpdate(data, 'enrollments');
+export async function createEnrollment(data: {
+	student: number;
+	school: number;
+	program_type: string;
+	start_date: string;
+	start_progression: string;
+	end_date: string;
+	end_progression: string;
+	curriculum: string;
+}) {
+	return await post(`enrollments/new/`, data);
 }
 
-export async function deleteEnrollment(data: any) {
+export async function updateEnrollment(data: {
+	id: number;
+	start_date: string;
+	start_progression: string;
+	end_date: string;
+	end_progression: string;
+	curriculum: string;
+}) {
+	return await patch(`enrollments/${data.id}/update/`, data);
+}
+
+export async function deleteEnrollment(data: { id: number }) {
 	return await destroy(`enrollments/${data.id}/update/`);
 }
-
-export const progressionOrder: Record<string, number> = {
-	G7: 0,
-	G8: 1,
-	G9: 2,
-	G10: 3,
-	G11: 4,
-	G12: 5,
-	'Year 1': 6,
-	'Year 2': 7,
-	'Year 3': 8,
-	'Year 4': 9,
-	'Year 5': 10
-} as const;
