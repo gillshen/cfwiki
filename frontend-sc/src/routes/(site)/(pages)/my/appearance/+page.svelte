@@ -24,7 +24,7 @@
 	<title>{createTitle('Manage Appearance')}</title>
 </svelte:head>
 
-<BreadcrumbContainer>
+<BreadcrumbContainer includeHome>
 	<Breadcrumb.Item>
 		<Breadcrumb.Page>Appearance</Breadcrumb.Page>
 	</Breadcrumb.Item>

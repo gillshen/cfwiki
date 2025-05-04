@@ -16,6 +16,7 @@
 <Table.Root class="w-full max-w-[1080px] flex-grow-0">
 	<Table.Header>
 		<Table.Row>
+			<Table.Head class="font-semibold pl-2 w-7"></Table.Head>
 			<Table.Head class="font-semibold">School</Table.Head>
 			<Table.Head class="font-semibold">Program</Table.Head>
 			<Table.Head class="font-semibold min-w-[100px]">Year & Plan</Table.Head>
@@ -29,7 +30,6 @@
 				<Table.Head class="font-semibold min-w-[128px]">Major/Track</Table.Head>
 			{/if}
 			<Table.Head class="font-semibold">Status</Table.Head>
-			<Table.Head class="font-semibold pr-2"></Table.Head>
 		</Table.Row>
 	</Table.Header>
 	<Table.Body>
@@ -38,11 +38,16 @@
 			.sort(orderByStatus)
 			.sort(orderByYearDesc) as application}
 			<Table.Row>
+				<Table.Cell class="max-w-[16px] pl-2">
+					<div class="flex justify-start">
+						<LinkIcon href="/application/{application.id}" />
+					</div>
+				</Table.Cell>
 				<Table.Cell>
 					<div
 						class={cn(
 							'flex flex-col',
-							hasMajor3 ? 'max-w-[232px]' : hasMajor2 ? 'max-w-[270px]' : 'max-w-[300px]'
+							hasMajor3 ? 'max-w-[240px]' : hasMajor2 ? 'max-w-[270px]' : 'max-w-[300px]'
 						)}
 					>
 						{#each application.schools as school}
@@ -73,11 +78,6 @@
 				<Table.Cell class="flex max-w-[120px]">
 					<div class="min-w-0">
 						<ApplicationStatusSign {application} />
-					</div>
-				</Table.Cell>
-				<Table.Cell class="max-w-[16px] pr-2">
-					<div class="flex justify-end">
-						<LinkIcon href="/application/{application.id}" />
 					</div>
 				</Table.Cell>
 			</Table.Row>

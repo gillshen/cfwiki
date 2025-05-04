@@ -2,7 +2,7 @@
 	import { type ComponentType } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import { superForm } from 'sveltekit-superforms';
-
+	import { cn } from '$lib/utils';
 	import * as Tabs from '$lib/components/ui/tabs/index';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
@@ -59,6 +59,19 @@
 			label: `${contract.type} ${contract.target_year}`
 		}));
 
+	$: hasTestScores =
+		data.student.sat.length ||
+		data.student.act.length ||
+		data.student.ap.length ||
+		data.student.ib.length ||
+		data.student.alevel.length ||
+		data.student.gre.length ||
+		data.student.gmat.length ||
+		data.student.lsat.length ||
+		data.student.toefl.length ||
+		data.student.ielts.length ||
+		data.student.duolingo.length;
+
 	const applicationTypeMap: Record<string, string[]> = {
 		'': [],
 		'UG Freshman': ['UG Freshman', 'Non-degree'],
@@ -106,7 +119,7 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-8">
+<section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-6">
 	<h1 class="page-title">
 		{data.student.fullname}
 		{#if data.student.preferred_name}
@@ -236,35 +249,40 @@
 </Section>
 
 <Section id="test-scores" title="Test Scores">
-	<div class="flex gap-6 flex-wrap items-stretch pt-2 empty:pt-0">
-		{#key data.student}{#each data.student.act as score}
-				<ScoreCard.Root testName="ACT" testDate={score.date} scoreValue={actOverall(score)}>
-					<ScoreCard.ActBarSet {score} />
-				</ScoreCard.Root>
-			{/each}{#each data.student.toefl as score}
-				<ScoreCard.Root testName="TOEFL" testDate={score.date} scoreValue={toeflOverall(score)}>
-					<ScoreCard.ToeflBarSet {score} />
-				</ScoreCard.Root>
-			{/each}{#each data.student.ielts as score}
-				<ScoreCard.Root
-					testName="IELTS"
-					testDate={score.date}
-					scoreValue={ieltsOverall(score)?.toFixed(1)}
-				>
-					<ScoreCard.IeltsBarSet {score} />
-				</ScoreCard.Root>
-			{/each}{#each data.student.duolingo as score}
-				<ScoreCard.Root testName="Duolingo" testDate={score.date} scoreValue={score.overall}>
-					<ScoreCard.DuolingoBarSet {score} />
-				</ScoreCard.Root>
-			{/each}{/key}{#if data.userCanEdit}
-			<div class="w-full">
-				<ButtonDialog buttonText="Add Test" dialogTitle="Add Test">
-					<div>Dialog body</div>
-				</ButtonDialog>
+	{#key data.student}
+		{#if hasTestScores}
+			<div class="flex gap-6 flex-wrap items-stretch pt-2">
+				{#each data.student.act as score}
+					<ScoreCard.Root testName="ACT" testDate={score.date} scoreValue={actOverall(score)}>
+						<ScoreCard.ActBarSet {score} />
+					</ScoreCard.Root>
+				{/each}{#each data.student.toefl as score}
+					<ScoreCard.Root testName="TOEFL" testDate={score.date} scoreValue={toeflOverall(score)}>
+						<ScoreCard.ToeflBarSet {score} />
+					</ScoreCard.Root>
+				{/each}{#each data.student.ielts as score}
+					<ScoreCard.Root
+						testName="IELTS"
+						testDate={score.date}
+						scoreValue={ieltsOverall(score)?.toFixed(1)}
+					>
+						<ScoreCard.IeltsBarSet {score} />
+					</ScoreCard.Root>
+				{/each}{#each data.student.duolingo as score}
+					<ScoreCard.Root testName="Duolingo" testDate={score.date} scoreValue={score.overall}>
+						<ScoreCard.DuolingoBarSet {score} />
+					</ScoreCard.Root>
+				{/each}
 			</div>
 		{/if}
-	</div>
+	{/key}
+	{#if data.userCanEdit}
+		<div class={cn('w-full', hasTestScores ? 'pt-4' : 'pt-2')}>
+			<ButtonDialog buttonText="Add Test" dialogTitle="Add Test">
+				<div>Dialog body</div>
+			</ButtonDialog>
+		</div>
+	{/if}
 </Section>
 
 <Section id="applications" title="Applications">

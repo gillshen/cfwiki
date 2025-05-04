@@ -77,6 +77,7 @@
 			<Table.Root class="w-full max-w-[1080px]">
 				<Table.Header>
 					<Table.Row>
+						<Table.Head class="font-semibold pl-2 w-7"></Table.Head>
 						{#if !hideYears}
 							<Table.Head class="font-semibold">Year</Table.Head>
 						{/if}
@@ -95,12 +96,16 @@
 							<Table.Head class="font-semibold min-w-[130px]">Major/Track</Table.Head>
 						{/if}
 						<Table.Head class="font-semibold">Status</Table.Head>
-						<Table.Head class="font-semibold pr-2"></Table.Head>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
 					{#each applications.sort(orderByStatus).sort(orderByYearDesc) as application}
 						<Table.Row>
+							<Table.Cell class="max-w-[16px] pl-2">
+								<div class="flex justify-start">
+									<LinkIcon href="/application/{application.id}" />
+								</div>
+							</Table.Cell>
 							{#if !hideYears}
 								<Table.Cell>{application.year}</Table.Cell>
 							{/if}
@@ -130,11 +135,6 @@
 							<Table.Cell class="flex">
 								<div class="min-w-0">
 									<ApplicationStatusSign {application} />
-								</div>
-							</Table.Cell>
-							<Table.Cell class="max-w-[16px] pr-2">
-								<div class="flex justify-end">
-									<LinkIcon href="/application/{application.id}" />
 								</div>
 							</Table.Cell>
 						</Table.Row>

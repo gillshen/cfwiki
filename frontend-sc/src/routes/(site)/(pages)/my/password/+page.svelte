@@ -30,7 +30,7 @@
 	<title>{createTitle('Change Password')}</title>
 </svelte:head>
 
-<BreadcrumbContainer>
+<BreadcrumbContainer includeHome>
 	<Breadcrumb.Item>
 		<Breadcrumb.Page>Password</Breadcrumb.Page>
 	</Breadcrumb.Item>

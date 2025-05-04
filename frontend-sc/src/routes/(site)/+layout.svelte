@@ -38,7 +38,7 @@
 	})();
 </script>
 
-<div class={cn('relative container w-[100vw]', isDataGridPage ? 'max-w-full' : '')}>
+<div class={cn('relative px-8 w-[calc(100vw-8px)]')}>
 	<header
 		id="navbar"
 		class="fixed top-0 left-0 w-[100vw] h-[60px] backdrop-blur bg-white/70 shadow-sm z-40 flex px-4"
@@ -46,7 +46,7 @@
 		<div
 			class={cn(
 				'mx-auto flex items-center justify-between space-between',
-				isDataGridPage ? 'w-full' : 'w-[1500px]'
+				isDataGridPage ? 'w-full' : 'w-[1496px] mx-auto'
 			)}
 		>
 			<nav class="flex gap-4 my-2 flex-grow-1">
@@ -290,24 +290,25 @@
 
 	<div
 		class={cn(
-			'mt-[60px] min-h-[calc(100vh-340px)] flex w-[100vw] justify-center',
-			isDataGridPage ? 'max-w-full' : ''
+			'mt-[60px] min-h-[calc(100vh-340px)] w-[100vw] flex justify-center',
+			isDataGridPage ? 'max-w-full' : 'max-w-[1496px] mx-auto'
 		)}
 	>
 		{#if isDataGridPage}
-			<article class="flex flex-col pt-4 w-full">
+			<article class="flex flex-col w-full pt-4">
 				<slot />
 			</article>
 		{:else}
-			<div class="flex mx-auto gap-8 w-full">
+			<div class="w-[1496px] mx-auto flex gap-x-8">
 				<aside
-					class="sticky top-[60px] max-w-[240px] min-w-[240px] h-[calc(100vh-60px)] overflow-auto px-6 py-8"
+					class="sticky top-[60px] max-w-[240px] min-w-[240px] h-[calc(100vh-60px)] overflow-auto px-4 py-8"
 				>
 					{#await data.students then students}
 						<StudentSideList username={data.username} {students} {selectedStudentId} />
 					{/await}
 				</aside>
-				<article class="flex flex-col w-full pt-4 pb-8 px-4 max-w-[1032px]">
+				<article class="flex flex-col w-full pt-4 pb-6 px-4 max-w-[1112px]">
+					<!-- main body has a max content width of 1080px -->
 					<slot />
 				</article>
 			</div>
