@@ -7,7 +7,7 @@
 	export let items: (SelectOption | string | number)[];
 </script>
 
-<SelectBody {items}>
+<SelectBody {items} triggerClass="w-[200px]" contentClass="max-h-[calc(50vh-160px)]">
 	<svelte:fragment slot="top-items">
 		<Select.Item value="All">All</Select.Item>
 		<Separator class="my-1" />

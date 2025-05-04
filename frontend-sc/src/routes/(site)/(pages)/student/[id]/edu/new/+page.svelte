@@ -115,7 +115,7 @@
 				disableSearch={!$formData._school_type}
 				searchDisabledEmptyText={$formData._school_type
 					? undefined
-					: 'You need to specify a school type first'}
+					: 'You need to select a school type first'}
 				postSelect={() => {
 					$formData.school = schools.find((school) => school.name === $formData._school)?.id ?? 0;
 				}}
@@ -153,7 +153,7 @@
 				label="Program type"
 				items={programTypeItems}
 				disableSearch
-				searchDisabledEmptyText="You need to specify a school type first"
+				searchDisabledEmptyText="You need to select a school type first"
 			/>
 
 			<Input {form} name="start_date" label="Start date" type="date" class="pb-0.5" />
@@ -164,7 +164,7 @@
 				label="Entering as"
 				items={progressions}
 				optional
-				searchDisabledEmptyText="You need to specify a school type first"
+				searchDisabledEmptyText="You need to select a school type first"
 				disableSearch
 			/>
 
@@ -177,7 +177,7 @@
 				items={progressions}
 				optional
 				disableSearch
-				searchDisabledEmptyText="You need to specify a school type first"
+				searchDisabledEmptyText="You need to select a school type first"
 			/>
 
 			{#if $formData._school_type === 'Secondary School'}

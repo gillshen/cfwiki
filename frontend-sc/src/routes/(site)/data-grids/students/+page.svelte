@@ -20,13 +20,13 @@
 	import RowCountLabel from '$lib/components/misc/RowCountLabel.svelte';
 	import { contractStatuses, contractTypes } from '$lib/api/contract';
 	import { createTitle } from '$lib/util/siteUtils';
-	import { orderByUsername } from '$lib/util/userUtils';
 	import { activeYears } from '$lib/util/dateUtils';
 	import { getColumnDefs } from '$lib/util/studentsGridColumns';
 
 	import {
 		DEFAULT_COL_DEF,
 		DEFAULT_GRID_OPTIONS,
+		getActiveUsernames,
 		SearchParamsManager
 	} from '$lib/util/dataGridUtils';
 
@@ -95,15 +95,13 @@
 	<h1 class="data-grid-title">Students</h1>
 
 	<DataGridControl.Root rowData={data.students} {gridApi} baseFileName="cf_students">
-		<div slot="filter-units" class="flex flex-col gap-4">
+		<div slot="filter-units" class="flex gap-6 pb-6">
 			<DataGridControl.FilterUnit label="Target year">
 				<Select.Root
 					selected={{ value: targetYear, label: targetYear }}
 					onSelectedChange={paramsManager.onScSelectChange('targetYear')}
 				>
-					<DataGridControl.FilterBody
-						items={activeYears().map((year) => ({ value: year, label: year.toString() }))}
-					/>
+					<DataGridControl.FilterBody items={activeYears()} />
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 
@@ -112,7 +110,7 @@
 					selected={{ value: contractType, label: contractType }}
 					onSelectedChange={paramsManager.onScSelectChange('contractType')}
 				>
-					<DataGridControl.FilterBody items={contractTypes.map((t) => ({ value: t, label: t }))} />
+					<DataGridControl.FilterBody items={[...contractTypes]} />
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 
@@ -121,23 +119,16 @@
 					selected={{ value: contractStatus, label: contractStatus }}
 					onSelectedChange={paramsManager.onScSelectChange('contractStatus')}
 				>
-					<DataGridControl.FilterBody
-						items={contractStatuses.map((t) => ({ value: t, label: t }))}
-					/>
+					<DataGridControl.FilterBody items={[...contractStatuses]} />
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 
-			<DataGridControl.FilterUnit label="CFer">
+			<DataGridControl.FilterUnit label="Handler">
 				<Select.Root
 					selected={{ value: cfer, label: cfer }}
 					onSelectedChange={paramsManager.onScSelectChange('cfer')}
 				>
-					<DataGridControl.FilterBody
-						items={data.cfUsers
-							.filter((u) => u.is_active)
-							.sort(orderByUsername)
-							.map((cfer) => ({ value: cfer.username, label: cfer.username }))}
-					/>
+					<DataGridControl.FilterBody items={getActiveUsernames(data.cfUsers)} />
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 		</div>

@@ -21,13 +21,13 @@
 	import { applicationTypes } from '$lib/api/application';
 	import { applicationStatusCategories } from '$lib/api/applicationLog';
 	import { createTitle } from '$lib/util/siteUtils';
-	import { orderByUsername } from '$lib/util/userUtils';
 	import { activeYears } from '$lib/util/dateUtils';
 	import { getColumnDefs } from '$lib/util/applicationsGridColumns';
 
 	import {
 		DEFAULT_COL_DEF,
 		DEFAULT_GRID_OPTIONS,
+		getActiveUsernames,
 		SearchParamsManager
 	} from '$lib/util/dataGridUtils';
 
@@ -101,7 +101,7 @@
 	<h1 class="data-grid-title">Applications</h1>
 
 	<DataGridControl.Root rowData={data.applications} {gridApi} baseFileName="cf_applications">
-		<div slot="filter-units" class="flex flex-col gap-4">
+		<div slot="filter-units" class="flex gap-6">
 			<DataGridControl.FilterUnit label="Year">
 				<Select.Root
 					selected={{ value: year, label: year }}
@@ -136,17 +136,12 @@
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 
-			<DataGridControl.FilterUnit label="CFer">
+			<DataGridControl.FilterUnit label="Handler">
 				<Select.Root
 					selected={{ value: cfer, label: cfer }}
 					onSelectedChange={paramsManager.onScSelectChange('cfer')}
 				>
-					<DataGridControl.FilterBody
-						items={data.cfUsers
-							.filter((u) => u.is_active)
-							.sort(orderByUsername)
-							.map((cfer) => cfer.username)}
-					/>
+					<DataGridControl.FilterBody items={getActiveUsernames(data.cfUsers)} />
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 		</div>
@@ -164,7 +159,6 @@
 					>{formatApplicationType(applicationType)}</DismissibleBadge
 				>
 			{/if}
-
 			{#if status !== 'All'}
 				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('status')}
 					>{formatApplicationStatusCategory(status)}</DismissibleBadge

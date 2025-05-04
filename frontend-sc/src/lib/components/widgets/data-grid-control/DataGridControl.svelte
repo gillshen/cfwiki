@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { GridApi } from 'ag-grid-community';
 
-	import * as Popover from '$lib/components/ui/popover';
+	import * as Sheet from '$lib/components/ui/sheet/index';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
@@ -31,60 +31,65 @@
 
 <div class="flex flex-wrap items-center justify-between gap-4 w-full">
 	<div class="flex items-center gap-4 flex-grow-1">
-		<Popover.Root>
-			<Popover.Trigger>
+		<Sheet.Root>
+			<Sheet.Trigger>
 				<Button
 					variant="link"
 					class="flex items-center gap-1 p-0 hover:no-underline hover:text-primary/80"
 					><Settings class="size-4" />Columns</Button
 				>
-			</Popover.Trigger>
-			<Popover.Content class="p-0 flex flex-col gap-4 translate-x-9 w-fit min-w-[300px]">
-				<h2 class="px-6 pt-4 text-base font-semibold flex items-center gap-2">
-					<Settings class="size-4" />Choose columns to display
-				</h2>
-
-				<div
-					class="px-6 pb-6 grid grid-cols-4 gap-y-2 gap-x-4 max-h-[calc(100vh-288px)] overflow-auto"
-				>
-					{#each gridApi?.getColumns() ?? [] as column, i}
-						{@const headerName = column.getColDef().headerName || 'ID'}
-						<div class="flex items-center space-x-2">
-							<Checkbox
-								id="checkbox-{i}"
-								aria-labelledby="checkbox-{i}-label"
-								checked={column.isVisible()}
-								on:click={() => {
-									gridApi?.setColumnsVisible([column], !column.isVisible());
-								}}
-							/>
-							<Label id="checkbox-{i}-label" for="checkbox-{i}" class="text-sm font-normal"
-								>{headerName}</Label
-							>
-						</div>
-					{/each}
+			</Sheet.Trigger>
+			<Sheet.Content side="bottom" class="max-h-[70vh] min-h-[50vh] overflow-auto">
+				<div class="w-fit mx-auto">
+					<Sheet.Header>
+						<Sheet.Title class="flex items-center gap-2">
+							<Settings class="size-4" />Choose columns to display
+						</Sheet.Title>
+					</Sheet.Header>
+					<div class="pt-6 w-fit grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-2 gap-x-6">
+						{#each gridApi?.getColumns() ?? [] as column, i}
+							{@const headerName = column.getColDef().headerName || 'ID'}
+							<div class="flex items-center space-x-2">
+								<Checkbox
+									id="checkbox-{i}"
+									aria-labelledby="checkbox-{i}-label"
+									checked={column.isVisible()}
+									on:click={() => {
+										gridApi?.setColumnsVisible([column], !column.isVisible());
+									}}
+								/>
+								<Label id="checkbox-{i}-label" for="checkbox-{i}" class="text-sm font-normal"
+									>{headerName}</Label
+								>
+							</div>
+						{/each}
+					</div>
 				</div>
-			</Popover.Content>
-		</Popover.Root>
+			</Sheet.Content>
+		</Sheet.Root>
 
-		<Popover.Root>
-			<Popover.Trigger>
+		<Sheet.Root>
+			<Sheet.Trigger>
 				<Button
 					variant="link"
 					class="flex items-center gap-1 p-0 hover:no-underline hover:text-primary/80"
 				>
 					<ListFilter class="size-4" />Primary Filters
 				</Button>
-			</Popover.Trigger>
-			<Popover.Content class="p-0 flex flex-col gap-4 w-fit min-w-[300px]">
-				<h2 class="px-6 pt-4 text-base font-semibold flex items-center gap-2">
-					<ListFilter class="size-4" />Filter by
-				</h2>
-				<div class="px-6 pb-6 max-h-[calc(100vh-288px)] overflow-auto">
-					<slot name="filter-units" />
+			</Sheet.Trigger>
+			<Sheet.Content side="bottom" class="max-h-[70vh] min-h-[50vh] overflow-auto">
+				<div class="w-fit mx-auto">
+					<Sheet.Header>
+						<Sheet.Title class="flex items-center gap-2">
+							<ListFilter class="size-4" />Primary Filters
+						</Sheet.Title>
+					</Sheet.Header>
+					<div class="pt-6">
+						<slot name="filter-units" />
+					</div>
 				</div>
-			</Popover.Content>
-		</Popover.Root>
+			</Sheet.Content>
+		</Sheet.Root>
 
 		<div class="flex flex-wrap items-center gap-1">
 			<slot name="filter-badges" />

@@ -16,13 +16,14 @@ import {
 } from 'ag-grid-community';
 
 import GridLinkIcon from '$lib/components/misc/GridLinkIcon.svelte';
+import type { CfUserListItem } from '$lib/api/user';
 import type { StudentEnrollmentItem, StudentListItem } from '$lib/api/student';
 import type { BaseGrade } from '$lib/api/grade';
 import type { AcademyProgramListItem } from '$lib/api/academyProgram';
 import { formatGradeValue, parseNum } from '$lib/util/gradeUtils';
 import { filterCfAcamdeyPrograms, formatCfAcamdeyPrograms } from '$lib/util/cfAcademyUtils';
+import { formatLocation } from '$lib/util/studentUtils';
 import countryFlags from '$lib/constants/countries';
-import { formatLocation } from './studentUtils';
 
 export const DEFAULT_GRID_OPTIONS = {
 	enableCellTextSelection: true,
@@ -242,3 +243,9 @@ export const getCfAcademyPrograms = (params: {
 		}),
 		separator: SEPARATOR
 	});
+
+export const getActiveUsernames = (cfUsers: CfUserListItem[]): string[] =>
+	cfUsers
+		.filter((cfer) => cfer.is_active)
+		.map((cfer) => cfer.username)
+		.sort();
