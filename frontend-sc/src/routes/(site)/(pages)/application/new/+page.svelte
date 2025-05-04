@@ -262,7 +262,7 @@
 								{application}
 								compact
 								hideYear
-								class="border-none shadow-none"
+								class="border-none shadow-none w-[370px]"
 							/>
 						</a>
 					{/each}

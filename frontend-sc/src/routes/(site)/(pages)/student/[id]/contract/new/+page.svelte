@@ -26,10 +26,13 @@
 	let progressions: string[];
 
 	$: {
-		if ($formData.type.startsWith('UG')) {
+		if ($formData.type === 'UG Freshman') {
 			progressions = [...secondaryProgsWithContractTerms];
-		} else if ($formData.type === 'Graduate') {
-			progressions = [...universityProgsWithContractTerms];
+		} else if ($formData.type === 'UG Transfer' || $formData.type === 'Graduate') {
+			progressions = [
+				...secondaryProgsWithContractTerms.filter((p) => p.startsWith('G12')),
+				...universityProgsWithContractTerms
+			];
 		} else {
 			progressions = [...allProgsWithContractTerms];
 		}

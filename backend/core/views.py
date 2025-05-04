@@ -41,6 +41,17 @@ from core.serializers import (
 )
 
 
+class ReturnStudentAfterDeletionMixin:
+
+    def destroy(self, request, *args, **kwargs):
+        """Return the student after deletion"""
+        instance = self.get_object()
+        student = instance.student
+        instance.delete()
+        student_serializer = StudentCRUDSerializer(student)
+        return Response(student_serializer.data, status=status.HTTP_200_OK)
+
+
 class CFUserListView(ListAPIView):
     queryset = CFUser.objects.all()
     serializer_class = CFUserSerializer
@@ -164,7 +175,7 @@ class ContractCreateView(CreateAPIView):
     serializer_class = ContractCRUDSerializer
 
 
-class ContractRUDView(RetrieveUpdateDestroyAPIView):
+class ContractRUDView(ReturnStudentAfterDeletionMixin, RetrieveUpdateDestroyAPIView):
     queryset = Contract.objects.all()
     serializer_class = ContractCRUDSerializer
 
@@ -313,17 +324,9 @@ class ApplicationCreateView(CreateAPIView):
     serializer_class = ApplicationCRUDSerializer
 
 
-class ApplicationRUDView(RetrieveUpdateDestroyAPIView):
+class ApplicationRUDView(ReturnStudentAfterDeletionMixin, RetrieveUpdateDestroyAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationCRUDSerializer
-
-    def destroy(self, request, *args, **kwargs):
-        """Return the student after deletion"""
-        instance = self.get_object()
-        student = instance.student
-        instance.delete()
-        student_serializer = StudentCRUDSerializer(student)
-        return Response(student_serializer.data, status=status.HTTP_200_OK)
 
 
 _PENDING = ["Started", "Submitted", "Under Review", "Deferred", "On Waitlist"]

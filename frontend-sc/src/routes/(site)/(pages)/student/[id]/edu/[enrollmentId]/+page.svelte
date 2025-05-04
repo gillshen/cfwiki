@@ -13,7 +13,7 @@
 	export let data;
 
 	const enrollmentForm = superForm(data.enrollmentForm, { resetForm: false });
-	const { enhance: enrollmentEnhance } = enrollmentForm;
+	const { enhance: enrollmentFormEnhance } = enrollmentForm;
 
 	let progressions: string[] = [];
 
@@ -55,7 +55,7 @@
 		method="POST"
 		class="max-w-prose space-y-6 mt-4"
 		action="?/updateEnrollment"
-		use:enrollmentEnhance
+		use:enrollmentFormEnhance
 		id="enrollment-form"
 	>
 		<input type="number" name="id" bind:value={data.enrollment.id} hidden />

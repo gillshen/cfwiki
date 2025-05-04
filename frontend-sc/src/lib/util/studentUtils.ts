@@ -57,6 +57,9 @@ export const isCurrentForUser = (params: {
 	return false;
 };
 
+export const canCreateApplications = (student: { contracts: Contract[] }): boolean =>
+	student.contracts.some((contract) => !!contract.services.length);
+
 export function formatGender(student: BaseStudent): string {
 	switch (student.gender) {
 		case 'female':
