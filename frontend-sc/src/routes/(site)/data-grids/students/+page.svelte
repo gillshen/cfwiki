@@ -92,7 +92,34 @@
 </BreadcrumbContainer>
 
 <section class="pb-2 flex flex-col gap-2">
-	<h1 class="data-grid-title">Students</h1>
+	<h1 class="data-grid-title flex items-center gap-4">
+		Students
+		<div class="flex items-center gap-1 pt-1">
+			{#if cfer !== 'All'}
+				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('cfer')}
+					>{cfer}</DismissibleBadge
+				>
+			{/if}
+			{#if contractType !== 'All'}
+				<DismissibleBadge
+					variant="secondary"
+					onDismiss={paramsManager.onParamChange('contractType')}>{contractType}</DismissibleBadge
+				>
+			{/if}
+			{#if targetYear !== 'All'}
+				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('targetYear')}
+					>{targetYear}</DismissibleBadge
+				>
+			{/if}
+			{#if contractStatus !== 'All'}
+				<DismissibleBadge
+					variant="secondary"
+					onDismiss={paramsManager.onParamChange('contractStatus')}
+					>Contract: {contractStatus}</DismissibleBadge
+				>
+			{/if}
+		</div>
+	</h1>
 
 	<DataGridControl.Root rowData={data.students} {gridApi} baseFileName="cf_students">
 		<div slot="filter-units" class="flex gap-6 pb-6">
@@ -132,32 +159,6 @@
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 		</div>
-
-		<svelte:fragment slot="filter-badges">
-			{#if cfer !== 'All'}
-				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('cfer')}
-					>{cfer}</DismissibleBadge
-				>
-			{/if}
-			{#if contractType !== 'All'}
-				<DismissibleBadge
-					variant="secondary"
-					onDismiss={paramsManager.onParamChange('contractType')}>{contractType}</DismissibleBadge
-				>
-			{/if}
-			{#if targetYear !== 'All'}
-				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('targetYear')}
-					>{targetYear}</DismissibleBadge
-				>
-			{/if}
-			{#if contractStatus !== 'All'}
-				<DismissibleBadge
-					variant="secondary"
-					onDismiss={paramsManager.onParamChange('contractStatus')}
-					>Contract: {contractStatus}</DismissibleBadge
-				>
-			{/if}
-		</svelte:fragment>
 	</DataGridControl.Root>
 </section>
 

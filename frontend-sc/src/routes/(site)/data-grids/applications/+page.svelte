@@ -98,7 +98,33 @@
 </BreadcrumbContainer>
 
 <section class="pb-2 flex flex-col gap-2">
-	<h1 class="data-grid-title">Applications</h1>
+	<h1 class="data-grid-title flex items-center gap-4">
+		Applications
+		<div class="flex items-center gap-1 pt-1">
+			{#if year !== 'All'}
+				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('year')}
+					>{year}</DismissibleBadge
+				>
+			{/if}
+			{#if applicationType !== 'All'}
+				<DismissibleBadge
+					variant="secondary"
+					onDismiss={paramsManager.onParamChange('applicationType')}
+					>{formatApplicationType(applicationType)}</DismissibleBadge
+				>
+			{/if}
+			{#if status !== 'All'}
+				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('status')}
+					>{formatApplicationStatusCategory(status)}</DismissibleBadge
+				>
+			{/if}
+			{#if cfer !== 'All'}
+				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('cfer')}
+					>{cfer}</DismissibleBadge
+				>
+			{/if}
+		</div>
+	</h1>
 
 	<DataGridControl.Root rowData={data.applications} {gridApi} baseFileName="cf_applications">
 		<div slot="filter-units" class="flex gap-6">
@@ -145,31 +171,6 @@
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 		</div>
-
-		<svelte:fragment slot="filter-badges">
-			{#if year !== 'All'}
-				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('year')}
-					>{year}</DismissibleBadge
-				>
-			{/if}
-			{#if applicationType !== 'All'}
-				<DismissibleBadge
-					variant="secondary"
-					onDismiss={paramsManager.onParamChange('applicationType')}
-					>{formatApplicationType(applicationType)}</DismissibleBadge
-				>
-			{/if}
-			{#if status !== 'All'}
-				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('status')}
-					>{formatApplicationStatusCategory(status)}</DismissibleBadge
-				>
-			{/if}
-			{#if cfer !== 'All'}
-				<DismissibleBadge variant="secondary" onDismiss={paramsManager.onParamChange('cfer')}
-					>{cfer}</DismissibleBadge
-				>
-			{/if}
-		</svelte:fragment>
 	</DataGridControl.Root>
 </section>
 

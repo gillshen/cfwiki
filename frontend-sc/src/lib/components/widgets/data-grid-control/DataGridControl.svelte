@@ -90,10 +90,6 @@
 				</div>
 			</Sheet.Content>
 		</Sheet.Root>
-
-		<div class="flex flex-wrap items-center gap-1">
-			<slot name="filter-badges" />
-		</div>
 	</div>
 
 	{#await rowData then _}
