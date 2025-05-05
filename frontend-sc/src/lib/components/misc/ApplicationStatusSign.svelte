@@ -49,7 +49,7 @@
 	<div class={cn('text-sm flex items-center gap-1.5', `h-[${height}]`)}>
 		<svelte:component
 			this={statusMap[latestStatus].icon}
-			class={cn('size-4 translate-y-[0.5px] shrink-0', statusMap[latestStatus].className)}
+			class={cn('size-4 shrink-0', statusMap[latestStatus].className)}
 		/>
 		<div class="flex-1 min-w-0">
 			<span class="font-medium block truncate">{formattedStatuses}</span>

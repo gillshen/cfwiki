@@ -12,14 +12,14 @@
 	<h1 class="text-3xl font-bold">ChoiceFreezer</h1>
 
 	<form method="POST" class="space-y-4" action="?/login" use:enhance id="login-form">
-		<Input {form} name="username" label="Username" inputClass="w-full" />
+		<Input {form} name="username" label="Username" inputClass="w-full bg-white" />
 
 		<Input
 			{form}
 			name="password"
 			label="Password"
 			type="password"
-			inputClass="w-full"
+			inputClass="w-full bg-white"
 			class="pb-2"
 		/>
 

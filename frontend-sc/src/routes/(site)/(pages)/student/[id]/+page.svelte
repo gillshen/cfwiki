@@ -122,9 +122,7 @@
 <section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-6">
 	<h1 class="page-title">
 		{data.student.fullname}
-		{#if data.student.preferred_name}
-			&nbsp;{data.student.preferred_name}
-		{/if}
+		{data.student.preferred_name || ''}
 	</h1>
 	<div class="flex flex-row gap-2 items-center text-sm h-5">
 		<svelte:component this={genderMap[data.student.gender]} class="size-4 -mr-0.5" />
@@ -293,7 +291,7 @@
 					<div class="bg-white p-1 rounded-sm">(TODO filters)</div>
 				</Tabs.List>
 				<Tabs.Content value="grid-layout">
-					<div class="my-4 grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-6 w-full">
+					<div class="my-4 grid lg:grid-cols-2 xl:grid-cols-3 gap-6 w-fit">
 						{#each applications
 							.sort(orderBySchoolName)
 							.sort(orderByStatus)

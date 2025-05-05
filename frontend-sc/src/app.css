@@ -197,3 +197,16 @@ a {
 a:hover {
 	text-decoration: underline;
 }
+
+input[type="password"] {
+	@apply text-primary;
+	letter-spacing: 4px;
+}
+
+/* Make Firefox's password dots smaller */
+@-moz-document url-prefix() {
+	input[type="password"] {
+		font-size: 8px;
+	}
+}
+

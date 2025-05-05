@@ -17,10 +17,12 @@
 </script>
 
 <Card.Root class={cn('h-full flex flex-col', className)}>
-	<Card.Header>
+	<Card.Header class={compact ? 'pt-3' : ''}>
 		<Card.Title>
 			{#each application.schools as school}
-				<p class="text-pretty leading-5">{school.name}</p>
+				<p class={cn('text-pretty leading-5', compact ? 'text-base' : '')}>
+					{school.name}
+				</p>
 			{/each}
 		</Card.Title>
 		<Card.Description
@@ -31,11 +33,11 @@
 		</Card.Description>
 	</Card.Header>
 	{#if compact}
-		<Card.Content class="pt-2 flex flex-col gap-2 flex-grow">
+		<Card.Content class="pt-1.5 pb-3 flex flex-col gap-2 flex-grow">
 			<ApplicationStatusSign {application} />
 		</Card.Content>
 	{:else}
-		<Card.Content class="pt-4 flex flex-col gap-2 flex-grow">
+		<Card.Content class="pt-4 flex flex-col gap-2 flex-grow min-w-[240px]">
 			<ul class="list-disc ml-3.5 flex flex-col gap-1 text-muted-foreground">
 				{#each application.majors as major}
 					<li class="text-pretty">{major}</li>

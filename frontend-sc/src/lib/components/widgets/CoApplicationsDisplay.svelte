@@ -31,11 +31,13 @@
 			>
 		</Tabs.List>
 		<Tabs.Content value="grid-layout">
-			<div class="my-4 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-1 gap-6">
+			<div
+				class="my-4 grid min-[950px]:grid-cols-2 min-[1120px]:grid-cols-3 min-[1400px]:grid-cols-4 gap-6 w-fit"
+			>
 				{#each applications.sort(orderByStatus).sort(orderByYearDesc) as application}
 					<a href="/application/{application.id}" target="_self" class="hover:no-underline">
 						<Card.Root
-							class="h-full flex flex-col min-h-[200px] max-w-[320px] shadow-none hover:bg-muted/50"
+							class="h-full flex flex-col min-h-[200px] max-w-[320px] min-w-[240px] shadow-none hover:bg-muted/50"
 						>
 							<Card.Header>
 								<Card.Title>
@@ -58,7 +60,7 @@
 									{/if}
 								</Card.Description>
 							</Card.Header>
-							<Card.Content class="pt-2 flex flex-col gap-2 flex-grow">
+							<Card.Content class="pt-2 flex flex-col gap-2 flex-grow min-w-[240px]">
 								<ul class="list-disc ml-3.5 flex flex-col gap-1">
 									{#each application.majors as major}
 										<li class="text-muted-foreground">{major}</li>
@@ -74,7 +76,7 @@
 			</div>
 		</Tabs.Content>
 		<Tabs.Content value="table-layout">
-			<Table.Root class="w-full max-w-[1080px]">
+			<Table.Root class="w-full max-w-[1064px]">
 				<Table.Header>
 					<Table.Row>
 						<Table.Head class="font-semibold pl-2 w-7"></Table.Head>

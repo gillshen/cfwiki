@@ -13,7 +13,7 @@
 	const hasMajor3 = !!applications.filter((a) => a.majors.length > 2).length;
 </script>
 
-<Table.Root class="w-full max-w-[1080px] flex-grow-0">
+<Table.Root class="w-full max-w-[1064px] flex-grow-0">
 	<Table.Header>
 		<Table.Row>
 			<Table.Head class="font-semibold pl-2 w-7"></Table.Head>

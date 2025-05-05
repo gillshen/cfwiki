@@ -46,7 +46,7 @@
 		<div
 			class={cn(
 				'mx-auto flex items-center justify-between space-between',
-				isDataGridPage ? 'w-full' : 'w-[1488px] mx-auto'
+				isDataGridPage ? 'w-full' : 'w-[1496px] mx-auto'
 			)}
 		>
 			<nav class="flex gap-4 my-2 flex-grow-1">
@@ -309,8 +309,8 @@
 						<StudentSideList username={data.username} {students} {selectedStudentId} />
 					{/await}
 				</aside>
-				<article class="flex flex-col w-full pt-4 pb-6 px-4 max-w-[1112px]">
-					<!-- main body has a max content width of 1080px -->
+				<article class="flex flex-col w-full pt-4 pb-6 pl-4 pr-8 max-w-[1112px]">
+					<!-- main body has a max content width of 1064px -->
 					<slot />
 				</article>
 			</div>
