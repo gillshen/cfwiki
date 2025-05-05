@@ -3,18 +3,20 @@
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Table from '$lib/components/ui/table/index';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import Pencil from 'lucide-svelte/icons/pencil';
-	import X from 'lucide-svelte/icons/x';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
+	import ServiceForm from '$lib/components/forms/service-form/Form.svelte';
+	import ServiceActionItem from '$lib/components/widgets/ServiceActionItem.svelte';
+	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import Input from '$lib/components/forms/Input.svelte';
+	import UserAvatar from '$lib/components/misc/UserAvatar.svelte';
 	import PencilEditButton from '$lib/components/misc/PencilEditButton.svelte';
 	import ContractStatusSign from '$lib/components/misc/ContractStatusSign.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import Tooltip from '$lib/components/containers/Tooltip.svelte';
+
 	import { createTitle } from '$lib/util/siteUtils';
 	import { contractStatuses } from '$lib/api/contract';
 	import { orderByRoleUsername } from '$lib/util/serviceUtils';
@@ -28,20 +30,20 @@
 
 	export let data;
 
-	let contractFormOpen = false;
+	let contractUpdateModal = false;
+
 	const contractForm = superForm(data.contractForm, {
 		resetForm: false,
 		onUpdated({ form }) {
 			if (form.valid) {
-				contractFormOpen = false;
+				contractUpdateModal = false;
 			}
 		}
 	});
 	const { enhance: contractFormEnhance } = contractForm;
 
-	let deleteModalOpen = false;
-	const contractDeleteFrom = superForm(data.contractDeleteForm, { id: 'contract-delete' });
-	const { enhance: contractDeleteFormEnhance } = contractDeleteFrom;
+	let contractDeleteModal = false;
+	let newServiceModal = false;
 
 	const title = `${data.student.fullname} \u2022 ${data.contract.type} ${data.contract.target_year}`;
 
@@ -95,7 +97,7 @@
 				{data.contract.student_progression_when_signed}
 			</Tooltip>
 		{/if}
-		<ButtonDialog buttonSlot dialogTitle="Update Contract" bind:open={contractFormOpen}>
+		<ButtonDialog buttonSlot dialogTitle="Update Contract" bind:open={contractUpdateModal}>
 			<PencilEditButton slot="button" />
 			<form
 				method="POST"
@@ -109,12 +111,7 @@
 				<input name="type" bind:value={data.contract.type} hidden />
 				<input type="number" name="target_year" bind:value={data.contract.target_year} hidden />
 
-				<Combobox
-					form={contractForm}
-					name="status"
-					label="Status"
-					items={Array.from(contractStatuses)}
-				/>
+				<Combobox form={contractForm} name="status" label="Status" items={[...contractStatuses]} />
 				<Input
 					form={contractForm}
 					name="date"
@@ -136,7 +133,7 @@
 	</div>
 </section>
 
-<Section id="team" title="Team" hrule={false}>
+<Section id="team" title="CF Team" titleOnly>
 	<div class="border rounded-md w-fit">
 		<Table.Root class="w-[800px]">
 			<Table.Header>
@@ -152,30 +149,25 @@
 				{#each data.contract.services.sort(orderByRoleUsername) as service}
 					<Table.Row>
 						<Table.Cell>
-							<a href="/cf/{service.cf_username}" class="text-inherit">{service.cf_username}</a>
+							<div class="flex items-center gap-2">
+								<UserAvatar username={service.cf_username} class="size-8" imageClass="size-5" />
+								<a href="/cf/{service.cf_username}" class="text-inherit">{service.cf_username}</a>
+							</div>
 						</Table.Cell>
 						<Table.Cell>{service.role}</Table.Cell>
-						<Table.Cell>{service.start_date || 'Start of contract'}</Table.Cell>
-						<Table.Cell>{service.end_date || 'End of contract'}</Table.Cell>
-						<Table.Cell class="flex items-center gap-4 pr-6">
-							<ButtonDialog buttonSlot dialogTitle="Update Team Membership">
-								<Pencil
-									class="size-4 text-muted-foreground hover:text-secondary-foreground/80 translate-y-[1px]"
-									slot="button"
-								/>
-								<form>form</form>
-							</ButtonDialog>
-
-							<ButtonDialog
-								buttonSlot
-								dialogTitle="Remove {service.cf_username} as {service.role} from the team?"
-							>
-								<X
-									class="size-4 text-muted-foreground hover:text-secondary-foreground/80 translate-y-[1px]"
-									slot="button"
-								/>
-								<form>form</form>
-							</ButtonDialog>
+						<Table.Cell class={service.start_date ? '' : 'text-muted-foreground'}
+							>{toShortDate(service.start_date) || 'Start of contract'}</Table.Cell
+						>
+						<Table.Cell class={service.end_date ? '' : 'text-muted-foreground'}
+							>{toShortDate(service.end_date) || 'End of contract'}</Table.Cell
+						>
+						<Table.Cell class="flex items-center gap-4 pr-6 h-16">
+							<ServiceActionItem
+								{service}
+								contractId={data.contract.id}
+								updateForm={data.serviceForm}
+								deleteForm={data.deleteForm}
+							/>
 						</Table.Cell>
 					</Table.Row>
 				{/each}
@@ -185,38 +177,37 @@
 
 	<ButtonDialog
 		buttonVariant="outline"
-		buttonText="Add Team Member"
-		dialogTitle="Add Team Member"
+		buttonText="Add Member"
+		dialogTitle="Add Member"
 		buttonClass="w-fit mt-4"
+		bind:open={newServiceModal}
 	>
-		<form>form</form>
+		<ServiceForm
+			superValidated={data.serviceForm}
+			cfUsers={data.cfUsers}
+			contractId={data.contract.id}
+			onUpdated={({ form }) => form.valid && (newServiceModal = false)}
+		/>
 	</ButtonDialog>
 </Section>
 
-<Section id="delete" hrule>
+<Section id="delete" hruleOnly>
 	<ButtonDialog
 		buttonText="Delete Contract"
 		buttonVariant="destructive"
 		buttonClass="w-fit"
 		dialogTitle="Delete this contract?"
-		bind:open={deleteModalOpen}
+		bind:open={contractDeleteModal}
 	>
-		<p slot="description">
-			Deleting the contract will also delete all the applications associated with it. This action
+		<p slot="description" class="text-pretty">
+			Deleting a contract will also delete all the applications associated with it. This action
 			cannot be undone.
 		</p>
-		<form
-			method="POST"
-			class="max-w-prose space-y-4 pb-2"
+		<DeleteForm
+			superValidated={data.deleteForm}
+			objectId={data.contract.id}
 			action="?/deleteContract"
-			use:contractDeleteFormEnhance
-			id="contract-delete-form"
-		>
-			<input type="number" name="id" bind:value={data.contract.id} hidden />
-			<div class="mx-auto mt-4 w-fit">
-				<Form.Button variant="destructive" class="w-fit min-w-24">Delete</Form.Button>
-				<Button variant="ghost" on:click={() => (deleteModalOpen = false)}>Cancel</Button>
-			</div>
-		</form>
+			onUpdated={({ form }) => form.valid && (contractDeleteModal = false)}
+		/>
 	</ButtonDialog>
 </Section>

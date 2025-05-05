@@ -1,27 +1,19 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-
 	import * as Card from '$lib/components/ui/card/index';
-	import * as Avatar from '$lib/components/ui/avatar/index';
 	import * as HoverCard from '$lib/components/ui/hover-card/index';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Chevron from 'lucide-svelte/icons/chevron-right';
 	import Signature from 'lucide-svelte/icons/signature';
 
-	import type { CfUserListItem } from '$lib/api/user';
 	import type { Contract } from '$lib/api/student';
 	import ContractStatusSign from '$lib/components/misc/ContractStatusSign.svelte';
+	import UserAvatar from '$lib/components/misc/UserAvatar.svelte';
 	import PencilEditButton from '$lib/components/misc/PencilEditButton.svelte';
 	import { groupByCfPerson, leftEarly, orderByRoleUsername } from '$lib/util/serviceUtils';
 	import { toShortYearMonth } from '$lib/util/dateUtils';
 
 	export let contract: Contract;
 	export let canEdit: boolean;
-
-	const cfUsers = $page.data.cfUsers as CfUserListItem[];
-
-	const findAvatar = (username: string): string | undefined =>
-		cfUsers.find((user) => user.username === username)?.avatar;
 </script>
 
 <Card.Root class="shadow-none min-w-[270px]">
@@ -49,14 +41,7 @@
 			{@const stayedTillEnd = services.map((s) => !leftEarly(s)).some(Boolean)}
 			<div class="flex items-center gap-4 min-w-[220px] rounded-lg">
 				<div class="flex items-center gap-2 flex-grow-1 w-full hover:no-underline">
-					<Avatar.Root class="-translate-x-1 flex bg-primary/5">
-						<Avatar.Image
-							src={findAvatar(cfUsername)}
-							class="size-7 m-auto"
-							alt="{cfUsername}-avatar"
-						/>
-						<Avatar.Fallback>{cfUsername[0].toUpperCase()}</Avatar.Fallback>
-					</Avatar.Root>
+					<UserAvatar username={cfUsername} />
 					<div class="flex flex-col">
 						<div
 							class={stayedTillEnd

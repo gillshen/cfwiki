@@ -351,7 +351,7 @@
 </Section>
 
 {#if data.userCanEdit}
-	<Section id="delete" hrule>
+	<Section id="delete" hruleOnly>
 		<Button variant="destructive" class="w-fit">Delete Profile</Button>
 	</Section>
 {/if}

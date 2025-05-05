@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-	import FormButton from '$lib/components/ui/form/form-button.svelte';
-	import Button from '$lib/components/ui/button/button.svelte';
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import X from 'lucide-svelte/icons/x';
 
@@ -10,6 +8,7 @@
 	import type { DeleteSchema } from '$lib/schemas/delete';
 	import type { ApplicationDetail } from '$lib/api/application';
 	import ApplicationLogForm from '$lib/components/forms/ApplicationLogForm.svelte';
+	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
 	import PrimitiveItem from './PrimitiveItem.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 
@@ -21,38 +20,25 @@
 
 	const form = superForm(updateForm, {
 		id: `log-form-${log.id}`,
+		resetForm: false,
 		onUpdated({ form }) {
 			if (form.valid) {
-				// repopulate form data
-				$formData = { ...log, application: application.id };
-				updateDialogOpen = false;
+				updateModal = false;
 			}
 		}
 	});
 	const { form: formData, enhance } = form;
-
-	const delForm = superForm(deleteForm, {
-		id: `log-delete-form-${log.id}`,
-		onUpdated({ form }) {
-			if (form.valid) {
-				deleteDialogOpen = false;
-			}
-		}
-	});
-	const { form: delFormData, enhance: delEnhance } = delForm;
-
-	let updateDialogOpen = false;
-	let deleteDialogOpen = false;
-
 	$formData = { ...log, application: application.id };
-	$delFormData.id = log.id;
+
+	let updateModal = false;
+	let deleteModal = false;
 </script>
 
 {#if canEdit}
 	<PrimitiveItem {log}>
 		<div slot="buttons">
 			<div class="flex items-center space-x-2 ml-2">
-				<ButtonDialog buttonSlot dialogTitle="Edit Application Status" bind:open={updateDialogOpen}>
+				<ButtonDialog buttonSlot dialogTitle="Edit Application Status" bind:open={updateModal}>
 					<Pencil
 						class="size-3 text-muted-foreground hover:text-secondary-foreground/80"
 						slot="button"
@@ -71,27 +57,20 @@
 				<ButtonDialog
 					buttonSlot
 					dialogTitle="Delete this application status?"
-					bind:open={deleteDialogOpen}
+					bind:open={deleteModal}
 				>
 					<X
 						class="size-3 text-muted-foreground hover:text-secondary-foreground/80"
 						slot="button"
 					/>
 					<p slot="description">This action cannot be undone.</p>
-					<form
-						method="POST"
+					<DeleteForm
+						superValidated={deleteForm}
+						objectId={log.id}
 						action="?/deleteApplicationLog"
-						class="max-w-prose space-y-4 pb-2"
-						use:delEnhance
-						id="log-delete-form-{log.id}"
-					>
-						<input type="number" name="id" bind:value={$delFormData.id} hidden />
-
-						<div class="mx-auto mt-4 w-fit">
-							<FormButton variant="destructive">Delete</FormButton>
-							<Button variant="ghost" on:click={() => (deleteDialogOpen = false)}>Cancel</Button>
-						</div>
-					</form>
+						onUpdated={({ form }) => form.valid && (deleteModal = false)}
+						onCancel={() => (deleteModal = false)}
+					/>
 				</ButtonDialog>
 			</div>
 		</div>

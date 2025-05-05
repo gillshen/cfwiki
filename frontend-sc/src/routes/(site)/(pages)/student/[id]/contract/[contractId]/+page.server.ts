@@ -24,9 +24,8 @@ export async function load(event) {
 	return {
 		contract,
 		contractForm: await superValidate(contract, zod(contractSchema)),
-		contractDeleteForm: await superValidate(contract, zod(deleteSchema)),
 		serviceForm: await superValidate(zod(serviceSchema)),
-		serviceDeleteForm: await superValidate(zod(deleteSchema))
+		deleteForm: await superValidate(zod(deleteSchema))
 	};
 }
 

@@ -1,21 +1,19 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
-
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import FormButton from '$lib/components/ui/form/form-button.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 
+	import type { ApplicationLog } from '$lib/api/applicationLog';
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
 	import ApplicationStatusSign from '$lib/components/misc/ApplicationStatusSign.svelte';
 	import CoApplicationsDisplay from '$lib/components/widgets/CoApplicationsDisplay.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import * as Timeline from '$lib/components/widgets/timeline/index';
-	import ApplicationLogForm from '$lib/components/forms/ApplicationLogForm.svelte';
 	import ApplicationLogItem from '$lib/components/widgets/application-log/ApplicationLogItem.svelte';
-	import type { ApplicationLog } from '$lib/api/applicationLog';
+	import ApplicationLogForm from '$lib/components/forms/ApplicationLogForm.svelte';
+	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
 	import { createTitle } from '$lib/util/siteUtils';
 	import { joinNames } from '$lib/util/schoolUtils';
 
@@ -27,9 +25,6 @@
 	const { student, program_iteration, round, program, schools } = data.application;
 	const schoolNames = joinNames(data.application.schools);
 	const title = `${data.application.student.fullname} \u2022 ${schoolNames}`;
-
-	const deleteForm = superForm(data.deleteForm, { id: 'delete-form' });
-	const { form: delFormData, enhance: delFormEnhance } = deleteForm;
 
 	const logForm = superForm(data.logForm, {
 		id: `log-form-new`,
@@ -162,7 +157,7 @@
 </Section>
 
 {#if data.userCanEdit}
-	<Section id="delete" hrule>
+	<Section id="delete" hruleOnly>
 		<div>
 			<ButtonDialog
 				buttonText="Delete Application"
@@ -171,20 +166,12 @@
 				bind:open={deleteModalOpen}
 			>
 				<svelte:fragment slot="description">This action cannot be undone.</svelte:fragment>
-				<form
-					method="POST"
+				<DeleteForm
+					superValidated={data.deleteForm}
+					objectId={data.application.id}
 					action="?/deleteApplication"
-					class="max-w-prose space-y-4 pb-2"
-					use:delFormEnhance
-					id="delete-form"
-				>
-					<input type="number" name="id" bind:value={$delFormData.id} hidden />
-
-					<div class="mx-auto mt-4 w-fit">
-						<FormButton variant="destructive">Delete</FormButton>
-						<Button variant="ghost" on:click={() => (deleteModalOpen = false)}>Cancel</Button>
-					</div>
-				</form>
+					onCancel={() => (deleteModalOpen = false)}
+				/>
 			</ButtonDialog>
 		</div>
 	</Section>
