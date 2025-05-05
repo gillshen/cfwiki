@@ -54,7 +54,8 @@
 <Form.Field {form} {name} class={cn('flex flex-col text-left', className)}>
 	<Popover.Root bind:open let:ids>
 		<Form.Control let:attrs>
-			<Form.Label class={cn('pb-0.5', optional ? 'optional-field' : '', labelClass)}
+			<Form.Label
+				class={cn('h-4 flex items-center gap-1', optional ? 'optional-field' : '', labelClass)}
 				>{label}</Form.Label
 			>
 			<Popover.Trigger

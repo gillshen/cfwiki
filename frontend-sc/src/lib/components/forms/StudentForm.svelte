@@ -2,11 +2,11 @@
 	import type { SuperForm, Infer } from 'sveltekit-superforms';
 	import * as Form from '$lib/components/ui/form/index';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
-	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 
 	import type { StudentSchema } from '$lib/schemas/student';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import Input from '$lib/components/forms/Input.svelte';
+	import Textarea from '$lib/components/forms/Textarea.svelte';
 	import RadioGroup from '$lib/components/forms/RadioGroup.svelte';
 	import { names } from '$lib/constants/fake';
 	import americanStates from '$lib/constants/americanStates';
@@ -129,13 +129,14 @@
 	<Input {form} name="base_city" label="Home city" maxlength={100} optional />
 {/if}
 
-<Form.Field {form} name="comments">
-	<Form.Control let:attrs>
-		<Form.Label class="optional-field">Comments</Form.Label>
-		<Textarea rows={4} maxlength={5000} {...attrs} bind:value={$formData.comments} />
-	</Form.Control>
-	<Form.Description class="text-xs">Anything you want to note about the student</Form.Description>
-	<Form.FieldErrors />
-</Form.Field>
+<Textarea
+	{form}
+	name="comments"
+	label="Comments"
+	maxlength={5000}
+	class="max-w-[50ch]"
+	description="Anything you want to note about the student"
+	optional
+/>
 
 <Form.Button class="w-fit min-w-24">Submit</Form.Button>

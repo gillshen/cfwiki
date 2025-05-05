@@ -50,10 +50,11 @@ export function activeYears(lookAhead = 5): number[] {
 export function quickAccessYears(): number[] {
 	const today = new Date();
 	const currentYear = today.getFullYear();
-	if (today.getMonth() > 4) {
-		return [currentYear + 1, currentYear, currentYear - 1];
+	if (today.getMonth() > 2) {
+		// Show next year's students starting March
+		return [currentYear + 1, currentYear, currentYear - 1, currentYear - 2];
 	} else {
-		return [currentYear, currentYear - 1, currentYear - 2];
+		return [currentYear, currentYear - 1, currentYear - 2, currentYear - 3];
 	}
 }
 

@@ -127,9 +127,9 @@
 		{/if}
 	</h1>
 	<div class="flex flex-row gap-2 items-center text-sm h-5">
-		<svelte:component this={genderMap[data.student.gender]} class="size-4" />
+		<svelte:component this={genderMap[data.student.gender]} class="size-4 -mr-0.5" />
 		<div class="text-muted-foreground/50">&bullet;</div>
-		<div>{countryFlags[data.student.citizenship]}</div>
+		<div class="ml-0.5">{countryFlags[data.student.citizenship]}</div>
 		<div>{data.student.citizenship}</div>
 		{#if data.student.date_of_birth}
 			<div class="text-muted-foreground/50">&bullet;</div>

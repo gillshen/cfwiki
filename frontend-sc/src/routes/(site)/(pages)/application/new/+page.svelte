@@ -5,7 +5,6 @@
 	import * as Form from '$lib/components/ui/form/index';
 	import FormField from '$lib/components/ui/form/form-field.svelte';
 	import * as Select from '$lib/components/ui/select/index';
-	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 
@@ -14,6 +13,7 @@
 	import StudentApplicationCard from '$lib/components/widgets/StudentApplicationCard.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import Input from '$lib/components/forms/Input.svelte';
+	import Textarea from '$lib/components/forms/Textarea.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
 
@@ -223,14 +223,15 @@
 					{/if}
 				{/if}
 
-				<Form.Field {form} name="comments" class="max-w-[480px]">
-					<Form.Control let:attrs>
-						<Form.Label class="optional-field">Comments</Form.Label>
-						<Textarea rows={4} maxlength={1000} {...attrs} bind:value={$formData.comments} />
-					</Form.Control>
-					<Form.Description>Anything you want to note about this application</Form.Description>
-					<Form.FieldErrors />
-				</Form.Field>
+				<Textarea
+					{form}
+					name="comments"
+					label="Comments"
+					class="w-[480px]"
+					maxlength={1000}
+					description="Anything you want to note about this application"
+					optional
+				/>
 
 				<input name="contract" type="number" value={data.contract.id} class="hidden" />
 

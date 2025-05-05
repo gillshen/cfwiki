@@ -2,7 +2,7 @@
 	import type { SuperForm, Infer } from 'sveltekit-superforms';
 
 	import * as Form from '$lib/components/ui/form/index';
-	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+	import Textarea from '$lib/components/forms/Textarea.svelte';
 
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import Input from '$lib/components/forms/Input.svelte';
@@ -22,15 +22,8 @@
 	label="Status"
 	items={applicationStatuses.map((status) => ({ value: status, label: status }))}
 />
-
-<Input {form} name="date" label="Date" type="date" />
-
-<Form.Field {form} name="comments" class="pt-1">
-	<Form.Control let:attrs>
-		<Form.Label class="optional-field">Comments</Form.Label>
-		<Textarea rows={4} maxlength={1000} {...attrs} bind:value={$formData.comments} />
-	</Form.Control>
-</Form.Field>
+<Input {form} name="date" label="Date" type="date" class="pb-1" />
+<Textarea {form} name="comments" label="Comments" maxlength={1000} optional />
 
 <input type="number" name="id" bind:value={$formData.id} hidden />
 <input type="number" name="application" bind:value={application.id} hidden />
