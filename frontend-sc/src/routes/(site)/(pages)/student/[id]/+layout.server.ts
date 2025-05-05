@@ -1,6 +1,6 @@
 import { fetchStudent } from '$lib/api/student';
 import { base10Or400 } from '$lib/util/siteUtils';
-import { canEdit, canCreateApplications } from '$lib/util/studentUtils';
+import { userCanEdit, canCreateApplications } from '$lib/util/studentUtils';
 
 export async function load(event) {
 	const id = base10Or400(event.params.id, 'Invalid student ID');
@@ -9,7 +9,7 @@ export async function load(event) {
 
 	return {
 		student,
-		userCanEdit: canEdit({ user, student }),
+		userCanEdit: userCanEdit({ user, student }),
 		canCreateApplications: canCreateApplications(student)
 	};
 }

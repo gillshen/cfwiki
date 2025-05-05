@@ -1,11 +1,10 @@
 <script lang="ts">
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
-	import Button from '$lib/components/ui/button/button.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import Pencil from 'lucide-svelte/icons/pencil-line';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
+	import PencilEditButton from '$lib/components/misc/PencilEditButton.svelte';
 	import CoApplicationsDisplay from '$lib/components/widgets/CoApplicationsDisplay.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import countryFlags from '$lib/constants/countries';
@@ -46,12 +45,12 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<section class="w-fit min-w-[60ch] mb-4 space-y-2">
+<section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-4">
 	<h1 class="page-title">{data.school.name}</h1>
-	<div class="flex flex-row gap-2 items-center text-sm">
+	<div class="flex flex-row gap-2 items-center text-sm h-5">
 		{#if data.school.alt_name}
 			<div>{data.school.alt_name}</div>
-			<div class="text-gray-400">&bullet;</div>
+			<div class="text-muted-foreground/50">&bullet;</div>
 		{/if}
 		<div>{countryFlags[data.school.country]}</div>
 		<div>{formatLocation(data.school)}</div>
@@ -65,13 +64,7 @@
 				{/if}
 			</div>
 		{/if}
-		<Button
-			variant="link"
-			href="/school/{data.school.id}/update"
-			class="font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80"
-		>
-			<Pencil class="size-4" />Edit
-		</Button>
+		<PencilEditButton href="/school/{data.school.id}/update" />
 	</div>
 </section>
 

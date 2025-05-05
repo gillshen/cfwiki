@@ -12,7 +12,6 @@
 	import Venus from 'lucide-svelte/icons/venus';
 	import Mars from 'lucide-svelte/icons/mars';
 	import NonBinary from 'lucide-svelte/icons/non-binary';
-	import Pencil from 'lucide-svelte/icons/pencil-line';
 	import LayoutGrid from 'lucide-svelte/icons/layout-grid';
 	import List from 'lucide-svelte/icons/list';
 	import Calendar from 'lucide-svelte/icons/calendar';
@@ -25,6 +24,7 @@
 	import Section from '$lib/components/containers/Section.svelte';
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
+	import PencilEditButton from '$lib/components/misc/PencilEditButton.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import ContractCard from '$lib/components/widgets/ContractCard.svelte';
@@ -33,7 +33,7 @@
 
 	import countryFlags from '$lib/constants/countries';
 	import { formatLocation } from '$lib/util/studentUtils';
-	import { canEdit as canEditContract } from '$lib/util/contractUtils';
+	import { userCanEdit as canEditContract } from '$lib/util/contractUtils';
 	import { orderBySchoolName, orderByStatus, orderByYearDesc } from '$lib/util/applicationUtils';
 	import { activeYears, toShortDate, toShortYearMonth } from '$lib/util/dateUtils';
 	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
@@ -126,26 +126,20 @@
 			&nbsp;{data.student.preferred_name}
 		{/if}
 	</h1>
-	<div class="flex flex-row gap-2 items-center text-sm">
+	<div class="flex flex-row gap-2 items-center text-sm h-5">
 		<svelte:component this={genderMap[data.student.gender]} class="size-4" />
-		<div class="text-gray-400">&bullet;</div>
+		<div class="text-muted-foreground/50">&bullet;</div>
 		<div>{countryFlags[data.student.citizenship]}</div>
 		<div>{data.student.citizenship}</div>
 		{#if data.student.date_of_birth}
-			<div class="text-gray-400">&bullet;</div>
+			<div class="text-muted-foreground/50">&bullet;</div>
 			<div>b. {toShortDate(data.student.date_of_birth)}</div>
 		{/if}
-		<div class="text-gray-400">&bullet;</div>
+		<div class="text-muted-foreground/50">&bullet;</div>
 		<div>@ {formatLocation(data.student)}</div>
 
 		{#if data.userCanEdit}
-			<Button
-				variant="link"
-				href="/student/{data.student.id}/update"
-				class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80"
-			>
-				<Pencil class="mr-1 size-4" />Edit
-			</Button>
+			<PencilEditButton href="/student/{data.student.id}/update" />
 		{/if}
 	</div>
 	{#if data.student.comments}
@@ -153,7 +147,7 @@
 	{/if}
 
 	{#if data.student.contracts.length}
-		<div class="flex gap-4 flex-wrap pt-4">
+		<div class="flex gap-6 flex-wrap pt-4">
 			{#each data.student.contracts as contract}
 				<ContractCard {contract} canEdit={canEditContract({ user: data.user, contract })} />
 			{/each}
@@ -192,13 +186,10 @@
 								>{enrollment.school.name}</a
 							>
 							{#if data.userCanEdit}
-								<Button
-									variant="link"
+								<PencilEditButton
 									href="/student/{data.student.id}/edu/{enrollment.id}"
-									class="ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80 h-6"
-								>
-									<Pencil class="mr-1 size-4" />Edit
-								</Button>
+									class="h-6"
+								/>
 							{/if}
 						</h3>
 

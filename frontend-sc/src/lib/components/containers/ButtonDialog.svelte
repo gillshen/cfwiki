@@ -17,6 +17,7 @@
 	export let buttonIcon: ComponentType | undefined = undefined;
 	export let buttonIconClass: string = '';
 	export let buttonClass: string = '';
+	export let buttonSlot: boolean = false;
 	export let contentClass: string = '';
 	export let dialogTitle: string = '';
 	export let open: boolean = false;
@@ -24,19 +25,25 @@
 </script>
 
 <Dialog.Root bind:open>
-	<Dialog.Trigger
-		class={cn(
-			buttonVariants({ variant: buttonVariant, size: buttonSize }),
-			'flex items-center',
-			buttonClass
-		)}
-		{disabled}
-	>
-		{#if buttonIcon}
-			<svelte:component this={buttonIcon} class={buttonIconClass} />
-		{/if}
-		{buttonText}
-	</Dialog.Trigger>
+	{#if buttonSlot}
+		<Dialog.Trigger>
+			<slot name="button" />
+		</Dialog.Trigger>
+	{:else}
+		<Dialog.Trigger
+			class={cn(
+				buttonVariants({ variant: buttonVariant, size: buttonSize }),
+				'flex items-center',
+				buttonClass
+			)}
+			{disabled}
+		>
+			{#if buttonIcon}
+				<svelte:component this={buttonIcon} class={buttonIconClass} />
+			{/if}
+			{buttonText}
+		</Dialog.Trigger>
+	{/if}
 	<Dialog.Content class={cn('max-h-[calc(100vh-48px)] overflow-auto', contentClass)}>
 		<Dialog.Header>
 			{#if dialogTitle}

@@ -2,7 +2,6 @@
 	import type { GridApi } from 'ag-grid-community';
 
 	import * as Sheet from '$lib/components/ui/sheet/index';
-	import * as Tooltip from '$lib/components/ui/tooltip';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
@@ -13,6 +12,7 @@
 	import ArrowDownToLine from 'lucide-svelte/icons/arrow-down-to-line';
 	import Settings from 'lucide-svelte/icons/settings-2';
 
+	import Tooltip from '$lib/components/containers/Tooltip.svelte';
 	import { timestamp } from '$lib/util/dateUtils';
 
 	export let rowData: Promise<any[]>;
@@ -101,37 +101,27 @@
 				on:input={onFilterTextBoxChanged}
 			/>
 
-			<Tooltip.Root>
-				<Tooltip.Trigger>
-					<Button
-						variant="outline"
-						size="icon"
-						class="flex items-center gap-1 w-[40px] h-[40px]"
-						on:click={() => alert('TODO: stats')}
-					>
-						<ChartColumn class="size-4" />
-					</Button>
-				</Tooltip.Trigger>
-				<Tooltip.Content>
-					<p>Statistics</p>
-				</Tooltip.Content>
-			</Tooltip.Root>
+			<Tooltip text="Statistics">
+				<Button
+					variant="outline"
+					size="icon"
+					class="flex items-center gap-1 w-[40px] h-[40px]"
+					on:click={() => alert('TODO: stats')}
+				>
+					<ChartColumn class="size-4" />
+				</Button>
+			</Tooltip>
 
-			<Tooltip.Root>
-				<Tooltip.Trigger>
-					<Button
-						variant="outline"
-						size="icon"
-						class="flex items-center gap-1 w-[40px] h-[40px]"
-						on:click={() =>
-							gridApi && gridApi.exportDataAsCsv({ fileName: `${baseFileName}_${timestamp()}` })}
-						><ArrowDownToLine class="size-4" /></Button
-					>
-				</Tooltip.Trigger>
-				<Tooltip.Content>
-					<p>Download</p>
-				</Tooltip.Content>
-			</Tooltip.Root>
+			<Tooltip text="Download">
+				<Button
+					variant="outline"
+					size="icon"
+					class="flex items-center gap-1 w-[40px] h-[40px]"
+					on:click={() =>
+						gridApi && gridApi.exportDataAsCsv({ fileName: `${baseFileName}_${timestamp()}` })}
+					><ArrowDownToLine class="size-4" /></Button
+				>
+			</Tooltip>
 		</div>
 	{/await}
 </div>

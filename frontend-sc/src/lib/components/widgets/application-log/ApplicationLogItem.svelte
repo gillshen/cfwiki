@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-	import * as Dialog from '$lib/components/ui/dialog/index';
 	import FormButton from '$lib/components/ui/form/form-button.svelte';
-	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import X from 'lucide-svelte/icons/x';
 
@@ -14,6 +11,7 @@
 	import type { ApplicationDetail } from '$lib/api/application';
 	import ApplicationLogForm from '$lib/components/forms/ApplicationLogForm.svelte';
 	import PrimitiveItem from './PrimitiveItem.svelte';
+	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 
 	export let log: ApplicationLog;
 	export let application: ApplicationDetail;
@@ -53,58 +51,45 @@
 {#if canEdit}
 	<PrimitiveItem {log}>
 		<div slot="buttons">
-			<Badge variant="secondary" class="text-muted-foreground flex items-center space-x-2">
-				<Dialog.Root bind:open={updateDialogOpen}>
-					<Dialog.Trigger>
-						<Pencil class="size-3 text-secondary-foreground hover:text-secondary-foreground/80" />
-					</Dialog.Trigger>
-					<Dialog.Content>
-						<Dialog.Header>
-							<Dialog.Title>Edit Application Status</Dialog.Title>
-						</Dialog.Header>
-						<form
-							method="POST"
-							action="?/createOrUpdateApplicationLog"
-							class="max-w-prose space-y-4 my-4 mx-auto"
-							use:enhance
-							id="log-form-{log.id}"
-						>
-							<ApplicationLogForm {form} {application} />
-						</form>
-						<!-- <SuperDebug data={$formData} /> -->
-					</Dialog.Content>
-				</Dialog.Root>
+			<div class="flex items-center space-x-2 ml-2">
+				<ButtonDialog buttonSlot dialogTitle="Edit Application Status" bind:open={updateDialogOpen}>
+					<Pencil
+						class="size-3 text-muted-foreground hover:text-secondary-foreground/80"
+						slot="button"
+					/>
+					<form
+						method="POST"
+						action="?/createOrUpdateApplicationLog"
+						class="max-w-prose space-y-4 my-4 mx-auto"
+						use:enhance
+						id="log-form-{log.id}"
+					>
+						<ApplicationLogForm {form} {application} />
+					</form>
+				</ButtonDialog>
 
-				<Separator orientation="vertical" class="h-3" />
+				<ButtonDialog buttonSlot dialogTitle="Delete this application status?">
+					<X
+						class="size-3 text-muted-foreground hover:text-secondary-foreground/80"
+						slot="button"
+					/>
+					<p slot="description">This action cannot be undone.</p>
+					<form
+						method="POST"
+						action="?/deleteApplicationLog"
+						class="max-w-prose space-y-4 pb-2"
+						use:delEnhance
+						id="log-delete-form-{log.id}"
+					>
+						<input type="number" name="id" bind:value={$delFormData.id} hidden />
 
-				<Dialog.Root bind:open={deleteDialogOpen}>
-					<Dialog.Trigger>
-						<!-- <Badge variant="outline"> -->
-						<X class="size-3 text-secondary-foreground hover:text-rose-700" />
-						<!-- </Badge> -->
-					</Dialog.Trigger>
-					<Dialog.Content>
-						<Dialog.Header>
-							<Dialog.Title>Delete this application status?</Dialog.Title>
-							<Dialog.Description>This action cannot be undone.</Dialog.Description>
-						</Dialog.Header>
-						<form
-							method="POST"
-							action="?/deleteApplicationLog"
-							class="max-w-prose space-y-4 pb-2"
-							use:delEnhance
-							id="log-delete-form-{log.id}"
-						>
-							<input type="number" name="id" bind:value={$delFormData.id} hidden />
-
-							<div class="mx-auto mt-4 w-fit">
-								<FormButton variant="destructive">Delete</FormButton>
-								<Button variant="ghost" on:click={() => (deleteDialogOpen = false)}>Cancel</Button>
-							</div>
-						</form>
-					</Dialog.Content>
-				</Dialog.Root>
-			</Badge>
+						<div class="mx-auto mt-4 w-fit">
+							<FormButton variant="destructive">Delete</FormButton>
+							<Button variant="ghost" on:click={() => (deleteDialogOpen = false)}>Cancel</Button>
+						</div>
+					</form>
+				</ButtonDialog>
+			</div>
 		</div>
 	</PrimitiveItem>
 {:else}

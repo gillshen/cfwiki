@@ -5,13 +5,13 @@
 	import * as Avatar from '$lib/components/ui/avatar/index';
 	import * as HoverCard from '$lib/components/ui/hover-card/index';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import Pencil from 'lucide-svelte/icons/pencil-line';
 	import Chevron from 'lucide-svelte/icons/chevron-right';
 	import Signature from 'lucide-svelte/icons/signature';
 
 	import type { CfUserListItem } from '$lib/api/user';
 	import type { Contract } from '$lib/api/student';
 	import ContractStatusSign from '$lib/components/misc/ContractStatusSign.svelte';
+	import PencilEditButton from '$lib/components/misc/PencilEditButton.svelte';
 	import { groupByCfPerson, leftEarly, orderByRole } from '$lib/util/serviceUtils';
 	import { toShortYearMonth } from '$lib/util/dateUtils';
 
@@ -24,21 +24,19 @@
 		cfUsers.find((user) => user.username === username)?.avatar;
 </script>
 
-<Card.Root class="shadow-none">
+<Card.Root class="shadow-none min-w-[270px]">
 	<Card.Header class="py-4">
 		<Card.Title
 			class="text-base font-semibold tracking-normal pb-2 flex items-center gap-4 w-full justify-between pr-2"
 		>
 			<div>{contract.type} {contract.target_year}</div>
 			{#if canEdit}
-				<Button
-					variant="link"
+				<PencilEditButton
+					text=""
 					href="/student/{contract.student}/contract/{contract.id}"
-					size="icon"
-					class="font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80 size-6"
-				>
-					<Pencil class="size-4 translate-y-[1px]" />
-				</Button>
+					class="h-6 pr-0"
+					iconClass="translate-y-[1px]"
+				/>
 			{/if}
 		</Card.Title>
 		<Card.Description class="flex gap-4 items-center">

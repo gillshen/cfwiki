@@ -11,13 +11,13 @@ import type {
 import type { ContractType } from '$lib/api/contract';
 import americanStates from '$lib/constants/americanStates';
 import canadianProvinces from '$lib/constants/canadianProvinces';
-import { canEdit as canEditContract } from '$lib/util/contractUtils';
+import { userCanEdit as canEditContract } from '$lib/util/contractUtils';
 import { isActive } from '$lib/util/serviceUtils';
 import { compareAlevelGrade } from '$lib/util/scoresUtils';
 import { lexicalChineseLast } from '$lib/util/stringUtils';
 import { isDirectlyAdministered } from '$lib/constants/countries';
 
-export const canEdit = (params: {
+export const userCanEdit = (params: {
 	user: { username: string; is_staff: boolean; is_active: boolean };
 	student: { contracts: Contract[] };
 }): boolean => {
@@ -27,7 +27,7 @@ export const canEdit = (params: {
 		return false;
 	}
 	// TODO uncomment in production
-	// if (user.is_staff) {
+	// if (user.is_admin) {
 	// 	return true;
 	// }
 
