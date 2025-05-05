@@ -13,7 +13,9 @@
 	{#if title}
 		<div class="sticky top-[112px] bg-white z-10">
 			<h2 class="text-xl font-bold pb-2">{title}</h2>
-			<hr class={cn('pb-2', hruleClass)} />
+			{#if hrule}
+				<hr class={cn('pb-2', hruleClass)} />
+			{/if}
 		</div>
 	{:else if hrule}
 		<hr class={cn('pb-2', hruleClass)} />

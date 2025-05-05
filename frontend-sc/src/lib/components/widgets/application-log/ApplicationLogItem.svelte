@@ -68,7 +68,11 @@
 					</form>
 				</ButtonDialog>
 
-				<ButtonDialog buttonSlot dialogTitle="Delete this application status?">
+				<ButtonDialog
+					buttonSlot
+					dialogTitle="Delete this application status?"
+					bind:open={deleteDialogOpen}
+				>
 					<X
 						class="size-3 text-muted-foreground hover:text-secondary-foreground/80"
 						slot="button"

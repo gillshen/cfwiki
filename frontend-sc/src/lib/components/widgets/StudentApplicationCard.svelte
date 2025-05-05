@@ -30,12 +30,13 @@
 		>
 			<p class="text-muted-foreground text-pretty">{application.program.display_name}</p>
 			<Badge variant="outline" class="w-fit h-5 bg-muted -translate-x-[1px]">{badgeText}</Badge>
+			{#if compact}
+				<ApplicationStatusSign {application} iconOnly class="h-5" />
+			{/if}
 		</Card.Description>
 	</Card.Header>
 	{#if compact}
-		<Card.Content class="pt-1.5 pb-3 flex flex-col gap-2 flex-grow">
-			<ApplicationStatusSign {application} />
-		</Card.Content>
+		<Card.Footer class="pb-4" />
 	{:else}
 		<Card.Content class="pt-4 flex flex-col gap-2 flex-grow min-w-[240px]">
 			<ul class="list-disc ml-3.5 flex flex-col gap-1 text-muted-foreground">

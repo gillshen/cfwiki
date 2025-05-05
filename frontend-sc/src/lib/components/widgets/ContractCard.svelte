@@ -12,7 +12,7 @@
 	import type { Contract } from '$lib/api/student';
 	import ContractStatusSign from '$lib/components/misc/ContractStatusSign.svelte';
 	import PencilEditButton from '$lib/components/misc/PencilEditButton.svelte';
-	import { groupByCfPerson, leftEarly, orderByRole } from '$lib/util/serviceUtils';
+	import { groupByCfPerson, leftEarly, orderByRoleUsername } from '$lib/util/serviceUtils';
 	import { toShortYearMonth } from '$lib/util/dateUtils';
 
 	export let contract: Contract;
@@ -45,7 +45,7 @@
 	</Card.Header>
 
 	<Card.Content class="pt-2 pb-8 flex flex-col gap-4 text-sm">
-		{#each Object.entries(groupByCfPerson(contract.services.sort(orderByRole))) as [cfUsername, services]}
+		{#each Object.entries(groupByCfPerson(contract.services.sort(orderByRoleUsername))) as [cfUsername, services]}
 			{@const stayedTillEnd = services.map((s) => !leftEarly(s)).some(Boolean)}
 			<div class="flex items-center gap-4 min-w-[220px] rounded-lg">
 				<div class="flex items-center gap-2 flex-grow-1 w-full hover:no-underline">

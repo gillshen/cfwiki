@@ -12,7 +12,10 @@
 	import { formatNotableStatuses, getNotableStatuses } from '$lib/util/applicationUtils';
 
 	export let application: { logs: ApplicationLogBrief[] };
-	export let height: string = '24px';
+	export let iconOnly: boolean = false;
+	export let iconClass: string = '';
+	export let className: string = '';
+	export { className as class };
 
 	type Icon = {
 		icon: ComponentType;
@@ -46,13 +49,15 @@
 </script>
 
 {#if latestStatus}
-	<div class={cn('text-sm flex items-center gap-1.5', `h-[${height}]`)}>
+	<div class={cn('text-sm flex items-center gap-1.5 h-6', className)}>
 		<svelte:component
 			this={statusMap[latestStatus].icon}
-			class={cn('size-4 shrink-0', statusMap[latestStatus].className)}
+			class={cn('size-4 shrink-0', statusMap[latestStatus].className, iconClass)}
 		/>
-		<div class="flex-1 min-w-0">
-			<span class="font-medium block truncate">{formattedStatuses}</span>
-		</div>
+		{#if !iconOnly}
+			<div class="flex-1 min-w-0">
+				<span class="font-medium block truncate">{formattedStatuses}</span>
+			</div>
+		{/if}
 	</div>
 {/if}

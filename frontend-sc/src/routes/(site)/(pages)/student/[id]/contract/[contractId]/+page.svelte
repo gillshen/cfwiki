@@ -2,7 +2,10 @@
 	import { superForm } from 'sveltekit-superforms';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
+	import * as Table from '$lib/components/ui/table/index';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import Pencil from 'lucide-svelte/icons/pencil';
+	import X from 'lucide-svelte/icons/x';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
@@ -14,6 +17,7 @@
 	import Tooltip from '$lib/components/containers/Tooltip.svelte';
 	import { createTitle } from '$lib/util/siteUtils';
 	import { contractStatuses } from '$lib/api/contract';
+	import { orderByRoleUsername } from '$lib/util/serviceUtils';
 	import { toShortDate } from '$lib/util/dateUtils';
 
 	import {
@@ -132,14 +136,61 @@
 	</div>
 </section>
 
-<Section id="personnel">
-	{#each data.contract.services as service}
-		<pre class="text-sm p-4 rounded-lg bg-muted max-w-prose">{JSON.stringify(
-				service,
-				null,
-				2
-			)}</pre>
-	{/each}
+<Section id="team" title="Team" hrule={false}>
+	<div class="border rounded-md w-fit">
+		<Table.Root class="w-[800px]">
+			<Table.Header>
+				<Table.Row>
+					<Table.Head class="font-semibold min-w-[100px]">CFer</Table.Head>
+					<Table.Head class="font-semibold min-w-[100px]">Role</Table.Head>
+					<Table.Head class="font-semibold min-w-[120px]">Start Date</Table.Head>
+					<Table.Head class="font-semibold min-w-[120px]">End Date</Table.Head>
+					<Table.Head class="font-semibold w-[90px] flex-grow-0"></Table.Head>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{#each data.contract.services.sort(orderByRoleUsername) as service}
+					<Table.Row>
+						<Table.Cell>
+							<a href="/cf/{service.cf_username}" class="text-inherit">{service.cf_username}</a>
+						</Table.Cell>
+						<Table.Cell>{service.role}</Table.Cell>
+						<Table.Cell>{service.start_date || 'Start of contract'}</Table.Cell>
+						<Table.Cell>{service.end_date || 'End of contract'}</Table.Cell>
+						<Table.Cell class="flex items-center gap-4 pr-6">
+							<ButtonDialog buttonSlot dialogTitle="Update Team Membership">
+								<Pencil
+									class="size-4 text-muted-foreground hover:text-secondary-foreground/80 translate-y-[1px]"
+									slot="button"
+								/>
+								<form>form</form>
+							</ButtonDialog>
+
+							<ButtonDialog
+								buttonSlot
+								dialogTitle="Remove {service.cf_username} as {service.role} from the team?"
+							>
+								<X
+									class="size-4 text-muted-foreground hover:text-secondary-foreground/80 translate-y-[1px]"
+									slot="button"
+								/>
+								<form>form</form>
+							</ButtonDialog>
+						</Table.Cell>
+					</Table.Row>
+				{/each}
+			</Table.Body>
+		</Table.Root>
+	</div>
+
+	<ButtonDialog
+		buttonVariant="outline"
+		buttonText="Add Team Member"
+		dialogTitle="Add Team Member"
+		buttonClass="w-fit mt-4"
+	>
+		<form>form</form>
+	</ButtonDialog>
 </Section>
 
 <Section id="delete" hrule>

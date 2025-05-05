@@ -29,14 +29,14 @@ export function groupByCfPerson(services: Service[]): Record<string, Service[]> 
 	return grouped;
 }
 
-export function orderByRole(a: Service, b: Service): number {
-	const roles = Array.from(cfRoles) as string[];
+export function orderByRoleUsername(a: Service, b: Service): number {
+	const roles = [...cfRoles] as string[];
 	const indexA = roles.indexOf(a.role) ?? 99;
 	const indexB = roles.indexOf(b.role) ?? 99;
 
-	if (indexA === indexB) {
-		return a.role.localeCompare(b.role);
-	} else {
+	if (indexA !== indexB) {
 		return indexA - indexB;
 	}
+	// If roles are identical, compare username
+	return a.cf_username.localeCompare(b.cf_username);
 }
