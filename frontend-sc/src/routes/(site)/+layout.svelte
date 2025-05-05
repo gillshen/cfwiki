@@ -46,7 +46,7 @@
 		<div
 			class={cn(
 				'mx-auto flex items-center justify-between space-between',
-				isDataGridPage ? 'w-full' : 'w-[1496px] mx-auto'
+				isDataGridPage ? 'w-full' : 'w-[1488px] mx-auto'
 			)}
 		>
 			<nav class="flex gap-4 my-2 flex-grow-1">
@@ -290,8 +290,9 @@
 
 	<div
 		class={cn(
-			'mt-[60px] min-h-[calc(100vh-340px)] w-[100vw] flex justify-center',
-			isDataGridPage ? 'max-w-full' : 'max-w-[1496px] mx-auto'
+			// Use a non-negative min-width to prevent the side list going off the left edge as the viewport narrows
+			'mt-[60px] min-h-[calc(100vh-340px)] w-[100vw] min-w-[0px] flex justify-center',
+			isDataGridPage ? 'max-w-full' : 'max-w-[1488px] mx-auto'
 		)}
 	>
 		{#if isDataGridPage}
@@ -299,9 +300,10 @@
 				<slot />
 			</article>
 		{:else}
-			<div class="w-[1496px] mx-auto flex gap-x-8">
+			<!-- Use a non-negative min-width to prevent the side list going off the left edge as the viewport narrows -->
+			<div class="w-[1488px] min-w-[0px] mx-auto flex gap-x-8">
 				<aside
-					class="sticky top-[60px] max-w-[240px] min-w-[240px] h-[calc(100vh-60px)] overflow-auto px-4 py-8"
+					class="sticky top-[60px] max-w-[240px] min-w-[240px] shrink-0 h-[calc(100vh-60px)] overflow-auto px-4 py-8"
 				>
 					{#await data.students then students}
 						<StudentSideList username={data.username} {students} {selectedStudentId} />
