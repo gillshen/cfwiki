@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
+	import { cn } from '$lib/utils';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Table from '$lib/components/ui/table/index';
@@ -20,7 +21,7 @@
 
 	import { createTitle } from '$lib/util/siteUtils';
 	import { contractStatuses } from '$lib/api/contract';
-	import { orderByRoleUsername } from '$lib/util/serviceUtils';
+	import { formatDates, orderByRoleUsername } from '$lib/util/serviceUtils';
 	import { toShortDate } from '$lib/util/dateUtils';
 
 	import {
@@ -28,7 +29,6 @@
 		secondaryProgsWithContractTerms,
 		universityProgsWithContractTerms
 	} from '$lib/constants/progressions';
-	import { cn } from '$lib/utils';
 
 	export let data;
 
@@ -161,6 +161,7 @@
 					</Table.Header>
 					<Table.Body>
 						{#each data.contract.services.sort(orderByRoleUsername) as service}
+							{@const { startDate, endDate } = formatDates({ service, contract: data.contract })}
 							<Table.Row>
 								<Table.Cell class="pl-2">
 									<div class="flex items-center gap-2">
@@ -172,10 +173,10 @@
 								</Table.Cell>
 								<Table.Cell>{service.role}</Table.Cell>
 								<Table.Cell class={service.start_date ? '' : 'text-muted-foreground'}
-									>{toShortDate(service.start_date) || 'Start of contract'}</Table.Cell
+									>{startDate}</Table.Cell
 								>
 								<Table.Cell class={service.end_date ? '' : 'text-muted-foreground'}
-									>{toShortDate(service.end_date) || 'End of contract'}</Table.Cell
+									>{endDate}</Table.Cell
 								>
 								<Table.Cell class="flex items-center gap-4 pr-6 h-16">
 									<ServiceActionItem

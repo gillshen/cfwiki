@@ -1,7 +1,8 @@
 import { isFuture } from 'date-fns';
 
-import type { Service } from '$lib/api/contract';
+import type { Contract, Service } from '$lib/api/contract';
 import { cfRoles } from '$lib/api/service';
+import { toShortDate } from '$lib/util/dateUtils';
 
 export function isActive(service: Service): boolean {
 	return !service.end_date || isFuture(service.end_date);
@@ -39,4 +40,15 @@ export function orderByRoleUsername(a: Service, b: Service): number {
 	}
 	// If roles are identical, compare username
 	return a.cf_username.localeCompare(b.cf_username);
+}
+
+export function formatDates({ service, contract }: { service: Service; contract: Contract }): {
+	startDate: string;
+	endDate: string;
+} {
+	return {
+		startDate: toShortDate(service.start_date ?? contract.date) || 'Start of contract',
+		endDate:
+			toShortDate(service.end_date) || (contract.status === 'In effect' ? 'n/a' : 'End of contract')
+	};
 }
