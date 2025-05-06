@@ -16,20 +16,6 @@ export function filterForActive(services: Service[]): Service[] {
 	return services.filter((s) => isActive(s));
 }
 
-export function groupByCfPerson(services: Service[]): Record<string, Service[]> {
-	const grouped: Record<string, Service[]> = {};
-
-	for (const service of services) {
-		const key = service.cf_username;
-		if (!grouped[key]) {
-			grouped[key] = [];
-		}
-		grouped[key].push(service);
-	}
-
-	return grouped;
-}
-
 export function orderByRoleUsername(a: Service, b: Service): number {
 	const roles = [...cfRoles] as string[];
 	const indexA = roles.indexOf(a.role) ?? 99;

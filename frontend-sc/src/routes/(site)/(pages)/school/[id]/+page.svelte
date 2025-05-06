@@ -15,7 +15,8 @@
 		getSchoolRankingEntry
 	} from '$lib/util/schoolUtils';
 
-	import { groupByCategory, enhanceDisplayName } from '$lib/util/programUtils';
+	import { PROGRAM_CATEGORIES } from '$lib/api/program';
+	import { enhanceDisplayName } from '$lib/util/programUtils';
 	import { filterByType } from '$lib/util/applicationUtils';
 	import { toISOYearMonth } from '$lib/util/dateUtils';
 	import { orderByDatesDesc } from '$lib/util/enrollmentUtils';
@@ -70,23 +71,20 @@
 
 {#if data.school.type !== 'Secondary School'}
 	<Section id="programs" title="Programs">
-		{#await data.programs}
+		{#await data.programsGrouped}
 			<LoadingSign />
-		{:then programs}
-			{#if programs.length}
-				<div class="flex flex-col gap-4">
-					{#each groupByCategory(programs) as [category, filteredPrograms]}
-						{#if filteredPrograms.length}
-							<div class="flex flex-col gap-2">
-								<h4 class="text-base font-bold">{category}</h4>
-								{#each filteredPrograms as program}
-									<a class="w-fit" href="/program/{program.id}">{enhanceDisplayName(program)}</a>
-								{/each}
-							</div>
-						{/if}
-					{/each}
-				</div>
-			{/if}
+		{:then programsGrouped}
+			{#each PROGRAM_CATEGORIES as category}
+				{@const programs = programsGrouped[category]}
+				{#if programs?.length}
+					<div class="flex flex-col gap-2">
+						<h4 class="text-base font-bold">{category}</h4>
+						{#each programs as program}
+							<a class="w-fit" href="/program/{program.id}">{enhanceDisplayName(program)}</a>
+						{/each}
+					</div>
+				{/if}
+			{/each}
 		{/await}
 	</Section>
 

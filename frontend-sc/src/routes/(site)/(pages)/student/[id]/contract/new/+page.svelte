@@ -10,7 +10,7 @@
 
 	import { createTitle } from '$lib/util/siteUtils';
 	import { activeYears } from '$lib/util/dateUtils';
-	import { contractStatuses, contractTypes } from '$lib/api/contract';
+	import { CONTRACT_TYPES, CONTRACT_STATUSES } from '$lib/api/contract';
 
 	import {
 		allProgsWithContractTerms,
@@ -66,9 +66,9 @@
 	<form method="POST" action="?/createContract" class="max-w-prose space-y-6 mt-4" use:enhance>
 		<input type="number" name="student" bind:value={data.student.id} hidden />
 
-		<Combobox {form} name="type" label="Type" items={Array.from(contractTypes)} />
+		<Combobox {form} name="type" label="Type" items={[...CONTRACT_TYPES]} />
 		<Combobox {form} name="target_year" label="Target year" items={activeYears()} />
-		<Combobox {form} name="status" label="Status" items={Array.from(contractStatuses)} />
+		<Combobox {form} name="status" label="Status" items={[...CONTRACT_STATUSES]} />
 		<Input {form} name="date" label="Date signed" type="date" class="pb-0.5" optional />
 		<Combobox
 			{form}

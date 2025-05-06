@@ -8,17 +8,11 @@
 	import CalendarCheck from 'lucide-svelte/icons/calendar-check';
 
 	import type { Contract } from '$lib/api/student';
-	import type { ContractStatus } from '$lib/api/contract';
+	import type { ContractStatus, Service } from '$lib/api/contract';
 	import ContractStatusSign from '$lib/components/misc/ContractStatusSign.svelte';
 	import UserAvatar from '$lib/components/misc/UserAvatar.svelte';
 	import { toShortYearMonth } from '$lib/util/dateUtils';
-
-	import {
-		groupByCfPerson,
-		endedEarly,
-		orderByRoleUsername,
-		formatDates
-	} from '$lib/util/serviceUtils';
+	import { endedEarly, orderByRoleUsername, formatDates } from '$lib/util/serviceUtils';
 
 	export let contract: Contract;
 	export let canEdit: boolean;
@@ -46,6 +40,12 @@
 			shadow: 'shadow-rose-300/30'
 		}
 	};
+
+	$: servicesSorted = contract.services.sort(orderByRoleUsername);
+	$: servicesGrouped = Object.groupBy(servicesSorted, (service) => service.cf_username) as Record<
+		string,
+		Service[]
+	>;
 </script>
 
 <Card.Root
@@ -89,7 +89,7 @@
 	<Card.Content
 		class={cn('pt-2 flex flex-col gap-4 text-sm min-w-[250px]', canEdit ? 'pb-0' : 'pb-8')}
 	>
-		{#each Object.entries(groupByCfPerson(contract.services.sort(orderByRoleUsername))) as [cfUsername, services]}
+		{#each Object.entries(servicesGrouped) as [cfUsername, services]}
 			{@const stayedTillEnd = services.map((s) => !endedEarly(s)).some(Boolean)}
 			<div class="flex items-center gap-2">
 				<UserAvatar username={cfUsername} imageClass="size-[26px]" />

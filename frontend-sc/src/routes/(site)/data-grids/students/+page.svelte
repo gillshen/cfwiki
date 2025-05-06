@@ -18,7 +18,7 @@
 	import DismissibleBadge from '$lib/components/misc/DismissibleBadge.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import RowCountLabel from '$lib/components/misc/RowCountLabel.svelte';
-	import { contractStatuses, contractTypes } from '$lib/api/contract';
+	import { CONTRACT_TYPES, CONTRACT_STATUSES } from '$lib/api/contract';
 	import { createTitle } from '$lib/util/siteUtils';
 	import { activeYears } from '$lib/util/dateUtils';
 	import { getColumnDefs } from '$lib/util/studentsGridColumns';
@@ -137,7 +137,7 @@
 					selected={{ value: contractType, label: contractType }}
 					onSelectedChange={paramsManager.onScSelectChange('contractType')}
 				>
-					<DataGridControl.FilterBody items={[...contractTypes]} />
+					<DataGridControl.FilterBody items={[...CONTRACT_TYPES]} />
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 
@@ -146,7 +146,7 @@
 					selected={{ value: contractStatus, label: contractStatus }}
 					onSelectedChange={paramsManager.onScSelectChange('contractStatus')}
 				>
-					<DataGridControl.FilterBody items={[...contractStatuses]} />
+					<DataGridControl.FilterBody items={[...CONTRACT_STATUSES]} />
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 

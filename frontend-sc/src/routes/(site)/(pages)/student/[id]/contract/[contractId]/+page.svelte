@@ -19,8 +19,8 @@
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import Tooltip from '$lib/components/containers/Tooltip.svelte';
 
+	import { CONTRACT_STATUSES } from '$lib/api/contract';
 	import { createTitle } from '$lib/util/siteUtils';
-	import { contractStatuses } from '$lib/api/contract';
 	import { formatDates, orderByRoleUsername } from '$lib/util/serviceUtils';
 	import { toShortDate } from '$lib/util/dateUtils';
 
@@ -115,7 +115,7 @@
 				<input name="type" bind:value={data.contract.type} hidden />
 				<input type="number" name="target_year" bind:value={data.contract.target_year} hidden />
 
-				<Combobox form={contractForm} name="status" label="Status" items={[...contractStatuses]} />
+				<Combobox form={contractForm} name="status" label="Status" items={[...CONTRACT_STATUSES]} />
 				<Input
 					form={contractForm}
 					name="date"

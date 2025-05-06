@@ -1,4 +1,4 @@
-import type { BaseGrade, Grade, GroupedGrades } from '$lib/api/grade';
+import type { BaseGrade } from '$lib/api/grade';
 
 export function summarizeByProgression(grades: BaseGrade[]): BaseGrade[] {
 	const lastGradesPerProgression: Record<string, BaseGrade> = {};
@@ -7,20 +7,6 @@ export function summarizeByProgression(grades: BaseGrade[]): BaseGrade[] {
 		lastGradesPerProgression[grade.progression] = grade;
 	}
 	return Object.values(lastGradesPerProgression);
-}
-
-export function groupByProgressionTerm(grades: Grade[]): GroupedGrades {
-	const groupedGrades: GroupedGrades = {};
-
-	for (const grade of grades) {
-		const key = `${grade.progression} ${grade.term}`;
-		if (!groupedGrades[key]) {
-			groupedGrades[key] = [];
-		}
-		groupedGrades[key].push(grade);
-	}
-
-	return groupedGrades;
 }
 
 export const formatGradeValue = (

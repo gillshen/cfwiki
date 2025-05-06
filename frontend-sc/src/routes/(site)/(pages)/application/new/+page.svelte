@@ -3,7 +3,6 @@
 	import { type Selected } from 'bits-ui';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Form from '$lib/components/ui/form/index';
-	import FormField from '$lib/components/ui/form/form-field.svelte';
 	import * as Select from '$lib/components/ui/select/index';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
@@ -17,10 +16,11 @@
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
 
+	import type { Service } from '$lib/api/contract';
 	import { orderByName } from '$lib/util/schoolUtils';
 	import { enhanceDisplayName, orderByName as orderByProgramName } from '$lib/util/programUtils';
 	import { formatRound, orderByDueDate, orderByRoundName } from '$lib/util/applicationRoundUtils';
-	import { groupByCfPerson, endedEarly } from '$lib/util/serviceUtils';
+	import { endedEarly } from '$lib/util/serviceUtils';
 	import { createTitle } from '$lib/util/siteUtils';
 
 	export let data;
@@ -36,11 +36,16 @@
 	});
 	const { enhance: schoolFormEnhance } = schoolForm;
 
-	const groupedServices = Object.entries(groupByCfPerson(data.contract.services)).sort();
+	const servicesGrouped = Object.groupBy(data.contract.services, (s) => s.cf_username) as Record<
+		string,
+		Service[]
+	>;
+
+	const servicesGroupedEntries = Object.entries(servicesGrouped).sort();
 
 	const selectedStaff: Selected<string>[] = $formData.staff_names.length
 		? $formData.staff_names.map((s) => ({ value: s, label: s }))
-		: groupedServices
+		: servicesGroupedEntries
 				.filter(([, services]) => services.map((s) => !endedEarly(s)).some(Boolean))
 				.map(([cfUsername]) => ({ value: cfUsername, label: cfUsername }));
 
@@ -189,30 +194,26 @@
 					{/if}
 				{/if}
 
-				<FormField {form} name="staff_names" class="w-[480px] pb-0.5">
+				<Form.Field {form} name="staff_names" class="w-[480px] pb-0.5">
 					<Form.Control let:attrs>
 						<Form.Label>CF Involvement</Form.Label>
 						<Select.Root
 							multiple
 							selected={selectedStaff}
-							onSelectedChange={(v) => {
-								if (v) {
-									$formData.staff_names = v.map((item) => item.value).sort();
-								}
-								console.log($formData.staff_names);
-							}}
+							onSelectedChange={(v) =>
+								v && ($formData.staff_names = v.map((item) => item.value).sort())}
 						>
 							<Select.Trigger {...attrs}>
 								<Select.Value placeholder="Select at least one option" />
 							</Select.Trigger>
 							<Select.Content>
-								{#each groupedServices as [cfUsername]}
+								{#each servicesGroupedEntries as [cfUsername]}
 									<Select.Item value={cfUsername} label={cfUsername} />
 								{/each}
 							</Select.Content>
 						</Select.Root>
 						<select name="staff_names" multiple bind:value={$formData.staff_names} hidden>
-							{#each groupedServices as [cfUsername]}
+							{#each servicesGroupedEntries as [cfUsername]}
 								<option value={cfUsername}>{cfUsername}</option>
 							{/each}
 						</select>
@@ -221,7 +222,7 @@
 						>Select all and only those involved in this particular application</Form.Description
 					>
 					<Form.FieldErrors />
-				</FormField>
+				</Form.Field>
 
 				<Textarea
 					{form}

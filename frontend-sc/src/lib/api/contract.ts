@@ -2,16 +2,18 @@ import { z } from 'zod';
 import type { ContractSchema } from '$lib/schemas/contract';
 import { createOrUpdate, get, destroy } from '$lib/api/core';
 
-export const contractTypes = ['UG Freshman', 'UG Transfer', 'Graduate', 'Other'] as const;
-export type ContractType = (typeof contractTypes)[number];
+export const CONTRACT_TYPES = ['UG Freshman', 'UG Transfer', 'Graduate', 'Other'] as const;
 
-export const contractStatuses = ['In effect', 'Fulfilled', 'Terminated'] as const;
-export type ContractStatus = (typeof contractStatuses)[number];
+export type ContractType = (typeof CONTRACT_TYPES)[number];
+
+export const CONTRACT_STATUSES = ['In effect', 'Fulfilled', 'Terminated'] as const;
+
+export type ContractStatus = (typeof CONTRACT_STATUSES)[number];
 
 export type Contract = {
 	id: number;
 	student: number;
-	type: string;
+	type: ContractType;
 	target_year: number;
 	date: string | null;
 	status: ContractStatus;

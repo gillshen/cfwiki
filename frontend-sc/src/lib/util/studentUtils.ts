@@ -150,7 +150,7 @@ export const groupByTargetYear = (
 		for (const contract of student.contracts) {
 			const key = contract.target_year.toString();
 			if (!(key in grouped)) {
-				grouped[key] = [];
+				grouped[key] = [student];
 			}
 			if (!grouped[key].includes(student)) {
 				grouped[key].push(student);
@@ -182,7 +182,6 @@ export const groupByContractType = (
 				grouped[contractType]!.push(student);
 			}
 		}
-		console.log('processed', student.fullname);
 	}
 
 	return grouped;

@@ -181,54 +181,6 @@ export function orderByStudentName(a: ComposedApplication, b: ComposedApplicatio
 	return a.student.fullname.localeCompare(b.student.fullname, 'zh-CN');
 }
 
-export function groupByYear(
-	applications: ComposedApplication[]
-): Record<string, ComposedApplication[]> {
-	const grouped: Record<string, ComposedApplication[]> = {};
-
-	for (const appl of applications) {
-		const key = appl.year.toString();
-		if (!grouped[key]) {
-			grouped[key] = [];
-		}
-		grouped[key].push(appl);
-	}
-
-	const sortedGroups: Record<string, ComposedApplication[]> = {};
-	const sortedKeys = Object.keys(grouped).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
-
-	for (const key of sortedKeys) {
-		// Add a trailing space to prevent JS from reordering the keys
-		sortedGroups[`${key} `] = grouped[key];
-	}
-	return sortedGroups;
-}
-
-export function groupByType(
-	applications: ComposedApplication[]
-): Record<string, ComposedApplication[]> {
-	const grouped: Record<string, ComposedApplication[]> = {};
-
-	for (const appl of applications) {
-		let key = appl.program.type;
-		if (key === "Master's" || key === 'Doctorate') {
-			key = 'Graduate';
-		}
-		if (!grouped[key]) {
-			grouped[key] = [];
-		}
-		grouped[key].push(appl);
-	}
-
-	const sortedGroups: Record<string, ComposedApplication[]> = {};
-	const sortedKeys = Object.keys(grouped).sort((a, b) => _typeOrdering[a] - _typeOrdering[b]);
-
-	for (const key of sortedKeys) {
-		sortedGroups[key] = grouped[key];
-	}
-	return sortedGroups;
-}
-
 export function foldStatus(
 	status: ApplicationStatus | null | undefined
 ): Exclude<ApplicationStatusCategory, 'resolved'> {

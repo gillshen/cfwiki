@@ -2,6 +2,8 @@ import { fetchSchools } from '$lib/api/school';
 
 export async function load() {
 	return {
-		schools: fetchSchools()
+		schoolsGrouped: fetchSchools().then((schools) =>
+			Object.groupBy(schools, (school) => school.type)
+		)
 	};
 }

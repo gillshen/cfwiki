@@ -24,7 +24,7 @@
 					}
 					// matched service found
 					if (!result[key]) {
-						result[key] = [];
+						result[key] = [student];
 					}
 					if (!result[key].includes(student)) {
 						result[key].push(student);

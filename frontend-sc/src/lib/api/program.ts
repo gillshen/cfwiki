@@ -1,5 +1,11 @@
+import { z } from 'zod';
 import { get, patch, post, destroy, buildQuery } from '$lib/api/core';
 import type { ApplicationStats } from '$lib/api/stats';
+import type { NewProgramSchema, ProgramUpdateSchema } from '$lib/schemas/program';
+
+export const PROGRAM_CATEGORIES = ['Undergraduate', "Master's", 'Doctorate', 'Non-degree'] as const;
+
+export type ProgramCategory = (typeof PROGRAM_CATEGORIES)[number];
 
 export const programTypes = [
 	'UG Freshman',
@@ -12,9 +18,8 @@ export const programTypes = [
 export type ProgramType = (typeof programTypes)[number];
 
 export type Program = {
-	// used by the update form
 	id: number;
-	type: string;
+	type: ProgramType;
 	name: string;
 	degree: string;
 	is_defunct: boolean;
@@ -59,14 +64,14 @@ export async function fetchProgram(id: number): Promise<ProgramDetail> {
 	return await get(`programs/${id}/`, 'Program not found');
 }
 
-export async function createProgram(data: any) {
+export async function createProgram(data: z.infer<NewProgramSchema>) {
 	return await post('programs/new/', data);
 }
 
-export async function updateProgram(data: any) {
+export async function updateProgram(data: z.infer<ProgramUpdateSchema>) {
 	return await patch(`programs/${data.id}/update/`, data);
 }
 
-export async function deleteProgram(data: any) {
+export async function deleteProgram(data: { id: number }) {
 	return await destroy(`programs/${data.id}/update/`);
 }

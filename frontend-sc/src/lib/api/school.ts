@@ -1,5 +1,4 @@
 import { z } from 'zod';
-
 import { get, patch, post, destroy, buildQuery } from '$lib/api/core';
 import type { SchoolSchema } from '$lib/schemas/school';
 import type { ApplicationStats } from '$lib/api/stats';
@@ -11,9 +10,9 @@ export type RankingEntry = {
 	rank: number;
 };
 
-export const schoolTypes = ['University', 'Secondary School', 'Other'] as const;
+export const SCHOOL_TYPES = ['University', 'Secondary School', 'Other'] as const;
 
-export type SchoolType = (typeof schoolTypes)[number];
+export type SchoolType = (typeof SCHOOL_TYPES)[number];
 
 export type School = {
 	id: number;

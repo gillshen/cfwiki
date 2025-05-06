@@ -4,15 +4,9 @@
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
-	import { contractTypes } from '$lib/api/contract';
+	import { CONTRACT_TYPES } from '$lib/api/contract';
+	import { formatNameWithPref, orderByName } from '$lib/util/studentUtils';
 	import { createTitle } from '$lib/util/siteUtils';
-
-	import {
-		formatNameWithPref,
-		groupByContractType,
-		groupByTargetYear,
-		orderByName
-	} from '$lib/util/studentUtils';
 
 	export let data;
 </script>
@@ -27,15 +21,14 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-{#await data.students}
+{#await data.groupedCohorts}
 	<LoadingSign />
-{:then students}
-	{#each Object.entries(groupByTargetYear(students)).sort().reverse() as [year, cohort]}
-		{@const cohortGroupedByContractType = groupByContractType(cohort, parseInt(year))}
-		<Section id="cohort-{year}" title={year}>
+{:then groupedCohorts}
+	{#each groupedCohorts as { year, cohortGrouped }}
+		<Section id="cohort-{year}" title={year} class="gap-2">
 			<div class="flex flex-col gap-4">
-				{#each contractTypes as contractType}
-					{@const typedCohort = cohortGroupedByContractType[contractType]}
+				{#each CONTRACT_TYPES as contractType}
+					{@const typedCohort = cohortGrouped[contractType]}
 					{#if typedCohort?.length}
 						<hgroup>
 							<h3 class="font-semibold pb-2">{contractType}</h3>
