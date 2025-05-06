@@ -20,7 +20,7 @@
 	import { orderByName } from '$lib/util/schoolUtils';
 	import { enhanceDisplayName, orderByName as orderByProgramName } from '$lib/util/programUtils';
 	import { formatRound, orderByDueDate, orderByRoundName } from '$lib/util/applicationRoundUtils';
-	import { groupByCfPerson, leftEarly } from '$lib/util/serviceUtils';
+	import { groupByCfPerson, endedEarly } from '$lib/util/serviceUtils';
 	import { createTitle } from '$lib/util/siteUtils';
 
 	export let data;
@@ -41,7 +41,7 @@
 	const selectedStaff: Selected<string>[] = $formData.staff_names.length
 		? $formData.staff_names.map((s) => ({ value: s, label: s }))
 		: groupedServices
-				.filter(([, services]) => services.map((s) => !leftEarly(s)).some(Boolean))
+				.filter(([, services]) => services.map((s) => !endedEarly(s)).some(Boolean))
 				.map(([cfUsername]) => ({ value: cfUsername, label: cfUsername }));
 
 	$: {
@@ -84,9 +84,9 @@
 
 			<div class="text-sm flex gap-2 pt-2 pb-6">
 				<div><a href="/student/{data.studentId}">{data.contract.student_name}</a></div>
-				<div class="text-gray-400">&bullet;</div>
+				<div class="text-muted-foreground/50">&bullet;</div>
 				<div>{data.programType}</div>
-				<div class="text-gray-400">&bullet;</div>
+				<div class="text-muted-foreground/50">&bullet;</div>
 				<div>{data.term} {data.year}</div>
 			</div>
 
@@ -158,40 +158,6 @@
 					disableSearch
 				/>
 
-				<FormField {form} name="staff_names" class="w-[480px] pb-0.5">
-					<Form.Control let:attrs>
-						<Form.Label>Staff</Form.Label>
-						<Select.Root
-							multiple
-							selected={selectedStaff}
-							onSelectedChange={(v) => {
-								if (v) {
-									$formData.staff_names = v.map((item) => item.value).sort();
-								}
-								console.log($formData.staff_names);
-							}}
-						>
-							<Select.Trigger {...attrs}>
-								<Select.Value placeholder="Select at least one option" />
-							</Select.Trigger>
-							<Select.Content>
-								{#each groupedServices as [cfUsername]}
-									<Select.Item value={cfUsername} label={cfUsername} />
-								{/each}
-							</Select.Content>
-						</Select.Root>
-						<select name="staff_names" multiple bind:value={$formData.staff_names} hidden>
-							{#each groupedServices as [cfUsername]}
-								<option value={cfUsername}>{cfUsername}</option>
-							{/each}
-						</select>
-					</Form.Control>
-					<Form.Description
-						>Select all and only those involved in this particular application</Form.Description
-					>
-					<Form.FieldErrors />
-				</FormField>
-
 				<Input
 					{form}
 					name="major_1"
@@ -222,6 +188,40 @@
 						/>
 					{/if}
 				{/if}
+
+				<FormField {form} name="staff_names" class="w-[480px] pb-0.5">
+					<Form.Control let:attrs>
+						<Form.Label>CF Involvement</Form.Label>
+						<Select.Root
+							multiple
+							selected={selectedStaff}
+							onSelectedChange={(v) => {
+								if (v) {
+									$formData.staff_names = v.map((item) => item.value).sort();
+								}
+								console.log($formData.staff_names);
+							}}
+						>
+							<Select.Trigger {...attrs}>
+								<Select.Value placeholder="Select at least one option" />
+							</Select.Trigger>
+							<Select.Content>
+								{#each groupedServices as [cfUsername]}
+									<Select.Item value={cfUsername} label={cfUsername} />
+								{/each}
+							</Select.Content>
+						</Select.Root>
+						<select name="staff_names" multiple bind:value={$formData.staff_names} hidden>
+							{#each groupedServices as [cfUsername]}
+								<option value={cfUsername}>{cfUsername}</option>
+							{/each}
+						</select>
+					</Form.Control>
+					<Form.Description
+						>Select all and only those involved in this particular application</Form.Description
+					>
+					<Form.FieldErrors />
+				</FormField>
 
 				<Textarea
 					{form}

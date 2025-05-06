@@ -3,6 +3,7 @@
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Table from '$lib/components/ui/table/index';
+	import * as Card from '$lib/components/ui/card/index';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
@@ -27,6 +28,7 @@
 		secondaryProgsWithContractTerms,
 		universityProgsWithContractTerms
 	} from '$lib/constants/progressions';
+	import { cn } from '$lib/utils';
 
 	export let data;
 
@@ -48,6 +50,8 @@
 	const title = `${data.student.fullname} \u2022 ${data.contract.type} ${data.contract.target_year}`;
 
 	let progressions: string[];
+
+	$: hasServices = !!data.contract.services.length;
 
 	$: {
 		if (data.contract.type === 'UG Freshman') {
@@ -80,7 +84,7 @@
 <section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-4">
 	<h1 class="page-title flex gap-2">
 		<div>{data.student.fullname}</div>
-		<div>&bullet;</div>
+		<div class="scale-[80%]">&bullet;</div>
 		<div>{data.contract.type} {data.contract.target_year}</div>
 	</h1>
 	<div class="flex flex-row gap-2 items-center text-sm h-5">
@@ -133,65 +137,97 @@
 	</div>
 </section>
 
-<Section id="team" title="CF Team" titleOnly>
-	<div class="border rounded-md w-fit">
-		<Table.Root class="w-[800px]">
-			<Table.Header>
-				<Table.Row>
-					<Table.Head class="font-semibold min-w-[100px]">CFer</Table.Head>
-					<Table.Head class="font-semibold min-w-[100px]">Role</Table.Head>
-					<Table.Head class="font-semibold min-w-[120px]">Start Date</Table.Head>
-					<Table.Head class="font-semibold min-w-[120px]">End Date</Table.Head>
-					<Table.Head class="font-semibold w-[90px] flex-grow-0"></Table.Head>
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
-				{#each data.contract.services.sort(orderByRoleUsername) as service}
-					<Table.Row>
-						<Table.Cell>
-							<div class="flex items-center gap-2">
-								<UserAvatar username={service.cf_username} class="size-8" imageClass="size-5" />
-								<a href="/cf/{service.cf_username}" class="text-inherit">{service.cf_username}</a>
-							</div>
-						</Table.Cell>
-						<Table.Cell>{service.role}</Table.Cell>
-						<Table.Cell class={service.start_date ? '' : 'text-muted-foreground'}
-							>{toShortDate(service.start_date) || 'Start of contract'}</Table.Cell
-						>
-						<Table.Cell class={service.end_date ? '' : 'text-muted-foreground'}
-							>{toShortDate(service.end_date) || 'End of contract'}</Table.Cell
-						>
-						<Table.Cell class="flex items-center gap-4 pr-6 h-16">
-							<ServiceActionItem
-								{service}
-								contractId={data.contract.id}
-								updateForm={data.serviceForm}
-								deleteForm={data.deleteForm}
-							/>
-						</Table.Cell>
-					</Table.Row>
-				{/each}
-			</Table.Body>
-		</Table.Root>
-	</div>
-
-	<ButtonDialog
-		buttonVariant="outline"
-		buttonText="Add Member"
-		dialogTitle="Add Member"
-		buttonClass="w-fit mt-4"
-		bind:open={newServiceModal}
-	>
-		<ServiceForm
-			superValidated={data.serviceForm}
-			cfUsers={data.cfUsers}
-			contractId={data.contract.id}
-			onUpdated={({ form }) => form.valid && (newServiceModal = false)}
-		/>
-	</ButtonDialog>
+<Section id="team">
+	<Card.Root class={cn('shadow-none', hasServices ? 'w-fit' : 'w-[450px]')}>
+		<Card.Header>
+			<Card.Title class="tracking-normal">CF Team</Card.Title>
+			{#if !hasServices}
+				<Card.Description
+					><p class="text-balance">Make sure you add yourself first.</p></Card.Description
+				>
+			{/if}
+		</Card.Header>
+		<Card.Content class="min-h-[250px] flex">
+			{#if hasServices}
+				<Table.Root class="w-[750px]">
+					<Table.Header>
+						<Table.Row>
+							<Table.Head class="font-semibold min-w-[100px] pl-2">Person</Table.Head>
+							<Table.Head class="font-semibold min-w-[100px]">Role</Table.Head>
+							<Table.Head class="font-semibold min-w-[120px]">Start Date</Table.Head>
+							<Table.Head class="font-semibold min-w-[120px]">End Date</Table.Head>
+							<Table.Head class="font-semibold w-[90px] flex-grow-0"></Table.Head>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
+						{#each data.contract.services.sort(orderByRoleUsername) as service}
+							<Table.Row>
+								<Table.Cell class="pl-2">
+									<div class="flex items-center gap-2">
+										<UserAvatar username={service.cf_username} class="size-8" imageClass="size-5" />
+										<a href="/cf/{service.cf_username}" class="text-inherit"
+											>{service.cf_username}</a
+										>
+									</div>
+								</Table.Cell>
+								<Table.Cell>{service.role}</Table.Cell>
+								<Table.Cell class={service.start_date ? '' : 'text-muted-foreground'}
+									>{toShortDate(service.start_date) || 'Start of contract'}</Table.Cell
+								>
+								<Table.Cell class={service.end_date ? '' : 'text-muted-foreground'}
+									>{toShortDate(service.end_date) || 'End of contract'}</Table.Cell
+								>
+								<Table.Cell class="flex items-center gap-4 pr-6 h-16">
+									<ServiceActionItem
+										{service}
+										contractId={data.contract.id}
+										updateForm={data.serviceForm}
+										deleteForm={data.deleteForm}
+									/>
+								</Table.Cell>
+							</Table.Row>
+						{/each}
+					</Table.Body>
+				</Table.Root>
+			{:else}
+				<ButtonDialog
+					buttonVariant="default"
+					buttonText="Add Member"
+					dialogTitle="Add Member"
+					buttonClass="w-fit m-auto"
+					bind:open={newServiceModal}
+				>
+					<ServiceForm
+						superValidated={data.serviceForm}
+						cfUsers={data.cfUsers}
+						contractId={data.contract.id}
+						onUpdated={({ form }) => form.valid && (newServiceModal = false)}
+					/>
+				</ButtonDialog>
+			{/if}
+		</Card.Content>
+		{#if hasServices}
+			<Card.Footer>
+				<ButtonDialog
+					buttonVariant="outline"
+					buttonText="Add Member"
+					dialogTitle="Add Member"
+					buttonClass="w-fit mt-2"
+					bind:open={newServiceModal}
+				>
+					<ServiceForm
+						superValidated={data.serviceForm}
+						cfUsers={data.cfUsers}
+						contractId={data.contract.id}
+						onUpdated={({ form }) => form.valid && (newServiceModal = false)}
+					/>
+				</ButtonDialog>
+			</Card.Footer>
+		{/if}
+	</Card.Root>
 </Section>
 
-<Section id="delete" hruleOnly>
+<Section id="delete" class="mt-auto">
 	<ButtonDialog
 		buttonText="Delete Contract"
 		buttonVariant="destructive"

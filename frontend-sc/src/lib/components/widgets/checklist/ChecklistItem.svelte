@@ -10,7 +10,7 @@
 
 <li class="flex gap-1 items-center">
 	{#if checked === null}
-		<div class="size-4 text-center -translate-y-[2px]">&bull;</div>
+		<div class="size-4 text-center -translate-y-[2px]">&bullet;</div>
 		<span>{text}</span>
 	{:else if checked}
 		<Check class="size-4" />

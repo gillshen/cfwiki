@@ -119,7 +119,7 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-6">
+<section class="w-fit min-w-[60ch] mb-2 flex flex-col gap-2 pb-10">
 	<h1 class="page-title">
 		{data.student.fullname}
 		{data.student.preferred_name || ''}
@@ -160,14 +160,16 @@
 			</div>
 		{/if}
 	{:else}
-		<Alert.Root class="w-fit pr-6 max-w-prose border-none bg-yellow-300">
+		<Alert.Root class="w-fit h-[180px] pr-8 mt-4 max-w-prose border-none bg-yellow-300">
 			<TriangleAlert class="size-4" />
 			<Alert.Title>We need a contract!</Alert.Title>
-			<Alert.Description>
+			<Alert.Description class="h-full flex flex-col">
 				<p>This student is not associated with any contract. Add one below.</p>
-				<Button href="/student/{data.student.id}/contract/new" class="hover:no-underline mt-4"
-					>Add Contract</Button
-				>
+				<div class="flex-grow flex justify-center items-center">
+					<Button href="/student/{data.student.id}/contract/new" class="hover:no-underline"
+						>Add Contract</Button
+					>
+				</div>
 			</Alert.Description>
 		</Alert.Root>
 	{/if}

@@ -61,7 +61,7 @@
 	<h1 class="page-title flex gap-2">
 		<div>{student.fullname}</div>
 		{#if schools.length}
-			<div>&bullet;</div>
+			<div class="scale-[80%]">&bullet;</div>
 			<div>{schoolNames}</div>
 		{/if}
 	</h1>

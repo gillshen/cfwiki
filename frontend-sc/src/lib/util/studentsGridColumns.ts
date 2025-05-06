@@ -332,7 +332,7 @@ const getContractStatusRenderer = (pageParams: PageParams) =>
 				target: this.eGui,
 				props: {
 					status: _getRelevantContract(params.data, pageParams)?.status,
-					height: '39px'
+					class: 'h-[39px]'
 				}
 			});
 		}

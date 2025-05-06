@@ -14,7 +14,7 @@
 	variant="link"
 	{href}
 	class={cn(
-		'ml-2 font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80',
+		'font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80',
 		className
 	)}
 >

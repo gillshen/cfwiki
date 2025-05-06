@@ -7,7 +7,7 @@ export function isActive(service: Service): boolean {
 	return !service.end_date || isFuture(service.end_date);
 }
 
-export function leftEarly(service: Service): boolean {
+export function endedEarly(service: Service): boolean {
 	return !!service.end_date;
 }
 

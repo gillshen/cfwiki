@@ -177,7 +177,7 @@
 }
 
 h1.page-title {
-	@apply text-3xl font-bold;
+	@apply text-3xl font-bold py-2;
 }
 
 h1.data-grid-title {
@@ -210,3 +210,6 @@ input[type="password"] {
 	}
 }
 
+textarea {
+	field-sizing: content;
+}

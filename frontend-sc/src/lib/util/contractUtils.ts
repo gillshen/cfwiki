@@ -1,5 +1,5 @@
 import type { Service } from '$lib/api/contract';
-import { leftEarly } from '$lib/util/serviceUtils';
+import { endedEarly } from '$lib/util/serviceUtils';
 
 export const userCanEdit = (params: {
 	user: { username: string; is_staff: boolean; is_active: boolean };
@@ -18,6 +18,6 @@ export const userCanEdit = (params: {
 	// return true if no CFer has been assigned to it or if user stayed to the end
 	return (
 		!contract.services.length ||
-		contract.services.some((s) => s.cf_username === user.username && !leftEarly(s))
+		contract.services.some((s) => s.cf_username === user.username && !endedEarly(s))
 	);
 };
