@@ -137,7 +137,7 @@
 	</div>
 </section>
 
-<Section id="team">
+<Section id="team" class="mt-4">
 	<Card.Root class={cn('shadow-none', hasServices ? 'w-fit' : 'w-[450px]')}>
 		<Card.Header>
 			<Card.Title class="tracking-normal">CF Team</Card.Title>
@@ -147,9 +147,9 @@
 				>
 			{/if}
 		</Card.Header>
-		<Card.Content class="min-h-[250px] flex">
+		<Card.Content class="min-h-[234px] flex">
 			{#if hasServices}
-				<Table.Root class="w-[750px]">
+				<Table.Root class="w-[653px]">
 					<Table.Header>
 						<Table.Row>
 							<Table.Head class="font-semibold min-w-[100px] pl-2">Person</Table.Head>

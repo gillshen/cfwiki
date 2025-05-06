@@ -33,7 +33,7 @@ export const DEFAULT_GRID_OPTIONS = {
 export const DEFAULT_COL_DEF = {
 	filter: true,
 	flex: 1,
-	minWidth: 100
+	minWidth: 120
 };
 
 export const SEPARATOR = ' \u2022 '; // a bullet surrounded by a space on each side

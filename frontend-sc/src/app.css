@@ -185,7 +185,7 @@ h1.data-grid-title {
 }
 
 .optional-field::after {
-	@apply text-muted-foreground;
+	@apply text-muted-foreground/80;
 	content: ' (optional)';
 }
 

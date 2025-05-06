@@ -2,7 +2,7 @@
 	import { cn } from '$lib/utils';
 	import * as Card from '$lib/components/ui/card/index';
 	import * as HoverCard from '$lib/components/ui/hover-card/index';
-	import Signature from 'lucide-svelte/icons/signature';
+	import PenTool from 'lucide-svelte/icons/pen-tool';
 
 	import type { Contract } from '$lib/api/student';
 	import type { ContractStatus } from '$lib/api/contract';
@@ -15,16 +15,29 @@
 	export let contract: Contract;
 	export let canEdit: boolean;
 
-	const colorMap: Record<ContractStatus, { bg: string; border: string; shadow: string }> = {
-		'In effect': { bg: 'bg-mint-300', border: 'border-mint-300', shadow: 'shadow-mint-100' },
-		Fulfilled: { bg: 'bg-muted', border: '', shadow: '' },
-		Terminated: { bg: 'bg-rose-300', border: 'border-rose-300', shadow: 'shadow-rose-100' }
+	const colorMap: Record<
+		ContractStatus,
+		{ text: string; bg: string; border: string; shadow: string }
+	> = {
+		'In effect': {
+			text: 'text-primary-foreground',
+			bg: 'bg-primary',
+			border: 'border-primary',
+			shadow: 'shadow-primary/70'
+		},
+		Fulfilled: { text: '', bg: 'bg-muted', border: '', shadow: '' },
+		Terminated: {
+			text: '',
+			bg: 'bg-rose-300',
+			border: 'border-rose-300',
+			shadow: 'shadow-rose-100'
+		}
 	};
 </script>
 
 <Card.Root
 	class={cn(
-		'min-w-[250px] min-h-[250px] relative mt-4 shadow-sm',
+		'min-w-[248px] min-h-[248px] relative mt-4 shadow-sm',
 		colorMap[contract.status].border,
 		colorMap[contract.status].shadow
 	)}
@@ -36,7 +49,7 @@
 			colorMap[contract.status].border
 		)}
 	>
-		<ContractStatusSign status={contract.status} />
+		<ContractStatusSign status={contract.status} class={colorMap[contract.status].text} />
 	</div>
 	<Card.Header class="pb-2 pt-8">
 		<Card.Title class="text-lg font-semibold pb-2 flex items-center gap-2">
@@ -45,7 +58,7 @@
 				<PencilEditButton
 					text=""
 					href="/student/{contract.student}/contract/{contract.id}"
-					class="h-6"
+					class="h-6 px-0 ml-2"
 					iconClass="translate-y-[1px]"
 				/>
 			{/if}
@@ -95,7 +108,7 @@
 
 	{#if contract.date || contract.student_progression_when_signed}
 		<Card.Footer class="pb-5 flex items-center gap-1 text-muted-foreground text-xs justify-center">
-			<Signature class="size-3" />
+			<PenTool class="size-3 -rotate-90" />
 			{#if contract.student_progression_when_signed}
 				<div>{contract.student_progression_when_signed}</div>
 			{/if}

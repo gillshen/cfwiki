@@ -13,20 +13,10 @@
 	import LogOut from 'lucide-svelte/icons/log-out';
 
 	import StudentSideList from '$lib/components/widgets/student-side-list/StudentSideList.svelte';
-	import UserDirectory from '$lib/components/widgets/UserDirectory.svelte';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
+	import UserMenuDirectory from '$lib/components/widgets/UserMenuDirectory.svelte';
 	import { quickAccessYears } from '$lib/util/dateUtils';
-	import { randomAvatar } from '$lib/assets/avatars/index';
 
 	export let data;
-
-	// TODO remove after backend update
-	data.cfUsers.forEach((user) => {
-		// the authenticated user already had their avatar assigned in +page.server.ts
-		if (user.username !== data.username) {
-			user.avatar = randomAvatar();
-		}
-	});
 
 	$: isDataGridPage = !!$page.url.pathname.match('/data-grids/(students|applications)');
 
@@ -50,7 +40,7 @@
 			)}
 		>
 			<nav class="flex gap-4 my-2 flex-grow-1">
-				<Button variant="ghost" href="/home" class="text-black font-medium hover:no-underline"
+				<Button variant="ghost" href="/home" class="text-primary font-medium hover:no-underline"
 					>Home</Button
 				>
 
@@ -58,19 +48,21 @@
 					<DropdownMenu.Trigger asChild let:builder>
 						<Button variant="ghost" builders={[builder]}>CF People</Button>
 					</DropdownMenu.Trigger>
-					<DropdownMenu.Content class="w-[600px]">
-						<div class="grid grid-cols-2 gap-8 py-4 px-8">
-							<div class="flex flex-col gap-2">
-								<h3 class="font-medium">文案部</h3>
-								<Separator />
-								<UserDirectory users={data.cfUsers} department="文案" hrefClass="text-sm" />
-							</div>
-							<div class="flex flex-col gap-2">
-								<h3 class="font-medium">咨询部</h3>
-								<Separator />
-								<UserDirectory users={data.cfUsers} department="咨询" hrefClass="text-sm" />
-							</div>
-						</div>
+					<DropdownMenu.Content class="min-w-[160px] px-2">
+						<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
+							<DropdownMenu.Sub>
+								<DropdownMenu.SubTrigger>文案部</DropdownMenu.SubTrigger>
+								<DropdownMenu.SubContent class="px-3 py-2 w-[300px]">
+									<UserMenuDirectory users={data.cfUsers} department={'文案'} />
+								</DropdownMenu.SubContent>
+							</DropdownMenu.Sub>
+							<DropdownMenu.Sub>
+								<DropdownMenu.SubTrigger>咨询部</DropdownMenu.SubTrigger>
+								<DropdownMenu.SubContent class="px-3 py-2 w-[300px]">
+									<UserMenuDirectory users={data.cfUsers} department={'咨询'} />
+								</DropdownMenu.SubContent>
+							</DropdownMenu.Sub>
+						</DropdownMenu.Group>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
 
@@ -78,32 +70,46 @@
 					<DropdownMenu.Trigger asChild let:builder>
 						<Button variant="ghost" builders={[builder]}>Students</Button>
 					</DropdownMenu.Trigger>
-					<DropdownMenu.Content class="min-w-[160px]">
+					<DropdownMenu.Content class="min-w-[190px] px-2">
 						<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
 							<DropdownMenu.Item
 								href="/data-grids/students?contractStatus=In+effect"
 								class="text-inherit hover:no-underline">Current</DropdownMenu.Item
 							>
 							<DropdownMenu.Separator />
-							{#each quickAccessYears() as year}
-								<DropdownMenu.Sub>
-									<DropdownMenu.SubTrigger>{year}</DropdownMenu.SubTrigger>
-									<DropdownMenu.SubContent class="min-w-[160px]">
+							<DropdownMenu.Sub>
+								<DropdownMenu.SubTrigger>UG Freshman</DropdownMenu.SubTrigger>
+								<DropdownMenu.SubContent class="min-w-[180px] p-2">
+									{#each quickAccessYears() as year}
 										<DropdownMenu.Item
-											href="/data-grids/students?targetYear={year}&contractType=UG+Freshman"
-											class="text-inherit hover:no-underline">UG Freshman</DropdownMenu.Item
+											href="/data-grids/students?contractType=UG+Freshman&targetYear={year}"
+											class="text-inherit hover:no-underline">{year}</DropdownMenu.Item
 										>
+									{/each}
+								</DropdownMenu.SubContent>
+							</DropdownMenu.Sub>
+							<DropdownMenu.Sub>
+								<DropdownMenu.SubTrigger>UG Transfer</DropdownMenu.SubTrigger>
+								<DropdownMenu.SubContent class="min-w-[180px] p-2">
+									{#each quickAccessYears() as year}
 										<DropdownMenu.Item
-											href="/data-grids/students?targetYear={year}&contractType=UG+Transfer"
-											class="text-inherit hover:no-underline">UG Transfer</DropdownMenu.Item
+											href="/data-grids/students?contractType=UG+Transfer&targetYear={year}"
+											class="text-inherit hover:no-underline">{year}</DropdownMenu.Item
 										>
+									{/each}
+								</DropdownMenu.SubContent>
+							</DropdownMenu.Sub>
+							<DropdownMenu.Sub>
+								<DropdownMenu.SubTrigger>Graduate</DropdownMenu.SubTrigger>
+								<DropdownMenu.SubContent class="min-w-[180px] p-2">
+									{#each quickAccessYears() as year}
 										<DropdownMenu.Item
-											href="/data-grids/students?targetYear={year}&contractType=Graduate"
-											class="text-inherit hover:no-underline">Graduate</DropdownMenu.Item
+											href="/data-grids/students?contractType=Graduate&targetYear={year}"
+											class="text-inherit hover:no-underline">{year}</DropdownMenu.Item
 										>
-									</DropdownMenu.SubContent>
-								</DropdownMenu.Sub>
-							{/each}
+									{/each}
+								</DropdownMenu.SubContent>
+							</DropdownMenu.Sub>
 							<DropdownMenu.Separator />
 							<DropdownMenu.Item href="/data-grids/students" class="text-inherit hover:no-underline"
 								>All Students</DropdownMenu.Item
@@ -116,45 +122,71 @@
 					<DropdownMenu.Trigger asChild let:builder>
 						<Button variant="ghost" builders={[builder]}>Applications</Button>
 					</DropdownMenu.Trigger>
-					<DropdownMenu.Content class="min-w-[160px]">
+					<DropdownMenu.Content class="min-w-[200px] px-2">
 						<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
 							<DropdownMenu.Item
 								href="/data-grids/applications?status=pending"
 								class="text-inherit hover:no-underline">In Progress</DropdownMenu.Item
 							>
 							<DropdownMenu.Separator />
-							{#each quickAccessYears() as year}
-								<DropdownMenu.Sub>
-									<DropdownMenu.SubTrigger>{year}</DropdownMenu.SubTrigger>
-									<DropdownMenu.SubContent class="min-w-[180px]">
-										<DropdownMenu.Label>Undergraduate</DropdownMenu.Label>
+							<DropdownMenu.Label>Undergraduate</DropdownMenu.Label>
+							<DropdownMenu.Sub>
+								<DropdownMenu.SubTrigger>Freshman</DropdownMenu.SubTrigger>
+								<DropdownMenu.SubContent class="min-w-[180px] p-2">
+									{#each quickAccessYears() as year}
 										<DropdownMenu.Item
-											href="/data-grids/applications?year={year}&applicationType=freshman"
-											class="text-inherit hover:no-underline">Freshman</DropdownMenu.Item
+											href="/data-grids/applications?applicationType=freshman&year={year}"
+											class="text-inherit hover:no-underline">{year}</DropdownMenu.Item
 										>
+									{/each}
+								</DropdownMenu.SubContent>
+							</DropdownMenu.Sub>
+							<DropdownMenu.Sub>
+								<DropdownMenu.SubTrigger>Transfer</DropdownMenu.SubTrigger>
+								<DropdownMenu.SubContent class="min-w-[180px] p-2">
+									{#each quickAccessYears() as year}
 										<DropdownMenu.Item
-											href="/data-grids/applications?year={year}&applicationType=transfer"
-											class="text-inherit hover:no-underline">Transfer</DropdownMenu.Item
+											href="/data-grids/applications?applicationType=transfer&year={year}"
+											class="text-inherit hover:no-underline">{year}</DropdownMenu.Item
 										>
-										<DropdownMenu.Separator />
-										<DropdownMenu.Label>Graduate</DropdownMenu.Label>
+									{/each}
+								</DropdownMenu.SubContent>
+							</DropdownMenu.Sub>
+							<DropdownMenu.Label>Graduate</DropdownMenu.Label>
+							<DropdownMenu.Sub>
+								<DropdownMenu.SubTrigger>Master&rsquo;s</DropdownMenu.SubTrigger>
+								<DropdownMenu.SubContent class="min-w-[180px] p-2">
+									{#each quickAccessYears() as year}
 										<DropdownMenu.Item
-											href="/data-grids/applications?year={year}&applicationType=masters"
-											class="text-inherit hover:no-underline">Master&rsquo;s</DropdownMenu.Item
+											href="/data-grids/applications?applicationType=masters&year={year}"
+											class="text-inherit hover:no-underline">{year}</DropdownMenu.Item
 										>
+									{/each}
+								</DropdownMenu.SubContent>
+							</DropdownMenu.Sub>
+							<DropdownMenu.Sub>
+								<DropdownMenu.SubTrigger>Doctorate</DropdownMenu.SubTrigger>
+								<DropdownMenu.SubContent class="min-w-[180px] p-2">
+									{#each quickAccessYears() as year}
 										<DropdownMenu.Item
-											href="/data-grids/applications?year={year}&applicationType=doctorate"
-											class="text-inherit hover:no-underline">Doctorate</DropdownMenu.Item
+											href="/data-grids/applications?applicationType=doctorate&year={year}"
+											class="text-inherit hover:no-underline">{year}</DropdownMenu.Item
 										>
-										<DropdownMenu.Separator />
-										<DropdownMenu.Label>Other</DropdownMenu.Label>
+									{/each}
+								</DropdownMenu.SubContent>
+							</DropdownMenu.Sub>
+							<DropdownMenu.Label>Other</DropdownMenu.Label>
+							<DropdownMenu.Sub>
+								<DropdownMenu.SubTrigger>Non-degree</DropdownMenu.SubTrigger>
+								<DropdownMenu.SubContent class="min-w-[180px] p-2">
+									{#each quickAccessYears() as year}
 										<DropdownMenu.Item
-											href="/data-grids/applications?year={year}&applicationType=other"
-											class="text-inherit hover:no-underline">Non-degree</DropdownMenu.Item
+											href="/data-grids/applications?applicationType=other&year={year}"
+											class="text-inherit hover:no-underline">{year}</DropdownMenu.Item
 										>
-									</DropdownMenu.SubContent>
-								</DropdownMenu.Sub>
-							{/each}
+									{/each}
+								</DropdownMenu.SubContent>
+							</DropdownMenu.Sub>
 							<DropdownMenu.Separator />
 							<DropdownMenu.Item
 								href="/data-grids/applications"
@@ -166,10 +198,11 @@
 
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger asChild let:builder>
-						<Button variant="ghost" builders={[builder]}>Schools</Button>
+						<Button variant="ghost" builders={[builder]}>Schools & Programs</Button>
 					</DropdownMenu.Trigger>
-					<DropdownMenu.Content class="min-w-[180px]">
+					<DropdownMenu.Content class="min-w-[200px] px-2">
 						<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
+							<DropdownMenu.Label>Schools</DropdownMenu.Label>
 							<DropdownMenu.Item
 								href="/school/index/#universities"
 								class="text-inherit hover:no-underline">Universities</DropdownMenu.Item
@@ -183,39 +216,23 @@
 								class="text-inherit hover:no-underline">Other Institutions</DropdownMenu.Item
 							>
 							<DropdownMenu.Separator />
-							<DropdownMenu.Item>Rankings</DropdownMenu.Item>
-						</DropdownMenu.Group>
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
-
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger asChild let:builder>
-						<Button variant="ghost" builders={[builder]}>Programs</Button>
-					</DropdownMenu.Trigger>
-					<DropdownMenu.Content class="min-w-[180px]">
-						<DropdownMenu.Group class="p-1 flex flex-col gap-0.5">
+							<DropdownMenu.Item disabled>School Rankings</DropdownMenu.Item>
+							<DropdownMenu.Separator />
+							<DropdownMenu.Label>Programs</DropdownMenu.Label>
 							<DropdownMenu.Item
 								href="/program/index/#ug-freshman"
-								class="text-inherit hover:no-underline">UG Freshman</DropdownMenu.Item
-							>
-							<DropdownMenu.Item
-								href="/program/index/#ug-transfer"
-								class="text-inherit hover:no-underline">UG Transfer</DropdownMenu.Item
+								class="text-inherit hover:no-underline">Undergraduate</DropdownMenu.Item
 							>
 							<DropdownMenu.Item
 								href="/program/index/#masters"
-								class="text-inherit hover:no-underline">Master&rsquo;s</DropdownMenu.Item
-							>
-							<DropdownMenu.Item
-								href="/program/index/#doctorate"
-								class="text-inherit hover:no-underline">Doctorate</DropdownMenu.Item
+								class="text-inherit hover:no-underline">Graduate</DropdownMenu.Item
 							>
 							<DropdownMenu.Item
 								href="/program/index/#non-degree"
 								class="text-inherit hover:no-underline">Non-degree</DropdownMenu.Item
 							>
 							<DropdownMenu.Separator />
-							<DropdownMenu.Item>Program Collections</DropdownMenu.Item>
+							<DropdownMenu.Item disabled>Program Collections</DropdownMenu.Item>
 						</DropdownMenu.Group>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
