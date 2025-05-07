@@ -1,11 +1,15 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import type { ZodObject } from 'zod';
+import type { ZodObject, ZodRawShape } from 'zod';
 import { superValidate, fail, message } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const formAction = <T extends ZodObject<any>>(
-	schema: T,
+import type { GradeSchema } from '$lib/schemas/grade';
+
+export const formAction = <T extends ZodObject<ZodRawShape>>(
+	// gradeSchema is not a ZodObject, but a ZodEffects object with two more layers
+	// of ZodEffects nested within it;
+	// I judge that an explicitly ad hoc fix is no worse than writing a horrendously nested type
+	schema: T | GradeSchema,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	apiCall: (data: any) => Promise<Response>,
 	onSuccess?: (params: { event?: RequestEvent; response?: Response }) => Promise<unknown>

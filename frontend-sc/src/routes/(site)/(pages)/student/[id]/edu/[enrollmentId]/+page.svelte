@@ -6,7 +6,6 @@
 	import Calendar from 'lucide-svelte/icons/calendar';
 	import GraduationCap from 'lucide-svelte/icons/graduation-cap';
 	import Check from 'lucide-svelte/icons/check';
-	import X from 'lucide-svelte/icons/x';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
@@ -19,7 +18,7 @@
 	import { createTitle } from '$lib/util/siteUtils';
 	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
 	import { toShortYearMonth } from '$lib/util/dateUtils';
-	import { formatGrade, parseNumber } from '$lib/util/gradeUtils';
+	import { formatGrade } from '$lib/util/gradeUtils';
 
 	import { SECONDARY_PROGRESSIONS, UNIVERSITY_PROGRESSIONS } from '$lib/constants/progressions';
 
@@ -64,12 +63,12 @@
 		{data.enrollment.school.name}
 	</h1>
 	<div class="flex flex-col gap-2 text-sm">
-		<div class="flex items-center gap-1.5">
+		<div class="flex items-center gap-2">
 			<Calendar class="size-4" />
 			{formatEnrollmentDates(data.enrollment, toShortYearMonth)}
 		</div>
 		{#if data.enrollment.curriculum}
-			<div class="flex items-center gap-1.5">
+			<div class="flex items-center gap-2">
 				<GraduationCap class="size-4" />
 				<div>{data.enrollment.curriculum}</div>
 			</div>
@@ -80,7 +79,7 @@
 				dialogTitle="Update Educational Experience"
 				bind:open={enrollmentUpdateModal}
 			>
-				<PencilEditButton slot="button" class="p-0 m-0" iconClass="mr-1.5" />
+				<PencilEditButton slot="button" class="p-0 mt-2" iconClass="mr-2" />
 				<EnrollmentForm
 					data={data.enrollmentForm}
 					enrollment={{ ...data.enrollment, school: data.enrollment.school.id }}
@@ -107,8 +106,8 @@
 							<Table.Head class="font-semibold">Year</Table.Head>
 							<Table.Head class="font-semibold">Period</Table.Head>
 							<Table.Head class="font-semibold">GPA or Description</Table.Head>
-							<Table.Head class="font-semibold">Weighted</Table.Head>
-							<Table.Head class="font-semibold">Cumul.</Table.Head>
+							<Table.Head class="font-semibold w-[105px]">Weighted</Table.Head>
+							<Table.Head class="font-semibold w-[90px]">Cumul.</Table.Head>
 							<Table.Head class="font-semibold w-[90px] flex-grow-0"></Table.Head>
 						</Table.Row>
 					</Table.Header>
@@ -120,15 +119,17 @@
 								<Table.Cell class="tabular-nums max-w-[320px]">{formatGrade(grade)}</Table.Cell>
 								<Table.Cell>
 									{#if grade.is_weighted}
-										<Check class="size-4" />
-									{:else if parseNumber(grade.scale)}
-										<X class="size-4" />
+										<Check class="size-4 mx-auto" />
 									{:else}
-										<span class="text-muted-foreground">n/a</span>
+										<div class="text-muted-foreground size-4 mx-auto">-</div>
 									{/if}
 								</Table.Cell>
 								<Table.Cell>
-									<svelte:component this={grade.is_cumulative ? Check : X} class="size-4" />
+									{#if grade.is_cumulative}
+										<Check class="size-4 mx-auto" />
+									{:else}
+										<div class="text-muted-foreground size-4 mx-auto">-</div>
+									{/if}
 								</Table.Cell>
 								<Table.Cell>actionItem</Table.Cell>
 							</Table.Row>

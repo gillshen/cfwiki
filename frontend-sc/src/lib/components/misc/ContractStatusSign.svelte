@@ -8,6 +8,7 @@
 	import type { ContractStatus } from '$lib/api/contract';
 
 	export let status: ContractStatus | null | undefined;
+	export let hideIcon: boolean = false;
 	export let className: string = '';
 	export { className as class };
 
@@ -20,7 +21,9 @@
 
 {#if status}
 	<div class={cn('flex items-center gap-1.5 text-sm h-5', className)}>
-		<svelte:component this={statusMap[status].icon} class="size-4 shrink-0 translate-y-[0.5px]" />
+		{#if !hideIcon}
+			<svelte:component this={statusMap[status].icon} class="size-4 shrink-0 translate-y-[0.5px]" />
+		{/if}
 		<div class="truncate">{statusMap[status].label}</div>
 	</div>
 {/if}

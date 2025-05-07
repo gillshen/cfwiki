@@ -4,7 +4,7 @@
 	export let href: string;
 	export let target: '_self' | '_blank' = '_self';
 	export let size: number = 4;
-	export let className: string = '';
+	export let className: string = 'text-mint-600';
 	export { className as class };
 </script>
 

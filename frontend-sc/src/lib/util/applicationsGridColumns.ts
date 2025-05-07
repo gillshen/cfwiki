@@ -143,7 +143,8 @@ export const getColumnDefs = (params: PageParams) => {
 		},
 		{
 			headerName: '顾问',
-			valueGetter: (params: ValueGetterParams) => formatCfNames(params.data.services, '顾问')
+			valueGetter: (params: ValueGetterParams) => formatCfNames(params.data.services, '顾问'),
+			hide: true
 		},
 		{
 			headerName: '服务顾问',
@@ -152,11 +153,13 @@ export const getColumnDefs = (params: PageParams) => {
 		},
 		{
 			headerName: '文案',
-			valueGetter: (params: ValueGetterParams) => formatCfNames(params.data.services, '文案')
+			valueGetter: (params: ValueGetterParams) => formatCfNames(params.data.services, '文案'),
+			hide: true
 		},
 		{
 			headerName: '流程顾问',
-			valueGetter: (params: ValueGetterParams) => formatCfNames(params.data.services, '流程顾问')
+			valueGetter: (params: ValueGetterParams) => formatCfNames(params.data.services, '流程顾问'),
+			hide: true
 		},
 
 		// bio
@@ -197,10 +200,7 @@ export const getColumnDefs = (params: PageParams) => {
 		{
 			headerName: 'SAT/ACT',
 			valueGetter: (params: ValueGetterParams) => getSatOrAct(params.data.student.scores),
-			hide:
-				params.applicationType === 'graduate' ||
-				params.applicationType === 'masters' ||
-				params.applicationType === 'doctorate'
+			hide: true
 		},
 		{
 			headerName: 'SAT',
@@ -235,7 +235,7 @@ export const getColumnDefs = (params: PageParams) => {
 		{
 			headerName: 'GRE/GMAT',
 			valueGetter: (params: ValueGetterParams) => getGreOrGmat(params.data.student.scores),
-			hide: params.applicationType === 'freshman' || params.applicationType === 'transfer'
+			hide: true
 		},
 		{
 			headerName: 'GRE',
@@ -260,7 +260,8 @@ export const getColumnDefs = (params: PageParams) => {
 		},
 		{
 			headerName: 'Eng. Proficiency',
-			valueGetter: (params: ValueGetterParams) => getEnglishProficiency(params.data.student.scores)
+			valueGetter: (params: ValueGetterParams) => getEnglishProficiency(params.data.student.scores),
+			hide: true
 		},
 		{
 			headerName: 'TOEFL',

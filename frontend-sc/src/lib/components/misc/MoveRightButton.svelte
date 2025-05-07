@@ -13,7 +13,7 @@
 	size="icon"
 	variant="link"
 	class={cn(
-		'font-normal size-8 rounded-full text-primary hover:no-underline bg-mint-400 hover:bg-mint-300 transition-colors duration-500 ease-in-out',
+		'font-normal size-7 rounded-full text-primary hover:no-underline bg-mint-400 hover:bg-mint-300 transition-colors duration-300 ease-in-out',
 		className
 	)}
 	{href}

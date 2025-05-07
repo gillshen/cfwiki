@@ -200,27 +200,30 @@
 								index < data.student.enrollments.length - 1 ? 'pb-8' : ''
 							)}
 						>
-							<div class="text-muted-foreground flex items-center gap-1.5">
+							<div class="text-muted-foreground flex items-center gap-2">
 								<Calendar class="size-4 text-primary" />
 								{formatEnrollmentDates(enrollment, toShortYearMonth)}
 							</div>
-							<div class="text-muted-foreground flex items-center gap-1.5">
+							<div class="text-muted-foreground flex items-center gap-2">
 								<GraduationCap class="size-4 text-primary" />
-								{#if enrollment.curriculum}
-									{enrollment.curriculum}
-									{#if enrollment.program_type === 'UG Transfer'}
-										<div class="text-muted-foreground/50">&bullet;</div>
-										<div>Transfer</div>
+								<div class="flex items-center gap-1">
+									{#if enrollment.curriculum}
+										{enrollment.curriculum}
+										{#if enrollment.program_type === 'UG Transfer'}
+											<div class="text-muted-foreground/50">&bullet;</div>
+											<div>Transfer</div>
+										{/if}
+									{:else}
+										{enrollment.program_type}
 									{/if}
-								{:else}
-									{enrollment.program_type}
-								{/if}
+								</div>
 							</div>
 							<!-- TODO -->
-							<div class="text-muted-foreground flex items-center gap-1.5">
+							<div class="text-muted-foreground flex items-center gap-2">
 								<BookCheck class="size-4 text-primary" />
 								<HoverCard.Root>
-									<HoverCard.Trigger class="underline decoration-dotted hover:decoration-dotted"
+									<HoverCard.Trigger
+										class="underline underline-offset-4 decoration-dotted hover:decoration-dotted hover:decoration-mint-600"
 										>GPA: (TODO)</HoverCard.Trigger
 									>
 									<HoverCard.Content class="w-[480px]">

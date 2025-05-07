@@ -40,6 +40,8 @@
 		}
 	};
 
+	const pointerIconClass = 'bg-rose-300 hover:bg-rose-400';
+
 	$: servicesSorted = contract.services.sort(orderByRoleUsername);
 	$: servicesGrouped = Object.groupBy(servicesSorted, (service) => service.cf_username) as Record<
 		string,
@@ -61,7 +63,7 @@
 			styleMap[contract.status].border
 		)}
 	>
-		<ContractStatusSign status={contract.status} class={styleMap[contract.status].text} />
+		<ContractStatusSign status={contract.status} class={styleMap[contract.status].text} hideIcon />
 	</div>
 	<Card.Header class="pb-2 pt-8">
 		<Card.Title class="text-lg font-semibold">
@@ -106,14 +108,14 @@
 							{/if}
 							<HoverCard.Root>
 								<HoverCard.Trigger
-									class="cursor-pointer underline decoration-dotted hover:decoration-dotted"
+									class="cursor-pointer underline underline-offset-4 decoration-dotted hover:decoration-dotted hover:decoration-mint-600"
 								>
 									<div class={endedEarly(service) ? 'text-muted-foreground/70' : ''}>
 										{service.role}
 									</div>
 								</HoverCard.Trigger>
 								<HoverCard.Content
-									class="text-sm w-[220px] text-primary bg-muted-foreground/10 backdrop-blur-lg rounded-xl border shadow-md flex flex-col gap-4 p-6 pb-8"
+									class="text-sm w-[220px] text-primary bg-muted-foreground/10 backdrop-blur-lg rounded-xl border shadow-md flex flex-col gap-4 p-6 pb-12"
 								>
 									<h3 class="text-base font-semibold flex flex-col gap-1 mb-2">
 										<UserAvatar username={service.cf_username} class="bg-transparent" />
@@ -146,7 +148,7 @@
 		<Card.Footer class="pt-0 pb-2">
 			<MoveRightButton
 				href="/student/{contract.student}/contract/{contract.id}"
-				class="ml-auto -mr-2 mb-2"
+				class={cn('ml-auto -mr-2 mb-2', contract.status === 'Terminated' ? pointerIconClass : '')}
 			/>
 		</Card.Footer>
 	{/if}

@@ -183,7 +183,8 @@ export const getColumnDefs = (params: PageParams) => {
 			valueGetter: (params: ValueGetterParams) => formatLocation(params.data),
 			comparator: lexicalChineseLast,
 			valueFormatter: (params: ValueFormatterParams) => formatResidence(params.data),
-			useValueFormatterForExport: false
+			useValueFormatterForExport: false,
+			hide: true
 		},
 
 		// educational history
@@ -200,7 +201,7 @@ export const getColumnDefs = (params: PageParams) => {
 		{
 			headerName: 'SAT/ACT',
 			valueGetter: (params: ValueGetterParams) => getSatOrAct(params.data.scores),
-			hide: params.contractType === 'Graduate'
+			hide: true
 		},
 		{
 			headerName: 'SAT',
@@ -234,7 +235,7 @@ export const getColumnDefs = (params: PageParams) => {
 		{
 			headerName: 'GRE/GMAT',
 			valueGetter: (params: ValueGetterParams) => getGreOrGmat(params.data.scores),
-			hide: params.contractType === 'UG Freshman' || params.contractType === 'UG Transfer'
+			hide: true
 		},
 		{
 			headerName: 'GRE',
@@ -259,7 +260,8 @@ export const getColumnDefs = (params: PageParams) => {
 		},
 		{
 			headerName: 'Eng. Proficiency',
-			valueGetter: (params: ValueGetterParams) => getEnglishProficiency(params.data.scores)
+			valueGetter: (params: ValueGetterParams) => getEnglishProficiency(params.data.scores),
+			hide: true
 		},
 		{
 			headerName: 'TOEFL',

@@ -54,11 +54,8 @@
 	{#if useComments}
 		<Textarea {form} name="comments" label="Description" />
 	{:else}
-		<div class="flex items-bottom justify-start gap-2 max-w-[360px]">
-			<Input {form} name="value" label="Grade" inputClass="w-[100px]" />
-			<div class="flex-grow-0 translate-y-[32px]">/</div>
-			<Input {form} name="scale" label="Grading scale" inputClass="w-[100px]" />
-		</div>
+		<Input {form} name="value" label="Grade" inputClass="w-[100px] text-right" />
+		<Input {form} name="scale" label="Grading scale" inputClass="w-[100px] text-right" />
 
 		<Form.Field {form} name="is_weighted" class="flex flex-row items-start space-x-3 space-y-0">
 			<Form.Control let:attrs>

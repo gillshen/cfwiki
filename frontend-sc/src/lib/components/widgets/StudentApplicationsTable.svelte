@@ -40,7 +40,7 @@
 			<Table.Row>
 				<Table.Cell class="max-w-[16px] pl-2">
 					<div class="flex justify-start">
-						<LinkIcon href="/application/{application.id}" />
+						<LinkIcon href="/application/{application.id}" class="text-mint-600" />
 					</div>
 				</Table.Cell>
 				<Table.Cell>
