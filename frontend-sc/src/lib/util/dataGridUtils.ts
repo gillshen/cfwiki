@@ -18,11 +18,11 @@ import {
 import GridLinkIcon from '$lib/components/misc/GridLinkIcon.svelte';
 import type { CfUserListItem } from '$lib/api/user';
 import type { StudentEnrollmentItem, StudentListItem } from '$lib/api/student';
-import type { BaseGrade } from '$lib/api/grade';
 import type { AcademyProgramListItem } from '$lib/api/academyProgram';
-import { formatGradeValue, parseNum } from '$lib/util/gradeUtils';
+import { filterSortCfUsers } from '$lib/util/userUtils';
 import { filterCfAcamdeyPrograms, formatCfAcamdeyPrograms } from '$lib/util/cfAcademyUtils';
 import { formatLocation } from '$lib/util/studentUtils';
+import { formatGradeOfProgression } from '$lib/util/enrollmentUtils';
 import countryFlags from '$lib/constants/countries';
 
 export const DEFAULT_GRID_OPTIONS = {
@@ -171,29 +171,30 @@ export const formatResidence = (student: StudentListItem): string => {
 };
 
 export const gradeValueGetter =
-	(params: {
+	({
+		progression,
+		enrollmentsGetter
+	}: {
 		progression: string;
 		enrollmentsGetter: (params: ValueGetterParams) => StudentEnrollmentItem[];
 	}): ValueGetterFunc =>
 	(valueGetterParams: ValueGetterParams): string => {
-		for (const e of params.enrollmentsGetter(valueGetterParams)) {
-			// find grades of the right progression
-			const matchingGrades = e.grades.filter(
-				(g: BaseGrade) => g.progression === params.progression
-			);
-			// if not found, continue with the next educational experience
-			if (!matchingGrades.length) {
-				continue;
-			}
-			// if found, take the last grade and format it
-			const grade: BaseGrade = matchingGrades[matchingGrades.length - 1];
-			if (parseNum(grade.scale)) {
-				return `${formatGradeValue(grade.value, grade.scale)}/${formatGradeValue(grade.scale)}`;
-			} else {
-				return grade.comments;
-			}
+		// student may be enrolled in more than one school during a progression
+		// but each (school, progression) combination is unique
+		const gradePerSchool = enrollmentsGetter(valueGetterParams)
+			.map((enrollment) => ({
+				schoolName: enrollment.school_name,
+				grade: formatGradeOfProgression({ enrollment, progression, precision: 2 })
+			}))
+			.filter((item) => item.grade !== undefined) as { schoolName: string; grade: string }[];
+
+		if (!gradePerSchool.length) {
+			return '';
 		}
-		return '';
+		if (gradePerSchool.length === 1) {
+			return gradePerSchool[0].grade;
+		}
+		return gradePerSchool.map((obj) => `${obj.schoolName}: ${obj.grade}`).join('; ');
 	};
 
 export const formatCfNames = (
@@ -245,7 +246,4 @@ export const getCfAcademyPrograms = (params: {
 	});
 
 export const getActiveUsernames = (cfUsers: CfUserListItem[]): string[] =>
-	cfUsers
-		.filter((cfer) => cfer.is_active)
-		.map((cfer) => cfer.username)
-		.sort();
+	filterSortCfUsers({ users: cfUsers }).map((cfer) => cfer.username);

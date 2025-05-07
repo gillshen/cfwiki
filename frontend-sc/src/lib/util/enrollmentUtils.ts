@@ -1,5 +1,6 @@
 import type { EnrollmentListItem, EnrollmentByStudent } from '$lib/api/enrollment';
 import type { StudentEnrollmentItem } from '$lib/api/student';
+import { formatGrade } from '$lib/util/gradeUtils';
 
 export function formatEnrollments(enrollments: StudentEnrollmentItem[]): string {
 	return enrollments.map((e) => formatEnrollment(e)).join('; ');
@@ -51,3 +52,22 @@ export function orderByDatesDesc(
 	}
 	return endDateB.localeCompare(endDateA);
 }
+
+export const formatGradeOfProgression = ({
+	enrollment,
+	progression,
+	precision = 3
+}: {
+	enrollment: StudentEnrollmentItem;
+	progression: string;
+	precision?: number;
+}): string | undefined => {
+	const grades = enrollment.grades.filter((grade) => grade.progression === progression);
+
+	if (!grades.length) {
+		return undefined;
+	}
+	// grades always come sorted from the backend
+	const lastGrade = grades[grades.length - 1];
+	return formatGrade(lastGrade, precision);
+};

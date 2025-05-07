@@ -1,8 +1,10 @@
+import { redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-import { fetchEnrollment, updateEnrollment } from '$lib/api/enrollment';
+import { deleteEnrollment, fetchEnrollment, updateEnrollment } from '$lib/api/enrollment';
 import { enrollmentUpdateSchema } from '$lib/schemas/enrollment';
+import { deleteSchema } from '$lib/schemas/delete';
 import { formAction } from '$lib/util/formUtils';
 import { base10Or400 } from '$lib/util/siteUtils';
 
@@ -12,10 +14,15 @@ export async function load(event) {
 
 	return {
 		enrollment,
-		enrollmentForm: await superValidate(enrollment, zod(enrollmentUpdateSchema))
+		enrollmentForm: await superValidate(enrollment, zod(enrollmentUpdateSchema)),
+		deleteForm: await superValidate(zod(deleteSchema))
 	};
 }
 
 export const actions = {
-	updateEnrollment: formAction(enrollmentUpdateSchema, updateEnrollment)
+	updateEnrollment: formAction(enrollmentUpdateSchema, updateEnrollment),
+	deleteEnrollment: formAction(deleteSchema, deleteEnrollment, async ({ response }) => {
+		const student = await response?.json();
+		throw redirect(303, `/student/${student.id}`);
+	})
 };

@@ -11,8 +11,8 @@
 
 <Button
 	size="icon"
-	variant="ghost"
-	class={cn('text-primary p-0 ml-auto cursor-pointer rounded-full', className)}
+	variant="link"
+	class={cn('font-normal text-primary hover:no-underline hover:text-mint-600', className)}
 	{href}
 >
 	<MoveRight class={cn('size-4', iconClass)} />

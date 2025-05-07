@@ -63,7 +63,7 @@
 						class="size-3 text-muted-foreground hover:text-secondary-foreground/80"
 						slot="button"
 					/>
-					<p slot="description">This action cannot be undone.</p>
+					<p slot="description">Deletion is instant and undoable.</p>
 					<DeleteForm
 						data={deleteForm}
 						objectId={log.id}

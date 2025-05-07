@@ -147,12 +147,12 @@
 				>
 			{/if}
 		</Card.Header>
-		<Card.Content class="min-h-[234px] flex">
+		<Card.Content class="min-h-[160px] flex">
 			{#if hasServices}
 				<Table.Root class="w-[653px]">
 					<Table.Header>
 						<Table.Row>
-							<Table.Head class="font-semibold min-w-[100px] pl-2">Person</Table.Head>
+							<Table.Head class="font-semibold min-w-[100px] ">Person</Table.Head>
 							<Table.Head class="font-semibold min-w-[100px]">Role</Table.Head>
 							<Table.Head class="font-semibold min-w-[120px]">Start Date</Table.Head>
 							<Table.Head class="font-semibold min-w-[120px]">End Date</Table.Head>
@@ -163,7 +163,7 @@
 						{#each data.contract.services.sort(orderByRoleUsername) as service}
 							{@const { startDate, endDate } = formatDates({ service, contract: data.contract })}
 							<Table.Row>
-								<Table.Cell class="pl-2">
+								<Table.Cell>
 									<div class="flex items-center gap-2">
 										<UserAvatar username={service.cf_username} class="size-8" imageClass="size-5" />
 										<a href="/cf/{service.cf_username}" class="text-inherit"
@@ -237,14 +237,15 @@
 		bind:open={contractDeleteModal}
 	>
 		<p slot="description" class="text-pretty">
-			Deleting a contract will also delete all the applications associated with it. This action
-			cannot be undone.
+			Deletion is instant and permanent. It will also cause all the associated applications to be
+			instantly and permanently deleted.
 		</p>
 		<DeleteForm
 			data={data.deleteForm}
 			objectId={data.contract.id}
 			action="?/deleteContract"
 			onUpdated={({ form }) => form.valid && (contractDeleteModal = false)}
+			onCancel={() => (contractDeleteModal = false)}
 		/>
 	</ButtonDialog>
 </Section>

@@ -13,10 +13,7 @@
 <Button
 	variant="link"
 	{href}
-	class={cn(
-		'font-normal text-muted-foreground hover:no-underline hover:text-secondary-foreground/80',
-		className
-	)}
+	class={cn('font-normal text-muted-foreground hover:no-underline hover:text-mint-600', className)}
 >
 	<Pencil class={cn('mr-1 size-4', iconClass)} />{text}
 </Button>

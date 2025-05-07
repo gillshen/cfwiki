@@ -40,6 +40,7 @@ from academics.serializers import (
 )
 
 from core.cache_utils import CacheResponseMixin
+from core.views import ReturnStudentAfterDeletionMixin
 
 
 class EnrollmentListView(CacheResponseMixin, ListAPIView):
@@ -66,7 +67,7 @@ class EnrollmentCreateView(CreateAPIView):
     serializer_class = EnrollmentCRUDSerializer
 
 
-class EnrollmentRUDView(RetrieveUpdateDestroyAPIView):
+class EnrollmentRUDView(ReturnStudentAfterDeletionMixin, RetrieveUpdateDestroyAPIView):
     queryset = Enrollment.objects.all()
     serializer_class = EnrollmentCRUDSerializer
 

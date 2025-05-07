@@ -1,16 +1,19 @@
 import type { Cookies } from '@sveltejs/kit';
 import type { CfUserListItem } from '$lib/api/user';
 
-export const filterSortCfUsers = (params: {
+export const filterSortCfUsers = ({
+	users,
+	department,
+	employmentStatus
+}: {
 	users: CfUserListItem[];
-	department: '文案' | '咨询';
-	employmentStatus?: 'current' | 'past' | 'all';
+	department?: '文案' | '咨询' | undefined;
+	employmentStatus?: 'current' | 'past' | undefined;
 }): CfUserListItem[] => {
-	const { users, department, employmentStatus } = params;
 	return users
 		.filter(
 			(user) =>
-				user.department === department &&
+				(!department || user.department === department) &&
 				// if looking for current users, get the active ones
 				(employmentStatus !== 'current' || user.is_active) &&
 				// if looking for past users, get the inactive ones

@@ -165,7 +165,7 @@
 				dialogTitle="Delete this application?"
 				bind:open={deleteModalOpen}
 			>
-				<svelte:fragment slot="description">This action cannot be undone.</svelte:fragment>
+				<svelte:fragment slot="description">Deletion is instant and permanent.</svelte:fragment>
 				<DeleteForm
 					data={data.deleteForm}
 					objectId={data.application.id}

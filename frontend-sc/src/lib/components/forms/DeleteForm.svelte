@@ -10,6 +10,7 @@
 	export let objectId: number;
 	export let formId: string = '';
 	export let deleteButtonText: string = 'Delete';
+	export let cancelButtonText: string = 'Cancel';
 	export let onUpdated:
 		| ((event: { form: SuperValidated<Infer<DeleteSchema>> }) => any)
 		| undefined = undefined;
@@ -33,5 +34,5 @@
 	<input type="number" name="id" bind:value={$formData.id} hidden />
 
 	<FormButton variant="destructive">{deleteButtonText}</FormButton>
-	<Button type="button" variant="ghost" on:click={onCancel}>Cancel</Button>
+	<Button type="button" variant="ghost" on:click={onCancel}>{cancelButtonText}</Button>
 </form>

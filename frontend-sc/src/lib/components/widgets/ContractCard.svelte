@@ -146,7 +146,7 @@
 
 	{#if canEdit}
 		<Card.Footer class="pt-0 pb-2">
-			<MoveRightButton href="/student/{contract.student}/contract/{contract.id}" />
+			<MoveRightButton href="/student/{contract.student}/contract/{contract.id}" class="ml-auto" />
 		</Card.Footer>
 	{/if}
 </Card.Root>
