@@ -1,7 +1,7 @@
 import { isFuture } from 'date-fns';
 
 import type { Contract, Service } from '$lib/api/contract';
-import { cfRoles } from '$lib/api/service';
+import { CF_ROLES } from '$lib/api/service';
 import { toShortDate } from '$lib/util/dateUtils';
 
 export function isActive(service: Service): boolean {
@@ -17,7 +17,7 @@ export function filterForActive(services: Service[]): Service[] {
 }
 
 export function orderByRoleUsername(a: Service, b: Service): number {
-	const roles = [...cfRoles] as string[];
+	const roles = [...CF_ROLES] as string[];
 	const indexA = roles.indexOf(a.role) ?? 99;
 	const indexB = roles.indexOf(b.role) ?? 99;
 

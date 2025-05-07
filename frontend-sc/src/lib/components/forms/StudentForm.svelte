@@ -52,12 +52,18 @@
 
 <input type="number" name="id" bind:value={$formData.id} hidden />
 
-<Input {form} name="surname" label="Surname" placeholder={fakeName.surname ?? ''} maxlength={100} />
+<Input
+	{form}
+	name="surname"
+	label="Last name"
+	placeholder={fakeName.surname ?? ''}
+	maxlength={100}
+/>
 
 <Input
 	{form}
 	name="given_name"
-	label="Given name"
+	label="First name"
 	placeholder={fakeName.givenName ?? ''}
 	maxlength={100}
 />
@@ -66,10 +72,8 @@
 	<Form.Control let:attrs>
 		<Checkbox {...attrs} bind:checked={$formData.surname_first} />
 		<div class="space-y-1 leading-none">
-			<Form.Label>Surname first</Form.Label>
-			<Form.Description class="text-xs"
-				>Place the surname before the given name, as in a typical Chinese name.</Form.Description
-			>
+			<Form.Label>Last name first</Form.Label>
+			<Form.Description class="text-xs">As in a typical Chinese name</Form.Description>
 		</div>
 		<input name={attrs.name} value={$formData.surname_first} hidden />
 	</Form.Control>

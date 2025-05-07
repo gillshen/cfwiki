@@ -39,10 +39,7 @@
 		<div slot="buttons">
 			<div class="flex items-center space-x-2 ml-2">
 				<ButtonDialog buttonSlot dialogTitle="Edit Application Status" bind:open={updateModal}>
-					<Pencil
-						class="size-3 text-muted-foreground hover:text-secondary-foreground/80"
-						slot="button"
-					/>
+					<Pencil class="size-3 text-muted-foreground hover:text-mint-600" slot="button" />
 					<form
 						method="POST"
 						action="?/createOrUpdateApplicationLog"
@@ -59,10 +56,7 @@
 					dialogTitle="Delete this application status?"
 					bind:open={deleteModal}
 				>
-					<X
-						class="size-3 text-muted-foreground hover:text-secondary-foreground/80"
-						slot="button"
-					/>
+					<X class="size-3 text-muted-foreground hover:text-mint-600" slot="button" />
 					<p slot="description">Deletion is instant and undoable.</p>
 					<DeleteForm
 						data={deleteForm}

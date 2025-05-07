@@ -7,7 +7,7 @@
 	import type { ServiceSchema } from '$lib/schemas/service';
 	import type { Service } from '$lib/api/contract';
 	import type { CfUserListItem } from '$lib/api/user';
-	import { cfRoles } from '$lib/api/service';
+	import { CF_ROLES } from '$lib/api/service';
 	import { orderByUsername } from '$lib/util/userUtils';
 
 	export let form: SuperForm<Infer<ServiceSchema>>;
@@ -36,7 +36,7 @@
 		postSelect={onUsernameSelection}
 	/>
 
-	<Combobox {form} name="role" label="Role" items={[...cfRoles]} />
+	<Combobox {form} name="role" label="Role" items={[...CF_ROLES]} disableSearch />
 {/if}
 
 <Input

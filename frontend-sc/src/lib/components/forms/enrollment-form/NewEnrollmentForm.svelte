@@ -9,7 +9,7 @@
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
-	import { secondaryProgressions, universityProgressions } from '$lib/constants/progressions';
+	import { SECONDARY_PROGRESSIONS, UNIVERSITY_PROGRESSIONS } from '$lib/constants/progressions';
 
 	export let data: SuperValidated<Infer<NewEnrollmentSchema>>;
 	export let onUpdated: (event: { form: typeof data }) => any;
@@ -45,12 +45,12 @@
 	$: {
 		if ($formData._school_type === 'Secondary School') {
 			programTypeItems = ['Secondary School'];
-			progressions = secondaryProgressions;
+			progressions = [...SECONDARY_PROGRESSIONS];
 			$formData.program_type = 'Secondary School';
 			$schoolFormData.type = 'Secondary School';
 		} else if ($formData._school_type === 'University') {
 			programTypeItems = ['UG Freshman', 'UG Transfer', "Master's"];
-			progressions = universityProgressions;
+			progressions = [...UNIVERSITY_PROGRESSIONS];
 			if ($formData.program_type === 'Secondary School') {
 				$formData.program_type = '';
 			}

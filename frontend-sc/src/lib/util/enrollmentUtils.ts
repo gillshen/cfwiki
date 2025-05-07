@@ -7,7 +7,7 @@ export function formatEnrollments(enrollments: StudentEnrollmentItem[]): string 
 }
 
 export function formatEnrollment(e: StudentEnrollmentItem): string {
-	const dash = '\u2013'; // n dash
+	const dash = ' \u2013 '; // en dash surrounded by space
 	let progression: string;
 
 	if (e.start_progression == e.end_progression) {

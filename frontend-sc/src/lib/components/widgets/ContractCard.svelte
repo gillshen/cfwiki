@@ -49,7 +49,7 @@
 
 <Card.Root
 	class={cn(
-		'min-w-[248px] min-h-[248px] relative mt-4 shadow-sm',
+		'min-w-[220px] min-h-[248px] relative mt-4 shadow-sm',
 		styleMap[contract.status].border,
 		styleMap[contract.status].shadow
 	)}
@@ -85,9 +85,7 @@
 		</Card.Description>
 	</Card.Header>
 
-	<Card.Content
-		class={cn('pt-2 flex flex-col gap-4 text-sm min-w-[250px]', canEdit ? 'pb-0' : 'pb-8')}
-	>
+	<Card.Content class={cn('pt-2 flex flex-col gap-4 text-sm', canEdit ? 'pb-0' : 'pb-8')}>
 		{#each Object.entries(servicesGrouped) as [cfUsername, services]}
 			{@const stayedTillEnd = services.map((s) => !endedEarly(s)).some(Boolean)}
 			<div class="flex items-center gap-2">
@@ -115,24 +113,24 @@
 									</div>
 								</HoverCard.Trigger>
 								<HoverCard.Content
-									class="text-sm bg-primary/80 text-primary-foreground backdrop-blur rounded-xl border-none shadow-md flex flex-col gap-4 p-6 pb-8"
+									class="text-sm w-[220px] text-primary bg-muted-foreground/10 backdrop-blur-lg rounded-xl border shadow-md flex flex-col gap-4 p-6 pb-8"
 								>
 									<h3 class="text-base font-semibold flex flex-col gap-1 mb-2">
-										<UserAvatar username={service.cf_username} class="invert bg-transparent" />
+										<UserAvatar username={service.cf_username} class="bg-transparent" />
 										<div>{service.cf_username} &bullet; {service.role}</div>
 									</h3>
 									<div class="flex items-center gap-4">
 										<CalendarClock class="size-5" />
 										<div>
 											<h4 class="font-semibold">Start Date</h4>
-											<p class="font-normal text-primary-foreground/70">{startDate}</p>
+											<p class="font-normal text-primary/70">{startDate}</p>
 										</div>
 									</div>
 									<div class="flex items-center gap-4">
 										<CalendarCheck class="size-5" />
 										<div>
 											<h4 class="font-semibold">End Date</h4>
-											<p class="font-normal text-primary-foreground/70">{endDate}</p>
+											<p class="font-normal text-primary/70">{endDate}</p>
 										</div>
 									</div>
 								</HoverCard.Content>
@@ -146,7 +144,10 @@
 
 	{#if canEdit}
 		<Card.Footer class="pt-0 pb-2">
-			<MoveRightButton href="/student/{contract.student}/contract/{contract.id}" class="ml-auto" />
+			<MoveRightButton
+				href="/student/{contract.student}/contract/{contract.id}"
+				class="ml-auto -mr-2 mb-2"
+			/>
 		</Card.Footer>
 	{/if}
 </Card.Root>

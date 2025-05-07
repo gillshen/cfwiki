@@ -12,8 +12,11 @@
 <Button
 	size="icon"
 	variant="link"
-	class={cn('font-normal text-primary hover:no-underline hover:text-mint-600', className)}
+	class={cn(
+		'font-normal size-8 rounded-full text-primary hover:no-underline bg-mint-400 hover:bg-mint-300 transition-colors duration-500 ease-in-out',
+		className
+	)}
 	{href}
 >
-	<MoveRight class={cn('size-4', iconClass)} />
+	<MoveRight class={cn('size-3', iconClass)} />
 </Button>

@@ -3,7 +3,7 @@
 	import { type SuperValidated, type Infer, superForm, type SuperForm } from 'sveltekit-superforms';
 	import type { CommonEnrollmentSchema, EnrollmentUpdateSchema } from '$lib/schemas/enrollment';
 	import type { BaseEnrollment } from '$lib/api/enrollment';
-	import { secondaryProgressions, universityProgressions } from '$lib/constants/progressions';
+	import { SECONDARY_PROGRESSIONS, UNIVERSITY_PROGRESSIONS } from '$lib/constants/progressions';
 	import EnrollmentUpdateFormFields from './CommonEnrollmentFormFields.svelte';
 
 	export let data: SuperValidated<Infer<EnrollmentUpdateSchema>>;
@@ -22,7 +22,9 @@
 	$formData = { ...$formData, ...enrollment };
 
 	const progressions =
-		enrollment.program_type === 'Secondary School' ? secondaryProgressions : universityProgressions;
+		enrollment.program_type === 'Secondary School'
+			? SECONDARY_PROGRESSIONS
+			: UNIVERSITY_PROGRESSIONS;
 </script>
 
 <form
@@ -34,5 +36,9 @@
 >
 	<input type="number" name="id" value={enrollment.id} hidden />
 
-	<EnrollmentUpdateFormFields {form} programType={enrollment.program_type} {progressions} />
+	<EnrollmentUpdateFormFields
+		{form}
+		programType={enrollment.program_type}
+		progressions={[...progressions]}
+	/>
 </form>

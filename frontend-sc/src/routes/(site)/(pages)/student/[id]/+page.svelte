@@ -38,9 +38,9 @@
 	import { orderBySchoolName, orderByStatus, orderByYearDesc } from '$lib/util/applicationUtils';
 	import { activeYears, toShortDate, toShortYearMonth } from '$lib/util/dateUtils';
 	import { formatEnrollmentDates, orderByDatesDesc } from '$lib/util/enrollmentUtils';
-	import { academicTerms } from '$lib/constants/progressions';
 	import { actOverall, ieltsOverall, toeflOverall } from '$lib/util/scoresUtils';
 	import { createTitle } from '$lib/util/siteUtils';
+	import { ACADEMIC_TERMS } from '$lib/constants/progressions';
 
 	export let data;
 
@@ -180,7 +180,7 @@
 	{#key data.student}
 		{#if data.student.enrollments.length}
 			<Timeline.Root class="pb-2">
-				{#each data.student.enrollments.sort(orderByDatesDesc) as enrollment}
+				{#each data.student.enrollments.sort(orderByDatesDesc) as enrollment, index}
 					<Timeline.Item class="min-h-[120px] w-full">
 						<h3 class="text-base font-semibold flex items-center pb-2 h-8 overflow-visible">
 							<a href="/school/{enrollment.school.id}" class="text-inherit"
@@ -189,25 +189,36 @@
 							{#if data.userCanEdit}
 								<MoveRightButton
 									href="/student/{data.student.id}/edu/{enrollment.id}"
-									class="ml-1"
+									class="ml-2"
 								/>
 							{/if}
 						</h3>
 
-						<div class="flex flex-col gap-2">
+						<fieldset
+							class={cn(
+								'flex flex-col gap-2 pt-2',
+								index < data.student.enrollments.length - 1 ? 'pb-8' : ''
+							)}
+						>
 							<div class="text-muted-foreground flex items-center gap-1.5">
-								<Calendar class="size-4" />
+								<Calendar class="size-4 text-primary" />
 								{formatEnrollmentDates(enrollment, toShortYearMonth)}
 							</div>
-							{#if enrollment.curriculum}
-								<div class="text-muted-foreground flex items-center gap-1.5">
-									<GraduationCap class="size-4" />
+							<div class="text-muted-foreground flex items-center gap-1.5">
+								<GraduationCap class="size-4 text-primary" />
+								{#if enrollment.curriculum}
 									{enrollment.curriculum}
-								</div>
-							{/if}
+									{#if enrollment.program_type === 'UG Transfer'}
+										<div class="text-muted-foreground/50">&bullet;</div>
+										<div>Transfer</div>
+									{/if}
+								{:else}
+									{enrollment.program_type}
+								{/if}
+							</div>
 							<!-- TODO -->
 							<div class="text-muted-foreground flex items-center gap-1.5">
-								<BookCheck class="size-4" />
+								<BookCheck class="size-4 text-primary" />
 								<HoverCard.Root>
 									<HoverCard.Trigger class="underline decoration-dotted hover:decoration-dotted"
 										>GPA: (TODO)</HoverCard.Trigger
@@ -222,7 +233,7 @@
 									</HoverCard.Content>
 								</HoverCard.Root>
 							</div>
-						</div>
+						</fieldset>
 					</Timeline.Item>
 				{/each}
 			</Timeline.Root>
@@ -344,7 +355,7 @@
 							items={relevantApplicationTypes}
 						/>
 						<Combobox {form} name="year" label="Year of admission" items={relevantYears} />
-						<Combobox {form} name="term" label="Term" items={academicTerms} />
+						<Combobox {form} name="term" label="Term" items={[...ACADEMIC_TERMS]} />
 						<Form.Button class="w-fit min-w-24">Next</Form.Button>
 					</form>
 				</ButtonDialog>

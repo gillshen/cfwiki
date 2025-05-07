@@ -1,4 +1,6 @@
+import { z } from 'zod';
 import { createOrUpdate, destroy } from '$lib/api/core';
+import type { GradeSchema } from '$lib/schemas/grade';
 
 export type BaseGrade = {
 	progression: string;
@@ -15,12 +17,10 @@ export type Grade = BaseGrade & {
 	is_weighted: boolean;
 };
 
-export async function createOrUpdateGrade(data: any) {
+export async function createOrUpdateGrade(data: z.infer<GradeSchema>) {
 	return createOrUpdate(data, 'grades');
 }
 
-export async function deleteGrade(data: any) {
+export async function deleteGrade(data: { id: number }) {
 	return destroy(`grades/${data.id}/update/`);
 }
-
-export type GroupedGrades = Record<string, Grade[]>;

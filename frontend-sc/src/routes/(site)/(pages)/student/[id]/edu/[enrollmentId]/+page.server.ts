@@ -4,9 +4,11 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 import { deleteEnrollment, fetchEnrollment, updateEnrollment } from '$lib/api/enrollment';
 import { enrollmentUpdateSchema } from '$lib/schemas/enrollment';
+import { gradeSchema } from '$lib/schemas/grade';
 import { deleteSchema } from '$lib/schemas/delete';
 import { formAction } from '$lib/util/formUtils';
 import { base10Or400 } from '$lib/util/siteUtils';
+import { createOrUpdateGrade } from '$lib/api/grade.js';
 
 export async function load(event) {
 	const id = base10Or400(event.params.enrollmentId, 'Invalid enrollment ID');
@@ -15,6 +17,7 @@ export async function load(event) {
 	return {
 		enrollment,
 		enrollmentForm: await superValidate(enrollment, zod(enrollmentUpdateSchema)),
+		gradeForm: await superValidate(zod(gradeSchema)),
 		deleteForm: await superValidate(zod(deleteSchema))
 	};
 }
@@ -24,5 +27,6 @@ export const actions = {
 	deleteEnrollment: formAction(deleteSchema, deleteEnrollment, async ({ response }) => {
 		const student = await response?.json();
 		throw redirect(303, `/student/${student.id}`);
-	})
+	}),
+	createOrUpdateGrade: formAction(gradeSchema, createOrUpdateGrade)
 };

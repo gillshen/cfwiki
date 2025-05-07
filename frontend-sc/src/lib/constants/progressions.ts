@@ -1,10 +1,10 @@
-export const contractTerms = ['Fall', 'Spring', 'Summer'];
+export const CONTRACT_TERMS = ['Fall', 'Spring', 'Summer'] as const;
 
-export const academicTerms = ['Fall', 'Winter', 'Spring', 'Summer'];
+export const ACADEMIC_TERMS = ['Fall', 'Winter', 'Spring', 'Summer'] as const;
 
-export const gradingPeriods = ['Fall', 'Winter', 'Spring', 'Summer', 'Year'];
+export const GRADING_PERIODS = ['Fall', 'Winter', 'Spring', 'Summer', 'Year'] as const;
 
-export const termOrder: Record<string, number> = {
+export const TERM_ORDER: Record<string, number> = {
 	Fall: 0,
 	Winter: 1,
 	Spring: 2,
@@ -12,18 +12,24 @@ export const termOrder: Record<string, number> = {
 	Year: 4
 } as const;
 
-export const universityProgressions = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+export const UNIVERSITY_PROGRESSIONS = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'] as const;
 
-export const secondaryProgressions = ['G7', 'G8', 'G9', 'G10', 'G11', 'G12'];
+export const SECONDARY_PROGRESSIONS = ['G7', 'G8', 'G9', 'G10', 'G11', 'G12'] as const;
 
-export const allProgressions = [...secondaryProgressions, ...universityProgressions];
+export const ALL_PROGRESSIONS = [...SECONDARY_PROGRESSIONS, ...UNIVERSITY_PROGRESSIONS] as const;
 
 const _withTerms = (progressions: string[], terms: string[]): string[] =>
 	progressions.flatMap((year) => terms.map((term) => `${year} ${term}`));
 
-export const universityProgsWithContractTerms = _withTerms(universityProgressions, contractTerms);
+export const universityProgsWithContractTerms = _withTerms(
+	[...UNIVERSITY_PROGRESSIONS],
+	[...CONTRACT_TERMS]
+);
 
-export const secondaryProgsWithContractTerms = _withTerms(secondaryProgressions, contractTerms);
+export const secondaryProgsWithContractTerms = _withTerms(
+	[...SECONDARY_PROGRESSIONS],
+	[...CONTRACT_TERMS]
+);
 
 export const allProgsWithContractTerms = [
 	...secondaryProgsWithContractTerms,

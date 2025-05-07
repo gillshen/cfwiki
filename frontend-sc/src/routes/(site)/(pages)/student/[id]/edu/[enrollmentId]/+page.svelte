@@ -13,14 +13,22 @@
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import PencilEditButton from '$lib/components/misc/PencilEditButton.svelte';
 	import EnrollmentForm from '$lib/components/forms/enrollment-form/EnrollmentUpdateForm.svelte';
+	import GradeForm from '$lib/components/forms/GradeForm.svelte';
 	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
 
 	import { createTitle } from '$lib/util/siteUtils';
 	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
 	import { toShortYearMonth } from '$lib/util/dateUtils';
-	import { formatGrade } from '$lib/util/gradeUtils';
+	import { formatGrade, parseNumber } from '$lib/util/gradeUtils';
+
+	import { SECONDARY_PROGRESSIONS, UNIVERSITY_PROGRESSIONS } from '$lib/constants/progressions';
 
 	export let data;
+
+	const progressions =
+		data.enrollment.program_type === 'Secondary School'
+			? SECONDARY_PROGRESSIONS
+			: UNIVERSITY_PROGRESSIONS;
 
 	let enrollmentUpdateModal = false;
 	let newGradeModal = false;
@@ -98,9 +106,9 @@
 						<Table.Row>
 							<Table.Head class="font-semibold">Year</Table.Head>
 							<Table.Head class="font-semibold">Period</Table.Head>
-							<Table.Head class="font-semibold ">GPA or Description</Table.Head>
-							<Table.Head class="font-semibold ">Weighted</Table.Head>
-							<Table.Head class="font-semibold ">Cumul.</Table.Head>
+							<Table.Head class="font-semibold">GPA or Description</Table.Head>
+							<Table.Head class="font-semibold">Weighted</Table.Head>
+							<Table.Head class="font-semibold">Cumul.</Table.Head>
 							<Table.Head class="font-semibold w-[90px] flex-grow-0"></Table.Head>
 						</Table.Row>
 					</Table.Header>
@@ -109,9 +117,15 @@
 							<Table.Row>
 								<Table.Cell>{grade.progression}</Table.Cell>
 								<Table.Cell>{grade.term}</Table.Cell>
-								<Table.Cell class="tabular-nums">{formatGrade(grade)}</Table.Cell>
+								<Table.Cell class="tabular-nums max-w-[320px]">{formatGrade(grade)}</Table.Cell>
 								<Table.Cell>
-									<svelte:component this={grade.is_weighted ? Check : X} class="size-4" />
+									{#if grade.is_weighted}
+										<Check class="size-4" />
+									{:else if parseNumber(grade.scale)}
+										<X class="size-4" />
+									{:else}
+										<span class="text-muted-foreground">n/a</span>
+									{/if}
 								</Table.Cell>
 								<Table.Cell>
 									<svelte:component this={grade.is_cumulative ? Check : X} class="size-4" />
@@ -129,7 +143,12 @@
 					buttonClass="w-fit m-auto"
 					bind:open={newGradeModal}
 				>
-					grade report form
+					<GradeForm
+						data={data.gradeForm}
+						enrollmentId={data.enrollment.id}
+						progressions={[...progressions]}
+						onUpdated={({ form }) => form.valid && (newGradeModal = false)}
+					/>
 				</ButtonDialog>
 			{/if}
 		</Card.Content>
@@ -142,7 +161,12 @@
 					buttonClass="w-fit mt-2"
 					bind:open={newGradeModal}
 				>
-					grade report form
+					<GradeForm
+						data={data.gradeForm}
+						enrollmentId={data.enrollment.id}
+						progressions={[...progressions]}
+						onUpdated={({ form }) => form.valid && (newGradeModal = false)}
+					/>
 				</ButtonDialog>
 			</Card.Footer>
 		{/if}

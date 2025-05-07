@@ -7,7 +7,7 @@
 	import ServiceFormFields from './ServiceFormFields.svelte';
 
 	export let data: SuperValidated<Infer<ServiceSchema>>;
-	export let onUpdated: (event: { form: SuperValidated<Infer<ServiceSchema>> }) => any;
+	export let onUpdated: (event: { form: typeof data }) => any;
 	export let action: string = '?/createOrUpdateService';
 	export let className: string = '';
 	export let contractId: number;
