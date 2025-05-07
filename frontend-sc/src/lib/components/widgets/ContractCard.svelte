@@ -2,8 +2,6 @@
 	import { cn } from '$lib/utils';
 	import * as Card from '$lib/components/ui/card/index';
 	import * as HoverCard from '$lib/components/ui/hover-card/index';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import MoveRight from 'lucide-svelte/icons/move-right';
 	import CalendarClock from 'lucide-svelte/icons/calendar-clock';
 	import CalendarCheck from 'lucide-svelte/icons/calendar-check';
 
@@ -11,6 +9,7 @@
 	import type { ContractStatus, Service } from '$lib/api/contract';
 	import ContractStatusSign from '$lib/components/misc/ContractStatusSign.svelte';
 	import UserAvatar from '$lib/components/misc/UserAvatar.svelte';
+	import MoveRightButton from '$lib/components/misc/MoveRightButton.svelte';
 	import { toShortYearMonth } from '$lib/util/dateUtils';
 	import { endedEarly, orderByRoleUsername, formatDates } from '$lib/util/serviceUtils';
 
@@ -147,14 +146,7 @@
 
 	{#if canEdit}
 		<Card.Footer class="pt-0 pb-2">
-			<Button
-				size="icon"
-				variant="ghost"
-				class="text-primary p-0 ml-auto cursor-pointer rounded-full"
-				href="/student/{contract.student}/contract/{contract.id}"
-			>
-				<MoveRight class="size-4" />
-			</Button>
+			<MoveRightButton href="/student/{contract.student}/contract/{contract.id}" />
 		</Card.Footer>
 	{/if}
 </Card.Root>

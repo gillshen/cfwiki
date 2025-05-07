@@ -25,6 +25,7 @@
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import PencilEditButton from '$lib/components/misc/PencilEditButton.svelte';
+	import MoveRightButton from '$lib/components/misc/MoveRightButton.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import ContractCard from '$lib/components/widgets/ContractCard.svelte';
@@ -36,7 +37,7 @@
 	import { userCanEdit as canEditContract } from '$lib/util/contractUtils';
 	import { orderBySchoolName, orderByStatus, orderByYearDesc } from '$lib/util/applicationUtils';
 	import { activeYears, toShortDate, toShortYearMonth } from '$lib/util/dateUtils';
-	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
+	import { formatEnrollmentDates, orderByDatesDesc } from '$lib/util/enrollmentUtils';
 	import { academicTerms } from '$lib/constants/progressions';
 	import { actOverall, ieltsOverall, toeflOverall } from '$lib/util/scoresUtils';
 	import { createTitle } from '$lib/util/siteUtils';
@@ -179,16 +180,16 @@
 	{#key data.student}
 		{#if data.student.enrollments.length}
 			<Timeline.Root class="pb-2">
-				{#each data.student.enrollments as enrollment}
+				{#each data.student.enrollments.sort(orderByDatesDesc) as enrollment}
 					<Timeline.Item class="min-h-[120px] w-full">
-						<h3 class="text-base font-semibold flex items-center pb-2">
+						<h3 class="text-base font-semibold flex items-center pb-2 h-8 overflow-visible">
 							<a href="/school/{enrollment.school.id}" class="text-inherit"
 								>{enrollment.school.name}</a
 							>
 							{#if data.userCanEdit}
-								<PencilEditButton
+								<MoveRightButton
 									href="/student/{data.student.id}/edu/{enrollment.id}"
-									class="h-6"
+									class="ml-1"
 								/>
 							{/if}
 						</h3>

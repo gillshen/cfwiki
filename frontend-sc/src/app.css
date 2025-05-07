@@ -80,15 +80,9 @@
 }
 
 /* Apply styles to selected text */
-::selection {
-	@apply bg-cultured-100;
+::selection, ::-moz-selection {
+	@apply bg-cultured-300;
 }
-
-/* Apply styles to selected text in Firefox */
-::-moz-selection {
-	@apply bg-cultured-100;
-}
-
 
 /* WebKit (Chrome, Edge, Safari) scrollbar styling */
 ::-webkit-scrollbar {

@@ -1,35 +1,25 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
-	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
+	import Calendar from 'lucide-svelte/icons/calendar';
+	import GraduationCap from 'lucide-svelte/icons/graduation-cap';
 
-	import Section from '$lib/components/containers/Section.svelte';
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
-	import Combobox from '$lib/components/forms/Combobox.svelte';
-	import Input from '$lib/components/forms/Input.svelte';
+	import Section from '$lib/components/containers/Section.svelte';
+	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
+	import PencilEditButton from '$lib/components/misc/PencilEditButton.svelte';
+	import EnrollmentForm from '$lib/components/forms/enrollment-form/EnrollmentUpdateForm.svelte';
+
 	import { createTitle } from '$lib/util/siteUtils';
-	import { secondaryProgressions, universityProgressions } from '$lib/constants/progressions';
+	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
+	import { toShortYearMonth } from '$lib/util/dateUtils';
 
 	export let data;
 
-	const enrollmentForm = superForm(data.enrollmentForm, { resetForm: false });
-	const { enhance: enrollmentFormEnhance } = enrollmentForm;
-
-	let progressions: string[] = [];
-
-	$: title = `${data.student.fullname} @ ${data.enrollment.school.name}`;
-
-	$: {
-		if (data.enrollment.program_type === 'Secondary School') {
-			progressions = secondaryProgressions;
-		} else if (data.enrollment.program_type === 'University') {
-			progressions = universityProgressions;
-		}
-	}
+	let enrollmentUpdateModal = false;
 </script>
 
 <svelte:head>
-	<title>{createTitle(title)}</title>
+	<title>{createTitle(`${data.student.fullname} @ ${data.enrollment.school.name}`)}</title>
 </svelte:head>
 
 <BreadcrumbContainer>
@@ -48,70 +38,40 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<h1 class="page-title mb-2">{title}</h1>
-
-<Section id="enrollment-form-section">
-	<form
-		method="POST"
-		class="max-w-prose space-y-6 mt-4"
-		action="?/updateEnrollment"
-		use:enrollmentFormEnhance
-		id="enrollment-form"
-	>
-		<input type="number" name="id" bind:value={data.enrollment.id} hidden />
-
-		<Input form={enrollmentForm} name="start_date" label="Start date" type="date" class="pb-0.5" />
-
-		<Combobox
-			form={enrollmentForm}
-			name="start_progression"
-			label="Entering as"
-			items={progressions}
-			optional
-			searchDisabledEmptyText="You need to select a school type first"
-			disableSearch
-		/>
-
-		<Input
-			form={enrollmentForm}
-			name="end_date"
-			label="End date"
-			type="date"
-			class="pb-0.5"
-			optional
-		/>
-
-		<Combobox
-			form={enrollmentForm}
-			name="end_progression"
-			label="Leaving as"
-			items={progressions}
-			optional
-			disableSearch
-			searchDisabledEmptyText="You need to select a school type first"
-		/>
-
-		{#if data.enrollment.program_type === 'Secondary School'}
-			<Combobox
-				form={enrollmentForm}
-				name="curriculum"
-				label="Curriculum"
-				items={['A-level', 'AP', 'IB', 'Other']}
-				optional
-				disableSearch
-			/>
-		{:else if data.enrollment.program_type === 'University'}
-			<Input
-				form={enrollmentForm}
-				name="curriculum"
-				label="Program or major"
-				maxlength={50}
-				optional
-			/>
+<section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-4">
+	<h1 class="page-title flex items-center gap-1">
+		{data.student.fullname}
+		<span class="scale-[80%]">@</span>
+		{data.enrollment.school.name}
+	</h1>
+	<div class="flex flex-col gap-2 text-sm">
+		<div class="flex items-center gap-1.5">
+			<Calendar class="size-4" />
+			{formatEnrollmentDates(data.enrollment, toShortYearMonth)}
+		</div>
+		{#if data.enrollment.curriculum}
+			<div class="flex items-center gap-1.5">
+				<GraduationCap class="size-4" />
+				<div>{data.enrollment.curriculum}</div>
+			</div>
 		{/if}
+		<div class="=w-fit">
+			<ButtonDialog
+				buttonSlot
+				dialogTitle="Update Educational Experience"
+				bind:open={enrollmentUpdateModal}
+			>
+				<PencilEditButton slot="button" class="p-0 m-0" iconClass="mr-1.5" />
+				<EnrollmentForm
+					data={data.enrollmentForm}
+					enrollment={{ ...data.enrollment, school: data.enrollment.school.id }}
+					onUpdated={({ form }) => form.valid && (enrollmentUpdateModal = false)}
+				/>
+			</ButtonDialog>
+		</div>
+	</div>
+</section>
 
-		<Form.Button class="w-fit min-w-24">Submit</Form.Button>
-	</form>
-</Section>
+<Section id="enrollment-form-section"></Section>
 
-<pre class="text-sm bg-muted p-4 rounded-lg">{JSON.stringify(data.enrollment, null, 2)}</pre>
+<!-- <pre class="text-sm bg-muted p-4 rounded-lg">{JSON.stringify(data.enrollment, null, 2)}</pre> -->

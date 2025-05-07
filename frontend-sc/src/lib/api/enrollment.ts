@@ -8,7 +8,7 @@ import type { ContractStatus } from '$lib/api/contract';
 export type BaseEnrollment = {
 	id: number;
 	student: number;
-	school: { id: number; type: string; name: string; alt_name: string; country: string };
+	school: number;
 	program_type: string;
 	start_date: string;
 	start_progression: string;
@@ -17,7 +17,17 @@ export type BaseEnrollment = {
 	curriculum: string;
 };
 
-export type EnrollmentListItem = BaseEnrollment & {
+export type Enrollment = Omit<BaseEnrollment, 'school'> & {
+	school: {
+		id: number;
+		type: string;
+		name: string;
+		alt_name: string;
+		country: string;
+	};
+};
+
+export type EnrollmentListItem = Enrollment & {
 	student: {
 		id: number;
 		fullname: string;
@@ -27,7 +37,7 @@ export type EnrollmentListItem = BaseEnrollment & {
 	};
 };
 
-export type EnrollmentByStudent = BaseEnrollment & {
+export type EnrollmentByStudent = Enrollment & {
 	grades: Grade[];
 };
 

@@ -8,7 +8,7 @@
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
-	import ServiceForm from '$lib/components/forms/service-form/Form.svelte';
+	import ServiceForm from '$lib/components/forms/service-form/ServiceForm.svelte';
 	import ServiceActionItem from '$lib/components/widgets/ServiceActionItem.svelte';
 	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
@@ -199,7 +199,7 @@
 					bind:open={newServiceModal}
 				>
 					<ServiceForm
-						superValidated={data.serviceForm}
+						data={data.serviceForm}
 						cfUsers={data.cfUsers}
 						contractId={data.contract.id}
 						onUpdated={({ form }) => form.valid && (newServiceModal = false)}
@@ -217,7 +217,7 @@
 					bind:open={newServiceModal}
 				>
 					<ServiceForm
-						superValidated={data.serviceForm}
+						data={data.serviceForm}
 						cfUsers={data.cfUsers}
 						contractId={data.contract.id}
 						onUpdated={({ form }) => form.valid && (newServiceModal = false)}
@@ -241,7 +241,7 @@
 			cannot be undone.
 		</p>
 		<DeleteForm
-			superValidated={data.deleteForm}
+			data={data.deleteForm}
 			objectId={data.contract.id}
 			action="?/deleteContract"
 			onUpdated={({ form }) => form.valid && (contractDeleteModal = false)}

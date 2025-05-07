@@ -65,7 +65,7 @@
 					/>
 					<p slot="description">This action cannot be undone.</p>
 					<DeleteForm
-						superValidated={deleteForm}
+						data={deleteForm}
 						objectId={log.id}
 						action="?/deleteApplicationLog"
 						onUpdated={({ form }) => form.valid && (deleteModal = false)}

@@ -23,7 +23,7 @@
 	};
 
 	const inProgressIcon: Icon = { icon: Clock, className: 'text-sky-600/70' };
-	const acceptedIcon: Icon = { icon: CircleCheckBig, className: 'text-mint-400' };
+	const acceptedIcon: Icon = { icon: CircleCheckBig, className: 'text-mint-600' };
 	const rejectedIcon: Icon = { icon: CircleX, className: 'text-rejected' };
 	const deferredIcon: Icon = { icon: CircleHelp, className: 'text-deferred' };
 	const neutralIcon: Icon = { icon: Ban, className: 'text-muted-foreground/70 ' };
@@ -52,7 +52,7 @@
 	<div class={cn('text-sm flex items-center gap-1.5 h-6', className)}>
 		<svelte:component
 			this={statusMap[latestStatus].icon}
-			class={cn('size-4 shrink-0', statusMap[latestStatus].className, iconClass)}
+			class={cn('size-4 shrink-0 translate-y-[1px]', statusMap[latestStatus].className, iconClass)}
 		/>
 		{#if !iconOnly}
 			<div class="flex-1 min-w-0">

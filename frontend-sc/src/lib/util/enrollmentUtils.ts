@@ -38,10 +38,16 @@ export function formatEnrollmentDates(
 		.join(' ');
 }
 
-export function orderByDatesDesc(a: EnrollmentListItem, b: EnrollmentListItem): number {
-	if (a.end_date === b.end_date) {
+export function orderByDatesDesc(
+	a: { start_date: string; end_date: string | null },
+	b: { start_date: string; end_date: string | null }
+): number {
+	const endDateA = a.end_date ?? '9999-12-31';
+	const endDateB = b.end_date ?? '9999-12-31';
+
+	// if identical end dates, order by start date desc
+	if (endDateA === endDateB) {
 		return b.start_date.localeCompare(a.start_date);
 	}
-	// put the item with a non-null end date first
-	return a.end_date === null ? 1 : -1;
+	return endDateB.localeCompare(endDateA);
 }

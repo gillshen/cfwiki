@@ -7,7 +7,7 @@
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import X from 'lucide-svelte/icons/x';
-	import ServiceForm from '$lib/components/forms/service-form/Form.svelte';
+	import ServiceForm from '$lib/components/forms/service-form/ServiceForm.svelte';
 	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
 
 	import type { Service } from '$lib/api/contract';
@@ -28,7 +28,7 @@
 	/>
 	<p slot="description">{service.cf_username} as {service.role}</p>
 	<ServiceForm
-		superValidated={updateForm}
+		data={updateForm}
 		{contractId}
 		cfUsers={$page.data.cfUsers}
 		{service}
@@ -50,7 +50,7 @@
 		perform this role, set an end date instead.
 	</p>
 	<DeleteForm
-		superValidated={deleteForm}
+		data={deleteForm}
 		objectId={service.id}
 		action="?/deleteService"
 		onUpdated={({ form }) => form.valid && (deleteModal = false)}

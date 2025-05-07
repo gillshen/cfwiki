@@ -1,13 +1,13 @@
 <script lang="ts">
 	import * as Form from '$lib/components/ui/form/index';
 	import * as RadioGroup from '$lib/components/ui/radio-group/index';
-
 	import type { SuperForm } from 'sveltekit-superforms';
+	import { normalizeSelectItems, type SelectOption } from '$lib/util/formUtils';
 
 	export let form: SuperForm<any>;
 	export let name: string;
 	export let label: string;
-	export let items: { label: string; value: any }[];
+	export let items: (SelectOption | string | number)[];
 	export let onValueChange: (value?: string | undefined) => void = () => {};
 
 	const { form: formData } = form;
@@ -17,7 +17,7 @@
 	<Form.Legend class="pb-1">{label}</Form.Legend>
 	<Form.Control>
 		<RadioGroup.Root bind:value={$formData[name]} {onValueChange}>
-			{#each items as item}
+			{#each items.map(normalizeSelectItems) as item}
 				<div class="flex items-center space-x-3">
 					<Form.Control let:attrs>
 						<RadioGroup.Item value={item.value} {...attrs} />

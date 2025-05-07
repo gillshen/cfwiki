@@ -5,7 +5,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import type { DeleteSchema } from '$lib/schemas/delete';
 
-	export let superValidated: SuperValidated<Infer<DeleteSchema>>;
+	export let data: SuperValidated<Infer<DeleteSchema>>;
 	export let action: string;
 	export let objectId: number;
 	export let formId: string = '';
@@ -18,7 +18,7 @@
 	export { className as class };
 
 	const id: string = formId ?? `delete-form-${objectId}`;
-	const { form: formData, enhance } = superForm(superValidated, { id, onUpdated });
+	const { form: formData, enhance } = superForm(data, { id, onUpdated });
 
 	$formData.id = objectId;
 </script>

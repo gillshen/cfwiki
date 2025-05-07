@@ -43,21 +43,16 @@
 								<Card.Title>
 									{application.student.fullname}
 								</Card.Title>
-								<Card.Description class="pt-1 flex flex-col gap-2">
+
+								<Card.Description class="pt-2 flex flex-col gap-2">
 									{#if showPrograms}
-										<div class="text-muted-foreground font-semibold">
+										<div class="text-muted-foreground text-pretty">
 											{application.program.display_name}
 										</div>
 									{/if}
-									{#if hideYears}
-										<Badge variant="outline" class="w-fit -translate-x-[1px]"
-											>{application.round_name}</Badge
-										>
-									{:else}
-										<Badge variant="outline" class="w-fit -translate-x-[1px]"
-											>{application.year} {application.round_name}</Badge
-										>
-									{/if}
+									<Badge variant="outline" class="w-fit -translate-x-[1px]"
+										>{`${hideYears ? '' : application.year} ${application.round_name}`}</Badge
+									>
 								</Card.Description>
 							</Card.Header>
 							<Card.Content class="pt-2 flex flex-col gap-2 flex-grow min-w-[240px]">

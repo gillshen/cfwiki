@@ -167,7 +167,7 @@
 			>
 				<svelte:fragment slot="description">This action cannot be undone.</svelte:fragment>
 				<DeleteForm
-					superValidated={data.deleteForm}
+					data={data.deleteForm}
 					objectId={data.application.id}
 					action="?/deleteApplication"
 					onCancel={() => (deleteModalOpen = false)}
