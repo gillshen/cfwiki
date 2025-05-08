@@ -2,34 +2,49 @@ import { z } from 'zod';
 
 const common = {
 	id: z.number().optional(),
-	student: z.number(),
+	student: z.number().min(1, 'This field is required'),
 	date: z.string().nullable().default(null)
 };
 
-// TOEFL and IELTS
+// TOEFL
 
 export const toeflSchema = z.object({
 	...common,
-	reading: z.number().nullable().default(null),
-	listening: z.number().nullable().default(null),
-	speaking: z.number().nullable().default(null),
-	writing: z.number().nullable().default(null)
+	reading: z.number().min(0).max(30).step(1, 'Number must be an integer').nullable().default(null),
+	listening: z
+		.number()
+		.min(0)
+		.max(30)
+		.step(1, 'Number must be an integer')
+		.nullable()
+		.default(null),
+	speaking: z.number().min(0).max(30).step(1, 'Number must be an integer').nullable().default(null),
+	writing: z.number().min(0).max(30).step(1, 'Number must be an integer').nullable().default(null)
 });
 
-export const ieltschema = toeflSchema;
-
 export type ToeflSchema = typeof toeflSchema;
+
+// IELTS
+
+export const ieltschema = z.object({
+	...common,
+	reading: z.number().min(0).max(9).step(0.5).nullable().default(null),
+	listening: z.number().min(0).max(9).step(0.5).nullable().default(null),
+	speaking: z.number().min(0).max(9).step(0.5).nullable().default(null),
+	writing: z.number().min(0).max(9).step(0.5).nullable().default(null)
+});
+
 export type IeltsSchema = typeof ieltschema;
 
 // Duolingo
 
 export const duolingoSchema = z.object({
 	...common,
-	overall: z.number().nullable().default(null),
-	literacy: z.number().nullable().default(null),
-	comprehension: z.number().nullable().default(null),
-	conversation: z.number().nullable().default(null),
-	production: z.number().nullable().default(null)
+	overall: z.number().min(10).max(160).step(5).nullable().default(null),
+	literacy: z.number().min(10).max(160).step(5).nullable().default(null),
+	comprehension: z.number().min(10).max(160).step(5).nullable().default(null),
+	conversation: z.number().min(10).max(160).step(5).nullable().default(null),
+	production: z.number().min(10).max(160).step(5).nullable().default(null)
 });
 
 export type DuolingoSchema = typeof duolingoSchema;
