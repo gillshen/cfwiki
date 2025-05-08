@@ -14,6 +14,7 @@
 	import EnrollmentForm from '$lib/components/forms/enrollment-form/EnrollmentUpdateForm.svelte';
 	import GradeForm from '$lib/components/forms/GradeForm.svelte';
 	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
+	import GradeActionItem from '$lib/components/widgets/GradeActionItem.svelte';
 
 	import { createTitle } from '$lib/util/siteUtils';
 	import { formatEnrollmentDates } from '$lib/util/enrollmentUtils';
@@ -26,8 +27,8 @@
 
 	const progressions =
 		data.enrollment.program_type === 'Secondary School'
-			? SECONDARY_PROGRESSIONS
-			: UNIVERSITY_PROGRESSIONS;
+			? [...SECONDARY_PROGRESSIONS]
+			: [...UNIVERSITY_PROGRESSIONS];
 
 	let enrollmentUpdateModal = false;
 	let newGradeModal = false;
@@ -131,7 +132,15 @@
 										<div class="text-muted-foreground size-4 mx-auto">-</div>
 									{/if}
 								</Table.Cell>
-								<Table.Cell>actionItem</Table.Cell>
+								<Table.Cell class="flex items-center gap-4 pr-6 h-16">
+									<GradeActionItem
+										{grade}
+										enrollmentId={data.enrollment.id}
+										{progressions}
+										updateForm={data.gradeForm}
+										deleteForm={data.deleteForm}
+									/>
+								</Table.Cell>
 							</Table.Row>
 						{/each}
 					</Table.Body>
@@ -147,7 +156,7 @@
 					<GradeForm
 						data={data.gradeForm}
 						enrollmentId={data.enrollment.id}
-						progressions={[...progressions]}
+						{progressions}
 						onUpdated={({ form }) => form.valid && (newGradeModal = false)}
 					/>
 				</ButtonDialog>

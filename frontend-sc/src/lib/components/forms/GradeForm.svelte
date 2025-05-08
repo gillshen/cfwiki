@@ -28,6 +28,21 @@
 	const { form: formData, enhance } = form;
 
 	let useComments = false;
+
+	if (grade) {
+		$formData = { ...$formData, ...grade };
+		useComments = !!grade.comments;
+	}
+
+	// allow either a numeric grade or a verbal description, but not both
+	$: {
+		if (useComments) {
+			$formData.value = 0;
+			$formData.scale = 0;
+		} else {
+			$formData.comments = '';
+		}
+	}
 </script>
 
 <form
@@ -83,7 +98,5 @@
 	</Form.Field>
 
 	<Form.Button class="w-fit min-w-24">Submit</Form.Button>
-	<!-- <div class="max-w-[300px]">
-		<SuperDebug data={$formData} />
-	</div> -->
+	<!-- <SuperDebug data={$formData} /> -->
 </form>
