@@ -21,8 +21,10 @@ export async function load(event) {
 export const actions = {
 	updateProgram: formAction(programUpdateSchema, updateProgram),
 
-	deleteProgram: formAction(deleteSchema, deleteProgram, async () => {
-		throw redirect(303, '/home');
+	deleteProgram: formAction(deleteSchema, deleteProgram, {
+		onSuccess: async () => {
+			throw redirect(303, '/home');
+		}
 	}),
 
 	deleteApplicationRound: formAction(deleteSchema, deleteApplicationRound)

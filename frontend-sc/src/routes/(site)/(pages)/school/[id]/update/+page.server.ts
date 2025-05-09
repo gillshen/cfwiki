@@ -14,8 +14,10 @@ export async function load(event) {
 }
 
 export const actions = {
-	updateSchool: formAction(schoolSchema, updateSchool, async ({ response }) => {
-		const school = await response?.json();
-		throw redirect(303, `/school/${school.id}`);
+	updateSchool: formAction(schoolSchema, updateSchool, {
+		onSuccess: async ({ response }) => {
+			const school = await response?.json();
+			throw redirect(303, `/school/${school.id}`);
+		}
 	})
 };

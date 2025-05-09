@@ -10,7 +10,7 @@ export async function load() {
 }
 
 export const actions = {
-	updatePassword: formAction(passwordResetSchema, updatePassword, async ({ event }) =>
-		logout(event!.cookies)
-	)
+	updatePassword: formAction(passwordResetSchema, updatePassword, {
+		onSuccess: async ({ event }) => logout(event!.cookies)
+	})
 };

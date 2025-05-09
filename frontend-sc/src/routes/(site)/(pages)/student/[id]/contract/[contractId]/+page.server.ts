@@ -32,9 +32,11 @@ export async function load(event) {
 export const actions = {
 	updateContract: formAction(contractSchema, createOrUpdateContract),
 
-	deleteContract: formAction(deleteSchema, deleteContract, async ({ response }) => {
-		const student = await response?.json();
-		throw redirect(303, `/student/${student.id}`);
+	deleteContract: formAction(deleteSchema, deleteContract, {
+		onSuccess: async ({ response }) => {
+			const student = await response?.json();
+			throw redirect(303, `/student/${student.id}`);
+		}
 	}),
 
 	createOrUpdateService: formAction(serviceSchema, createOrUpdateService),

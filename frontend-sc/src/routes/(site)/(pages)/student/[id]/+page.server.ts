@@ -98,8 +98,10 @@ export const actions = {
 	createOrUpdateGmatScore: formAction(gmatScoreSchema, createOrUpdateGmatScore),
 	createOrUpdateLsatScore: formAction(lsatScoreSchema, createOrUpdateLsatScore),
 
-	deleteStudent: formAction(deleteSchema, deleteStudent, async () => {
-		throw redirect(303, '/home');
+	deleteStudent: formAction(deleteSchema, deleteStudent, {
+		onSuccess: () => {
+			throw redirect(303, '/home');
+		}
 	}),
 
 	deleteToeflScore: formAction(deleteSchema, deleteToeflScore),

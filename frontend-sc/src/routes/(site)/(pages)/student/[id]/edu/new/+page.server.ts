@@ -16,9 +16,11 @@ export async function load() {
 }
 
 export const actions = {
-	createEnrollment: formAction(newEnrollmentSchema, createEnrollment, async ({ response }) => {
-		const newEnrollment = await response?.json();
-		throw redirect(303, `/student/${newEnrollment.student}/edu/${newEnrollment.id}`);
+	createEnrollment: formAction(newEnrollmentSchema, createEnrollment, {
+		onSuccess: async ({ response }) => {
+			const newEnrollment = await response?.json();
+			throw redirect(303, `/student/${newEnrollment.student}/edu/${newEnrollment.id}`);
+		}
 	}),
 	createSchool: formAction(schoolSchema, createSchool)
 };

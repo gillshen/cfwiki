@@ -6,30 +6,31 @@ import { zod } from 'sveltekit-superforms/adapters';
 import type { GradeSchema } from '$lib/schemas/grade';
 
 export const formAction = <T extends ZodObject<ZodRawShape>>(
-	// gradeSchema is not a ZodObject, but a ZodEffects object with two more layers
-	// of ZodEffects nested within it;
-	// I judge that an explicitly ad hoc fix is no worse than writing a horrendously nested type
 	schema: T | GradeSchema,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	apiCall: (data: any) => Promise<Response>,
-	onSuccess?: (params: { event?: RequestEvent; response?: Response }) => Promise<unknown>
+	func: (data: any) => Promise<Response>,
+	hooks?: {
+		prepForm?: <K>(form: K) => K;
+		onSuccess?: (params: { event?: RequestEvent; response?: Response }) => Promise<unknown>;
+	}
 ) => {
 	return async (event: RequestEvent) => {
-		const form = await superValidate(event.request, zod(schema));
+		const rawForm = await superValidate(event.request, zod(schema));
+		const form = hooks?.prepForm ? hooks.prepForm(rawForm) : rawForm;
 		console.log(form);
 
 		if (!form.valid) {
 			return fail(400, { form });
 		}
 
-		const response = await apiCall(form.data);
+		const response = await func(form.data);
 
 		if (!response.ok) {
 			return message(form, 'Sorry, an error occurred', { status: 400 });
 		}
 
-		if (onSuccess) {
-			await onSuccess({ event, response });
+		if (hooks?.onSuccess) {
+			await hooks.onSuccess({ event, response });
 		}
 		return message(form, 'success');
 	};

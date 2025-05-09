@@ -13,8 +13,10 @@ export async function load() {
 }
 
 export const actions = {
-	createContract: formAction(contractSchema, createOrUpdateContract, async ({ response }) => {
-		const newContract = await response?.json();
-		throw redirect(303, `/student/${newContract.student}/contract/${newContract.id}`);
+	createContract: formAction(contractSchema, createOrUpdateContract, {
+		onSuccess: async ({ response }) => {
+			const newContract = await response?.json();
+			throw redirect(303, `/student/${newContract.student}/contract/${newContract.id}`);
+		}
 	})
 };

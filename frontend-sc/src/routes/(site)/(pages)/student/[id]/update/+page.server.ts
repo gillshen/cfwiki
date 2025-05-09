@@ -14,8 +14,10 @@ export async function load(event) {
 }
 
 export const actions = {
-	updateStudent: formAction(studentSchema, createOrUpdateStudent, async ({ response }) => {
-		const student = await response?.json();
-		throw redirect(303, `/student/${student.id}`);
+	updateStudent: formAction(studentSchema, createOrUpdateStudent, {
+		onSuccess: async ({ response }) => {
+			const student = await response?.json();
+			throw redirect(303, `/student/${student.id}`);
+		}
 	})
 };

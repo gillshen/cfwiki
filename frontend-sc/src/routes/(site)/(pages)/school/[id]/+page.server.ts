@@ -22,7 +22,9 @@ export async function load(event) {
 }
 
 export const actions = {
-	deleteSchool: formAction(deleteSchema, deleteSchool, async () => {
-		throw redirect(303, '/home');
+	deleteSchool: formAction(deleteSchema, deleteSchool, {
+		onSuccess: async () => {
+			throw redirect(303, '/home');
+		}
 	})
 };
