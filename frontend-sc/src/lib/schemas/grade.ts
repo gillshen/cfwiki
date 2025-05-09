@@ -6,11 +6,12 @@ export const gradeSchema = z
 		enrollment: z.number().min(1, 'This field is required'),
 		progression: z.string().min(1, 'This field is required').max(50),
 		term: z.string().min(1, 'This field is required').max(20),
-		value: z.number(),
-		scale: z.number(),
+		value: z.number().nullable(),
+		scale: z.number().nullable(),
 		is_weighted: z.boolean(),
 		is_cumulative: z.boolean(),
-		comments: z.string().trim().max(500)
+		comments: z.string().trim().max(500),
+		_use_comments: z.boolean().default(false)
 	})
 	.refine((data) => !!data.comments || (!!data.value && !!data.scale), {
 		message: 'This field is required',

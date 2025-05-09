@@ -2,7 +2,6 @@
 	import { cn } from '$lib/utils';
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import * as Form from '$lib/components/ui/form/index';
-	import Label from '$lib/components/ui/label/label.svelte';
 	import Switch from '$lib/components/ui/switch/switch.svelte';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 
@@ -27,21 +26,12 @@
 	const form = superForm(data, { id, resetForm: false, onUpdated });
 	const { form: formData, enhance } = form;
 
-	let useComments = false;
-
 	if (grade) {
 		$formData = { ...$formData, ...grade };
-		useComments = !!grade.comments;
-	}
 
-	// allow either a numeric grade or a verbal description, but not both
-	$: {
-		if (useComments) {
-			$formData.value = 0;
-			$formData.scale = 0;
-		} else {
-			$formData.comments = '';
-		}
+		// `_use_comments` is a helper field that doesn't exist in the database
+		// must be initialized by hand when updating an existing grade
+		$formData._use_comments = !!grade.comments;
 	}
 </script>
 
@@ -59,14 +49,16 @@
 
 	<Combobox {form} name="term" label="Grading period" items={[...GRADING_PERIODS]} disableSearch />
 
-	<div class="flex items-center space-x-2 py-2">
-		<Switch id="comments-mode" bind:checked={useComments} />
-		<Label for="comments-mode" class="font-normal"
-			>Provide a description instead of numeric values</Label
-		>
-	</div>
+	<Form.Field {form} name="_use_comments">
+		<Form.Control let:attrs>
+			<div class="flex items-center space-x-2 py-2">
+				<Switch includeInput {...attrs} bind:checked={$formData._use_comments} />
+				<Form.Label class="font-normal">Provide a description instead of numeric values</Form.Label>
+			</div>
+		</Form.Control>
+	</Form.Field>
 
-	{#if useComments}
+	{#if $formData._use_comments}
 		<Textarea {form} name="comments" label="Description" />
 	{:else}
 		<Input {form} name="value" label="Grade" inputClass="w-[100px] text-right" />

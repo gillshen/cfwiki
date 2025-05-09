@@ -22,10 +22,7 @@
 </script>
 
 <ButtonDialog buttonSlot dialogTitle="Update Grade" bind:open={updateModal}>
-	<Pencil
-		class="size-4 text-muted-foreground hover:text-mint-600 translate-y-[1px]"
-		slot="button"
-	/>
+	<Pencil class="size-4 text-muted-foreground hover:text-mint-600" slot="button" />
 	<p slot="description">{grade.progression} - {grade.term}</p>
 	<GradeForm
 		data={updateForm}
@@ -41,7 +38,7 @@
 	dialogTitle="Delete the {grade.term} grade of {grade.progression}?"
 	bind:open={deleteModal}
 >
-	<X class="size-4 text-muted-foreground hover:text-mint-600 translate-y-[1px]" slot="button" />
+	<X class="size-4 text-muted-foreground hover:text-mint-600" slot="button" />
 	<p slot="description" class="text-pretty">Deletion is instant and permanent</p>
 	<DeleteForm
 		data={deleteForm}

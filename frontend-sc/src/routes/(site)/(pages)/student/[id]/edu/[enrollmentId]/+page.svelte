@@ -107,8 +107,8 @@
 							<Table.Head class="font-semibold">Year</Table.Head>
 							<Table.Head class="font-semibold">Period</Table.Head>
 							<Table.Head class="font-semibold">GPA or Description</Table.Head>
-							<Table.Head class="font-semibold w-[105px]">Weighted</Table.Head>
-							<Table.Head class="font-semibold w-[90px]">Cumul.</Table.Head>
+							<Table.Head class="font-semibold w-[105px] text-center">Weighted</Table.Head>
+							<Table.Head class="font-semibold w-[90px] text-center">Cumul.</Table.Head>
 							<Table.Head class="font-semibold w-[90px] flex-grow-0"></Table.Head>
 						</Table.Row>
 					</Table.Header>
@@ -118,28 +118,30 @@
 								<Table.Cell>{grade.progression}</Table.Cell>
 								<Table.Cell>{grade.term}</Table.Cell>
 								<Table.Cell class="tabular-nums max-w-[320px]">{formatGrade(grade)}</Table.Cell>
-								<Table.Cell>
+								<Table.Cell class="text-center">
 									{#if grade.is_weighted}
 										<Check class="size-4 mx-auto" />
 									{:else}
 										<div class="text-muted-foreground size-4 mx-auto">-</div>
 									{/if}
 								</Table.Cell>
-								<Table.Cell>
+								<Table.Cell class="text-center">
 									{#if grade.is_cumulative}
 										<Check class="size-4 mx-auto" />
 									{:else}
 										<div class="text-muted-foreground size-4 mx-auto">-</div>
 									{/if}
 								</Table.Cell>
-								<Table.Cell class="flex items-center gap-4 pr-6 h-16">
-									<GradeActionItem
-										{grade}
-										enrollmentId={data.enrollment.id}
-										{progressions}
-										updateForm={data.gradeForm}
-										deleteForm={data.deleteForm}
-									/>
+								<Table.Cell>
+									<div class="flex items-center gap-4 pr-6">
+										<GradeActionItem
+											{grade}
+											enrollmentId={data.enrollment.id}
+											{progressions}
+											updateForm={data.gradeForm}
+											deleteForm={data.deleteForm}
+										/>
+									</div>
 								</Table.Cell>
 							</Table.Row>
 						{/each}

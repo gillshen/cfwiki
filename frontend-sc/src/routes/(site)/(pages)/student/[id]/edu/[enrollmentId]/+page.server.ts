@@ -25,6 +25,15 @@ export async function load(event) {
 export const actions = {
 	updateEnrollment: formAction(enrollmentUpdateSchema, updateEnrollment),
 	deleteEnrollment: formAction(deleteSchema, deleteEnrollment, {
+		prepForm: (form) => {
+			if (form.data._use_comments) {
+				form.data.value = null;
+				form.data.scale = null;
+			} else {
+				form.data.comments = '';
+			}
+			return form;
+		},
 		onSuccess: async ({ response }) => {
 			const student = await response?.json();
 			throw redirect(303, `/student/${student.id}`);

@@ -18,10 +18,13 @@ export const formatNumericGrade = ({
 	scale,
 	precision: defaultPrecision = 3
 }: {
-	value: string | number;
-	scale: string | number;
+	value: string | number | null;
+	scale: string | number | null;
 	precision?: number;
 }): string => {
+	if (value === null || scale === null) {
+		return '';
+	}
 	const numericScale = parseNumber(scale);
 	if (!numericScale) {
 		return '';

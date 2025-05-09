@@ -5,8 +5,8 @@ import type { GradeSchema } from '$lib/schemas/grade';
 export type BaseGrade = {
 	progression: string;
 	term: string;
-	value: number;
-	scale: number;
+	value: number | null;
+	scale: number | null;
 	is_cumulative: boolean;
 	comments: string;
 };

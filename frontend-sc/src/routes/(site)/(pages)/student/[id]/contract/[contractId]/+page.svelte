@@ -178,13 +178,15 @@
 								<Table.Cell class={service.end_date ? '' : 'text-muted-foreground'}
 									>{endDate}</Table.Cell
 								>
-								<Table.Cell class="flex items-center gap-4 pr-6 h-16">
-									<ServiceActionItem
-										{service}
-										contractId={data.contract.id}
-										updateForm={data.serviceForm}
-										deleteForm={data.deleteForm}
-									/>
+								<Table.Cell>
+									<div class="flex items-center gap-4 pr-6">
+										<ServiceActionItem
+											{service}
+											contractId={data.contract.id}
+											updateForm={data.serviceForm}
+											deleteForm={data.deleteForm}
+										/>
+									</div>
 								</Table.Cell>
 							</Table.Row>
 						{/each}

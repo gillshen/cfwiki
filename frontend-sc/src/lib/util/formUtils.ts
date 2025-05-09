@@ -1,16 +1,19 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import type { ZodObject, ZodRawShape } from 'zod';
-import { superValidate, fail, message } from 'sveltekit-superforms';
+import { superValidate, fail, message, type SuperValidated } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import type { GradeSchema } from '$lib/schemas/grade';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SuperValidatedForm = SuperValidated<Record<string, unknown>, any, Record<string, unknown>>;
 
 export const formAction = <T extends ZodObject<ZodRawShape>>(
 	schema: T | GradeSchema,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	func: (data: any) => Promise<Response>,
 	hooks?: {
-		prepForm?: <K>(form: K) => K;
+		prepForm?: (form: SuperValidatedForm) => SuperValidatedForm;
 		onSuccess?: (params: { event?: RequestEvent; response?: Response }) => Promise<unknown>;
 	}
 ) => {
