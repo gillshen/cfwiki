@@ -4,12 +4,14 @@ import { superValidate, fail, message, type SuperValidated } from 'sveltekit-sup
 import { zod } from 'sveltekit-superforms/adapters';
 
 import type { GradeSchema } from '$lib/schemas/grade';
+import type { GmatScoreSchema } from '$lib/schemas/scores';
+import type { PasswordResetSchema } from '$lib/schemas/user';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SuperValidatedForm = SuperValidated<Record<string, unknown>, any, Record<string, unknown>>;
 
 export const formAction = <T extends ZodObject<ZodRawShape>>(
-	schema: T | GradeSchema,
+	schema: T | GradeSchema | GmatScoreSchema | PasswordResetSchema,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	func: (data: any) => Promise<Response>,
 	hooks?: {

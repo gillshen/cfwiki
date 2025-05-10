@@ -3,16 +3,16 @@
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import FormButton from '$lib/components/ui/form/form-button.svelte';
 
-	import type { IeltsScore, ToeflScore } from '$lib/api/scores';
-	import type { IeltsSchema, ToeflSchema } from '$lib/schemas/scores';
+	import type { ActScore } from '$lib/api/scores';
+	import type { ActScoreSchema } from '$lib/schemas/scores';
 	import Input from '$lib/components/forms/Input.svelte';
 
-	export let data: SuperValidated<Infer<IeltsSchema>> | SuperValidated<Infer<ToeflSchema>>;
+	export let data: SuperValidated<Infer<ActScoreSchema>>;
 	export let onUpdated: (event: { form: typeof data }) => any;
-	export let action: string;
+	export let action: string = '?/createOrUpdateActScore';
 	export let className: string = '';
 	export let studentId: number;
-	export let score: IeltsScore | ToeflScore | undefined = undefined;
+	export let score: ActScore | undefined = undefined;
 	export { className as class };
 
 	const id = `${action}-form-${score?.id}`;
@@ -37,9 +37,10 @@
 	<input type="number" name="student" value={studentId} hidden />
 
 	<Input {form} name="date" label="Test date" type="date" inputClass="tabular-nums" optional />
+	<Input {form} name="english" label="English" inputClass="tabular-nums" optional />
+	<Input {form} name="math" label="Math" inputClass="tabular-nums" optional />
 	<Input {form} name="reading" label="Reading" inputClass="tabular-nums" optional />
-	<Input {form} name="listening" label="Listening" inputClass="tabular-nums" optional />
-	<Input {form} name="speaking" label="Speaking" inputClass="tabular-nums" optional />
+	<Input {form} name="science" label="Science" inputClass="tabular-nums" optional />
 	<Input {form} name="writing" label="Writing" inputClass="tabular-nums" optional />
 
 	<FormButton class="w-fit min-w-24">Submit</FormButton>

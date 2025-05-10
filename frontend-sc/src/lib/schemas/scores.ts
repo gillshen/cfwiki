@@ -53,9 +53,8 @@ export type DuolingoSchema = typeof duolingoSchema;
 
 export const satScoreSchema = z.object({
 	...common,
-	ebrw: z.number().nullable().default(null),
-	math: z.number().nullable().default(null),
-	essay: z.number().nullable().default(null)
+	ebrw: z.number().min(200).max(800).step(10).nullable().default(null),
+	math: z.number().min(200).max(800).step(10).nullable().default(null)
 });
 
 export type SatScoreSchema = typeof satScoreSchema;
@@ -64,11 +63,11 @@ export type SatScoreSchema = typeof satScoreSchema;
 
 export const actScoreSchema = z.object({
 	...common,
-	english: z.number().nullable().default(null),
-	math: z.number().nullable().default(null),
-	reading: z.number().nullable().default(null),
-	science: z.number().nullable().default(null),
-	writing: z.number().nullable().default(null)
+	english: z.number().min(1).max(36).step(1, 'Number must be an integer').nullable().default(null),
+	math: z.number().min(1).max(36).step(1, 'Number must be an integer').nullable().default(null),
+	reading: z.number().min(1).max(36).step(1, 'Number must be an integer').nullable().default(null),
+	science: z.number().min(1).max(36).step(1, 'Number must be an integer').nullable().default(null),
+	writing: z.number().min(1).max(12).step(1, 'Number must be an integer').nullable().default(null)
 });
 
 export type ActScoreSchema = typeof actScoreSchema;
@@ -78,7 +77,7 @@ export type ActScoreSchema = typeof actScoreSchema;
 export const apScoreSchema = z.object({
 	...common,
 	subject: z.string(),
-	score: z.number().nullable().default(null)
+	score: z.number().min(1).max(5).step(1, 'Number must be an integer').nullable().default(null)
 });
 
 export type ApScoreSchema = typeof apScoreSchema;
@@ -110,29 +109,90 @@ export type AlevelGradeSchema = typeof alevelGradeSchema;
 
 export const greScoreSchema = z.object({
 	...common,
-	verbal: z.number().nullable().default(null),
-	quant: z.number().nullable().default(null),
-	writing: z.number().nullable().default(null)
+	verbal: z
+		.number()
+		.min(130)
+		.max(170)
+		.step(1, 'Number must be an integer')
+		.nullable()
+		.default(null),
+	quant: z.number().min(130).max(170).step(1, 'Number must be an integer').nullable().default(null),
+	writing: z.number().min(0).max(6).step(0.5).nullable().default(null)
 });
 
 export type GreScoreSchema = typeof greScoreSchema;
 
-export const gmatScoreSchema = z.object({
-	...common,
-	total: z.number().nullable().default(null),
-	verbal: z.number().nullable().default(null),
-	quant: z.number().nullable().default(null),
-	data_insights: z.number().nullable().default(null),
-	reasoning: z.number().nullable().default(null),
-	writing: z.number().nullable().default(null),
-	is_legacy: z.boolean()
-});
+export const gmatScoreSchema = z
+	.object({
+		...common,
+		total: z.number().nullable().default(null),
+		verbal: z.number().step(1, 'Number must be an integer').nullable().default(null),
+		quant: z.number().step(1, 'Number must be an integer').nullable().default(null),
+		data_insights: z
+			.number()
+			.min(60)
+			.max(90)
+			.step(1, 'Number must be an integer')
+			.nullable()
+			.default(null),
+		reasoning: z
+			.number()
+			.min(1)
+			.max(8)
+			.step(1, 'Number must be an integer')
+			.nullable()
+			.default(null),
+		writing: z.number().min(0).max(6).step(0.5).nullable().default(null),
+		is_legacy: z.boolean().default(false)
+	})
+	// check total score range
+	.refine(
+		(data) => data.total === null || !data.is_legacy || (data.total >= 200 && data.total <= 800),
+		{
+			message: 'Number must be between 200 and 800',
+			path: ['total']
+		}
+	)
+	.refine(
+		(data) => data.total === null || data.is_legacy || (data.total >= 205 && data.total <= 805),
+		{
+			message: 'Number must be between 205 and 805',
+			path: ['total']
+		}
+	)
+	// check total score step
+	.refine((data) => data.total === null || !data.is_legacy || data.total % 10 === 0, {
+		message: 'Number must be a multiple of 10',
+		path: ['total']
+	})
+	.refine((data) => data.total === null || data.is_legacy || data.total % 5 === 0, {
+		message: 'Number must be a multiple of 5',
+		path: ['total']
+	})
+	// check verbal score range
+	.refine(
+		(data) => data.verbal === null || !data.is_legacy || (data.verbal >= 6 && data.verbal <= 51),
+		{ message: 'Number must be between 6 and 51', path: ['verbal'] }
+	)
+	.refine(
+		(data) => data.verbal === null || data.is_legacy || (data.verbal >= 60 && data.verbal <= 90),
+		{ message: 'Number must be between 60 and 90', path: ['verbal'] }
+	)
+	// check quant score range
+	.refine(
+		(data) => data.quant === null || !data.is_legacy || (data.quant >= 6 && data.quant <= 51),
+		{ message: 'Number must be between 6 and 51', path: ['quant'] }
+	)
+	.refine(
+		(data) => data.quant === null || data.is_legacy || (data.quant >= 60 && data.quant <= 90),
+		{ message: 'Number must be between 60 and 90', path: ['quant'] }
+	);
 
 export type GmatScoreSchema = typeof gmatScoreSchema;
 
 export const lsatScoreSchema = z.object({
 	...common,
-	score: z.number().nullable().default(null)
+	score: z.number().min(120).max(180).step(1, 'Number must be an integer').nullable().default(null)
 });
 
 export type LsatScoreSchema = typeof lsatScoreSchema;

@@ -2,15 +2,16 @@
 	import * as Tabs from '$lib/components/ui/tabs/index';
 
 	import * as ScoreForm from '$lib/components/forms/score-forms/index';
-	import * as ScoreActionItem from '$lib/components/widgets/score-action-items/index';
+	import ActionUnit from '$lib/components/containers/ActionUnit.svelte';
+	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
 
 	export let data;
 </script>
 
 <Tabs.Root value="toefl">
 	<Tabs.List>
-		<Tabs.Trigger value="toefl" class="text-mint-600">TOEFL</Tabs.Trigger>
-		<Tabs.Trigger value="ielts" class="text-purple-600">IELTS</Tabs.Trigger>
+		<Tabs.Trigger value="toefl">TOEFL</Tabs.Trigger>
+		<Tabs.Trigger value="ielts">IELTS</Tabs.Trigger>
 		<Tabs.Trigger value="duolingo">Duolingo</Tabs.Trigger>
 		<Tabs.Trigger value="sat">SAT</Tabs.Trigger>
 		<Tabs.Trigger value="act">ACT</Tabs.Trigger>
@@ -21,18 +22,34 @@
 
 	<!-- TOEFL -->
 	<Tabs.Content value="toefl">
-		<div class="flex gap-6 bg-mint-100">
+		<div class="flex gap-6">
 			<div class="w-[300px] pt-4 text-sm flex flex-col gap-2">
 				{#each data.student.toefl as score}
 					<div class="p-4 border-2 border-primary rounded-xl">
 						<pre class="mb-2">{JSON.stringify(score, null, 2)}</pre>
 						<div class="flex justify-end gap-2">
-							<ScoreActionItem.Toefl
-								{score}
-								studentId={data.student.id}
-								updateForm={data.toeflForm}
-								deleteForm={data.deleteForm}
-							/>
+							<ActionUnit
+								updateDiologTitle="Update TOEFL Score"
+								deleteDialogTitle="Delete this TOEFL score?"
+							>
+								<ScoreForm.Toefl
+									slot="update-form"
+									let:closeUpdateModal
+									data={data.toeflForm}
+									{score}
+									studentId={data.student.id}
+									onUpdated={({ form }) => form.valid && closeUpdateModal()}
+								/>
+								<DeleteForm
+									slot="delete-form"
+									let:closeDeleteModal
+									data={data.deleteForm}
+									objectId={score.id}
+									action="?/deleteToeflScore"
+									onUpdated={({ form }) => form.valid && closeDeleteModal()}
+									onCancel={closeDeleteModal}
+								/>
+							</ActionUnit>
 						</div>
 					</div>
 				{/each}
@@ -41,7 +58,6 @@
 			<ScoreForm.Toefl
 				data={data.toeflForm}
 				studentId={data.student.id}
-				action="?/createOrUpdateToeflScore"
 				onUpdated={({ form }) => form.valid && alert('success')}
 			/>
 		</div>
@@ -49,18 +65,34 @@
 
 	<!-- IELTS -->
 	<Tabs.Content value="ielts">
-		<div class="flex gap-6 bg-purple-100">
+		<div class="flex gap-6">
 			<div class="w-[300px] pt-4 text-sm flex flex-col gap-2">
 				{#each data.student.ielts as score}
 					<div class="p-4 border-2 border-primary rounded-xl">
 						<pre class="mb-2">{JSON.stringify(score, null, 2)}</pre>
 						<div class="flex justify-end gap-2">
-							<ScoreActionItem.Ielts
-								{score}
-								studentId={data.student.id}
-								updateForm={data.ieltsForm}
-								deleteForm={data.deleteForm}
-							/>
+							<ActionUnit
+								updateDiologTitle="Update IELTS Score"
+								deleteDialogTitle="Delete this IELTS score?"
+							>
+								<ScoreForm.Ielts
+									slot="update-form"
+									let:closeUpdateModal
+									data={data.ieltsForm}
+									{score}
+									studentId={data.student.id}
+									onUpdated={({ form }) => form.valid && closeUpdateModal()}
+								/>
+								<DeleteForm
+									slot="delete-form"
+									let:closeDeleteModal
+									data={data.deleteForm}
+									objectId={score.id}
+									action="?/deleteIeltsScore"
+									onUpdated={({ form }) => form.valid && closeDeleteModal()}
+									onCancel={closeDeleteModal}
+								/>
+							</ActionUnit>
 						</div>
 					</div>
 				{/each}
@@ -69,7 +101,269 @@
 			<ScoreForm.Ielts
 				data={data.toeflForm}
 				studentId={data.student.id}
-				action="?/createOrUpdateIeltsScore"
+				onUpdated={({ form }) => form.valid && alert('success')}
+			/>
+		</div>
+	</Tabs.Content>
+
+	<!-- Duolingo -->
+	<Tabs.Content value="duolingo">
+		<div class="flex gap-6">
+			<div class="w-[300px] pt-4 text-sm flex flex-col gap-2">
+				{#each data.student.duolingo as score}
+					<div class="p-4 border-2 border-primary rounded-xl">
+						<pre class="mb-2">{JSON.stringify(score, null, 2)}</pre>
+						<div class="flex justify-end gap-2">
+							<ActionUnit
+								updateDiologTitle="Update Duolingo Score"
+								deleteDialogTitle="Delete this Duolingo score?"
+							>
+								<ScoreForm.Duolingo
+									slot="update-form"
+									let:closeUpdateModal
+									data={data.duolingoForm}
+									{score}
+									studentId={data.student.id}
+									onUpdated={({ form }) => form.valid && closeUpdateModal()}
+								/>
+								<DeleteForm
+									slot="delete-form"
+									let:closeDeleteModal
+									data={data.deleteForm}
+									objectId={score.id}
+									action="?/deleteDuolingoScore"
+									onUpdated={({ form }) => form.valid && closeDeleteModal()}
+									onCancel={closeDeleteModal}
+								/>
+							</ActionUnit>
+						</div>
+					</div>
+				{/each}
+			</div>
+
+			<ScoreForm.Duolingo
+				data={data.duolingoForm}
+				studentId={data.student.id}
+				onUpdated={({ form }) => form.valid && alert('success')}
+			/>
+		</div>
+	</Tabs.Content>
+
+	<!-- SAT -->
+	<Tabs.Content value="sat">
+		<div class="flex gap-6">
+			<div class="w-[300px] pt-4 text-sm flex flex-col gap-2">
+				{#each data.student.sat as score}
+					<div class="p-4 border-2 border-primary rounded-xl">
+						<pre class="mb-2">{JSON.stringify(score, null, 2)}</pre>
+						<div class="flex justify-end gap-2">
+							<ActionUnit
+								updateDiologTitle="Update SAT Score"
+								deleteDialogTitle="Delete this SAT score?"
+							>
+								<ScoreForm.Sat
+									slot="update-form"
+									let:closeUpdateModal
+									data={data.satForm}
+									{score}
+									studentId={data.student.id}
+									onUpdated={({ form }) => form.valid && closeUpdateModal()}
+								/>
+
+								<DeleteForm
+									slot="delete-form"
+									let:closeDeleteModal
+									data={data.deleteForm}
+									objectId={score.id}
+									action="?/deleteSatScore"
+									onUpdated={({ form }) => form.valid && closeDeleteModal()}
+									onCancel={closeDeleteModal}
+								/>
+							</ActionUnit>
+						</div>
+					</div>
+				{/each}
+			</div>
+
+			<ScoreForm.Sat
+				data={data.satForm}
+				studentId={data.student.id}
+				onUpdated={({ form }) => form.valid && alert('success')}
+			/>
+		</div>
+	</Tabs.Content>
+
+	<!-- ACT -->
+	<Tabs.Content value="act">
+		<div class="flex gap-6">
+			<div class="w-[300px] pt-4 text-sm flex flex-col gap-2">
+				{#each data.student.act as score}
+					<div class="p-4 border-2 border-primary rounded-xl">
+						<pre class="mb-2">{JSON.stringify(score, null, 2)}</pre>
+						<div class="flex justify-end gap-2">
+							<ActionUnit
+								updateDiologTitle="Update ACT Score"
+								deleteDialogTitle="Delete this ACT score?"
+							>
+								<ScoreForm.Act
+									slot="update-form"
+									let:closeUpdateModal
+									data={data.actForm}
+									{score}
+									studentId={data.student.id}
+									onUpdated={({ form }) => form.valid && closeUpdateModal()}
+								/>
+
+								<DeleteForm
+									slot="delete-form"
+									let:closeDeleteModal
+									data={data.deleteForm}
+									objectId={score.id}
+									action="?/deleteActScore"
+									onUpdated={({ form }) => form.valid && closeDeleteModal()}
+									onCancel={closeDeleteModal}
+								/>
+							</ActionUnit>
+						</div>
+					</div>
+				{/each}
+			</div>
+
+			<ScoreForm.Act
+				data={data.actForm}
+				studentId={data.student.id}
+				onUpdated={({ form }) => form.valid && alert('success')}
+			/>
+		</div>
+	</Tabs.Content>
+
+	<!-- GRE -->
+	<Tabs.Content value="gre">
+		<div class="flex gap-6">
+			<div class="w-[300px] pt-4 text-sm flex flex-col gap-2">
+				{#each data.student.gre as score}
+					<div class="p-4 border-2 border-primary rounded-xl">
+						<pre class="mb-2">{JSON.stringify(score, null, 2)}</pre>
+						<div class="flex justify-end gap-2">
+							<ActionUnit
+								updateDiologTitle="Update GRE Score"
+								deleteDialogTitle="Delete this GRE score?"
+							>
+								<ScoreForm.Gre
+									slot="update-form"
+									let:closeUpdateModal
+									data={data.greForm}
+									{score}
+									studentId={data.student.id}
+									onUpdated={({ form }) => form.valid && closeUpdateModal()}
+								/>
+
+								<DeleteForm
+									slot="delete-form"
+									let:closeDeleteModal
+									data={data.deleteForm}
+									objectId={score.id}
+									action="?/deleteGreScore"
+									onUpdated={({ form }) => form.valid && closeDeleteModal()}
+									onCancel={closeDeleteModal}
+								/>
+							</ActionUnit>
+						</div>
+					</div>
+				{/each}
+			</div>
+
+			<ScoreForm.Gre
+				data={data.greForm}
+				studentId={data.student.id}
+				onUpdated={({ form }) => form.valid && alert('success')}
+			/>
+		</div>
+	</Tabs.Content>
+
+	<!-- GMAT -->
+	<Tabs.Content value="gmat">
+		<div class="flex gap-6">
+			<div class="w-[300px] pt-4 text-sm flex flex-col gap-2">
+				{#each data.student.gmat as score}
+					<div class="p-4 border-2 border-primary rounded-xl">
+						<pre class="mb-2">{JSON.stringify(score, null, 2)}</pre>
+						<div class="flex justify-end gap-2">
+							<ActionUnit
+								updateDiologTitle="Update GMAT Score"
+								deleteDialogTitle="Delete this GMAT score?"
+							>
+								<ScoreForm.Gmat
+									slot="update-form"
+									let:closeUpdateModal
+									data={data.gmatForm}
+									{score}
+									studentId={data.student.id}
+									onUpdated={({ form }) => form.valid && closeUpdateModal()}
+								/>
+
+								<DeleteForm
+									slot="delete-form"
+									let:closeDeleteModal
+									data={data.deleteForm}
+									objectId={score.id}
+									action="?/deleteGmatScore"
+									onUpdated={({ form }) => form.valid && closeDeleteModal()}
+									onCancel={closeDeleteModal}
+								/>
+							</ActionUnit>
+						</div>
+					</div>
+				{/each}
+			</div>
+
+			<ScoreForm.Gmat
+				data={data.gmatForm}
+				studentId={data.student.id}
+				onUpdated={({ form }) => form.valid && alert('success')}
+			/>
+		</div>
+	</Tabs.Content>
+
+	<!-- LSAT -->
+	<Tabs.Content value="lsat">
+		<div class="flex gap-6">
+			<div class="w-[300px] pt-4 text-sm flex flex-col gap-2">
+				{#each data.student.lsat as score}
+					<div class="p-4 border-2 border-primary rounded-xl">
+						<pre class="mb-2">{JSON.stringify(score, null, 2)}</pre>
+						<div class="flex justify-end gap-2">
+							<ActionUnit
+								updateDiologTitle="Update LSAT Score"
+								deleteDialogTitle="Delete this LSAT score?"
+							>
+								<ScoreForm.Lsat
+									slot="update-form"
+									let:closeUpdateModal
+									data={data.lsatForm}
+									{score}
+									studentId={data.student.id}
+									onUpdated={({ form }) => form.valid && closeUpdateModal()}
+								/>
+
+								<DeleteForm
+									slot="delete-form"
+									let:closeDeleteModal
+									data={data.deleteForm}
+									objectId={score.id}
+									action="?/deleteLsatScore"
+									onUpdated={({ form }) => form.valid && closeDeleteModal()}
+									onCancel={closeDeleteModal}
+								/>
+							</ActionUnit>
+						</div>
+					</div>
+				{/each}
+			</div>
+
+			<ScoreForm.Lsat
+				data={data.lsatForm}
+				studentId={data.student.id}
 				onUpdated={({ form }) => form.valid && alert('success')}
 			/>
 		</div>

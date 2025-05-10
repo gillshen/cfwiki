@@ -1,3 +1,4 @@
+import { passwordHasDigitOrSpecial, passwordHasLower, passwordHasUpper } from '$lib/util/userUtils';
 import { z } from 'zod';
 
 export const userUpdateSchema = z.object({
@@ -18,11 +19,27 @@ export const userAdminUpdateSchema = z.object({
 
 export type UserAdminUpdateSchema = typeof userAdminUpdateSchema;
 
-export const passwordResetSchema = z.object({
-	id: z.number(),
-	current_password: z.string().min(1, 'This field is required').max(50),
-	new_password: z.string().min(8, 'Password too short').max(50),
-	confirm_new_password: z.string().min(8, 'Password too short').max(50)
-});
+export const passwordResetSchema = z
+	.object({
+		id: z.number(),
+		current_password: z.string().min(1, 'This field is required').max(50),
+		new_password: z
+			.string()
+			.min(8, '')
+			.max(50)
+			// TODO check username too
+			.refine(passwordHasLower, '')
+			.refine(passwordHasUpper, '')
+			.refine(passwordHasDigitOrSpecial, ''),
+		confirm_new_password: z.string()
+	})
+	.refine((data) => data.current_password !== data.new_password, {
+		message: '',
+		path: ['new_password']
+	})
+	.refine((data) => data.new_password === data.confirm_new_password, {
+		message: '',
+		path: ['confirm_new_password']
+	});
 
 export type PasswordResetSchema = typeof passwordResetSchema;
