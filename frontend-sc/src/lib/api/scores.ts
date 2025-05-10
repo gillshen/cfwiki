@@ -54,8 +54,8 @@ export type IbGrade = BaseScore & {
 export type AlevelGrade = BaseScore & {
 	type: 'predicted' | 'final';
 	subject: string;
+	grade: 'A*' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 	percentage: number | null;
-	grade: string;
 };
 
 export type GreScore = BaseScore & {

@@ -76,7 +76,7 @@ export type ActScoreSchema = typeof actScoreSchema;
 
 export const apScoreSchema = z.object({
 	...common,
-	subject: z.string(),
+	subject: z.string().min(1, 'This field is required'),
 	score: z.number().min(1).max(5).step(1, 'Number must be an integer').nullable().default(null)
 });
 
@@ -86,9 +86,9 @@ export type ApScoreSchema = typeof apScoreSchema;
 
 export const ibGradeSchema = z.object({
 	...common,
-	type: z.string(),
-	subject: z.string(),
-	grade: z.number().nullable().default(null)
+	type: z.string().min(1, 'This field is required'),
+	subject: z.string().min(1, 'This field is required'),
+	grade: z.number().min(1).max(7).step(1, 'Number must be an integer').nullable().default(null)
 });
 
 export type IbGradeSchema = typeof ibGradeSchema;
@@ -97,10 +97,16 @@ export type IbGradeSchema = typeof ibGradeSchema;
 
 export const alevelGradeSchema = z.object({
 	...common,
-	type: z.string(),
-	subject: z.string(),
-	grade: z.string(),
-	percentage: z.number().nullable().default(null)
+	type: z.string().min(1, 'This field is required'),
+	subject: z.string().min(1, 'This field is required'),
+	grade: z.string(), // trustworthy input from combobox
+	percentage: z
+		.number()
+		.min(0)
+		.max(100)
+		.step(1, 'Number must be an integer')
+		.nullable()
+		.default(null)
 });
 
 export type AlevelGradeSchema = typeof alevelGradeSchema;
