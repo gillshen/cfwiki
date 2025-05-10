@@ -23,7 +23,7 @@
 
 <ButtonDialog buttonSlot dialogTitle="Update Member Involvement" bind:open={updateModal}>
 	<Pencil class="size-4 text-muted-foreground hover:text-mint-600" slot="button" />
-	<p slot="description">{service.cf_username} as {service.role}</p>
+	<p slot="description">{service.cf_username} &bullet; {service.role}</p>
 	<ServiceForm
 		data={updateForm}
 		{contractId}

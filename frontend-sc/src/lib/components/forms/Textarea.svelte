@@ -16,7 +16,7 @@
 	export let placeholder: string = '';
 	export let optional: boolean = false;
 	export let maxlength: number | undefined = undefined;
-	export let rows: number | undefined = 5;
+	export let rows: number = 5;
 	export let className: string = '';
 	export { className as class };
 

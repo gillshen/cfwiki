@@ -20,7 +20,7 @@
 	<Card.Header class={compact ? 'pt-3' : ''}>
 		<Card.Title>
 			{#each application.schools as school}
-				<p class={cn('text-pretty leading-5', compact ? 'text-base' : '')}>
+				<p class={cn('text-pretty leading-5', compact ? '' : 'text-base')}>
 					{school.name}
 				</p>
 			{/each}
@@ -29,7 +29,9 @@
 			class={compact ? 'inline-flex flex-wrap items-center gap-2' : 'flex flex-col gap-2 pt-2'}
 		>
 			<p class="text-muted-foreground text-pretty">{application.program.display_name}</p>
-			<Badge variant="outline" class="w-fit h-5 bg-muted -translate-x-[1px]">{badgeText}</Badge>
+			<Badge variant="outline" class="w-fit h-5 bg-muted text-muted-foreground -translate-x-[1px]"
+				>{badgeText}</Badge
+			>
 			{#if compact}
 				<ApplicationStatusSign {application} iconOnly class="h-5" />
 			{/if}

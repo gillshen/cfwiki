@@ -7,7 +7,7 @@
 	export let testDate: string | null | undefined;
 </script>
 
-<Card.Root class="w-fit min-w-[200px] shadow-none">
+<Card.Root class="w-fit min-w-[200px]">
 	<Card.Content class="w-full flex items-top gap-4 justify-between space-between">
 		<div class="text-left">
 			<div class="font-bold">{testName}</div>

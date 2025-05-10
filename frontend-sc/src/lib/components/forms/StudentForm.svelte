@@ -32,9 +32,9 @@
 	const countryItems = citizenshipItems.filter((item) => item.value !== 'United States Green Card');
 
 	const regionMap: Record<string, { label: string; regions: string[] }> = {
-		China: { label: 'provinces', regions: Object.keys(chineseProvinces) },
-		'United States': { label: 'states', regions: Object.keys(americanStates) },
-		Canada: { label: 'provinces', regions: Object.keys(canadianProvinces) }
+		China: { label: 'province', regions: Object.keys(chineseProvinces) },
+		'United States': { label: 'state', regions: Object.keys(americanStates) },
+		Canada: { label: 'province', regions: Object.keys(canadianProvinces) }
 	};
 
 	$: regionRequired = ['China', 'United States', 'Canada'].includes($formData.base_country);

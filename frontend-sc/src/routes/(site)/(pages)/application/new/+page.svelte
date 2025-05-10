@@ -243,7 +243,7 @@
 		<section class="text-sm flex flex-col min-h-[120px]">
 			{#if applications.length}
 				<div
-					class="py-4 px-8 border rounded-t-lg backdrop-blur bg-muted/70 shadow-sm z-10 flex items-center"
+					class="py-4 px-8 border rounded-lg backdrop-blur bg-muted/70 shadow-sm z-10 flex items-center"
 				>
 					<h2 class="text-base font-semibold">{data.term} {data.year} Applications</h2>
 					<Badge variant="outline" class="ml-4 min-w-8 h-5 justify-center bg-popover"
@@ -253,18 +253,19 @@
 				<!-- Workaround for a Firefox bug where backdrop-blur does not work with rounded corners  -->
 				<div
 					id="existing-applications-list"
-					class="max-h-[calc(100vh-168px)] -mt-[56px] pt-[56px] flex flex-col rounded-lg border overflow-auto overscroll-none px-2"
+					class="max-h-[calc(100vh-168px)] -mt-[56px] pt-[56px] flex flex-col rounded-lg border overflow-auto overscroll-none px-2 pb-2"
 				>
-					{#each applications.sort().reverse() as application, index}
-						{#if index}
-							<Separator />
-						{/if}
-						<a href="/application/{application.id}" target="_self" class="hover:no-underline">
+					{#each applications.sort().toReversed() as application}
+						<a
+							href="/application/{application.id}"
+							target="_self"
+							class="hover:no-underline first:mt-1"
+						>
 							<StudentApplicationCard
 								{application}
 								compact
 								hideYear
-								class="border-none shadow-none w-[370px]"
+								class="border-none shadow-none w-[370px] hover:bg-muted/70"
 							/>
 						</a>
 					{/each}

@@ -314,10 +314,7 @@
 							.sort(orderByStatus)
 							.sort(orderByYearDesc) as application}
 							<a href="/application/{application.id}" target="_self" class="hover:no-underline">
-								<StudentApplicationCard
-									{application}
-									class="max-w-[360px] shadow-none hover:bg-muted/50"
-								/>
+								<StudentApplicationCard {application} class="max-w-[360px] hover:bg-muted/50" />
 							</a>
 						{/each}
 					</div>

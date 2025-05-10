@@ -37,7 +37,7 @@
 				{#each applications.sort(orderByStatus).sort(orderByYearDesc) as application}
 					<a href="/application/{application.id}" target="_self" class="hover:no-underline">
 						<Card.Root
-							class="h-full flex flex-col min-h-[200px] max-w-[320px] min-w-[240px] shadow-none hover:bg-muted/50"
+							class="h-full flex flex-col min-h-[200px] max-w-[320px] min-w-[240px] hover:bg-muted/50"
 						>
 							<Card.Header>
 								<Card.Title>

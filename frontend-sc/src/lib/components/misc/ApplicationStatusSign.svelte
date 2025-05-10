@@ -14,6 +14,7 @@
 	export let application: { logs: ApplicationLogBrief[] };
 	export let iconOnly: boolean = false;
 	export let iconClass: string = '';
+	export let textClass: string = '';
 	export let className: string = '';
 	export { className as class };
 
@@ -52,11 +53,11 @@
 	<div class={cn('text-sm flex items-center gap-1.5 h-6', className)}>
 		<svelte:component
 			this={statusMap[latestStatus].icon}
-			class={cn('size-4 shrink-0 translate-y-[1px]', statusMap[latestStatus].className, iconClass)}
+			class={cn('size-4 shrink-0', statusMap[latestStatus].className, iconClass)}
 		/>
 		{#if !iconOnly}
 			<div class="flex-1 min-w-0">
-				<span class="font-medium block truncate">{formattedStatuses}</span>
+				<span class={cn('font-medium block truncate', textClass)}>{formattedStatuses}</span>
 			</div>
 		{/if}
 	</div>
