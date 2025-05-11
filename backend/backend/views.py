@@ -9,8 +9,9 @@ class CFTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user: CFUser):
         token = super().get_token(user)
         token["username"] = user.username
-        token["email"] = user.email
-        token["department"] = user.department
+        token["is_active"] = user.is_active
+        token["is_staff"] = user.is_staff
+        token["is_superuser"] = user.is_superuser
         return token
 
 

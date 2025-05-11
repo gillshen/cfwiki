@@ -1,5 +1,5 @@
-import { logout } from '$lib/util/userUtils';
+import { deleteCookies } from '$lib/api/auth';
 
 export function load({ cookies }) {
-	logout(cookies);
+	deleteCookies(cookies);
 }

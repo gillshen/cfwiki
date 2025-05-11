@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { get, patch } from '$lib/api/core';
-import type { PasswordResetSchema, UserUpdateSchema } from '$lib/schemas/user';
+import type { PasswordSchema, UserUpdateSchema } from '$lib/schemas/user';
 
 export enum Departments {
 	SALES = '咨询',
@@ -32,6 +32,6 @@ export async function updateUser(data: z.infer<UserUpdateSchema>) {
 	return await patch(`users/${data.id}/update/`, data);
 }
 
-export async function updatePassword(data: z.infer<PasswordResetSchema>) {
+export async function updatePassword(data: z.infer<PasswordSchema>) {
 	return await patch(`users/${data.id}/password/`, data);
 }

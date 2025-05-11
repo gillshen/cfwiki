@@ -1,4 +1,3 @@
-import type { PageServerLoadEvent } from './$types';
 import { error, redirect } from '@sveltejs/kit';
 import { fail, message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
@@ -20,8 +19,8 @@ import { base10Or400 } from '$lib/util/siteUtils';
 
 let token: string | null; // for redirecting
 
-export async function load(event: PageServerLoadEvent) {
-	token = event.url.searchParams.get('token');
+export async function load({ locals, url }) {
+	token = url.searchParams.get('token');
 
 	if (!token) {
 		throw error(400, 'Token required');
@@ -35,7 +34,7 @@ export async function load(event: PageServerLoadEvent) {
 		throw error(400, `Invalid token\n${err}`);
 	}
 
-	const { username } = await event.parent();
+	const { username } = locals.user!;
 	if (payload.username !== username) {
 		throw error(401, 'Unauthorized');
 	}

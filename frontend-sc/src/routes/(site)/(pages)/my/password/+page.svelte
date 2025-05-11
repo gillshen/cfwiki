@@ -13,16 +13,16 @@
 	import { createTitle } from '$lib/util/siteUtils';
 
 	import {
-		passwordHasUsername,
-		passwordLongEnough,
-		passwordHasUpper,
-		passwordHasLower,
-		passwordHasDigitOrSpecial
+		has8Chars,
+		hasLowercase,
+		hasUppercase,
+		hasDigitOrSpecial,
+		noUsername
 	} from '$lib/util/userUtils';
 
 	export let data;
 
-	const form = superForm(data.passwordResetForm, { invalidateAll: 'force' });
+	const form = superForm(data.passwordForm, { invalidateAll: 'force' });
 	const { form: formData, enhance } = form;
 </script>
 
@@ -43,7 +43,7 @@
 		<ShieldAlert class="size-4" />
 		<Alert.Title class="mt-1">Heads up!</Alert.Title>
 		<Alert.Description class="mb-1">
-			After changing the password, you will be logged out immediately.
+			After changing your password, you will be logged out immediately.
 		</Alert.Description>
 	</Alert.Root>
 
@@ -69,7 +69,7 @@
 			<Checklist.Root class="pt-1 gap-1" slot="description">
 				<Checklist.Item
 					text="At least 8 characters"
-					checked={$formData.new_password ? passwordLongEnough($formData.new_password) : null}
+					checked={$formData.new_password ? has8Chars($formData.new_password) : null}
 				/>
 				<Checklist.Item
 					text="Must be different from your current password"
@@ -80,22 +80,20 @@
 				<Checklist.Item
 					text="Must not contain your username"
 					checked={$formData.new_password
-						? !passwordHasUsername($formData.new_password, data.user.username)
+						? noUsername($formData.new_password, data.user.username)
 						: null}
 				/>
 				<Checklist.Item
 					text="Must contain at least 1 uppercase letter"
-					checked={$formData.new_password ? passwordHasUpper($formData.new_password) : null}
+					checked={$formData.new_password ? hasUppercase($formData.new_password) : null}
 				/>
 				<Checklist.Item
 					text="Must contain at least 1 lowercase letter"
-					checked={$formData.new_password ? passwordHasLower($formData.new_password) : null}
+					checked={$formData.new_password ? hasLowercase($formData.new_password) : null}
 				/>
 				<Checklist.Item
 					text="Must contain at least 1 digit or special character"
-					checked={$formData.new_password
-						? passwordHasDigitOrSpecial($formData.new_password)
-						: null}
+					checked={$formData.new_password ? hasDigitOrSpecial($formData.new_password) : null}
 				/>
 			</Checklist.Root>
 		</Input>
