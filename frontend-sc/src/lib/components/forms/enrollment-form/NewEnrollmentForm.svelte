@@ -1,12 +1,15 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import { type SuperValidated, type Infer, type SuperForm, superForm } from 'sveltekit-superforms';
+	import Label from '$lib/components/ui/label/label.svelte';
+
 	import type { CommonEnrollmentSchema, NewEnrollmentSchema } from '$lib/schemas/enrollment';
 	import type { School } from '$lib/api/school';
 	import type { SchoolSchema } from '$lib/schemas/school';
 	import CommonEnrollmentFormFields from './CommonEnrollmentFormFields.svelte';
-	import RadioGroup from '$lib/components/forms/RadioGroup.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
+	import NcCombobox from '$lib/components/interactive/Combobox.svelte'; // non-form-controlled
+	import NcRadioGroup from '$lib/components/interactive/RadioGroup.svelte'; // non-form-controlled
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
 	import { SECONDARY_PROGRESSIONS, UNIVERSITY_PROGRESSIONS } from '$lib/constants/progressions';
@@ -32,33 +35,36 @@
 		resetForm: false,
 		onUpdated({ form }) {
 			// restore school type selection and set school selection
-			$formData._school_type = form.data.type;
-			$formData._school = form.data.name;
+			selectedSchoolType = form.data.type;
+			selectedSchool = form.data.name;
 			$formData.school = schools.find((school) => school.name === form.data.name)!.id;
 		}
 	});
 	const { form: schoolFormData, enhance: schoolFormEnhance } = schoolForm;
 
-	let programTypeItems: string[];
+	const programTypeItems = ['UG Freshman', 'UG Transfer', "Master's"];
+
+	let selectedSchoolType = '';
+	let selectedSchool = '';
+
 	let progressions: string[];
 
 	$: {
-		if ($formData._school_type === 'Secondary School') {
-			programTypeItems = ['Secondary School'];
-			progressions = [...SECONDARY_PROGRESSIONS];
-			$formData.program_type = 'Secondary School';
-			$schoolFormData.type = 'Secondary School';
-		} else if ($formData._school_type === 'University') {
-			programTypeItems = ['UG Freshman', 'UG Transfer', "Master's"];
-			progressions = [...UNIVERSITY_PROGRESSIONS];
-			if ($formData.program_type === 'Secondary School') {
-				$formData.program_type = '';
-			}
-			$schoolFormData.type = 'University';
-		} else {
-			programTypeItems = [];
-			progressions = [];
-			$schoolFormData.type = '';
+		switch (selectedSchoolType) {
+			case 'Secondary School':
+				progressions = [...SECONDARY_PROGRESSIONS];
+				$schoolFormData.type = 'Secondary School';
+				break;
+			case 'University':
+				progressions = [...UNIVERSITY_PROGRESSIONS];
+				if ($formData.program_type === 'Secondary School') {
+					$formData.program_type = '';
+				}
+				$schoolFormData.type = 'University';
+				break;
+			default:
+				progressions = [];
+				$schoolFormData.type = '';
 		}
 	}
 
@@ -69,76 +75,82 @@
 	method="POST"
 	{id}
 	{action}
-	class={cn('max-w-prose space-y-4 my-4 mx-auto', className)}
+	class={cn('max-w-prose flex flex-col gap-6 my-4 mx-auto', className)}
 	use:enhance
 >
 	<input type="number" name="student" value={$formData.student} hidden />
 
-	<RadioGroup
-		{form}
-		name="_school_type"
-		label="School type"
-		items={['University', 'Secondary School']}
-		onValueChange={() => {
-			$formData._school = '';
-			$formData.curriculum = '';
-		}}
-	/>
+	<div class="flex flex-col gap-2.5 pb-2">
+		<Label>School type</Label>
+		<NcRadioGroup
+			bind:value={selectedSchoolType}
+			items={['University', 'Secondary School']}
+			onValueChange={() => {
+				selectedSchool = '';
+				$formData.curriculum = '';
+			}}
+		/>
+	</div>
 
-	<Combobox
-		{form}
-		name="_school"
-		label="School"
-		items={schools
-			.filter((school) => school.type === $formData._school_type)
-			.map((school) => school.name)
-			.sort()}
-		width="w-[420px]"
-		disableSearch={!$formData._school_type}
-		searchDisabledEmptyText={$formData._school_type
-			? undefined
-			: 'You need to select a school type first'}
-		postSelect={() => {
-			$formData.school = schools.find((school) => school.name === $formData._school)?.id ?? 0;
-		}}
-	>
-		<div slot="if-not-found">
-			{#if $formData._school_type}
-				<ButtonDialog
-					buttonVariant="secondary"
-					buttonSize="sm"
-					buttonText="Add School"
-					buttonClass="mt-4 mx-auto"
-					contentClass="min-w-[529px]"
-					dialogTitle="Create School Profile"
-					open={schoolFormOpen}
-				>
-					<form
-						method="POST"
-						action="?/createSchool"
-						class="flex flex-col gap-4 items-start justify-start mx-auto my-4"
-						use:schoolFormEnhance
-						id="school-form"
+	<div class="flex flex-col gap-2 pb-2">
+		<Label>School</Label>
+		<NcCombobox
+			bind:value={selectedSchool}
+			items={schools
+				.filter((school) => school.type === selectedSchoolType)
+				.map((school) => school.name)
+				.sort()}
+			width="w-[420px]"
+			disableSearch={!selectedSchoolType}
+			searchDisabledEmptyText={selectedSchoolType
+				? undefined
+				: 'You need to select a school type first'}
+			onSelect={() => {
+				$formData.school = schools.find((school) => school.name === selectedSchool)?.id ?? 0;
+			}}
+		>
+			<div slot="if-not-found">
+				{#if selectedSchoolType}
+					<ButtonDialog
+						buttonVariant="secondary"
+						buttonSize="sm"
+						buttonText="Add School"
+						buttonClass="mt-4 mx-auto"
+						contentClass="min-w-[529px]"
+						dialogTitle="Create School Profile"
+						open={schoolFormOpen}
 					>
-						<SchoolForm form={schoolForm} />
-					</form>
-					<!-- <SuperDebug data={$schoolFormData} /> -->
-				</ButtonDialog>
-			{/if}
-		</div>
-	</Combobox>
+						<form
+							method="POST"
+							action="?/createSchool"
+							class="flex flex-col gap-4 items-start justify-start mx-auto my-4"
+							use:schoolFormEnhance
+							id="school-form"
+						>
+							<SchoolForm form={schoolForm} />
+						</form>
+						<!-- <SuperDebug data={$schoolFormData} /> -->
+					</ButtonDialog>
+				{/if}
+			</div>
+		</NcCombobox>
+	</div>
 
 	<input type="number" name="school" bind:value={$formData.school} hidden />
 
-	<Combobox
-		{form}
-		name="program_type"
-		label="Program type"
-		items={programTypeItems}
-		disableSearch
-		searchDisabledEmptyText="You need to select a school type first"
-	/>
+	{#if selectedSchoolType === 'Secondary School'}
+		<input name="program_type" value="Secondary School" hidden />
+	{:else}
+		<Combobox
+			{form}
+			name="program_type"
+			label="Program type"
+			items={selectedSchoolType ? programTypeItems : []}
+			disableSearch
+			searchDisabledEmptyText="You need to select a school type first"
+		/>
+	{/if}
 
-	<CommonEnrollmentFormFields form={_form} programType={$formData._school_type} {progressions} />
+	<CommonEnrollmentFormFields form={_form} programType={selectedSchoolType} {progressions} />
 	<!-- <SuperDebug data={$formData} /> -->
 </form>

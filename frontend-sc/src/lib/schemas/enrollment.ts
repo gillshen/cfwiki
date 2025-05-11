@@ -14,8 +14,6 @@ export type CommonEnrollmentSchema = typeof commonEnrollmentSchema;
 
 export const newEnrollmentSchema = z.object({
 	student: z.number().min(1, 'This field is required'),
-	_school_type: z.string().min(1, 'This field is required'),
-	_school: z.string().min(1, 'This field is required'),
 	school: z.number().min(1, 'This field is required'),
 	program_type: z.string().min(1, 'This field is required'),
 	...commonEnrollmentFields
