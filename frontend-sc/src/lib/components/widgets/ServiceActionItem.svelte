@@ -7,7 +7,7 @@
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import X from 'lucide-svelte/icons/x';
-	import ServiceForm from '$lib/components/forms/service-form/ServiceForm.svelte';
+	import ServiceForm from '$lib/components/forms/ServiceForm.svelte';
 	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
 
 	import type { Service } from '$lib/api/contract';

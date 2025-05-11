@@ -8,7 +8,7 @@
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import Section from '$lib/components/containers/Section.svelte';
-	import ServiceForm from '$lib/components/forms/service-form/ServiceForm.svelte';
+	import ServiceForm from '$lib/components/forms/ServiceForm.svelte';
 	import ServiceActionItem from '$lib/components/widgets/ServiceActionItem.svelte';
 	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
