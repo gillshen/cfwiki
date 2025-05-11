@@ -93,7 +93,7 @@
 			.filter((school) => school.type === $formData._school_type)
 			.map((school) => school.name)
 			.sort()}
-		width="w-[480px]"
+		width="w-[420px]"
 		disableSearch={!$formData._school_type}
 		searchDisabledEmptyText={$formData._school_type
 			? undefined
@@ -106,6 +106,7 @@
 			{#if $formData._school_type}
 				<ButtonDialog
 					buttonVariant="secondary"
+					buttonSize="sm"
 					buttonText="Add School"
 					buttonClass="mt-4 mx-auto"
 					contentClass="min-w-[529px]"
@@ -115,7 +116,7 @@
 					<form
 						method="POST"
 						action="?/createSchool"
-						class="flex flex-col gap-4 items-start justify-start"
+						class="flex flex-col gap-4 items-start justify-start mx-auto my-4"
 						use:schoolFormEnhance
 						id="school-form"
 					>

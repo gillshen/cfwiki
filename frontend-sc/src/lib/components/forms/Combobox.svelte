@@ -62,7 +62,7 @@
 				role="combobox"
 				class={cn(
 					buttonVariants({ variant: 'outline' }),
-					'justify-between font-normal border-input h-10 bg-transparent transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-muted-foreground focus-visible:ring-offset-0',
+					'justify-between font-normal',
 					width,
 					!$formData[name] && 'text-muted-foreground'
 				)}

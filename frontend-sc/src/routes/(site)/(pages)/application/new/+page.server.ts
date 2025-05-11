@@ -19,6 +19,8 @@ import { base10Or400 } from '$lib/util/siteUtils';
 
 let token: string | null; // for redirecting
 
+type ApplicationType = 'freshman' | 'transfer' | 'graduate' | 'other';
+
 export async function load({ locals, url }) {
 	token = url.searchParams.get('token');
 
@@ -48,7 +50,9 @@ export async function load({ locals, url }) {
 	}
 
 	const year = base10Or400(payload.year, 'Invalid year');
-	const programTypeKey: 'freshman' | 'transfer' | 'graduate' | 'other' = getTypeKey(payload.type);
+	const applicationType: ApplicationType = getTypeKey(payload.type);
+
+	console.log(payload.type);
 
 	return {
 		studentId,
@@ -56,26 +60,31 @@ export async function load({ locals, url }) {
 		programType: payload.type,
 		year,
 		term: payload.term,
+
+		// existing applications
 		applications: fetchComposedApplications({
 			student: studentId,
 			year: year,
-			application_type: payload.type
+			application_type: applicationType
 		}),
-		schools: payload.type === 'Non-degree' ? fetchSchools() : fetchSchools({ type: 'university' }),
-		programs: fetchPrograms({ type: programTypeKey }),
+
+		// form options
+		schools: fetchSchools(applicationType === 'other' ? undefined : { type: 'university' }),
+		programs: fetchPrograms({ type: applicationType }),
 		applicationRounds: fetchApplicationRounds({
-			program_type: payload.type,
+			program_type: applicationType,
 			year,
 			term: payload.term
 		}),
+
 		newSchoolForm: await superValidate(zod(schoolSchema)),
 		newProgramForm: await superValidate(zod(newProgramSchema)),
-		newApplicationForm: await superValidate(zod(applicationSchema)),
-		newApplicationRoundForm: await superValidate(zod(roundSchema))
+		newRoundForm: await superValidate(zod(roundSchema)),
+		newApplicationForm: await superValidate(zod(applicationSchema))
 	};
 }
 
-const getTypeKey = (input: string): 'freshman' | 'transfer' | 'graduate' | 'other' => {
+const getTypeKey = (input: string): ApplicationType => {
 	switch (input) {
 		case 'UG Freshman':
 			return 'freshman';
@@ -86,7 +95,7 @@ const getTypeKey = (input: string): 'freshman' | 'transfer' | 'graduate' | 'othe
 		case 'Non-degree':
 			return 'other';
 		default:
-			throw error(400, 'Invalid program type');
+			throw error(400, 'Invalid application type');
 	}
 };
 

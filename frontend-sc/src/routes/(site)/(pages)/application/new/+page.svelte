@@ -4,13 +4,14 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Select from '$lib/components/ui/select/index';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
+	import Label from '$lib/components/ui/label/label.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import StudentApplicationCard from '$lib/components/widgets/StudentApplicationCard.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
+	import NcCombobox from '$lib/components/interactive/Combobox.svelte'; // non-form-controlled
 	import Input from '$lib/components/forms/Input.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
@@ -31,10 +32,24 @@
 	const schoolForm = superForm(data.newSchoolForm, {
 		onUpdated({ form }) {
 			// set school selection
-			$formData._school = form.data.name;
+			selectedSchool = form.data.name;
 		}
 	});
 	const { enhance: schoolFormEnhance } = schoolForm;
+
+	const programForm = superForm(data.newProgramForm, {
+		onUpdated({ form }) {
+			// TODO set program selection
+		}
+	});
+	const { enhance: programFormEnhance } = programForm;
+
+	const roundForm = superForm(data.newRoundForm, {
+		onUpdated({ form }) {
+			// TODO set application round
+		}
+	});
+	const { enhance: roundFormEnhance } = roundForm;
 
 	const servicesGrouped = Object.groupBy(data.contract.services, (s) => s.cf_username) as Record<
 		string,
@@ -65,7 +80,12 @@
 		$formData.staff_names = selectedStaff.map((item) => item.value);
 	}
 
+	let selectedSchool = '';
+	let selectedProgram = '';
+
 	let schoolFormOpen = false;
+	let programFormOpen = false;
+	let roundFormOpen = false;
 </script>
 
 <svelte:head>
@@ -97,78 +117,128 @@
 
 			<form
 				method="POST"
-				class="max-w-prose space-y-6"
+				class="max-w-prose flex flex-col gap-6"
 				action="?/createApplication"
 				use:enhance
 				id="application-form"
 			>
-				<Combobox
-					{form}
-					name="_school"
-					label="School"
-					width="w-[480px]"
-					items={schools.sort(orderByName).map((school) => school.name)}
-					onSelect={() => {
-						$formData._program = '';
-						$formData.round = 0;
-					}}
-				>
-					<div slot="if-not-found">
-						<ButtonDialog
-							buttonVariant="secondary"
-							buttonText="Add School"
-							buttonClass="mt-4 mx-auto"
-							contentClass="min-w-[529px]"
-							dialogTitle="Create School Profile"
-							open={schoolFormOpen}
-						>
-							<form
-								method="POST"
-								action="?/createSchool"
-								class="flex flex-col gap-4 items-start justify-start"
-								use:schoolFormEnhance
-								id="school-form"
+				<div class="flex flex-col gap-2.5">
+					<Label>School</Label>
+					<NcCombobox
+						bind:value={selectedSchool}
+						width="w-[420px]"
+						items={schools.sort(orderByName).map((school) => school.name)}
+						onSelect={() => {
+							selectedProgram = '';
+							$formData.round = 0;
+						}}
+					>
+						<div slot="if-not-found">
+							<ButtonDialog
+								buttonVariant="secondary"
+								buttonSize="sm"
+								buttonText="Add School"
+								buttonClass="mt-4 mx-auto"
+								contentClass="min-w-[529px]"
+								dialogTitle="Create School Profile"
+								open={schoolFormOpen}
 							>
-								<SchoolForm form={schoolForm} />
-							</form>
-						</ButtonDialog>
-					</div>
-				</Combobox>
+								<form
+									method="POST"
+									action="?/createSchool"
+									class="flex flex-col gap-4 items-start justify-start mx-auto my-4"
+									use:schoolFormEnhance
+									id="school-form"
+								>
+									<SchoolForm form={schoolForm} />
+								</form>
+							</ButtonDialog>
+						</div>
+					</NcCombobox>
+				</div>
 
-				<Combobox
-					{form}
-					name="_program"
-					label="Program"
-					width="w-[480px]"
-					items={programs
-						.filter((p) => p.schools.map((s) => s.name).includes($formData._school))
-						.sort(orderByProgramName)
-						.map((p) => ({ label: enhanceDisplayName(p), value: p.id.toString() }))}
-					onSelect={() => {
-						$formData.round = 0;
-					}}
-					disableSearch
-				/>
+				<div class="flex flex-col gap-2.5 h-[68px]">
+					<Label>Program</Label>
+					<NcCombobox
+						bind:value={selectedProgram}
+						width="w-[420px]"
+						items={programs
+							.filter((p) => p.schools.map((s) => s.name).includes(selectedSchool))
+							.sort(orderByProgramName)
+							.map((p) => ({ label: enhanceDisplayName(p), value: p.id.toString() }))}
+						onSelect={() => {
+							$formData.round = 0;
+						}}
+						emptyText={selectedSchool ? undefined : 'You need to select a school first'}
+					>
+						<div slot="if-not-found">
+							<ButtonDialog
+								buttonVariant="secondary"
+								buttonSize="sm"
+								buttonText="Add Program"
+								buttonClass="mt-4 mx-auto"
+								contentClass="min-w-[529px]"
+								dialogTitle="Create Program Profile"
+								open={programFormOpen}
+							>
+								<form
+									method="POST"
+									action="?/createProgram"
+									class="flex flex-col gap-4 items-start justify-start mx-auto my-4"
+									use:programFormEnhance
+									id="program-form"
+								>
+									<pre>{JSON.stringify(programForm.form, null, 2)}</pre>
+								</form>
+							</ButtonDialog>
+						</div>
+					</NcCombobox>
+				</div>
 
 				<Combobox
 					{form}
 					name="round"
 					label="Admission plan"
-					width="w-[300px]"
+					width="w-[420px]"
 					items={applicationRounds
-						.filter((r) => r.program_iteration.program.toString() === $formData._program)
+						.filter((r) => r.program_iteration.program.toString() === selectedProgram)
 						.sort(orderByRoundName)
 						.sort(orderByDueDate)
 						.map((r) => ({ label: formatRound(r), value: r.id.toString() }))}
 					disableSearch
-				/>
+					searchDisabledEmptyText={selectedProgram
+						? undefined
+						: 'You need to select a program first'}
+				>
+					<div slot="if-not-found">
+						<ButtonDialog
+							buttonVariant="secondary"
+							buttonSize="sm"
+							buttonText="Add Plan"
+							buttonClass="mt-4 mx-auto"
+							contentClass="min-w-[529px]"
+							dialogTitle="Create Admission Plan"
+							open={roundFormOpen}
+						>
+							<form
+								method="POST"
+								action="?/createProgram"
+								class="flex flex-col gap-4 items-start justify-start mx-auto my-4"
+								use:roundFormEnhance
+								id="round-form"
+							>
+								<pre>{JSON.stringify(roundForm.form, null, 2)}</pre>
+							</form>
+						</ButtonDialog>
+					</div>
+				</Combobox>
 
 				<Input
 					{form}
 					name="major_1"
 					label="First-choice major or track"
 					maxlength={100}
-					inputClass="w-[480px]"
+					inputClass="w-[420px]"
 					optional
 				/>
 
@@ -178,7 +248,7 @@
 						name="major_2"
 						label="Second-choice major or track"
 						maxlength={100}
-						inputClass="w-[480px]"
+						inputClass="w-[420px]"
 						optional
 					/>
 
@@ -188,13 +258,13 @@
 							name="major_3"
 							label="Third-choice major or track"
 							maxlength={100}
-							inputClass="w-[480px]"
+							inputClass="w-[420px]"
 							optional
 						/>
 					{/if}
 				{/if}
 
-				<Form.Field {form} name="staff_names" class="w-[480px] pb-0.5">
+				<Form.Field {form} name="staff_names" class="w-[420px]">
 					<Form.Control let:attrs>
 						<Form.Label>CF Involvement</Form.Label>
 						<Select.Root
@@ -228,7 +298,7 @@
 					{form}
 					name="comments"
 					label="Comments"
-					class="w-[480px]"
+					class="w-[420px]"
 					maxlength={1000}
 					description="Anything you want to note about this application"
 					optional
@@ -240,12 +310,12 @@
 			</form>
 		</section>
 
-		<section class="text-sm flex flex-col min-h-[120px]">
+		<section class="text-sm flex flex-col">
 			{#if applications.length}
 				<div
-					class="py-4 px-8 border rounded-lg backdrop-blur bg-muted/70 shadow-sm z-10 flex items-center"
+					class="py-4 px-8 border-t border-l border-r rounded-[10px] backdrop-blur bg-muted/70 shadow-sm z-10 flex items-center"
 				>
-					<h2 class="text-base font-semibold">{data.term} {data.year} Applications</h2>
+					<h3 class="text-base font-semibold">{data.programType} Applications of {data.year}</h3>
 					<Badge variant="outline" class="ml-4 min-w-8 h-5 justify-center bg-popover"
 						>{applications.length}</Badge
 					>
@@ -253,7 +323,7 @@
 				<!-- Workaround for a Firefox bug where backdrop-blur does not work with rounded corners  -->
 				<div
 					id="existing-applications-list"
-					class="max-h-[calc(100vh-168px)] -mt-[56px] pt-[56px] flex flex-col rounded-lg border overflow-auto overscroll-none px-2 pb-2"
+					class="max-h-[calc(100vh-180px)] min-h-[500px] -mt-[56px] pt-[56px] flex flex-col rounded-[10px] border overflow-auto overscroll-none px-2 pb-2"
 				>
 					{#each applications.sort().toReversed() as application}
 						<a
@@ -265,7 +335,7 @@
 								{application}
 								compact
 								hideYear
-								class="border-none shadow-none w-[370px] hover:bg-muted/70"
+								class="border-none shadow-none w-[370px] hover:bg-muted/70 rounded-md"
 							/>
 						</a>
 					{/each}

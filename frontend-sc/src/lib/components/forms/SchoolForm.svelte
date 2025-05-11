@@ -56,7 +56,6 @@
 	name="name"
 	label="Full name"
 	placeholder="Clayton University"
-	inputClass="w-[480px]"
 	maxlength={100}
 	class="text-left pb-0.5"
 />
@@ -66,7 +65,6 @@
 	name="alt_name"
 	label="Abbreviation"
 	placeholder="Clayton"
-	inputClass="w-[480px]"
 	maxlength={20}
 	optional
 	class="text-left pb-0.5"

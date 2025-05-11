@@ -5,8 +5,6 @@ import type { ApplicationRoundListItem } from '$lib/api/applicationRound';
 
 export const applicationSchema = z.object({
 	id: z.number().optional(),
-	_school: z.string().min(1, 'This field is required'),
-	_program: z.string().min(1, 'This field is required'),
 	contract: z.number().min(1, 'This field is required'),
 	round: z.number().min(1, 'This field is required'),
 	staff_names: z.string().array().min(1, 'Select at least one option'),
