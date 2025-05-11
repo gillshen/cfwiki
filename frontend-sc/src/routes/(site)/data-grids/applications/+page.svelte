@@ -18,11 +18,12 @@
 	import DismissibleBadge from '$lib/components/misc/DismissibleBadge.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import RowCountLabel from '$lib/components/misc/RowCountLabel.svelte';
-	import { applicationTypes } from '$lib/api/application';
-	import { applicationStatusCategories } from '$lib/api/applicationLog';
-	import { createTitle } from '$lib/util/siteUtils';
-	import { activeYears } from '$lib/util/dateUtils';
-	import { getColumnDefs } from '$lib/util/applicationsGridColumns';
+	import { APPLICATION_TYPES, type ApplicationType } from '$lib/api/application';
+
+	import {
+		APPLICATION_STATUS_CATEGORIES,
+		type ApplicationStatusCategory
+	} from '$lib/api/applicationLog';
 
 	import {
 		DEFAULT_COL_DEF,
@@ -36,6 +37,10 @@
 		formatApplicationType
 	} from '$lib/util/applicationUtils';
 
+	import { createTitle } from '$lib/util/siteUtils';
+	import { activeYears } from '$lib/util/dateUtils';
+	import { getColumnDefs } from '$lib/util/applicationsGridColumns';
+
 	ModuleRegistry.registerModules([AllCommunityModule]);
 
 	export let data;
@@ -46,8 +51,12 @@
 
 	$: cfer = $page.url.searchParams.get('cfer') || 'All';
 	$: year = $page.url.searchParams.get('year') || 'All';
-	$: applicationType = $page.url.searchParams.get('applicationType') || 'All';
-	$: status = $page.url.searchParams.get('status') || 'All';
+
+	$: applicationType = ($page.url.searchParams.get('applicationType') || 'All') as
+		| ApplicationType
+		| 'All';
+
+	$: status = ($page.url.searchParams.get('status') || 'All') as ApplicationStatusCategory | 'All';
 
 	$: columnDefs = getColumnDefs({ year, applicationType, status });
 
@@ -143,7 +152,7 @@
 					onSelectedChange={paramsManager.onScSelectChange('applicationType')}
 				>
 					<DataGridControl.FilterBody
-						items={applicationTypes.map((t) => ({ value: t, label: formatApplicationType(t) }))}
+						items={APPLICATION_TYPES.map((t) => ({ value: t, label: formatApplicationType(t) }))}
 					/>
 				</Select.Root>
 			</DataGridControl.FilterUnit>
@@ -154,7 +163,7 @@
 					onSelectedChange={paramsManager.onScSelectChange('status')}
 				>
 					<DataGridControl.FilterBody
-						items={applicationStatusCategories.map((c) => ({
+						items={APPLICATION_STATUS_CATEGORIES.map((c) => ({
 							value: c,
 							label: formatApplicationStatusCategory(c)
 						}))}
@@ -162,7 +171,7 @@
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 
-			<DataGridControl.FilterUnit label="Handler">
+			<DataGridControl.FilterUnit label="CFer involved">
 				<Select.Root
 					selected={{ value: cfer, label: cfer }}
 					onSelectedChange={paramsManager.onScSelectChange('cfer')}

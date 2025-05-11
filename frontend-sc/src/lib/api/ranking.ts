@@ -1,12 +1,12 @@
 import { buildQuery, createOrUpdate, destroy, get, patch, post } from '$lib/api/core';
 
-export const recognizedRankings = [
+export const RECOGNIZED_RANKINGS = [
 	'US News National Universities',
 	'US News Liberal Arts Colleges',
 	'QS World'
 ] as const;
 
-export type RecognizedRanking = (typeof recognizedRankings)[number];
+export type RecognizedRanking = (typeof RECOGNIZED_RANKINGS)[number];
 
 export type SchoolRanking = {
 	id: number;

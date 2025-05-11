@@ -12,7 +12,7 @@
 	import Input from '$lib/components/forms/Input.svelte';
 	import { createTitle } from '$lib/util/siteUtils';
 	import { defaultBanner } from '$lib/util/userUtils';
-	import { avatars } from '$lib/assets/avatars';
+	import { AVATARS } from '$lib/assets/avatars';
 
 	export let data;
 
@@ -55,7 +55,7 @@
 			<Form.Control>
 				<Form.Label>Avatar</Form.Label>
 				<RadioGroup.Root bind:value={$formData.avatar} class="pt-1 w-fit grid grid-cols-5 gap-4">
-					{#each Object.entries(avatars).concat([['__null__', '']]) as [avatarKey, avatarPath]}
+					{#each [...Object.entries(AVATARS), ['__null__', '']] as [avatarKey, avatarPath]}
 						<Label
 							for={avatarKey}
 							class="size-12 rounded-md flex border-2 bg-popover hover:bg-accent [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-accent"

@@ -8,7 +8,7 @@
 	import Input from '$lib/components/forms/Input.svelte';
 	import type { ApplicationLogSchema } from '$lib/schemas/applicationLog';
 	import type { ApplicationDetail } from '$lib/api/application';
-	import { applicationStatuses } from '$lib/api/applicationLog';
+	import { APPLICATION_STATUSES } from '$lib/api/applicationLog';
 
 	export let form: SuperForm<Infer<ApplicationLogSchema>>;
 	export let application: ApplicationDetail;
@@ -16,12 +16,7 @@
 	const { form: formData } = form;
 </script>
 
-<Combobox
-	{form}
-	name="status"
-	label="Status"
-	items={applicationStatuses.map((status) => ({ value: status, label: status }))}
-/>
+<Combobox {form} name="status" label="Status" items={[...APPLICATION_STATUSES]} />
 <Input {form} name="date" label="Date" type="date" class="pb-1" />
 <Textarea {form} name="comments" label="Comments" maxlength={1000} optional />
 

@@ -18,10 +18,13 @@
 	import DismissibleBadge from '$lib/components/misc/DismissibleBadge.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import RowCountLabel from '$lib/components/misc/RowCountLabel.svelte';
-	import { CONTRACT_TYPES, CONTRACT_STATUSES } from '$lib/api/contract';
-	import { createTitle } from '$lib/util/siteUtils';
-	import { activeYears } from '$lib/util/dateUtils';
-	import { getColumnDefs } from '$lib/util/studentsGridColumns';
+
+	import {
+		CONTRACT_TYPES,
+		CONTRACT_STATUSES,
+		type ContractType,
+		type ContractStatus
+	} from '$lib/api/contract';
 
 	import {
 		DEFAULT_COL_DEF,
@@ -29,6 +32,10 @@
 		getActiveUsernames,
 		SearchParamsManager
 	} from '$lib/util/dataGridUtils';
+
+	import { createTitle } from '$lib/util/siteUtils';
+	import { activeYears } from '$lib/util/dateUtils';
+	import { getColumnDefs } from '$lib/util/studentsGridColumns';
 
 	ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -39,9 +46,14 @@
 	let rowCount: number = 0;
 
 	$: cfer = $page.url.searchParams.get('cfer') || 'All';
-	$: contractType = $page.url.searchParams.get('contractType') || 'All';
+
+	$: contractType = ($page.url.searchParams.get('contractType') || 'All') as ContractType | 'All';
+
 	$: targetYear = $page.url.searchParams.get('targetYear') || 'All';
-	$: contractStatus = $page.url.searchParams.get('contractStatus') || 'All';
+
+	$: contractStatus = ($page.url.searchParams.get('contractStatus') || 'All') as
+		| ContractStatus
+		| 'All';
 
 	$: columnDefs = getColumnDefs({ targetYear, contractType, contractStatus });
 
@@ -150,7 +162,7 @@
 				</Select.Root>
 			</DataGridControl.FilterUnit>
 
-			<DataGridControl.FilterUnit label="Handler">
+			<DataGridControl.FilterUnit label="CFer involved">
 				<Select.Root
 					selected={{ value: cfer, label: cfer }}
 					onSelectedChange={paramsManager.onScSelectChange('cfer')}

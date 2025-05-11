@@ -10,16 +10,18 @@ import type {
 
 import type { AcademicFields } from '$lib/api/student';
 
-export const applicationTypes = [
+// valid types for filtering
+export const APPLICATION_TYPES = [
 	'freshman',
 	'transfer',
-	'graduate',
+	'undergraduate',
 	'masters',
 	'doctorate',
-	'other'
+	'graduate',
+	'nondegree'
 ] as const;
 
-export type ApplicationType = (typeof applicationTypes)[number];
+export type ApplicationType = (typeof APPLICATION_TYPES)[number];
 
 type Service = {
 	cf_username: string;

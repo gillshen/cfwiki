@@ -7,7 +7,7 @@ export const PROGRAM_CATEGORIES = ['Undergraduate', "Master's", 'Doctorate', 'No
 
 export type ProgramCategory = (typeof PROGRAM_CATEGORIES)[number];
 
-export const programTypes = [
+export const PROGRAM_TYPES = [
 	'UG Freshman',
 	'UG Transfer',
 	"Master's",
@@ -15,7 +15,7 @@ export const programTypes = [
 	'Non-degree'
 ] as const;
 
-export type ProgramType = (typeof programTypes)[number];
+export type ProgramType = (typeof PROGRAM_TYPES)[number];
 
 export type Program = {
 	id: number;

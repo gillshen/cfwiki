@@ -23,7 +23,7 @@ import Snake from './snake.png';
 import Tiger from './tiger.png';
 import Whale from './whale.png';
 
-export const avatars = {
+export const AVATARS = {
 	Bear,
 	Bunny,
 	Camel,
@@ -53,6 +53,7 @@ export const avatars = {
 export const randomAvatar = (fromArray: string[] = []) => {
 	const avatarsArray = fromArray.length
 		? fromArray
-		: Object.entries(avatars).map((entry) => entry[1]);
+		: Object.entries(AVATARS).map((entry) => entry[1]);
+
 	return avatarsArray[Math.floor(Math.random() * avatarsArray.length)];
 };

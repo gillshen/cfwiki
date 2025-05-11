@@ -2,7 +2,7 @@ import type { ComposedApplication, ApplicationType } from '$lib/api/application'
 import type { ProgramType } from '$lib/api/program';
 
 import {
-	applicationStatusOrder,
+	applicationStatusOrdering,
 	type ApplicationStatus,
 	type ApplicationLogBrief,
 	type ApplicationStatusCategory
@@ -57,22 +57,26 @@ const _typeOrdering: Record<string, number> = {
 	'Non-degree': 3
 };
 
-export function formatApplicationType(applicationType: ApplicationType | string): string {
+export function formatApplicationType(applicationType: ApplicationType | 'All'): string {
 	switch (applicationType) {
+		case 'All':
+			return 'All';
 		case 'freshman':
 			return 'UG Freshman';
 		case 'transfer':
 			return 'UG Transfer';
-		case 'graduate':
-			return 'Graduate';
+		case 'undergraduate':
+			return 'All Undergraduate';
 		case 'masters':
 			return "Master's";
 		case 'doctorate':
 			return 'Doctorate';
-		case 'other':
+		case 'graduate':
+			return 'All Graduate';
+		case 'nondegree':
 			return 'Non-degree';
 		default:
-			return applicationType;
+			throw new Error(`unknown application type: ${applicationType}`);
 	}
 }
 
@@ -143,9 +147,9 @@ export function orderByRoundName(a: ComposedApplication, b: ComposedApplication)
 
 export function orderByStatus(a: ComposedApplication, b: ComposedApplication) {
 	const aStatusOrder: number =
-		applicationStatusOrder[getLatestLog(a)?.status as ApplicationStatus] ?? -1;
+		applicationStatusOrdering[getLatestLog(a)?.status as ApplicationStatus] ?? -1;
 	const bStatusOrder: number =
-		applicationStatusOrder[getLatestLog(b)?.status as ApplicationStatus] ?? -1;
+		applicationStatusOrdering[getLatestLog(b)?.status as ApplicationStatus] ?? -1;
 	return aStatusOrder - bStatusOrder;
 }
 

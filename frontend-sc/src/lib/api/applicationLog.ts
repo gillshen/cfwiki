@@ -2,21 +2,24 @@ import { z } from 'zod';
 import type { ApplicationLogSchema } from '$lib/schemas/applicationLog';
 import { createOrUpdate, destroy } from '$lib/api/core';
 
-export type ApplicationStatus =
-	| 'Started'
-	| 'Submitted'
-	| 'Under Review'
-	| 'Deferred'
-	| 'On Waitlist'
-	| 'Accepted'
-	| 'Rejected'
-	| 'Pres. Rejected'
-	| 'Offer Rescinded'
-	| 'Cancelled'
-	| 'Withdrawn'
-	| 'Untracked';
+export const APPLICATION_STATUSES = [
+	'Started',
+	'Submitted',
+	'Under Review',
+	'Deferred',
+	'On Waitlist',
+	'Accepted',
+	'Rejected',
+	'Pres. Rejected',
+	'Offer Rescinded',
+	'Cancelled',
+	'Withdrawn',
+	'Untracked'
+] as const;
 
-export const applicationStatusCategories = [
+export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
+
+export const APPLICATION_STATUS_CATEGORIES = [
 	'pending',
 	'resolved',
 	'accepted',
@@ -24,9 +27,9 @@ export const applicationStatusCategories = [
 	'neutral'
 ] as const;
 
-export type ApplicationStatusCategory = (typeof applicationStatusCategories)[number];
+export type ApplicationStatusCategory = (typeof APPLICATION_STATUS_CATEGORIES)[number];
 
-export const applicationStatusOrder: Record<ApplicationStatus, number> = {
+export const applicationStatusOrdering: Record<ApplicationStatus, number> = {
 	Started: 10,
 	Submitted: 11,
 	'Under Review': 12,
@@ -40,8 +43,6 @@ export const applicationStatusOrder: Record<ApplicationStatus, number> = {
 	Withdrawn: 41,
 	Untracked: 50
 };
-
-export const applicationStatuses: string[] = Object.keys(applicationStatusOrder);
 
 export type ApplicationLogBrief = {
 	status: ApplicationStatus;
