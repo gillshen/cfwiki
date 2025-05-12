@@ -16,6 +16,7 @@
 	export let type: 'text' | 'number' | 'date' | 'password' = 'text';
 	export let placeholder: string = '';
 	export let optional: boolean = false;
+	export let disabled: boolean = false;
 	export let maxlength: number | undefined = undefined;
 	export let className: string = '';
 	export { className as class };
@@ -26,8 +27,12 @@
 <Form.Field {form} {name} class={className}>
 	<Form.Control let:attrs>
 		<Form.Label
-			class={cn('h-4 flex items-center gap-1', optional ? 'optional-field' : '', labelClass)}
-			>{label}</Form.Label
+			class={cn(
+				'h-4 flex items-center gap-1',
+				optional ? 'optional-field' : '',
+				disabled ? 'text-muted-foreground' : '',
+				labelClass
+			)}>{label}</Form.Label
 		>
 		<Input
 			{type}
@@ -36,6 +41,7 @@
 			class={cn('w-[360px]', inputClass)}
 			{...attrs}
 			bind:value={$formData[name]}
+			{disabled}
 		/>
 		{#if description}
 			<Form.Description class="text-xs">

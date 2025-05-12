@@ -52,8 +52,6 @@ export async function load({ locals, url }) {
 	const year = base10Or400(payload.year, 'Invalid year');
 	const applicationType: ApplicationType = getTypeKey(payload.type);
 
-	console.log(payload.type);
-
 	return {
 		studentId,
 		contract,

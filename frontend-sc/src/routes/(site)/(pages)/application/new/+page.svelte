@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
-	import { type Selected } from 'bits-ui';
+	import type { Selected } from 'bits-ui';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Select from '$lib/components/ui/select/index';
@@ -16,6 +16,7 @@
 	import Textarea from '$lib/components/forms/Textarea.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
+	import ProgramFormFields from '$lib/components/forms/program-form/ProgramFormFields.svelte';
 
 	import type { Service } from '$lib/api/contract';
 	import { orderByName } from '$lib/util/schoolUtils';
@@ -29,20 +30,40 @@
 	const form = superForm(data.newApplicationForm);
 	const { form: formData, enhance } = form;
 
+	// These forms must be declared here to be properly reactive
+
 	const schoolForm = superForm(data.newSchoolForm, {
 		onUpdated({ form }) {
-			// set school selection
-			selectedSchool = form.data.name;
+			if (form.valid) {
+				// set school selection
+				selectedSchool = form.data.name;
+			}
 		}
 	});
 	const { enhance: schoolFormEnhance } = schoolForm;
 
 	const programForm = superForm(data.newProgramForm, {
-		onUpdated({ form }) {
-			// TODO set program selection
+		onUpdated: async ({ form }) => {
+			if (form.valid) {
+				const programs = await data.programs;
+				// set program selection
+				// the newly created program should have the largest id
+				const newProgramId = Math.max(...programs.map((p) => p.id));
+				console.log(newProgramId);
+				selectedProgram = newProgramId.toString();
+			}
 		}
 	});
-	const { enhance: programFormEnhance } = programForm;
+	const { form: programFormData, enhance: programFormEnhance } = programForm;
+
+	// set a reasonable default
+	if (
+		data.programType === 'UG Freshman' ||
+		data.programType === 'UG Transfer' ||
+		data.programType === 'Non-degree'
+	) {
+		$programFormData.type = data.programType;
+	}
 
 	const roundForm = superForm(data.newRoundForm, {
 		onUpdated({ form }) {
@@ -64,6 +85,13 @@
 				.filter(([, services]) => services.map((s) => !endedEarly(s)).some(Boolean))
 				.map(([cfUsername]) => ({ value: cfUsername, label: cfUsername }));
 
+	let selectedSchool = '';
+	let selectedProgram = '';
+
+	let schoolFormOpen = false;
+	let programFormOpen = false;
+	let roundFormOpen = false;
+
 	$: {
 		if (!$formData.major_1) {
 			$formData.major_2 = '';
@@ -79,13 +107,6 @@
 		// console.table(data.contract);
 		$formData.staff_names = selectedStaff.map((item) => item.value);
 	}
-
-	let selectedSchool = '';
-	let selectedProgram = '';
-
-	let schoolFormOpen = false;
-	let programFormOpen = false;
-	let roundFormOpen = false;
 </script>
 
 <svelte:head>
@@ -100,28 +121,28 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-{#await Promise.all([data.schools, data.programs, data.applicationRounds, data.applications])}
-	<LoadingSign />
-{:then [schools, programs, applicationRounds, applications]}
-	<div class="flex justify-between space-between gap-12">
-		<section>
-			<h1 class="page-title">Create Application</h1>
+<div class="flex justify-between space-between gap-12">
+	<section>
+		<h1 class="page-title">Create Application</h1>
 
-			<div class="text-sm flex gap-2 pt-2 pb-6">
-				<div><a href="/student/{data.studentId}">{data.contract.student_name}</a></div>
-				<div class="text-muted-foreground/50">&bullet;</div>
-				<div>{data.programType}</div>
-				<div class="text-muted-foreground/50">&bullet;</div>
-				<div>{data.term} {data.year}</div>
-			</div>
+		<div class="text-sm flex gap-2 pt-2 pb-6">
+			<div><a href="/student/{data.studentId}">{data.contract.student_name}</a></div>
+			<div class="text-muted-foreground/50">&bullet;</div>
+			<div>{data.programType}</div>
+			<div class="text-muted-foreground/50">&bullet;</div>
+			<div>{data.term} {data.year}</div>
+		</div>
 
-			<form
-				method="POST"
-				class="max-w-prose flex flex-col gap-6"
-				action="?/createApplication"
-				use:enhance
-				id="application-form"
-			>
+		<form
+			method="POST"
+			class="max-w-prose flex flex-col gap-6"
+			action="?/createApplication"
+			use:enhance
+			id="application-form"
+		>
+			{#await Promise.all([data.schools, data.programs])}
+				<LoadingSign />
+			{:then [schools, programs]}
 				<div class="flex flex-col gap-2.5">
 					<Label>School</Label>
 					<NcCombobox
@@ -131,6 +152,11 @@
 						onSelect={() => {
 							selectedProgram = '';
 							$formData.round = 0;
+							// set the default school in the program form
+							const selectedSchoolId = schools.find((s) => s.name === selectedSchool)?.id;
+							if (selectedSchoolId && !$programFormData.schools.includes(selectedSchoolId)) {
+								$programFormData.schools = [...$programFormData.schools, selectedSchoolId];
+							}
 						}}
 					>
 						<div slot="if-not-found">
@@ -172,29 +198,33 @@
 						emptyText={selectedSchool ? undefined : 'You need to select a school first'}
 					>
 						<div slot="if-not-found">
-							<ButtonDialog
-								buttonVariant="secondary"
-								buttonSize="sm"
-								buttonText="Add Program"
-								buttonClass="mt-4 mx-auto"
-								contentClass="min-w-[529px]"
-								dialogTitle="Create Program Profile"
-								open={programFormOpen}
-							>
-								<form
-									method="POST"
-									action="?/createProgram"
-									class="flex flex-col gap-4 items-start justify-start mx-auto my-4"
-									use:programFormEnhance
-									id="program-form"
+							{#if selectedSchool}
+								<ButtonDialog
+									buttonVariant="secondary"
+									buttonSize="sm"
+									buttonText="Add Program"
+									buttonClass="mt-4 mx-auto"
+									contentClass="min-w-[529px]"
+									dialogTitle="Create Program Profile"
+									open={programFormOpen}
 								>
-									<pre>{JSON.stringify(programForm.form, null, 2)}</pre>
-								</form>
-							</ButtonDialog>
+									<form
+										method="POST"
+										action="?/createProgram"
+										class="flex flex-col gap-4 items-start justify-start text-left mx-auto my-4"
+										use:programFormEnhance
+										id="program-form"
+									>
+										<ProgramFormFields form={programForm} {schools} />
+									</form>
+								</ButtonDialog>
+							{/if}
 						</div>
 					</NcCombobox>
 				</div>
+			{/await}
 
+			{#await data.applicationRounds then applicationRounds}
 				<Combobox
 					{form}
 					name="round"
@@ -211,106 +241,110 @@
 						: 'You need to select a program first'}
 				>
 					<div slot="if-not-found">
-						<ButtonDialog
-							buttonVariant="secondary"
-							buttonSize="sm"
-							buttonText="Add Plan"
-							buttonClass="mt-4 mx-auto"
-							contentClass="min-w-[529px]"
-							dialogTitle="Create Admission Plan"
-							open={roundFormOpen}
-						>
-							<form
-								method="POST"
-								action="?/createProgram"
-								class="flex flex-col gap-4 items-start justify-start mx-auto my-4"
-								use:roundFormEnhance
-								id="round-form"
+						{#if selectedProgram}
+							<ButtonDialog
+								buttonVariant="secondary"
+								buttonSize="sm"
+								buttonText="Add Plan"
+								buttonClass="mt-4 mx-auto"
+								contentClass="min-w-[529px]"
+								dialogTitle="Create Admission Plan"
+								open={roundFormOpen}
 							>
-								<pre>{JSON.stringify(roundForm.form, null, 2)}</pre>
-							</form>
-						</ButtonDialog>
+								<form
+									method="POST"
+									action="?/createProgram"
+									class="flex flex-col gap-4 items-start justify-start mx-auto my-4"
+									use:roundFormEnhance
+									id="round-form"
+								>
+									<pre>{JSON.stringify(roundForm.form, null, 2)}</pre>
+								</form>
+							</ButtonDialog>
+						{/if}
 					</div>
 				</Combobox>
+			{/await}
 
+			<Input
+				{form}
+				name="major_1"
+				label="First-choice major or track"
+				maxlength={100}
+				inputClass="w-[420px]"
+				optional
+			/>
+
+			{#if $formData.major_1.trim()}
 				<Input
 					{form}
-					name="major_1"
-					label="First-choice major or track"
+					name="major_2"
+					label="Second-choice major or track"
 					maxlength={100}
 					inputClass="w-[420px]"
 					optional
 				/>
 
-				{#if $formData.major_1.trim()}
+				{#if $formData.major_2.trim()}
 					<Input
 						{form}
-						name="major_2"
-						label="Second-choice major or track"
+						name="major_3"
+						label="Third-choice major or track"
 						maxlength={100}
 						inputClass="w-[420px]"
 						optional
 					/>
-
-					{#if $formData.major_2.trim()}
-						<Input
-							{form}
-							name="major_3"
-							label="Third-choice major or track"
-							maxlength={100}
-							inputClass="w-[420px]"
-							optional
-						/>
-					{/if}
 				{/if}
+			{/if}
 
-				<Form.Field {form} name="staff_names" class="w-[420px]">
-					<Form.Control let:attrs>
-						<Form.Label>CF Involvement</Form.Label>
-						<Select.Root
-							multiple
-							selected={selectedStaff}
-							onSelectedChange={(v) =>
-								v && ($formData.staff_names = v.map((item) => item.value).sort())}
-						>
-							<Select.Trigger {...attrs}>
-								<Select.Value placeholder="Select at least one option" />
-							</Select.Trigger>
-							<Select.Content>
-								{#each servicesGroupedEntries as [cfUsername]}
-									<Select.Item value={cfUsername} label={cfUsername} />
-								{/each}
-							</Select.Content>
-						</Select.Root>
-						<select name="staff_names" multiple bind:value={$formData.staff_names} hidden>
-							{#each servicesGroupedEntries as [cfUsername]}
-								<option value={cfUsername}>{cfUsername}</option>
-							{/each}
-						</select>
-					</Form.Control>
-					<Form.Description
-						>Select all and only those involved in this particular application</Form.Description
+			<Form.Field {form} name="staff_names" class="w-[420px]">
+				<Form.Control let:attrs>
+					<Form.Label>CF Involvement</Form.Label>
+					<Select.Root
+						multiple
+						selected={selectedStaff}
+						onSelectedChange={(v) =>
+							v && ($formData.staff_names = v.map((item) => item.value).sort())}
 					>
-					<Form.FieldErrors />
-				</Form.Field>
+						<Select.Trigger {...attrs}>
+							<Select.Value placeholder="Select at least one option" />
+						</Select.Trigger>
+						<Select.Content>
+							{#each servicesGroupedEntries as [cfUsername]}
+								<Select.Item value={cfUsername} label={cfUsername} />
+							{/each}
+						</Select.Content>
+					</Select.Root>
+					<select name="staff_names" multiple bind:value={$formData.staff_names} hidden>
+						{#each servicesGroupedEntries as [cfUsername]}
+							<option value={cfUsername}>{cfUsername}</option>
+						{/each}
+					</select>
+				</Form.Control>
+				<Form.Description
+					>Select all and only those involved in this particular application</Form.Description
+				>
+				<Form.FieldErrors />
+			</Form.Field>
 
-				<Textarea
-					{form}
-					name="comments"
-					label="Comments"
-					class="w-[420px]"
-					maxlength={1000}
-					description="Anything you want to note about this application"
-					optional
-				/>
+			<Textarea
+				{form}
+				name="comments"
+				label="Comments"
+				class="w-[420px]"
+				maxlength={1000}
+				description="Anything you want to note about this application"
+				optional
+			/>
 
-				<input name="contract" type="number" value={data.contract.id} class="hidden" />
+			<input name="contract" type="number" value={data.contract.id} class="hidden" />
 
-				<Form.Button class="w-fit min-w-24">Submit</Form.Button>
-			</form>
-		</section>
+			<Form.Button class="w-fit min-w-24">Submit</Form.Button>
+		</form>
+	</section>
 
-		<section class="text-sm flex flex-col">
+	<section class="text-sm flex flex-col">
+		{#await data.applications then applications}
 			{#if applications.length}
 				<div
 					class="py-4 px-8 border-t border-l border-r rounded-[10px] backdrop-blur bg-muted/70 shadow-sm z-10 flex items-center"
@@ -341,9 +375,9 @@
 					{/each}
 				</div>
 			{/if}
-		</section>
-	</div>
-{/await}
+		{/await}
+	</section>
+</div>
 
 <style>
 	#existing-applications-list::-webkit-scrollbar-track {

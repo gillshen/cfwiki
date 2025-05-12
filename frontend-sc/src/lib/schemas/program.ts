@@ -7,11 +7,11 @@ export const newProgramSchema = z
 		degree: z.string().trim().max(100),
 		schools: z.number().array().min(1, 'Select at least one option')
 	})
-	.refine((data) => data.type.startsWith('UG') || !!data.degree, {
+	.refine((data) => (data.type !== "Master's" && data.type !== 'Doctorate') || !!data.degree, {
 		message: 'This field is required',
 		path: ['degree']
 	})
-	.refine((data) => data.type.startsWith('UG') || !!data.degree, {
+	.refine((data) => data.type.startsWith('UG') || !!data.name, {
 		message: 'This field is required',
 		path: ['name']
 	});
