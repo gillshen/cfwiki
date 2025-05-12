@@ -4,12 +4,15 @@
 	import * as ScoreForm from '$lib/components/forms/score-forms/index';
 	import ActionUnit from '$lib/components/containers/ActionUnit.svelte';
 	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
+	import ProgramForm from '$lib/components/forms/program-form/ProgramForm.svelte';
+	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 
 	export let data;
 </script>
 
-<Tabs.Root value="toefl">
+<Tabs.Root value="temp">
 	<Tabs.List>
+		<Tabs.Trigger value="temp">temp</Tabs.Trigger>
 		<Tabs.Trigger value="toefl">TOEFL</Tabs.Trigger>
 		<Tabs.Trigger value="ielts">IELTS</Tabs.Trigger>
 		<Tabs.Trigger value="duolingo">Duolingo</Tabs.Trigger>
@@ -22,6 +25,17 @@
 		<Tabs.Trigger value="ib">IB</Tabs.Trigger>
 		<Tabs.Trigger value="alevel">A-level</Tabs.Trigger>
 	</Tabs.List>
+
+	<Tabs.Content value="temp">
+		<h2 class="text-2xl font-bold mt-4 mb-8">Create Program</h2>
+		<div class="w-fit">
+			{#await data.schools}
+				<LoadingSign />
+			{:then schools}
+				<ProgramForm data={data.newProgramForm} {schools} onUpdated={() => alert('submitted')} />
+			{/await}
+		</div>
+	</Tabs.Content>
 
 	<!-- TOEFL -->
 	<Tabs.Content value="toefl">

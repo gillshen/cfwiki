@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 
 from target.models import (
     School,
@@ -62,24 +62,26 @@ class ProgramSerializer(serializers.ModelSerializer):
 
 
 class ProgramCreateSerializer(serializers.ModelSerializer):
+
+    schools = serializers.ListField(
+        child=serializers.CharField(),
+        write_only=True,
+        required=True,
+    )
+
     class Meta:
         model = Program
-        fields = ["id", "type", "name", "degree", "school_1", "school_2"]
-
-    school_1 = serializers.IntegerField(write_only=True, required=True)
-    school_2 = serializers.IntegerField(write_only=True)
+        fields = ["id", "type", "name", "degree", "schools"]
 
     def create(self, validated_data):
-        school_1 = validated_data.pop("school_1")
-        school_2 = validated_data.pop("school_2")
-        program = Program.objects.create(**validated_data)
-        program.schools.add(school_1)
-        if school_2:
-            program.schools.add(school_2)
-        return program
+        with transaction.atomic():
+            schools = validated_data.pop("schools")
+            program = Program.objects.create(**validated_data)
+            program.schools.set(School.objects.filter(id__in=schools))
+            return program
 
 
-class ProgramCRUDSerializer(serializers.ModelSerializer):
+class ProgramRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
         fields = "__all__"
