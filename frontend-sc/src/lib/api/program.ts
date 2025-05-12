@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { get, patch, post, destroy, buildQuery } from '$lib/api/core';
+import { get, patch, post, destroy, makeUrl } from '$lib/api/core';
 import type { ApplicationStats } from '$lib/api/stats';
 import type { NewProgramSchema, ProgramUpdateSchema } from '$lib/schemas/program';
 
@@ -50,14 +50,14 @@ export async function fetchPrograms(params?: {
 	school?: number;
 	type?: 'undergraduate' | 'freshman' | 'transfer' | 'graduate' | 'other';
 }): Promise<ProgramListItem[]> {
-	return await get(`programs/${buildQuery(params)}`);
+	return await get(makeUrl('programs', params));
 }
 
 export async function fetchApplicationStats(params?: {
 	program_id?: number;
 	application_type?: 'undergraduate' | 'freshman' | 'transfer' | 'graduate' | 'other';
 }): Promise<ApplicationStats[]> {
-	return await get(`applications/stats/programs/${buildQuery(params)}`);
+	return await get(makeUrl('applications/stats/programs', params));
 }
 
 export async function fetchProgram(id: number): Promise<ProgramDetail> {

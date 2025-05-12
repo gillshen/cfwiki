@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from django.db.models import OuterRef, Subquery, Count, F, Q, Prefetch
-from django.core.cache import cache
 
 from core.models import CFUser, Student, Service, Contract, Application, ApplicationLog
 from target.models import School, ApplicationRound
@@ -214,7 +213,11 @@ class ApplicationWithLogsListView(CacheResponseMixin, ListAPIView):
         ).prefetch_related(
             "staff",
             "round__program_iteration__program__schools__rankings__ranking",
-            "logs",
+            Prefetch(
+                "logs",
+                queryset=ApplicationLog.objects.order_by("date"),
+                to_attr=self.serializer_class.prefetched_logs,
+            ),
         )
 
         return Application.filter(

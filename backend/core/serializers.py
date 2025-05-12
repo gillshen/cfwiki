@@ -341,7 +341,15 @@ class ContractCRUDSerializer(serializers.ModelSerializer):
 class ApplicationWithLogsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        fields = ["id", "contract", "round", "staff", "logs", "majors"]
+        fields = [
+            "id",
+            "contract",
+            "round",
+            "staff",
+            "majors",
+            "history",
+            "last_updated",
+        ]
 
     staff = serializers.SlugRelatedField(
         many=True,
@@ -349,17 +357,30 @@ class ApplicationWithLogsSerializer(serializers.ModelSerializer):
         slug_field="username",
     )
 
-    class ApplicationLogSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = ApplicationLog
-            fields = ["status", "date"]
-
-    logs = ApplicationLogSerializer(many=True)
-
     majors = serializers.SerializerMethodField()
 
     def get_majors(self, obj) -> list[str]:
         return list(filter(None, [obj.major_1, obj.major_2, obj.major_3]))
+
+    history = serializers.SerializerMethodField()
+
+    def get_history(self, obj):
+        prefetched_logs = getattr(obj, self.prefetched_logs)
+        return _get_notable_statuses([log.status for log in prefetched_logs])
+
+    last_updated = serializers.SerializerMethodField()
+
+    def get_last_updated(self, obj):
+        prefetched_logs = getattr(obj, self.prefetched_logs)
+        return prefetched_logs[-1].date if prefetched_logs else None
+
+    prefetched_logs = "status_logs"
+    # To be used by views:
+    # Prefetch(
+    #     "logs",
+    #     queryset=ApplicationLog.objects.order_by("date"),
+    #     to_attr=ApplicationWithLogsSerializer.prefetched_logs,
+    # )
 
 
 class ApplicationTargetSerializer(serializers.ModelSerializer):
@@ -508,6 +529,12 @@ class ApplicationDetailSerializer(serializers.ModelSerializer):
 
     logs = ApplicationLogSerializer(many=True)
 
+    history = serializers.SerializerMethodField()
+
+    def get_history(self, obj):
+        statuses = [log.status for log in obj.logs.order_by("date")]
+        return _get_notable_statuses(statuses)
+
 
 class ApplicationCRUDSerializer(serializers.ModelSerializer):
 
@@ -594,3 +621,12 @@ class ApplicationLogCRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationLog
         fields = "__all__"
+
+
+def _get_notable_statuses(statuses: list[str]):
+    if len(statuses) < 2:
+        return statuses
+    *early, last = statuses
+    ignorable = {"Started", "Submitted", "Under Review"}
+    notable_statuses = [s for s in early if s not in ignorable] + [last]
+    return notable_statuses

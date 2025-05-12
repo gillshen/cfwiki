@@ -8,9 +8,8 @@ export async function load(event) {
 
 	return {
 		school,
-		applications:
-			school.type === 'Secondary School'
-				? fetchComposedApplications({ school_attended: school.id })
-				: fetchComposedApplications({ school: school.id })
+		applications: fetchComposedApplications(
+			school.type === 'Secondary School' ? { school_attended: school.id } : { school: school.id }
+		)
 	};
 }

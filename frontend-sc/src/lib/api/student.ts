@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { get, destroy, buildQuery, createOrUpdate } from '$lib/api/core';
+import { get, destroy, createOrUpdate, makeUrl } from '$lib/api/core';
 import type { StudentSchema } from '$lib/schemas/student';
 import type { ContractType, Service } from '$lib/api/contract';
 import type { EnrollmentByStudent } from '$lib/api/enrollment';
@@ -127,7 +127,7 @@ export async function fetchStudents(params?: {
 	target_year?: string | null;
 	contract_status?: string | null;
 }): Promise<StudentListItem[]> {
-	return await get(`students/${buildQuery(params)}`);
+	return await get(makeUrl('students', params));
 }
 
 export async function fetchStudentsByUser(params?: {
@@ -136,7 +136,7 @@ export async function fetchStudentsByUser(params?: {
 	target_year?: string;
 	contract_status?: string;
 }): Promise<StudentOfCferListItem[]> {
-	return await get(`students/per-user/${buildQuery(params)}`);
+	return await get(makeUrl('students/per-user', params));
 }
 
 export async function fetchStudent(id: number): Promise<StudentDetail> {

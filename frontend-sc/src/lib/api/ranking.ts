@@ -1,4 +1,4 @@
-import { buildQuery, createOrUpdate, destroy, get, patch, post } from '$lib/api/core';
+import { createOrUpdate, destroy, get, patch, post, makeUrl } from '$lib/api/core';
 
 export const RECOGNIZED_RANKINGS = [
 	'US News National Universities',
@@ -45,7 +45,7 @@ export async function fetchSchoolRankingEntries(params?: {
 	ranking?: number;
 	year?: number;
 }): Promise<SchoolRankingEntry[]> {
-	return await get(`school-ranks/${buildQuery(params)}`);
+	return await get(makeUrl('school-ranks', params));
 }
 
 export async function createOrUpdateSchoolRankingEntry(data: any) {

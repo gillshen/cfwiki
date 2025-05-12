@@ -1,13 +1,7 @@
 import { z } from 'zod';
-import { get, post, patch, buildQuery, destroy } from '$lib/api/core';
+import { get, post, patch, destroy, makeUrl } from '$lib/api/core';
 import type { ApplicationSchema } from '$lib/schemas/application';
-
-import type {
-	ApplicationLog,
-	ApplicationLogBrief,
-	ApplicationStatus
-} from '$lib/api/applicationLog';
-
+import type { ApplicationLog, ApplicationStatus } from '$lib/api/applicationLog';
 import type { AcademicFields } from '$lib/api/student';
 
 // valid types for filtering
@@ -34,7 +28,8 @@ type ApplicationWithLogs = {
 	round: number;
 	staff: string[]; // array of usernames
 	majors: string[];
-	logs: { status: ApplicationStatus; date: string }[];
+	history: ApplicationStatus[];
+	last_updated: string | null;
 };
 
 type ApplicationTarget = {
@@ -80,7 +75,8 @@ export type ComposedApplication = {
 	round_name: string;
 	due_date: string | null;
 	majors: string[];
-	logs: ApplicationLogBrief[];
+	history: ApplicationStatus[];
+	last_updated: string | null;
 };
 
 export type ApplicationDetail = {
@@ -104,6 +100,7 @@ export type ApplicationDetail = {
 	major_3: string;
 	comments: string;
 	logs: ApplicationLog[];
+	history: ApplicationStatus[];
 };
 
 async function fetchApplicationsWithLogs(params?: {
@@ -118,7 +115,7 @@ async function fetchApplicationsWithLogs(params?: {
 	application_type?: string | null;
 	status?: string | null;
 }): Promise<ApplicationWithLogs[]> {
-	return await get(`applications-logged/${buildQuery(params)}`);
+	return await get(makeUrl('applications-logged', params));
 }
 
 async function fetchApplicationTargets(params?: {
@@ -128,14 +125,14 @@ async function fetchApplicationTargets(params?: {
 	programs?: string | null;
 	program_iteration?: number | string | null;
 }): Promise<ApplicationTarget[]> {
-	return await get(`application-targets/${buildQuery(params)}`);
+	return await get(makeUrl('application-targets', params));
 }
 
 async function fetchApplicationContracts(params?: {
 	student?: number | string | null;
 	cfer?: string | null;
 }): Promise<ApplicationContract[]> {
-	return await get(`application-contracts/${buildQuery(params)}`);
+	return await get(makeUrl('application-contracts', params));
 }
 
 export async function fetchComposedApplications(params?: {

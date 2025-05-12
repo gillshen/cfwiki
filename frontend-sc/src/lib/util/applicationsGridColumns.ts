@@ -10,6 +10,7 @@ import ApplicationStatusSign from '$lib/components/misc/ApplicationStatusSign.sv
 import { lexicalChineseLast, padChineseRuns, toTitleCase } from '$lib/util/stringUtils';
 import { formatEnrollments } from '$lib/util/enrollmentUtils';
 import { getSchoolRankingEntry } from '$lib/util/schoolUtils';
+import { formatHistory } from '$lib/util/applicationUtils';
 import { makeDate, toShortDate } from '$lib/util/dateUtils';
 
 import {
@@ -26,12 +27,6 @@ import {
 	formatIbSummary,
 	formatLocation
 } from '$lib/util/studentUtils';
-
-import {
-	formatNotableStatuses,
-	getLatestLog,
-	getNotableStatuses
-} from '$lib/util/applicationUtils';
 
 import {
 	SEPARATOR,
@@ -336,15 +331,14 @@ export const getColumnDefs = (params: PageParams) => {
 		},
 		{
 			headerName: 'Status',
-			valueGetter: (params: ValueGetterParams) =>
-				formatNotableStatuses(getNotableStatuses(params.data)),
+			valueGetter: (params: ValueGetterParams) => formatHistory(params.data.history),
 			cellRenderer: ApplicationStatusRenderer,
 			minWidth: 120,
 			flex: 1.5
 		},
 		{
-			headerName: 'Status Date',
-			valueGetter: (params: ValueGetterParams) => makeDate(getLatestLog(params.data)?.date),
+			headerName: 'Last Updated',
+			valueGetter: (params: ValueGetterParams) => makeDate(params.data.last_updated),
 			valueFormatter: (params: ValueFormatterParams) => toShortDate(params.value),
 			filter: 'agDateColumnFilter',
 			hide: true

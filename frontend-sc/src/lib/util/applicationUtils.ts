@@ -4,7 +4,6 @@ import type { ProgramType } from '$lib/api/program';
 import {
 	applicationStatusOrdering,
 	type ApplicationStatus,
-	type ApplicationLogBrief,
 	type ApplicationStatusCategory
 } from '$lib/api/applicationLog';
 
@@ -86,35 +85,7 @@ export function formatApplicationStatusCategory(
 	return toTitleCase(category);
 }
 
-export function getLatestLog(application: ComposedApplication): ApplicationLogBrief | null {
-	if (!application.logs.length) {
-		return null;
-	}
-	const logsOrderedByDateDesc = application.logs.sort((a, b) => b.date.localeCompare(a.date));
-	return logsOrderedByDateDesc[0];
-}
-
-function isIgnorable(status: ApplicationStatus) {
-	return status === 'Started' || status === 'Submitted' || status === 'Under Review';
-}
-
-export function getNotableStatuses(application: {
-	logs: ApplicationLogBrief[];
-}): ApplicationStatus[] {
-	const statuses = application.logs
-		.sort((a, b) => a.date.localeCompare(b.date))
-		.map((log) => log.status);
-
-	const notableStatuses = statuses.filter((status) => !isIgnorable(status));
-
-	if (notableStatuses.length) {
-		return notableStatuses;
-	} else {
-		return statuses.slice(statuses.length - 1);
-	}
-}
-
-export function formatNotableStatuses(statuses: ApplicationStatus[]): string {
+export function formatHistory(statuses: ApplicationStatus[]): string {
 	return (
 		statuses
 			.map((status, index) => {
@@ -145,17 +116,16 @@ export function orderByRoundName(a: ComposedApplication, b: ComposedApplication)
 	return compareRoundName(a.round_name, b.round_name);
 }
 
-export function orderByStatus(a: ComposedApplication, b: ComposedApplication) {
-	const aStatusOrder: number =
-		applicationStatusOrdering[getLatestLog(a)?.status as ApplicationStatus] ?? -1;
-	const bStatusOrder: number =
-		applicationStatusOrdering[getLatestLog(b)?.status as ApplicationStatus] ?? -1;
-	return aStatusOrder - bStatusOrder;
-}
+const getStatusOrdering = ({ history }: { history: ApplicationStatus[] }): number => {
+	const lastStatus = history[history.length - 1];
+	return applicationStatusOrdering[lastStatus] ?? -1;
+};
 
-export function orderByStatusDateDesc(a: ComposedApplication, b: ComposedApplication) {
-	return (getLatestLog(b)?.date ?? '').localeCompare(getLatestLog(a)?.date ?? '');
-}
+export const orderByStatus = (a: ComposedApplication, b: ComposedApplication) =>
+	getStatusOrdering(a) - getStatusOrdering(b);
+
+export const orderByLastUpdatedDesc = (a: ComposedApplication, b: ComposedApplication) =>
+	(b.last_updated ?? '').localeCompare(a.last_updated ?? '');
 
 export function orderByType(a: ComposedApplication, b: ComposedApplication) {
 	return _typeOrdering[a.program.type] - _typeOrdering[b.program.type];
@@ -205,7 +175,7 @@ export function foldStatus(
 }
 
 function toDataPoint(application: ComposedApplication): ApplicationDataPoint {
-	const latestStatus = getLatestLog(application)?.status;
+	const latestStatus = application.history[application.history.length - 1];
 
 	return {
 		gender: application.student.gender,

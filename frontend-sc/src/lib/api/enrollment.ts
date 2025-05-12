@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { get, buildQuery, post, patch, destroy } from '$lib/api/core';
+import { get, post, patch, destroy, makeUrl } from '$lib/api/core';
 import type { EnrollmentUpdateSchema, NewEnrollmentSchema } from '$lib/schemas/enrollment';
 import type { Grade } from '$lib/api/grade';
 import type { ContractStatus } from '$lib/api/contract';
@@ -49,8 +49,7 @@ export async function fetchEnrollments(params?: {
 	school?: number;
 	program_type?: string;
 }): Promise<EnrollmentListItem[]> {
-	const queryString = buildQuery(params);
-	return await get(`enrollments/${queryString}`);
+	return await get(makeUrl('enrollments', params));
 }
 
 export async function fetchEnrollment(id: number): Promise<EnrollmentDetail> {

@@ -1,4 +1,4 @@
-import { get, post, patch, destroy, buildQuery } from '$lib/api/core';
+import { get, post, patch, destroy, makeUrl } from '$lib/api/core';
 
 export type ApplicationRoundListItem = {
 	id: number;
@@ -21,7 +21,7 @@ export type ApplicationRoundDetail = ApplicationRoundListItem;
 export async function fetchApplicationRounds(
 	params?: Record<string, any>
 ): Promise<ApplicationRoundListItem[]> {
-	return await get(`application-rounds/${buildQuery(params)}`);
+	return await get(makeUrl('application-rounds', params));
 }
 
 export async function fetchApplicationRound(id: number): Promise<ApplicationRoundDetail> {

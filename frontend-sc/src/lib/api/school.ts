@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { get, patch, post, destroy, buildQuery } from '$lib/api/core';
+import { get, patch, post, destroy, makeUrl } from '$lib/api/core';
 import type { SchoolSchema } from '$lib/schemas/school';
 import type { ApplicationStats } from '$lib/api/stats';
 import type { RecognizedRanking } from '$lib/api/ranking';
@@ -47,14 +47,14 @@ export type ComposedSchoolListItem = School & {
 export async function fetchSchools(params?: {
 	type: 'university' | 'secondary-school' | 'other';
 }): Promise<School[]> {
-	return await get(`schools/${buildQuery(params)}`);
+	return await get(makeUrl('schools', params));
 }
 
 export async function fetchApplicationStats(params?: {
 	school_id?: number;
 	school_type?: 'university' | 'secondary-school' | 'other';
 }): Promise<SchoolStats[]> {
-	return await get(`applications/stats/schools/${buildQuery(params)}`);
+	return await get(makeUrl('applications/stats/schools', params));
 }
 
 export async function fetchSchool(id: number): Promise<School> {

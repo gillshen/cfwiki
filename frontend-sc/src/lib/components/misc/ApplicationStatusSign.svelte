@@ -8,10 +8,10 @@
 	import Clock from 'lucide-svelte/icons/clock';
 	import Ban from 'lucide-svelte/icons/ban';
 
-	import type { ApplicationLogBrief, ApplicationStatus } from '$lib/api/applicationLog';
-	import { formatNotableStatuses, getNotableStatuses } from '$lib/util/applicationUtils';
+	import type { ApplicationStatus } from '$lib/api/applicationLog';
+	import { formatHistory } from '$lib/util/applicationUtils';
 
-	export let application: { logs: ApplicationLogBrief[] };
+	export let application: { history: ApplicationStatus[] };
 	export let iconOnly: boolean = false;
 	export let iconClass: string = '';
 	export let textClass: string = '';
@@ -44,9 +44,8 @@
 		Untracked: neutralIcon
 	};
 
-	const statuses = getNotableStatuses(application);
-	const formattedStatuses = formatNotableStatuses(statuses);
-	const latestStatus = statuses[statuses.length - 1];
+	const formattedStatuses = formatHistory(application.history);
+	const latestStatus = application.history[application.history.length - 1];
 </script>
 
 {#if latestStatus}

@@ -44,13 +44,10 @@ export const applicationStatusOrdering: Record<ApplicationStatus, number> = {
 	Untracked: 50
 };
 
-export type ApplicationLogBrief = {
+export type ApplicationLog = {
+	id: number;
 	status: ApplicationStatus;
 	date: string;
-};
-
-export type ApplicationLog = ApplicationLogBrief & {
-	id: number;
 	comments: string;
 	updated: string;
 };

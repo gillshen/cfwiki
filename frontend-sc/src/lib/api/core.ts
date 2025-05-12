@@ -2,8 +2,9 @@ import { error } from '@sveltejs/kit';
 
 const BASE = 'http://127.0.0.1:8000/api/';
 
-export async function get(url: string, notFoundMessage?: string) {
-	const response = await fetch(`${BASE}${url}`);
+export async function get(url: string | URL, notFoundMessage?: string) {
+	const response = await fetch(typeof url === 'string' ? `${BASE}${url}` : url);
+
 	if (response.ok) {
 		return await response.json();
 	}
@@ -45,15 +46,16 @@ export async function destroy(url: string) {
 	return await fetch(`${BASE}${url}`, { method: 'DELETE' });
 }
 
-export function buildQuery(params?: Record<string, unknown>): string {
-	if (!params) {
-		return '';
+export const makeUrl = (path: string, searchParams?: Record<string, unknown>): URL => {
+	const url = new URL(`${BASE}${path}`);
+
+	if (searchParams) {
+		const searchEntries = Object.entries(searchParams)
+			.filter(([, value]) => value !== undefined && value !== null)
+			.map(([key, value]) => [key, String(value)]);
+
+		url.search = new URLSearchParams(searchEntries).toString();
 	}
 
-	const queryString = Object.entries(params)
-		.filter(([, value]) => value !== undefined && value !== null)
-		.map(([key, value]) => `${key}=${value}`)
-		.join('&');
-
-	return `?${queryString}`;
-}
+	return url;
+};
