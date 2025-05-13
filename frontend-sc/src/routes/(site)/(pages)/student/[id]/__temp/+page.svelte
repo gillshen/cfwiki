@@ -6,6 +6,8 @@
 	import DeleteForm from '$lib/components/forms/DeleteForm.svelte';
 	import ProgramForm from '$lib/components/forms/program-form/ProgramForm.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import DismissibleBadge from '$lib/components/misc/DismissibleBadge.svelte';
 
 	export let data;
 </script>
@@ -29,6 +31,16 @@
 	<Tabs.Content value="temp">
 		<h2 class="text-2xl font-bold mt-4 mb-8">Create Program</h2>
 		<div class="w-fit">
+			<div>
+				<Button
+					variant="outline"
+					class="hover:bg-white px-2 flex flex-wrap justify-start gap-2 w-[420px] h-fit"
+				>
+					<DismissibleBadge class="h-7 rounded-sm">Princeton University</DismissibleBadge>
+					<DismissibleBadge class="h-7 rounded-sm">Yale University</DismissibleBadge>
+					<DismissibleBadge class="h-7 rounded-sm">Duke University</DismissibleBadge>
+				</Button>
+			</div>
 			{#await data.schools}
 				<LoadingSign />
 			{:then schools}

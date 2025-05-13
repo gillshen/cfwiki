@@ -43,10 +43,15 @@
 	const { enhance: schoolFormEnhance } = schoolForm;
 
 	const programForm = superForm(data.newProgramForm, {
+		resetForm: false, // avoid resetting the school and program type fields
 		onUpdated: async ({ form }) => {
 			if (form.valid) {
-				const programs = await data.programs;
+				// manually reset the degree and name fields
+				$programFormData.degree = '';
+				$programFormData.name = '';
+
 				// set program selection
+				const programs = await data.programs;
 				// the newly created program should have the largest id
 				const newProgramId = Math.max(...programs.map((p) => p.id));
 				console.log(newProgramId);
@@ -66,6 +71,7 @@
 	}
 
 	const roundForm = superForm(data.newRoundForm, {
+		resetForm: false,
 		onUpdated({ form }) {
 			// TODO set application round
 		}

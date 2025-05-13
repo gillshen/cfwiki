@@ -33,6 +33,15 @@
 		$formData.schools = $formData.schools.filter((id) => id !== schoolIdToRemove);
 	};
 
+	const handleProgramTypeSelection = () => {
+		if ($formData.type !== "Master's" && $formData.type !== 'Doctorate') {
+			$formData.degree = '';
+		}
+		if ($formData.type.startsWith('UG')) {
+			$formData.name = '';
+		}
+	};
+
 	let selectedSchoolName = '';
 </script>
 
@@ -68,7 +77,14 @@
 	{/if}
 </div>
 
-<Combobox {form} name="type" label="Program type" items={[...PROGRAM_TYPES]} width="w-[240px]" />
+<Combobox
+	{form}
+	name="type"
+	label="Program type"
+	items={[...PROGRAM_TYPES]}
+	width="w-[240px]"
+	postSelect={handleProgramTypeSelection}
+/>
 
 <!-- Prefer disabled input to hidden one to minimize height change in dialogs -->
 
