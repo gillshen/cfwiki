@@ -11,6 +11,7 @@
 	import Check from 'lucide-svelte/icons/check';
 
 	import { normalizeSelectItems, type SelectOption } from '$lib/util/formUtils';
+	import DismissibleBadge from '$lib/components/misc/DismissibleBadge.svelte';
 
 	type AnySchema = Record<string, unknown>;
 	type T = $$Generic<AnySchema>;
@@ -30,10 +31,12 @@
 	export let searchDisabledEmptyText: string | undefined = undefined;
 	export let onSelect: () => void = () => {};
 	export let postSelect: () => void = () => {};
+	export let transformValue: (value: any) => any = (value: any) => value;
 	export let className: string = '';
 	export { className as class };
 
 	const { form: formData } = form;
+	const id = `multi-select-${Math.random().toString()}`;
 
 	$: normalizedItems = items.map(normalizeSelectItems);
 
@@ -49,13 +52,32 @@
 		});
 	}
 
-	const setFormData = (value: any) => ($formData[name] = value);
+	const addValue = (value: any) => {
+		const transformed = transformValue(value);
+		if (transformed !== undefined && !fieldData.includes(transformed)) {
+			$formData[name] = [...fieldData, transformed] as T[FormPath<T>];
+			selectedValues = [...selectedValues, value];
+		}
+	};
+
+	const removeValue = (value: any) => {
+		const transformed = transformValue(value);
+		$formData[name] = fieldData.filter((it) => it !== transformed) as T[FormPath<T>];
+		selectedValues = selectedValues.filter((it) => it !== value);
+	};
+
+	// Keep track of selected items
+	let selectedValues: string[] = [];
+
+	// Type coercion to stop TS from complaining
+	$: fieldData = $formData[name] as unknown[];
 </script>
 
 <Form.Field {form} {name} class={cn('flex flex-col text-left', className)}>
 	<Popover.Root bind:open let:ids>
 		<Form.Control let:attrs>
 			<Form.Label
+				for={id}
 				class={cn('h-4 flex items-center gap-1', optional ? 'optional-field' : '', labelClass)}
 				>{label}</Form.Label
 			>
@@ -63,19 +85,34 @@
 				role="combobox"
 				class={cn(
 					buttonVariants({ variant: 'outline' }),
-					'justify-between font-normal',
+					'justify-between font-normal h-fit group',
 					width,
-					!$formData[name] && 'text-muted-foreground'
+					fieldData.length ? 'px-2' : 'text-muted-foreground'
 				)}
 				{...attrs}
 			>
-				<span class="truncate"
-					>{normalizedItems.find((item) => item.value === $formData[name])?.label ||
-						'Select an option'}</span
-				>
+				{#if fieldData.length}
+					<div class="flex flex-wrap justify-start gap-2 h-fit">
+						{#each fieldData as transformedValue}
+							{@const item = normalizedItems.find(
+								(it) => transformValue(it.value) === transformedValue
+							)}
+							<DismissibleBadge
+								class="h-7 rounded-sm group-hover:ring-1 ring-muted-foreground"
+								onDismiss={() => removeValue(item?.value)}>{item?.label}</DismissibleBadge
+							>
+						{/each}
+					</div>
+				{:else}
+					<span class="truncate"> Select one or more options</span>
+				{/if}
 				<ChevronDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
 			</Popover.Trigger>
-			<input hidden value={$formData[name]} name={attrs.name} />
+			<select {id} {name} multiple hidden bind:value={$formData[name]}>
+				{#each normalizedItems as { label, value }}
+					<option value={transformValue(value)}>{label}</option>
+				{/each}
+			</select>
 		</Form.Control>
 		<Popover.Content class={cn('p-0', inputClass, width)}>
 			<Command.Root>
@@ -100,17 +137,14 @@
 								// Order of operation critical:
 								closeAndFocusTrigger(ids.trigger);
 								onSelect();
-								// Update form data (calling a function as TS would complain
-								// about writing "$formData[name] = item.value" here directly
-								// updateStore(form.form, name, item.value);
-								setFormData(item.value);
+								addValue(item.value);
 								postSelect();
 							}}
 						>
 							<Check
 								class={cn(
 									'size-4 shrink-0',
-									item.value === $formData[name] ? 'opacity-100' : 'opacity-0'
+									fieldData.includes(transformValue(item.value)) ? 'opacity-100' : 'opacity-0'
 								)}
 							/>
 							<div>{item.label}</div>

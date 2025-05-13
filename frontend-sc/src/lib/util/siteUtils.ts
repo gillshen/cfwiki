@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import type { Writable } from 'svelte/store';
+// import type { Writable } from 'svelte/store';
 
 export const scrollToHash = () => {
 	const hash = window.location.hash;
@@ -20,14 +20,3 @@ export const base10Or400 = (input: string | null | undefined, errorMessage: stri
 };
 
 export const createTitle = (title: string) => `CF | ${title}`;
-
-export const updateStore = <T extends Record<string, any>>(
-	store: Writable<T>,
-	key: keyof T & string,
-	value: any
-) => {
-	store.update((data) => {
-		data[key] = value;
-		return data;
-	});
-};

@@ -5,33 +5,15 @@
 	import type { Infer, SuperForm } from 'sveltekit-superforms';
 	import type { NewProgramSchema } from '$lib/schemas/program';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
-	import NcCombobox from '$lib/components/interactive/Combobox.svelte';
+	import MultipleSelect from '$lib/components/forms/MultipleSelect.svelte';
 	import Input from '$lib/components/forms/Input.svelte';
-	import DismissibleBadge from '$lib/components/misc/DismissibleBadge.svelte';
 	import { PROGRAM_TYPES } from '$lib/api/program';
 	import { lexicalChineseLast } from '$lib/util/stringUtils';
 
 	export let schools: School[];
 	export let form: SuperForm<Infer<NewProgramSchema>>;
 
-	const schoolSelectId = `new-program-form-school-select`;
-
 	const { form: formData } = form;
-
-	const handleSchoolSelection = () => {
-		const selectedSchoolId = schools.find((s) => s.name === selectedSchoolName)?.id;
-
-		// Clear the combobox to help the user focus on the badge
-		selectedSchoolName = '';
-
-		if (selectedSchoolId && !$formData.schools.includes(selectedSchoolId)) {
-			$formData.schools = [...$formData.schools, selectedSchoolId];
-		}
-	};
-
-	const handleSchoolRemoval = (schoolIdToRemove: number) => {
-		$formData.schools = $formData.schools.filter((id) => id !== schoolIdToRemove);
-	};
 
 	const handleProgramTypeSelection = () => {
 		if ($formData.type !== "Master's" && $formData.type !== 'Doctorate') {
@@ -41,41 +23,16 @@
 			$formData.name = '';
 		}
 	};
-
-	let selectedSchoolName = '';
 </script>
 
-<div class="flex flex-col gap-2 justify-start">
-	<Form.Field {form} name="schools">
-		<Form.Control>
-			<div class="flex flex-col gap-2.5 justify-start">
-				<Form.Label for={schoolSelectId}>Host institution</Form.Label>
-				<NcCombobox
-					bind:value={selectedSchoolName}
-					items={schools.map((school) => school.name).sort(lexicalChineseLast)}
-					onSelect={handleSchoolSelection}
-					width="w-[420px]"
-				/>
-			</div>
-			<select id={schoolSelectId} name="schools" multiple bind:value={$formData.schools} hidden>
-				{#each schools as { id }}
-					<option value={id}>{id}</option>
-				{/each}
-			</select>
-			<Form.FieldErrors />
-		</Form.Control>
-	</Form.Field>
-	{#if $formData.schools.length}
-		<ul class="flex flex-col gap-2 mb-2">
-			{#each $formData.schools as schoolId}
-				{@const schoolName = schools.find((s) => s.id === schoolId)?.name}
-				<DismissibleBadge onDismiss={() => handleSchoolRemoval(schoolId)} class="w-fit h-7"
-					>{schoolName}</DismissibleBadge
-				>
-			{/each}
-		</ul>
-	{/if}
-</div>
+<MultipleSelect
+	{form}
+	name="schools"
+	label="Host institution"
+	width="w-[420px]"
+	items={schools.map((s) => s.name).sort(lexicalChineseLast)}
+	transformValue={(name) => schools.find((s) => s.name === name)?.id}
+/>
 
 <Combobox
 	{form}

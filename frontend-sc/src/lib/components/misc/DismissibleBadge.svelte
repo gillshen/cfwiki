@@ -13,7 +13,9 @@
 
 <Badge {variant} class={cn('flex items-center gap-1 shrink-0 h-5', className)}>
 	<slot />
-	<button {type} class="bg-transparent p-0 m-0 border-none" on:click={onDismiss}
-		><X class="size-3" /></button
+	<button
+		{type}
+		class="bg-transparent p-0 m-0 border-none"
+		on:click|stopPropagation|preventDefault={onDismiss}><X class="size-3" /></button
 	>
 </Badge>

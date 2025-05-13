@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
-	import type { Selected } from 'bits-ui';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Form from '$lib/components/ui/form/index';
-	import * as Select from '$lib/components/ui/select/index';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 
@@ -11,6 +9,7 @@
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import StudentApplicationCard from '$lib/components/widgets/StudentApplicationCard.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
+	import MultipleSelect from '$lib/components/forms/MultipleSelect.svelte';
 	import NcCombobox from '$lib/components/interactive/Combobox.svelte'; // non-form-controlled
 	import Input from '$lib/components/forms/Input.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
@@ -18,7 +17,7 @@
 	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
 	import ProgramFormFields from '$lib/components/forms/program-form/ProgramFormFields.svelte';
 
-	import type { Service } from '$lib/api/contract';
+	import type { School } from '$lib/api/school';
 	import { orderByName } from '$lib/util/schoolUtils';
 	import { enhanceDisplayName, orderByName as orderByProgramName } from '$lib/util/programUtils';
 	import { formatRound, orderByDueDate, orderByRoundName } from '$lib/util/applicationRoundUtils';
@@ -30,7 +29,7 @@
 	const form = superForm(data.newApplicationForm);
 	const { form: formData, enhance } = form;
 
-	// These forms must be declared here to be properly reactive
+	// Declare all forms here or it would be a pain to ensure reactivity
 
 	const schoolForm = superForm(data.newSchoolForm, {
 		onUpdated({ form }) {
@@ -78,18 +77,27 @@
 	});
 	const { enhance: roundFormEnhance } = roundForm;
 
-	const servicesGrouped = Object.groupBy(data.contract.services, (s) => s.cf_username) as Record<
-		string,
-		Service[]
-	>;
+	const staffNameOptions = [...new Set(data.contract.services.map((s) => s.cf_username))].sort();
 
-	const servicesGroupedEntries = Object.entries(servicesGrouped).sort();
+	// initialize the `staff` field:
+	if (!$formData.staff_names.length) {
+		const likelyServing = data.contract.services.filter((s) => !endedEarly(s));
+		$formData.staff_names = [...new Set(likelyServing.map((s) => s.cf_username).sort())];
+	}
 
-	const selectedStaff: Selected<string>[] = $formData.staff_names.length
-		? $formData.staff_names.map((s) => ({ value: s, label: s }))
-		: servicesGroupedEntries
-				.filter(([, services]) => services.map((s) => !endedEarly(s)).some(Boolean))
-				.map(([cfUsername]) => ({ value: cfUsername, label: cfUsername }));
+	const onSchoolSelection = (schools: School[]) => {
+		// TODO the current behavior is tha even if the user doesn't actually change
+		// their school choice,  the program and round fields will still be cleared,
+		// which is not ideal; should clear the other fields only on real changes
+		selectedProgram = '';
+		$formData.round = 0;
+
+		// set the default school in the program form
+		const selectedSchoolId = schools.find((s) => s.name === selectedSchool)?.id;
+		if (selectedSchoolId) {
+			$programFormData.schools = [selectedSchoolId];
+		}
+	};
 
 	let selectedSchool = '';
 	let selectedProgram = '';
@@ -105,13 +113,6 @@
 		if (!$formData.major_2) {
 			$formData.major_3 = '';
 		}
-	}
-
-	// Runs on initial load AND whenever the page URL changes
-	$: {
-		// console.log('Page URL changed:', $page.url);
-		// console.table(data.contract);
-		$formData.staff_names = selectedStaff.map((item) => item.value);
 	}
 </script>
 
@@ -155,15 +156,7 @@
 						bind:value={selectedSchool}
 						width="w-[420px]"
 						items={schools.sort(orderByName).map((school) => school.name)}
-						onSelect={() => {
-							selectedProgram = '';
-							$formData.round = 0;
-							// set the default school in the program form
-							const selectedSchoolId = schools.find((s) => s.name === selectedSchool)?.id;
-							if (selectedSchoolId && !$programFormData.schools.includes(selectedSchoolId)) {
-								$programFormData.schools = [...$programFormData.schools, selectedSchoolId];
-							}
-						}}
+						onSelect={() => onSchoolSelection(schools)}
 					>
 						<div slot="if-not-found">
 							<ButtonDialog
@@ -200,6 +193,7 @@
 							.map((p) => ({ label: enhanceDisplayName(p), value: p.id.toString() }))}
 						onSelect={() => {
 							$formData.round = 0;
+							// TODO
 						}}
 						emptyText={selectedSchool ? undefined : 'You need to select a school first'}
 					>
@@ -303,35 +297,13 @@
 				{/if}
 			{/if}
 
-			<Form.Field {form} name="staff_names" class="w-[420px]">
-				<Form.Control let:attrs>
-					<Form.Label>CF Involvement</Form.Label>
-					<Select.Root
-						multiple
-						selected={selectedStaff}
-						onSelectedChange={(v) =>
-							v && ($formData.staff_names = v.map((item) => item.value).sort())}
-					>
-						<Select.Trigger {...attrs}>
-							<Select.Value placeholder="Select at least one option" />
-						</Select.Trigger>
-						<Select.Content>
-							{#each servicesGroupedEntries as [cfUsername]}
-								<Select.Item value={cfUsername} label={cfUsername} />
-							{/each}
-						</Select.Content>
-					</Select.Root>
-					<select name="staff_names" multiple bind:value={$formData.staff_names} hidden>
-						{#each servicesGroupedEntries as [cfUsername]}
-							<option value={cfUsername}>{cfUsername}</option>
-						{/each}
-					</select>
-				</Form.Control>
-				<Form.Description
-					>Select all and only those involved in this particular application</Form.Description
-				>
-				<Form.FieldErrors />
-			</Form.Field>
+			<MultipleSelect
+				{form}
+				name="staff_names"
+				label="CF Involvement"
+				items={staffNameOptions}
+				description="Select all and only those involved in this application"
+			/>
 
 			<Textarea
 				{form}
@@ -346,6 +318,7 @@
 			<input name="contract" type="number" value={data.contract.id} class="hidden" />
 
 			<Form.Button class="w-fit min-w-24">Submit</Form.Button>
+			<!-- <SuperDebug data={$formData} /> -->
 		</form>
 	</section>
 
