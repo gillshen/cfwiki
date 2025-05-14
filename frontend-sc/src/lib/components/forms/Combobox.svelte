@@ -30,6 +30,7 @@
 	export let searchDisabledEmptyText: string | undefined = undefined;
 	export let onSelect: () => void = () => {};
 	export let postSelect: () => void = () => {};
+	export let transformValue: (value: any) => any = (value: any) => value;
 	export let className: string = '';
 	export { className as class };
 
@@ -49,7 +50,7 @@
 		});
 	}
 
-	const setFormData = (value: any) => ($formData[name] = value);
+	const setFormData = (value: any) => ($formData[name] = transformValue(value));
 </script>
 
 <Form.Field {form} {name} class={cn('flex flex-col text-left', className)}>
@@ -70,7 +71,7 @@
 				{...attrs}
 			>
 				<span class="truncate"
-					>{normalizedItems.find((item) => item.value === $formData[name])?.label ||
+					>{normalizedItems.find((item) => transformValue(item.value) === $formData[name])?.label ||
 						'Select an option'}</span
 				>
 				<ChevronDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -101,8 +102,7 @@
 								closeAndFocusTrigger(ids.trigger);
 								onSelect();
 								// Update form data (calling a function as TS would complain
-								// about writing "$formData[name] = item.value" here directly
-								// updateStore(form.form, name, item.value);
+								// about a direct assignment to $formData[name] here
 								setFormData(item.value);
 								postSelect();
 							}}
@@ -110,7 +110,7 @@
 							<Check
 								class={cn(
 									'size-4 shrink-0',
-									item.value === $formData[name] ? 'opacity-100' : 'opacity-0'
+									transformValue(item.value) === $formData[name] ? 'opacity-100' : 'opacity-0'
 								)}
 							/>
 							<div>{item.label}</div>
