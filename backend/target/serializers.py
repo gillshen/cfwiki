@@ -158,20 +158,20 @@ class ApplicationRoundCreateSerializer(serializers.ModelSerializer):
     term = serializers.CharField(write_only=True)
 
     def create(self, validated_data):
-        program = Program.objects.get(id=validated_data["program"])
+        program_id = validated_data.pop("program")
+        program = Program.objects.get(id=program_id)
+
+        year = validated_data.pop("year")
+        term = validated_data.pop("term")
         program_iteration, _ = ProgramIteration.objects.get_or_create(
             program=program,
-            year=validated_data["year"],
-            term=validated_data["term"],
+            year=year,
+            term=term,
         )
         try:
             application_round = ApplicationRound.objects.create(
                 program_iteration=program_iteration,
-                name=validated_data["name"],
-                due_date=validated_data["due_date"],
-                due_time=validated_data["due_time"],
-                timezone=validated_data["timezone"],
-                decision_date=validated_data["decision_date"],
+                **validated_data,
             )
         except IntegrityError:
             raise ValidationError({"detail": "Application round already exists"})
@@ -182,7 +182,13 @@ class ApplicationRoundCreateSerializer(serializers.ModelSerializer):
 class ApplicationRoundRUDSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationRound
-        fields = "__all__"
+        fields = [
+            "name",
+            "due_date",
+            "due_time",
+            "timezone",
+            "decision_date",
+        ]
 
 
 class SchoolRankingSerializer(serializers.ModelSerializer):

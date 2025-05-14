@@ -1,4 +1,10 @@
+import { z } from 'zod';
 import { get, post, patch, destroy, makeUrl } from '$lib/api/core';
+
+import type {
+	ApplicationRoundUpdateSchema,
+	NewApplicationRoundSchema
+} from '$lib/schemas/applicationRound';
 
 export type ApplicationRoundListItem = {
 	id: number;
@@ -18,9 +24,15 @@ export type ApplicationRoundListItem = {
 
 export type ApplicationRoundDetail = ApplicationRoundListItem;
 
-export async function fetchApplicationRounds(
-	params?: Record<string, any>
-): Promise<ApplicationRoundListItem[]> {
+export async function fetchApplicationRounds(params?: {
+	school?: number;
+	program_type?: 'undergraduate' | 'freshman' | 'transfer' | 'graduate' | 'nondegree' | 'other';
+	program?: number;
+	programs?: string; // comma separated list of program ids
+	program_iteration?: number;
+	year?: number;
+	term?: string;
+}): Promise<ApplicationRoundListItem[]> {
 	return await get(makeUrl('application-rounds', params));
 }
 
@@ -28,14 +40,14 @@ export async function fetchApplicationRound(id: number): Promise<ApplicationRoun
 	return await get(`application-rounds/${id}/`);
 }
 
-export async function createApplicationRound(data: any) {
+export async function createApplicationRound(data: z.infer<NewApplicationRoundSchema>) {
 	return await post('application-rounds/new/', data);
 }
 
-export async function updateApplicationRound(data: any) {
+export async function updateApplicationRound(data: z.infer<ApplicationRoundUpdateSchema>) {
 	return await patch(`application-rounds/${data.id}/update/`, data);
 }
 
-export async function deleteApplicationRound(data: any) {
+export async function deleteApplicationRound(data: { id: number }) {
 	return await destroy(`application-rounds/${data.id}/update/`);
 }

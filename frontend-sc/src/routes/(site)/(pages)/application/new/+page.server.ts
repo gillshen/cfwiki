@@ -12,7 +12,7 @@ import { createApplicationRound, fetchApplicationRounds } from '$lib/api/applica
 import { schoolSchema } from '$lib/schemas/school';
 import { applicationSchema, type NewApplicationPrepToken } from '$lib/schemas/application';
 import { programSchema } from '$lib/schemas/program';
-import { roundSchema } from '$lib/schemas/applicationRound';
+import { newApplicationRoundSchema } from '$lib/schemas/applicationRound';
 import { createApplication, fetchComposedApplications } from '$lib/api/application';
 import { formAction } from '$lib/util/formUtils';
 import { base10Or400 } from '$lib/util/siteUtils';
@@ -77,7 +77,7 @@ export async function load({ locals, url }) {
 
 		newSchoolForm: await superValidate(zod(schoolSchema)),
 		newProgramForm: await superValidate(zod(programSchema)),
-		newRoundForm: await superValidate(zod(roundSchema)),
+		newApplicationRoundForm: await superValidate(zod(newApplicationRoundSchema)),
 		newApplicationForm: await superValidate(zod(applicationSchema))
 	};
 }
@@ -102,7 +102,7 @@ export const actions = {
 
 	createProgram: formAction(programSchema, createProgram),
 
-	createApplicationRound: formAction(roundSchema, createApplicationRound),
+	createApplicationRound: formAction(newApplicationRoundSchema, createApplicationRound),
 
 	createApplication: async ({ request }) => {
 		const form = await superValidate(request, zod(applicationSchema));

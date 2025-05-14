@@ -1,0 +1,22 @@
+export const TIMEZONES: Record<string, string> = {
+	'New Zealand (+12:00/+13:00)': 'Pacific/Auckland',
+	'Sydney, Australia (+10:00/+11:00)': 'Australia/Sydney',
+	'Brisbane, Australia (+10:00)': 'Australia/Brisbane',
+	'Adelaide, Australia (+09:30/+10:30)': 'Australia/Adelaide',
+	'Tokyo, Japan (+09:00)': 'Asia/Tokyo',
+	'Hong Kong (+08:00)': 'Asia/Hong_Kong',
+	'Beijing, China (+08:00)': 'Asia/Shanghai',
+	'Singapore (+08:00)': 'Asia/Singapore',
+	'Perth, Australia (+08:00)': 'Australia/Perth',
+	'Berlin, Germany (+01:00/+02:00)': 'Europe/Berlin',
+	'Paris, France (+01:00/+02:00)': 'Europe/Paris',
+	'London, United Kingdom (+00:00/+01:00)': 'Europe/London',
+	'US Eastern Time (-05:00/-04:00)': 'America/New_York',
+	'Toronto, Canada (-05:00/-04:00)': 'America/Toronto',
+	'US Central Time (-06:00/-05:00)': 'America/Chicago',
+	'Winnipeg, Canada (-06:00/-05:00)': 'America/Winnipeg',
+	'US Mountain Time (-07:00/-06:00)': 'America/Denver',
+	'Edmonton, Canada (-07:00/-06:00)': 'America/Edmonton',
+	'US Pacific Time (-08:00/-07:00)': 'America/Los_Angeles',
+	'Vancouver, Canada (-08:00/-07:00)': 'America/Vancouver'
+};

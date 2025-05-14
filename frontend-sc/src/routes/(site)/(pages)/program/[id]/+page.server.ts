@@ -3,8 +3,20 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { deleteProgram, updateProgram } from '$lib/api/program';
-import { deleteApplicationRound, fetchApplicationRounds } from '$lib/api/applicationRound';
 import { programSchema } from '$lib/schemas/program';
+
+import {
+	applicationRoundUpdateSchema,
+	newApplicationRoundSchema
+} from '$lib/schemas/applicationRound';
+
+import {
+	createApplicationRound,
+	deleteApplicationRound,
+	fetchApplicationRounds,
+	updateApplicationRound
+} from '$lib/api/applicationRound';
+
 import { deleteSchema } from '$lib/schemas/delete';
 import { formAction } from '$lib/util/formUtils';
 
@@ -17,7 +29,9 @@ export async function load(event) {
 			zod(programSchema)
 		),
 		deleteForm: await superValidate(zod(deleteSchema)),
-		applicationRounds: fetchApplicationRounds({ program: program.id })
+		applicationRounds: fetchApplicationRounds({ program: program.id }),
+		newApplicationRoundForm: await superValidate(zod(newApplicationRoundSchema)),
+		applicationRoundUpdateForm: await superValidate(zod(applicationRoundUpdateSchema))
 	};
 }
 
@@ -30,5 +44,7 @@ export const actions = {
 		}
 	}),
 
+	createApplicationRound: formAction(newApplicationRoundSchema, createApplicationRound),
+	updateApplicationRound: formAction(applicationRoundUpdateSchema, updateApplicationRound),
 	deleteApplicationRound: formAction(deleteSchema, deleteApplicationRound)
 };

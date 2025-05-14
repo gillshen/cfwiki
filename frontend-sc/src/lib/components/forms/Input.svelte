@@ -13,7 +13,7 @@
 	export let description: string | boolean = false;
 	export let labelClass: string = '';
 	export let inputClass: string = '';
-	export let type: 'text' | 'number' | 'date' | 'password' = 'text';
+	export let type: 'text' | 'number' | 'date' | 'time' | 'password' = 'text';
 	export let placeholder: string = '';
 	export let optional: boolean = false;
 	export let disabled: boolean = false;

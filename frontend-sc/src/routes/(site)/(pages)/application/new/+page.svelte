@@ -69,7 +69,7 @@
 		$programFormData.type = data.programType;
 	}
 
-	const roundForm = superForm(data.newRoundForm, {
+	const roundForm = superForm(data.newApplicationRoundForm, {
 		resetForm: false,
 		onUpdated({ form }) {
 			// TODO set application round

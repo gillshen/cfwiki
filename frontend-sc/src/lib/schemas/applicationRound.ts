@@ -1,32 +1,27 @@
-import { z } from 'zod';
+import { z, ZodObject } from 'zod';
 
-export const roundSchema = z.object({
-	id: z.number().optional(),
-	program: z.number(),
-	year: z.number(),
-	term: z.string(),
-	name: z.string().trim().min(1).max(50),
+const commonApplicationRoundFields = {
+	name: z.string().trim().min(1, 'This field is required').max(50),
 	due_date: z.string().nullable().default(null),
 	due_time: z.string().nullable().default(null),
 	timezone: z.string(),
 	decision_date: z.string().nullable().default(null)
+};
+
+export type CommonApplicationRoundSchema = ZodObject<typeof commonApplicationRoundFields>;
+
+export const newApplicationRoundSchema = z.object({
+	program: z.number().min(1, 'This field is required'),
+	year: z.number().min(1, 'This field is required'),
+	term: z.string().min(1, 'This field is required'),
+	...commonApplicationRoundFields
 });
 
-export const RoundSchema = typeof roundSchema;
+export type NewApplicationRoundSchema = typeof newApplicationRoundSchema;
 
-export const roundNameSchema = z.object({
+export const applicationRoundUpdateSchema = z.object({
 	id: z.number(),
-	name: z.string().trim().min(1).max(50)
+	...commonApplicationRoundFields
 });
 
-export type RoundNameSchema = typeof roundNameSchema;
-
-export const roundDatesSchema = z.object({
-	id: z.number(),
-	due_date: z.string().nullable().default(null),
-	due_time: z.string().nullable().default(null),
-	timezone: z.string(),
-	decision_date: z.string().nullable().default(null)
-});
-
-export type RoundDatesSchema = typeof roundDatesSchema;
+export type ApplicationRoundUpdateSchema = typeof applicationRoundUpdateSchema;
