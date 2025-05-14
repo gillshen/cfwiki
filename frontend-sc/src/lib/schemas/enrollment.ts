@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z, ZodObject } from 'zod';
 
 const commonEnrollmentFields = {
 	start_date: z.string().min(1, 'This field is required'),
@@ -8,9 +8,7 @@ const commonEnrollmentFields = {
 	curriculum: z.string()
 };
 
-export const commonEnrollmentSchema = z.object(commonEnrollmentFields);
-
-export type CommonEnrollmentSchema = typeof commonEnrollmentSchema;
+export type CommonEnrollmentSchema = ZodObject<typeof commonEnrollmentFields>;
 
 export const newEnrollmentSchema = z.object({
 	student: z.number().min(1, 'This field is required'),

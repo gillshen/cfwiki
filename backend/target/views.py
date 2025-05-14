@@ -18,8 +18,7 @@ from target.serializers import (
     SchoolSerializer,
     SchoolCRUDSerializer,
     ProgramSerializer,
-    ProgramCreateSerializer,
-    ProgramRUDSerializer,
+    ProgramCRUDSerializer,
     ProgramCollectionSerializer,
     ProgramCollectionCRUDSerializer,
     ApplicationRoundSerializer,
@@ -81,12 +80,12 @@ class ProgramDetailView(RetrieveAPIView):
 
 class ProgramCreateView(CreateAPIView):
     queryset = Program.objects.all()
-    serializer_class = ProgramCreateSerializer
+    serializer_class = ProgramCRUDSerializer
 
 
 class ProgramRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Program.objects.all()
-    serializer_class = ProgramRUDSerializer
+    serializer_class = ProgramCRUDSerializer
 
 
 class ProgramCollectionListView(ListAPIView):

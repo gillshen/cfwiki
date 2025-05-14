@@ -61,7 +61,7 @@ class ProgramSerializer(serializers.ModelSerializer):
     display_name = serializers.CharField()
 
 
-class ProgramCreateSerializer(serializers.ModelSerializer):
+class ProgramCRUDSerializer(serializers.ModelSerializer):
 
     schools = serializers.ListField(
         child=serializers.CharField(),
@@ -71,7 +71,7 @@ class ProgramCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Program
-        fields = ["id", "type", "name", "degree", "schools"]
+        fields = "__all__"
 
     def create(self, validated_data):
         with transaction.atomic():
@@ -79,12 +79,6 @@ class ProgramCreateSerializer(serializers.ModelSerializer):
             program = Program.objects.create(**validated_data)
             program.schools.set(School.objects.filter(id__in=schools))
             return program
-
-
-class ProgramRUDSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Program
-        fields = "__all__"
 
 
 class ProgramCollectionSerializer(serializers.ModelSerializer):

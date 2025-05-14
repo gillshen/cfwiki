@@ -7,6 +7,7 @@
 	import Section from '$lib/components/containers/Section.svelte';
 	import { createTitle } from '$lib/util/siteUtils';
 	import { joinNames } from '$lib/util/schoolUtils';
+	import ProgramForm from '$lib/components/forms/program-form/ProgramForm.svelte';
 
 	export let data;
 
@@ -29,6 +30,13 @@
 </BreadcrumbContainer>
 
 <pre class="text-sm bg-gray-100 rounded-md p-4 mb-4">{JSON.stringify(data.program, null, 2)}</pre>
+
+<ProgramForm
+	data={data.programForm}
+	program={data.program}
+	action="?/updateProgram"
+	onUpdated={() => alert('success')}
+/>
 
 <Section id="applications" title="Applications">
 	{#await data.applications}

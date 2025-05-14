@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { get, patch, post, destroy, makeUrl } from '$lib/api/core';
 import type { ApplicationStats } from '$lib/api/stats';
-import type { NewProgramSchema, ProgramUpdateSchema } from '$lib/schemas/program';
+import type { ProgramSchema } from '$lib/schemas/program';
 
 export const PROGRAM_CATEGORIES = ['Undergraduate', "Master's", 'Doctorate', 'Non-degree'] as const;
 
@@ -17,7 +17,7 @@ export const PROGRAM_TYPES = [
 
 export type ProgramType = (typeof PROGRAM_TYPES)[number];
 
-export type Program = {
+type BaseProgram = {
 	id: number;
 	type: ProgramType;
 	name: string;
@@ -31,7 +31,7 @@ type School = {
 	alt_name: string;
 };
 
-export type ProgramListItem = Program & {
+export type ProgramListItem = BaseProgram & {
 	schools: School[];
 	display_name: string;
 };
@@ -64,11 +64,11 @@ export async function fetchProgram(id: number): Promise<ProgramDetail> {
 	return await get(`programs/${id}/`, 'Program not found');
 }
 
-export async function createProgram(data: z.infer<NewProgramSchema>) {
+export async function createProgram(data: z.infer<ProgramSchema>) {
 	return await post('programs/new/', data);
 }
 
-export async function updateProgram(data: z.infer<ProgramUpdateSchema>) {
+export async function updateProgram(data: z.infer<ProgramSchema>) {
 	return await patch(`programs/${data.id}/update/`, data);
 }
 

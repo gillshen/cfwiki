@@ -11,7 +11,7 @@ import { createProgram, fetchPrograms } from '$lib/api/program';
 import { createApplicationRound, fetchApplicationRounds } from '$lib/api/applicationRound';
 import { schoolSchema } from '$lib/schemas/school';
 import { applicationSchema, type NewApplicationPrepToken } from '$lib/schemas/application';
-import { newProgramSchema } from '$lib/schemas/program';
+import { programSchema } from '$lib/schemas/program';
 import { roundSchema } from '$lib/schemas/applicationRound';
 import { createApplication, fetchComposedApplications } from '$lib/api/application';
 import { formAction } from '$lib/util/formUtils';
@@ -76,7 +76,7 @@ export async function load({ locals, url }) {
 		}),
 
 		newSchoolForm: await superValidate(zod(schoolSchema)),
-		newProgramForm: await superValidate(zod(newProgramSchema)),
+		newProgramForm: await superValidate(zod(programSchema)),
 		newRoundForm: await superValidate(zod(roundSchema)),
 		newApplicationForm: await superValidate(zod(applicationSchema))
 	};
@@ -100,7 +100,7 @@ const getTypeKey = (input: string): ApplicationType => {
 export const actions = {
 	createSchool: formAction(schoolSchema, createSchool),
 
-	createProgram: formAction(newProgramSchema, createProgram),
+	createProgram: formAction(programSchema, createProgram),
 
 	createApplicationRound: formAction(roundSchema, createApplicationRound),
 
