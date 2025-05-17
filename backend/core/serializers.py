@@ -396,43 +396,46 @@ class ApplicationTargetSerializer(serializers.ModelSerializer):
             "term",
         ]
 
-    class SchoolSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = School
-            fields = ["id", "name", "country", "rankings"]
-
-        class RankingEntrySerializer(serializers.ModelSerializer):
-            class Meta:
-                model = SchoolRankingEntry
-                fields = ["ranking_name", "year", "rank"]
-
-            ranking_name = serializers.SerializerMethodField()
-            year = serializers.SerializerMethodField()
-
-            def get_ranking_name(self, ranking_entry):
-                return ranking_entry.ranking.name
-
-            def get_year(self, ranking_entry):
-                return ranking_entry.ranking.year
-
-        rankings = RankingEntrySerializer(many=True)
-
-    schools = SchoolSerializer(many=True)
-
     class ProgramSerializer(serializers.ModelSerializer):
         class Meta:
             model = Program
             fields = ["type", "display_name"]
 
     program = ProgramSerializer()
+    schools = serializers.SerializerMethodField()
     year = serializers.SerializerMethodField()
     term = serializers.SerializerMethodField()
+
+    def get_schools(self, obj):
+        return [school.id for school in obj.program_iteration.program.schools.all()]
 
     def get_year(self, obj):
         return obj.program_iteration.year
 
     def get_term(self, obj):
         return obj.program_iteration.term
+
+
+class SchoolWithRankingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields = ["id", "name", "country", "rankings"]
+
+    class RankingEntrySerializer(serializers.ModelSerializer):
+        class Meta:
+            model = SchoolRankingEntry
+            fields = ["ranking_name", "year", "rank"]
+
+        ranking_name = serializers.SerializerMethodField()
+        year = serializers.SerializerMethodField()
+
+        def get_ranking_name(self, ranking_entry):
+            return ranking_entry.ranking.name
+
+        def get_year(self, ranking_entry):
+            return ranking_entry.ranking.year
+
+    rankings = RankingEntrySerializer(many=True)
 
 
 class ApplicationContractSerializer(serializers.ModelSerializer):

@@ -40,6 +40,7 @@ from core.views import (
     StudentPerUserListView,
     ApplicationWithLogsListView,
     ApplicationTargetListView,
+    SchoolWithRankingsListView,
     ApplicationContractListView,
 )
 
@@ -88,10 +89,15 @@ def handle_application_core_changes(sender, **_):
 @receiver([post_save, post_delete], sender=ProgramIteration)
 @receiver([post_save, post_delete], sender=Program)
 @receiver([post_save, post_delete], sender=School)
-@receiver([post_save, post_delete], sender=SchoolRanking)
-@receiver([post_save, post_delete], sender=SchoolRankingEntry)
 def handle_application_target_changes(sender, **_):
     invalidate_view_cache(ApplicationTargetListView.__name__)
+
+
+@receiver([post_save, post_delete], sender=School)
+@receiver([post_save, post_delete], sender=SchoolRanking)
+@receiver([post_save, post_delete], sender=SchoolRankingEntry)
+def handle_school_with_rankings_changes(sender, **_):
+    invalidate_view_cache(SchoolWithRankingsListView.__name__)
 
 
 @receiver([post_save, post_delete], sender=Student)

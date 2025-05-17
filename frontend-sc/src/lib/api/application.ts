@@ -36,15 +36,17 @@ type ApplicationTarget = {
 	id: number;
 	name: string;
 	due_date: string;
-	schools: {
-		id: number;
-		name: string;
-		country: string;
-		rankings: { ranking_name: string; year: number; rank: number }[];
-	}[];
+	schools: number[];
 	program: { type: string; display_name: string };
 	year: number;
 	term: string;
+};
+
+type SchoolWithRankings = {
+	id: number;
+	name: string;
+	country: string;
+	rankings: { ranking_name: string; year: number; rank: number }[];
 };
 
 type ApplicantListItem = {
@@ -128,6 +130,12 @@ async function fetchApplicationTargets(params?: {
 	return await get(makeUrl('application-targets', params));
 }
 
+async function fetchSchoolsWithRankings(params?: {
+	school?: number | string | null;
+}): Promise<SchoolWithRankings[]> {
+	return await get(makeUrl('schools-with-rankings', params));
+}
+
 async function fetchApplicationContracts(params?: {
 	student?: number | string | null;
 	cfer?: string | null;
@@ -147,9 +155,10 @@ export async function fetchComposedApplications(params?: {
 	program_iteration?: string | number | null;
 	status?: string | null;
 }): Promise<ComposedApplication[]> {
-	const [applications, targets, contracts] = await Promise.all([
+	const [applications, targets, schools, contracts] = await Promise.all([
 		fetchApplicationsWithLogs(params),
 		fetchApplicationTargets(params),
+		fetchSchoolsWithRankings(params),
 		fetchApplicationContracts(params)
 	]);
 
@@ -162,7 +171,7 @@ export async function fetchComposedApplications(params?: {
 			...application,
 			round_name: target.name,
 			due_date: target.due_date,
-			schools: target.schools,
+			schools: target.schools.map((id) => schools.find((school) => school.id === id)!),
 			program: target.program,
 			year: target.year,
 			term: target.term,

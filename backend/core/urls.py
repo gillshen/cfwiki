@@ -18,6 +18,7 @@ from core.views import (
     ServiceRUDView,
     ApplicationWithLogsListView,
     ApplicationTargetListView,
+    SchoolWithRankingsListView,
     ApplicationContractListView,
     ApplicationDetailView,
     ApplicationCreateView,
@@ -135,6 +136,7 @@ urlpatterns = [
     # application
     path("applications-logged/", ApplicationWithLogsListView.as_view()),
     path("application-targets/", ApplicationTargetListView.as_view()),
+    path("schools-with-rankings/", SchoolWithRankingsListView.as_view()),
     path("application-contracts/", ApplicationContractListView.as_view()),
     path("applications/<int:pk>/", ApplicationDetailView.as_view()),
     path("applications/new/", ApplicationCreateView.as_view()),

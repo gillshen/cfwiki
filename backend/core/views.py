@@ -31,6 +31,7 @@ from core.serializers import (
     ServiceCRUDSerializer,
     ApplicationWithLogsSerializer,
     ApplicationTargetSerializer,
+    SchoolWithRankingsSerializer,
     ApplicationContractSerializer,
     ApplicationDetailSerializer,
     ApplicationCRUDSerializer,
@@ -250,7 +251,7 @@ class ApplicationTargetListView(CacheResponseMixin, ListAPIView):
         q = ApplicationRound.objects.select_related(
             "program_iteration__program",
         ).prefetch_related(
-            "program_iteration__program__schools__rankings__ranking",
+            "program_iteration__program__schools",
         )
 
         query_params = self.request.query_params
@@ -263,6 +264,19 @@ class ApplicationTargetListView(CacheResponseMixin, ListAPIView):
             program_iteration=query_params.get("program_iteration"),
             year=query_params.get("year"),
         )
+        return q
+
+
+class SchoolWithRankingsListView(CacheResponseMixin, ListAPIView):
+    serializer_class = SchoolWithRankingsSerializer
+
+    def get_queryset(self):
+        q = School.objects.prefetch_related("rankings__ranking")
+
+        query_id = self.request.query_params.get("school")
+        if query_id is not None:
+            q = q.filter(id=query_id)
+
         return q
 
 

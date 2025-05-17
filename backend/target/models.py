@@ -202,10 +202,6 @@ class ApplicationRound(models.Model):
         return self.applications.count()
 
     @property
-    def schools(self):
-        return self.program_iteration.program.schools
-
-    @property
     def program(self):
         return self.program_iteration.program
 
