@@ -50,7 +50,11 @@
 							onUpdated={({ form }) => form.valid && alert('success')}
 						/>
 					</ButtonDialog>
-					<ButtonDialog buttonText="Delete" dialogTitle="Delete this admission plan?">
+					<ButtonDialog
+						buttonText="Delete"
+						dialogTitle="Delete this admission plan?"
+						contentClass="pb-2"
+					>
 						<DeleteForm
 							data={data.deleteForm}
 							objectId={round.id}

@@ -54,10 +54,11 @@
 				<ButtonDialog
 					buttonSlot
 					dialogTitle="Delete this application status?"
+					contentClass="pb-2"
 					bind:open={deleteModal}
 				>
 					<X class="size-3 text-muted-foreground hover:text-mint-600" slot="button" />
-					<p slot="description">Deletion is instant and permanent.</p>
+					<p slot="description">Deletion is instant and irreversible.</p>
 					<DeleteForm
 						data={deleteForm}
 						objectId={log.id}

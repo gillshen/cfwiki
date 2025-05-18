@@ -163,9 +163,10 @@
 				buttonText="Delete Application"
 				buttonVariant="destructive"
 				dialogTitle="Delete this application?"
+				contentClass="pb-2"
 				bind:open={deleteModalOpen}
 			>
-				<svelte:fragment slot="description">Deletion is instant and permanent.</svelte:fragment>
+				<svelte:fragment slot="description">Deletion is instant and irreversible.</svelte:fragment>
 				<DeleteForm
 					data={data.deleteForm}
 					objectId={data.application.id}

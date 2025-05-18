@@ -21,8 +21,13 @@
 	<slot name="update-form" {closeUpdateModal} />
 </ButtonDialog>
 
-<ButtonDialog buttonSlot dialogTitle={deleteDialogTitle} bind:open={deleteModal}>
+<ButtonDialog
+	buttonSlot
+	dialogTitle={deleteDialogTitle}
+	bind:open={deleteModal}
+	contentClass="pb-2"
+>
 	<X class="size-4 text-muted-foreground hover:text-mint-600 translate-y-[1px]" slot="button" />
-	<p slot="description" class="text-pretty">Deletion is instant and permanent.</p>
+	<p slot="description" class="text-pretty">Deletion is instant and irreversible.</p>
 	<slot name="delete-form" {closeDeleteModal} />
 </ButtonDialog>

@@ -36,6 +36,7 @@
 <ButtonDialog
 	buttonSlot
 	dialogTitle="Remove {service.cf_username}&rsquo;s role as {service.role}?"
+	contentClass="pb-2"
 	bind:open={deleteModal}
 >
 	<X class="size-4 text-muted-foreground hover:text-mint-600" slot="button" />

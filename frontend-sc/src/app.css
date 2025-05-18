@@ -4,7 +4,8 @@
 
 @layer base {
 	:root {
-		--background: 0 0% 100%;
+		/* --background: 0 0% 100%; */
+		--background: transparent;
 		--foreground: 240 10% 3.9%;
 
 		--muted: 240 4.8% 95.9%;
@@ -98,8 +99,12 @@
 ::-webkit-scrollbar-track {
 	background: transparent;
 	border-radius: 4px;
-	margin: 2px;
 	/* Creates gap around track */
+	margin: 2px;
+}
+
+::-webkit-scrollbar-track:hover {
+	background-color: rgb(244, 244, 245);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -111,15 +116,11 @@
 
 :hover::-webkit-scrollbar-thumb {
 	background: rgba(113, 113, 122, 0.5);
-	border-color: white;
+	border-color: rgb(244, 244, 245);
 }
 
 ::-webkit-scrollbar-thumb:hover {
 	background: rgba(113, 113, 122, 1);
-}
-
-::-webkit-scrollbar-track:hover {
-	background-color: rgb(244, 244, 245);
 }
 
 /* https://issues.chromium.org/issues/40766658 */
@@ -127,25 +128,19 @@
 	font-family: 'Twemoji Country Flags';
 	unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+E0062-E0063, U+E0065, U+E0067, U+E006C, U+E006E,
 		U+E0073-E0074, U+E0077, U+E007F;
-	src: url('https://cdn.jsdelivr.net/npm/country-flag-emoji-polyfill@0.1/dist/TwemojiCountryFlags.woff2') format('woff2');
+	src: url('https://cdn.jsdelivr.net/npm/country-flag-emoji-polyfill@0.1/dist/TwemojiCountryFlags.woff2')
+		format('woff2');
 }
 
+.font-serif,
+.font-heading,
 * {
-	font-family: 'Geist', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, sans-serif;
-}
-
-.font-serif {
-	font-family: 'Geist', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, sans-serif;
-}
-
-.font-heading {
-	font-family: 'Geist', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, sans-serif;
+	font-family: 'Twemoji Country Flags', 'Geist', 'Noto Sans SC', Roboto, sans-serif;
 }
 
 .data-grid {
-	--ag-font-family: 'Geist', 'Noto Sans SC', 'Twemoji Country Flags', Roboto, sans-serif;
-	/* --ag-borders: none; */
-	--ag-header-background-color: rgb(244, 244, 245);
+	--ag-font-family: 'Twemoji Country Flags', 'Geist', 'Noto Sans SC', Roboto, sans-serif;
+	--ag-header-background-color: rgba(244, 244, 245, 0.7);
 	--ag-row-hover-color: rgba(244, 244, 245, 0.7);
 	--ag-accent-color: hsl(var(--primary) / 0.9);
 	--ag-checkbox-checked-background-color: hsl(var(--primary) / 0.9);
@@ -154,15 +149,24 @@
 }
 
 .data-grid.full-page {
-	height: calc(100vh - 60px - 200px);
+	height: calc(100vh - 60px - 192px);
 }
 
-.data-grid .ag-input-field-input:not(:focus) {
+.data-grid .ag-menu {
+	border-radius: 12px;
+	@apply bg-muted/50 backdrop-blur shadow-lg;
+}
+
+.data-grid .ag-picker-field-wrapper,
+.data-grid .ag-input-field-input {
 	border: solid 1px hsl(var(--primary) / 0.2);
+	border-radius: 6px;
 }
 
+.data-grid .ag-picker-field-wrapper:focus,
 .data-grid .ag-input-field-input:focus {
-	outline: solid hsl(var(--primary) / 0.9);
+	outline: solid 2px hsl(var(--primary) / 0.7);
+	border: solid 1px transparent;
 }
 
 .data-grid .ag-radio-button-input:focus {
@@ -195,14 +199,14 @@ a:hover {
 	text-decoration: underline;
 }
 
-input[type="password"] {
+input[type='password'] {
 	@apply text-primary;
 	letter-spacing: 4px;
 }
 
 /* Make Firefox's password dots smaller */
 @-moz-document url-prefix() {
-	input[type="password"] {
+	input[type='password'] {
 		font-size: 8px;
 	}
 }

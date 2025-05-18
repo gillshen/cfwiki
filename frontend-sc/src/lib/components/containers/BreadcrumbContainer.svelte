@@ -1,9 +1,13 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
+
 	export let includeHome: boolean = false;
+	export let className: string = '';
+	export { className as class };
 </script>
 
-<div class="py-4 sticky top-[60px] bg-white z-20">
+<div class={cn('py-4 top-[60px] bg-transparent z-20', className)}>
 	<Breadcrumb.Root>
 		<Breadcrumb.List>
 			{#if includeHome}

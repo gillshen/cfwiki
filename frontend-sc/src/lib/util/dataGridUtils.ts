@@ -27,7 +27,9 @@ import countryFlags from '$lib/constants/countries';
 
 export const DEFAULT_GRID_OPTIONS = {
 	enableCellTextSelection: true,
-	theme: themeQuartz
+	theme: themeQuartz.withParams({
+		borderColor: 'rgb(244, 244, 245)' // bg-muted
+	})
 };
 
 export const DEFAULT_COL_DEF = {

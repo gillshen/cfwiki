@@ -3,6 +3,7 @@
 
 	export let id: string;
 	export let title: string = '';
+	export let titleContainerClass: string = '';
 	export let titleOnly: boolean = false;
 	export let hruleOnly: boolean = false;
 	export let hruleClass: string = '';
@@ -12,7 +13,7 @@
 
 <section {id} class={cn('flex flex-col gap-4 text-sm pb-12 last:pb-4', className)}>
 	{#if title}
-		<div class="sticky top-[112px] bg-white z-10">
+		<div class={titleContainerClass}>
 			<h2 class="text-xl font-bold">{title}</h2>
 			{#if !titleOnly}
 				<hr class={cn('my-2', hruleClass)} />

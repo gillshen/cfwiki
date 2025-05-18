@@ -1,4 +1,4 @@
-import type { Service } from '$lib/api/contract';
+import type { Contract, ContractStatus, Service } from '$lib/api/contract';
 import { endedEarly } from '$lib/util/serviceUtils';
 
 export const userCanEdit = (params: {
@@ -20,4 +20,20 @@ export const userCanEdit = (params: {
 		!contract.services.length ||
 		contract.services.some((s) => s.cf_username === user.username && !endedEarly(s))
 	);
+};
+
+const statusOrdering: Record<ContractStatus, number> = {
+	'In effect': 1,
+	Fulfilled: 2,
+	Terminated: 2
+};
+
+export const orderByStatusTargetYearDesc = (a: Contract, b: Contract): number => {
+	const statusA = statusOrdering[a.status];
+	const statusB = statusOrdering[b.status];
+
+	if (statusA === statusB) {
+		return (b.date ?? '').localeCompare(a.date ?? '');
+	}
+	return statusA - statusB;
 };

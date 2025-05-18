@@ -236,11 +236,12 @@
 		buttonVariant="destructive"
 		buttonClass="w-fit"
 		dialogTitle="Delete this contract?"
+		contentClass="pb-2"
 		bind:open={contractDeleteModal}
 	>
 		<p slot="description" class="text-pretty">
-			Deletion is instant and permanent. It will also cause all the associated applications to be
-			instantly and permanently deleted.
+			Deletion is instant and irreversible. It will also cause all the associated applications to be
+			deleted instantly and irreversibly.
 		</p>
 		<DeleteForm
 			data={data.deleteForm}

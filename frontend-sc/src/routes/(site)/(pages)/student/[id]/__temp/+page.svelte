@@ -32,7 +32,12 @@
 			{#await data.schools}
 				<LoadingSign />
 			{:then schools}
-				<ProgramForm data={data.newProgramForm} {schools} onUpdated={() => alert('submitted')} />
+				<ProgramForm
+					data={data.newProgramForm}
+					action="?/createProgram"
+					{schools}
+					onUpdated={() => alert('submitted')}
+				/>
 			{/await}
 		</div>
 	</Tabs.Content>

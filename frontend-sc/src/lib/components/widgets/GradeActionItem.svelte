@@ -36,10 +36,11 @@
 <ButtonDialog
 	buttonSlot
 	dialogTitle="Delete the {grade.term} grade of {grade.progression}?"
+	contentClass="pb-2"
 	bind:open={deleteModal}
 >
 	<X class="size-4 text-muted-foreground hover:text-mint-600" slot="button" />
-	<p slot="description" class="text-pretty">Deletion is instant and permanent.</p>
+	<p slot="description" class="text-pretty">Deletion is instant and irreversible.</p>
 	<DeleteForm
 		data={deleteForm}
 		objectId={grade.id}
