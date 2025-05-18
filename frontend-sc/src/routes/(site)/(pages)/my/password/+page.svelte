@@ -36,10 +36,10 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<h1 class="page-title mb-2">Change Password</h1>
+<h2 class="page-title mb-2">Change Password</h2>
 
 <Section id="password-section">
-	<Alert.Root class="mt-6 mb-8 w-fit pr-6 max-w-prose">
+	<Alert.Root class="mt-6 mb-4 w-fit pr-6 max-w-prose">
 		<ShieldAlert class="size-4" />
 		<Alert.Title class="mt-1">Heads up!</Alert.Title>
 		<Alert.Description class="mb-1">

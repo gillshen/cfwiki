@@ -82,11 +82,11 @@
 </BreadcrumbContainer>
 
 <section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-4">
-	<h1 class="page-title flex gap-2">
+	<h2 class="page-title flex gap-2">
 		<div>{data.student.fullname}</div>
 		<div class="scale-[80%]">&bullet;</div>
 		<div>{data.contract.type} {data.contract.target_year}</div>
-	</h1>
+	</h2>
 	<div class="flex flex-row gap-2 items-center text-sm h-5">
 		<ContractStatusSign status={data.contract.status} />
 		{#if data.contract.date}

@@ -130,7 +130,7 @@
 
 <div class="flex justify-between space-between gap-12">
 	<section>
-		<h1 class="page-title">Create Application</h1>
+		<h2 class="page-title">Create Application</h2>
 
 		<div class="text-sm flex gap-2 pt-2 pb-6">
 			<div><a href="/student/{data.studentId}">{data.contract.student_name}</a></div>

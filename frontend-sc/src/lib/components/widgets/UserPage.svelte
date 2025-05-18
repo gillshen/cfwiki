@@ -29,7 +29,7 @@
 </BreadcrumbContainer>
 
 <section class="w-fit min-w-[60ch] mb-4 space-y-2">
-	<h1 class="page-title">{user.public_banner || defaultBanner(user.username)}</h1>
+	<h2 class="page-title">{user.public_banner || defaultBanner(user.username)}</h2>
 </section>
 
 <div class="w-full grid grid-cols-[minmax(480px,1fr)_240px]">
@@ -125,7 +125,7 @@
 	</section>
 
 	<section>
-		<h2 class="text-lg font-medium pt-5 pb-2 border-b">Important Dates</h2>
+		<h3 class="text-lg font-medium pt-5 pb-2 border-b">Important Dates</h3>
 		<div class="text-zinc-300 py-2">(TODO)</div>
 	</section>
 </div>

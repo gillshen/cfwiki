@@ -12,8 +12,8 @@
 	enum StatusColors {
 		InProgress = 'bg-sky-300',
 		Accepted = 'bg-mint-500',
-		Rejected = 'bg-rejected',
-		Deferred = 'bg-deferred',
+		Rejected = 'bg-red-400',
+		Deferred = 'bg-yellow-300',
 		Neutral = 'bg-muted-foreground/50'
 	}
 
@@ -38,9 +38,7 @@
 
 {#if latestStatus}
 	<div class={cn('text-sm flex items-center gap-1.5 h-6', className)}>
-		<div
-			class={cn('size-3 shrink-0 rounded-full translate-y-[0.5px]', statusMap[latestStatus])}
-		></div>
+		<div class={cn('size-3 shrink-0 rounded-full', statusMap[latestStatus])}></div>
 		{#if !iconOnly}
 			<div class="flex-1 min-w-0">
 				<span class={cn('font-medium block truncate', textClass)}>{formattedStatuses}</span>

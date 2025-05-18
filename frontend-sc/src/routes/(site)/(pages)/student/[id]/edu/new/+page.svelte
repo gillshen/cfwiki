@@ -27,7 +27,7 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<h1 class="page-title mb-2">Create Educational Experience</h1>
+<h2 class="page-title mb-2">Create Educational Experience</h2>
 
 {#await data.schools}
 	<LoadingSign />

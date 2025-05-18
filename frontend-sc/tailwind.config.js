@@ -175,10 +175,7 @@ const config = {
 					800: '#486c08',
 					900: '#3d5b0c',
 					950: '#1e3300'
-				},
-
-				rejected: '#f55f69',
-				deferred: '#dea466'
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

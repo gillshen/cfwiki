@@ -107,7 +107,7 @@
 </BreadcrumbContainer>
 
 <section class="pb-2 flex flex-col gap-2">
-	<h1 class="data-grid-title flex items-center gap-4">
+	<h2 class="data-grid-title flex items-center gap-4">
 		Applications
 		<div class="flex items-center gap-1 pt-1">
 			{#if year !== 'All'}
@@ -133,7 +133,7 @@
 				>
 			{/if}
 		</div>
-	</h1>
+	</h2>
 
 	<DataGridControl.Root rowData={data.applications} {gridApi} baseFileName="cf_applications">
 		<div slot="filter-units" class="flex gap-6">

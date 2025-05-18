@@ -44,7 +44,7 @@
 			{buttonText}
 		</Dialog.Trigger>
 	{/if}
-	<Dialog.Content class={cn('max-h-[calc(100vh-48px)] overflow-auto bg-white', contentClass)}>
+	<Dialog.Content class={cn('max-h-[calc(100vh-48px)] overflow-auto', contentClass)}>
 		<Dialog.Header>
 			{#if dialogTitle}
 				<Dialog.Title>{dialogTitle}</Dialog.Title>

@@ -123,7 +123,7 @@
 
 	<section class="flex flex-col text-sm h-[calc(100vh-60px-70px)] grow-0">
 		<div class="flex flex-col gap-4">
-			<div class="flex items-center gap-2">
+			<div class="flex items-center gap-2 mb-4">
 				<h2 class="page-title">
 					{data.student.fullname}
 					{data.student.preferred_name || ''}
@@ -131,52 +131,52 @@
 			</div>
 
 			<!-- citizenship -->
-			<hgroup class="flex flex-col gap-1">
-				<h3 class="text-muted-foreground">Citizenship</h3>
-				<p>{data.student.citizenship}&nbsp; {countryFlags[data.student.citizenship]}</p>
+			<hgroup class="flex flex-col gap-0.5">
+				<h3 class="text-muted-foreground/70">Citizenship</h3>
+				<p>
+					{data.student.citizenship}&nbsp; {countryFlags[data.student.citizenship]}
+				</p>
 			</hgroup>
 
 			<!-- gender -->
-			<hgroup class="flex flex-col gap-1">
-				<h3 class="text-muted-foreground">Gender</h3>
+			<hgroup class="flex flex-col gap-0.5">
+				<h3 class="text-muted-foreground/70">Gender</h3>
 				<p>{toTitleCase(data.student.gender)}</p>
 			</hgroup>
 
 			<!-- date of birth -->
-			<hgroup class="flex flex-col gap-1">
-				<h3 class="text-muted-foreground">Date of Birth</h3>
+			<hgroup class="flex flex-col gap-0.5">
+				<h3 class="text-muted-foreground/70">Date of Birth</h3>
 				{#if data.student.date_of_birth}
 					<p>{toShortDate(data.student.date_of_birth)}</p>
 				{:else}
-					<p class="text-muted-foreground">n/a</p>
+					<p class="text-muted-foreground/70">n/a</p>
 				{/if}
 			</hgroup>
 
 			<!-- residence -->
-			<hgroup class="flex flex-col gap-1">
-				<h3 class="text-muted-foreground">Primary Residence</h3>
+			<hgroup class="flex flex-col gap-0.5">
+				<h3 class="text-muted-foreground/70">Residence</h3>
 				{#if data.student.base_country}
-					<p>
-						{formatLocation(data.student)}&nbsp; {countryFlags[data.student.base_country]}
-					</p>
+					<p>{formatLocation(data.student)}</p>
 				{:else}
-					<p class="text-muted-foreground">n/a</p>
+					<p class="text-muted-foreground/70">n/a</p>
 				{/if}
 			</hgroup>
 
 			<!-- comments -->
-			<hgroup class="flex flex-col gap-1">
-				<h3 class="text-muted-foreground">Comments</h3>
+			<hgroup class="flex flex-col gap-0.5">
+				<h3 class="text-muted-foreground/70">Comments</h3>
 				{#if data.student.comments}
 					<p>{data.student.comments}</p>
 				{:else}
-					<p class="text-muted-foreground">n/a</p>
+					<p class="text-muted-foreground/70">n/a</p>
 				{/if}
 			</hgroup>
 		</div>
 
 		{#if data.userCanEdit}
-			<div class="flex items-center space-x-2 my-8">
+			<div class="flex items-center space-x-2 mt-12 my-8">
 				<Switch id="edit-mode" />
 				<Label for="edit-mode" class="font-normal">Edit Mode</Label>
 			</div>

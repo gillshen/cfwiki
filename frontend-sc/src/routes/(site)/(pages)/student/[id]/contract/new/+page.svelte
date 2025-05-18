@@ -60,7 +60,7 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<h1 class="page-title mb-2">Create Contract</h1>
+<h2 class="page-title mb-2">Create Contract</h2>
 
 <Section id="contract-form-section">
 	<form method="POST" action="?/createContract" class="max-w-prose space-y-6 mt-4" use:enhance>

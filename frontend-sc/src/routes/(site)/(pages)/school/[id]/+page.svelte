@@ -47,7 +47,7 @@
 </BreadcrumbContainer>
 
 <section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-4">
-	<h1 class="page-title">{data.school.name}</h1>
+	<h2 class="page-title">{data.school.name}</h2>
 	<div class="flex flex-row gap-2 items-center text-sm h-5">
 		{#if data.school.alt_name}
 			<div>{data.school.alt_name}</div>

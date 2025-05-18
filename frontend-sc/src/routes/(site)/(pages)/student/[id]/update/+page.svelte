@@ -25,7 +25,7 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<h1 class="page-title mb-2">Update Student Profile</h1>
+<h2 class="page-title mb-2">Update Student Profile</h2>
 
 <Section id="student-form-section">
 	<form

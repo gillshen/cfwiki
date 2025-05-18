@@ -58,11 +58,11 @@
 </BreadcrumbContainer>
 
 <section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-4">
-	<h1 class="page-title flex items-center gap-1">
+	<h2 class="page-title flex items-center gap-1">
 		{data.student.fullname}
 		<span class="scale-[80%]">@</span>
 		{data.enrollment.school.name}
-	</h1>
+	</h2>
 	<div class="flex flex-col gap-2 text-sm">
 		<div class="flex items-center gap-2">
 			<Calendar class="size-4" />

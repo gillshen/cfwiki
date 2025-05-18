@@ -16,7 +16,7 @@
 	import StudentSideList from '$lib/components/widgets/student-side-list/StudentSideList.svelte';
 	import UserMenuDirectory from '$lib/components/widgets/UserMenuDirectory.svelte';
 	import { quickAccessYears } from '$lib/util/dateUtils';
-	import { Departments } from '$lib/api/user.js';
+	import { Departments } from '$lib/api/user';
 
 	export let data;
 
@@ -31,10 +31,10 @@
 	})();
 </script>
 
-<div class="relative px-8 w-[calc(100vw-8px)]">
+<div class="relative px-8 min-[1600px]:px-16 w-[calc(100vw-8px)]">
 	<header
 		id="navbar"
-		class="fixed top-0 left-0 w-[100vw] h-[60px] backdrop-blur-lg transparent z-40 flex"
+		class="fixed top-0 left-0 w-[100vw] h-[60px] backdrop-blur-lg transparent z-40 flex px-4 min-[1600px]:px-16"
 	>
 		<div
 			class={cn(
@@ -43,8 +43,10 @@
 			)}
 		>
 			<nav class="flex gap-4 my-2 flex-grow-1">
-				<Button variant="ghost" href="/home" class="text-primary font-medium hover:no-underline"
-					>Home</Button
+				<Button
+					variant="outline"
+					href="/home"
+					class="text-primary font-medium hover:no-underline mr-12">Home</Button
 				>
 
 				<DropdownMenu.Root>
@@ -266,7 +268,7 @@
 					<Button
 						variant="outline"
 						size="icon"
-						class="flex w-[40px] h-[40px] rounded-full mr-4"
+						class="flex w-[40px] h-[40px] rounded-full"
 						builders={[builder]}
 					>
 						<Avatar.Root class="flex bg-primary/5">
@@ -331,7 +333,7 @@
 			<!-- Use a non-negative min-width to prevent the side list going off the left edge as the viewport narrows -->
 			<div class="w-[1488px] min-w-[0px] mx-auto flex">
 				<aside
-					class="sticky top-[60px] max-w-[240px] min-w-[240px] shrink-0 h-[calc(100vh-60px)] overflow-auto px-4 py-8"
+					class="sticky top-[60px] max-w-[216px] min-w-[216px] shrink-0 h-[calc(100vh-60px)] overflow-auto px-2 py-8 mr-6"
 				>
 					{#await data.students then students}
 						<StudentSideList username={data.username} {students} {selectedStudentId} />

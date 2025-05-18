@@ -58,13 +58,13 @@
 </BreadcrumbContainer>
 
 <section class="w-fit min-w-[60ch] mb-2 space-y-2">
-	<h1 class="page-title flex gap-2">
+	<h2 class="page-title flex gap-2">
 		<div>{student.fullname}</div>
 		{#if schools.length}
 			<div class="scale-[80%]">&bullet;</div>
 			<div>{schoolNames}</div>
 		{/if}
-	</h1>
+	</h2>
 	<div class="flex gap-3 items-center">
 		<Badge variant="default">{program.type}</Badge>
 		{#key data.application.logs}
@@ -104,7 +104,7 @@
 		</article>
 
 		<article class="mt-4 text-sm flex flex-col gap-2 bg-muted/50 px-8 pt-6 pb-8 rounded-lg">
-			<h2 class="text-xl font-bold">History</h2>
+			<h3 class="text-xl font-bold">History</h3>
 
 			{#if data.application.logs.length}
 				<Timeline.Root class="mt-4">
@@ -157,7 +157,7 @@
 </Section>
 
 {#if data.userCanEdit}
-	<Section id="delete" hruleOnly>
+	<Section id="delete" hrule>
 		<div>
 			<ButtonDialog
 				buttonText="Delete Application"

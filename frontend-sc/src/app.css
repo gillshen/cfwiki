@@ -82,11 +82,11 @@
 
 /* Apply styles to selected text */
 ::selection {
-	@apply bg-cultured-300;
+	@apply bg-mint-400;
 }
 
 ::-moz-selection {
-	@apply bg-cultured-300;
+	@apply bg-mint-400;
 }
 
 /* WebKit (Chrome, Edge, Safari) scrollbar styling */
@@ -97,7 +97,7 @@
 }
 
 ::-webkit-scrollbar-track {
-	background: transparent;
+	background-color: transparent;
 	border-radius: 4px;
 	/* Creates gap around track */
 	margin: 2px;
@@ -108,19 +108,20 @@
 }
 
 ::-webkit-scrollbar-thumb {
-	background: transparent;
+	background-color: transparent;
 	border-radius: 4px;
 	/* Makes thumb appear thinner */
 	border: 2px solid transparent;
 }
 
 :hover::-webkit-scrollbar-thumb {
-	background: rgba(113, 113, 122, 0.5);
-	border-color: rgb(244, 244, 245);
+	background-color: rgba(113, 113, 122, 0.5);
+	border-color: #fcfcfc;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: rgba(113, 113, 122, 1);
+	background-color: rgba(113, 113, 122, 1);
+	border-color: #f4f4f5;
 }
 
 /* https://issues.chromium.org/issues/40766658 */
@@ -140,12 +141,13 @@
 
 .data-grid {
 	--ag-font-family: 'Twemoji Country Flags', 'Geist', 'Noto Sans SC', Roboto, sans-serif;
-	--ag-header-background-color: rgba(244, 244, 245, 0.7);
+	--ag-header-background-color: rgba(244, 244, 245);
 	--ag-row-hover-color: rgba(244, 244, 245, 0.7);
 	--ag-accent-color: hsl(var(--primary) / 0.9);
 	--ag-checkbox-checked-background-color: hsl(var(--primary) / 0.9);
 	--ag-focus-shadow: none;
 	font-variant-numeric: tabular-nums;
+	@apply drop-shadow-xl;
 }
 
 .data-grid.full-page {

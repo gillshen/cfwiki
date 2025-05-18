@@ -30,7 +30,7 @@
 	</Breadcrumb.Item>
 </BreadcrumbContainer>
 
-<h1 class="page-title mb-2">Manage Appearance</h1>
+<h2 class="page-title mb-2">Manage Appearance</h2>
 
 <Section id="user-form-section">
 	<form

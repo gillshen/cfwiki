@@ -104,7 +104,7 @@
 </BreadcrumbContainer>
 
 <section class="pb-2 flex flex-col gap-2">
-	<h1 class="data-grid-title flex items-center gap-4">
+	<h2 class="data-grid-title flex items-center gap-4">
 		Students
 		<div class="flex items-center gap-1 pt-1">
 			{#if cfer !== 'All'}
@@ -131,7 +131,7 @@
 				>
 			{/if}
 		</div>
-	</h1>
+	</h2>
 
 	<DataGridControl.Root rowData={data.students} {gridApi} baseFileName="cf_students">
 		<div slot="filter-units" class="flex gap-6 pb-6">
