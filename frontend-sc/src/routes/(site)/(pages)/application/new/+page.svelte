@@ -7,7 +7,6 @@
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
-	import StudentApplicationCard from '$lib/components/widgets/StudentApplicationCard.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
 	import MultipleSelect from '$lib/components/forms/MultipleSelect.svelte';
 	import NcCombobox from '$lib/components/interactive/Combobox.svelte'; // non-form-controlled
@@ -16,6 +15,7 @@
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
 	import ProgramFormFields from '$lib/components/forms/program-form/ProgramFormFields.svelte';
+	import StudentApplicationListItem from '$lib/components/widgets/StudentApplicationListItem.svelte';
 
 	import type { School } from '$lib/api/school';
 	import { orderByName } from '$lib/util/schoolUtils';
@@ -303,6 +303,7 @@
 				label="CF Involvement"
 				items={staffNameOptions}
 				description="Select all and only those involved in this application"
+				disableSearch
 			/>
 
 			<Textarea
@@ -325,41 +326,18 @@
 	<section class="text-sm flex flex-col">
 		{#await data.applications then applications}
 			{#if applications.length}
+				<h3 class="text-base font-semibold w-fit flex items-center my-4">
+					{data.programType} Applications of {data.year}
+					<Badge class="ml-4 min-w-8 h-5 justify-center">{applications.length}</Badge>
+				</h3>
 				<div
-					class="py-4 px-8 border-t border-l border-r rounded-[10px] backdrop-blur bg-muted/70 shadow-sm z-10 flex items-center"
-				>
-					<h3 class="text-base font-semibold">{data.programType} Applications of {data.year}</h3>
-					<Badge variant="outline" class="ml-4 min-w-8 h-5 justify-center bg-popover"
-						>{applications.length}</Badge
-					>
-				</div>
-				<!-- Workaround for a Firefox bug where backdrop-blur does not work with rounded corners  -->
-				<div
-					id="existing-applications-list"
-					class="max-h-[calc(100vh-180px)] min-h-[500px] -mt-[56px] pt-[56px] flex flex-col rounded-[10px] border overflow-auto overscroll-none px-2 pb-2"
+					class="max-h-[calc(100vh-240px)] min-h-[500px] flex flex-col rounded-[10px] border shadow-xl overflow-auto overscroll-none p-2"
 				>
 					{#each applications.sort().toReversed() as application}
-						<a
-							href="/application/{application.id}"
-							target="_self"
-							class="hover:no-underline first:mt-1"
-						>
-							<StudentApplicationCard
-								{application}
-								compact
-								hideYear
-								class="border-none shadow-none w-[370px] hover:bg-muted/70 rounded-md"
-							/>
-						</a>
+						<StudentApplicationListItem {application} />
 					{/each}
 				</div>
 			{/if}
 		{/await}
 	</section>
 </div>
-
-<style>
-	#existing-applications-list::-webkit-scrollbar-track {
-		margin-block-start: calc(56px + 2px);
-	}
-</style>
