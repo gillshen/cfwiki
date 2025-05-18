@@ -1,47 +1,35 @@
 <script lang="ts">
-	import type { ComponentType } from 'svelte';
-
 	import { cn } from '$lib/utils';
-	import CircleCheckBig from 'lucide-svelte/icons/circle-check-big';
-	import CircleX from 'lucide-svelte/icons/circle-x';
-	import CircleHelp from 'lucide-svelte/icons/circle-help';
-	import Clock from 'lucide-svelte/icons/clock';
-	import Ban from 'lucide-svelte/icons/ban';
-
 	import type { ApplicationStatus } from '$lib/api/applicationLog';
 	import { formatHistory } from '$lib/util/applicationUtils';
 
 	export let application: { history: ApplicationStatus[] };
 	export let iconOnly: boolean = false;
-	export let iconClass: string = '';
 	export let textClass: string = '';
 	export let className: string = '';
 	export { className as class };
 
-	type Icon = {
-		icon: ComponentType;
-		className: string;
-	};
+	enum StatusColors {
+		InProgress = 'bg-sky-300',
+		Accepted = 'bg-mint-500',
+		Rejected = 'bg-rejected',
+		Deferred = 'bg-deferred',
+		Neutral = 'bg-muted-foreground/50'
+	}
 
-	const inProgressIcon: Icon = { icon: Clock, className: 'text-sky-600/70' };
-	const acceptedIcon: Icon = { icon: CircleCheckBig, className: 'text-mint-600' };
-	const rejectedIcon: Icon = { icon: CircleX, className: 'text-rejected' };
-	const deferredIcon: Icon = { icon: CircleHelp, className: 'text-deferred' };
-	const neutralIcon: Icon = { icon: Ban, className: 'text-muted-foreground/70 ' };
-
-	const statusMap: Record<ApplicationStatus, Icon> = {
-		Started: inProgressIcon,
-		Submitted: inProgressIcon,
-		'Under Review': inProgressIcon,
-		Accepted: acceptedIcon,
-		Deferred: deferredIcon,
-		'On Waitlist': deferredIcon,
-		Rejected: rejectedIcon,
-		'Pres. Rejected': rejectedIcon,
-		'Offer Rescinded': rejectedIcon,
-		Cancelled: neutralIcon,
-		Withdrawn: neutralIcon,
-		Untracked: neutralIcon
+	const statusMap: Record<ApplicationStatus, StatusColors[keyof StatusColors]> = {
+		Started: StatusColors.InProgress,
+		Submitted: StatusColors.InProgress,
+		'Under Review': StatusColors.InProgress,
+		Accepted: StatusColors.Accepted,
+		Deferred: StatusColors.Deferred,
+		'On Waitlist': StatusColors.Deferred,
+		Rejected: StatusColors.Rejected,
+		'Pres. Rejected': StatusColors.Rejected,
+		'Offer Rescinded': StatusColors.Rejected,
+		Cancelled: StatusColors.Neutral,
+		Withdrawn: StatusColors.Neutral,
+		Untracked: StatusColors.Neutral
 	};
 
 	const formattedStatuses = formatHistory(application.history);
@@ -50,10 +38,9 @@
 
 {#if latestStatus}
 	<div class={cn('text-sm flex items-center gap-1.5 h-6', className)}>
-		<svelte:component
-			this={statusMap[latestStatus].icon}
-			class={cn('size-4 shrink-0', statusMap[latestStatus].className, iconClass)}
-		/>
+		<div
+			class={cn('size-3 shrink-0 rounded-full translate-y-[0.5px]', statusMap[latestStatus])}
+		></div>
 		{#if !iconOnly}
 			<div class="flex-1 min-w-0">
 				<span class={cn('font-medium block truncate', textClass)}>{formattedStatuses}</span>

@@ -21,8 +21,8 @@
 		{ text: string; bg: string; border: string; shadow: string }
 	> = {
 		'In effect': {
-			text: 'text-primary-foreground',
-			bg: 'bg-primary',
+			text: 'text-primary',
+			bg: 'bg-mint-400',
 			border: 'border-muted-foreground',
 			shadow: 'shadow-muted-foreground/30'
 		},
@@ -58,12 +58,16 @@
 >
 	<div
 		class={cn(
-			'absolute -top-4 -left-1 h-8 rounded-sm pl-3 pr-4 flex items-center',
+			'absolute -top-3 left-2 h-6 rounded-lg pl-3 pr-4 flex items-center',
 			styleMap[contract.status].bg,
 			styleMap[contract.status].border
 		)}
 	>
-		<ContractStatusSign status={contract.status} class={styleMap[contract.status].text} hideIcon />
+		<ContractStatusSign
+			status={contract.status}
+			class={cn('text-xs tracking-normal', styleMap[contract.status].text)}
+			hideIcon
+		/>
 	</div>
 	<Card.Header class="pb-2 pt-8">
 		<Card.Title class="text-lg font-semibold">
