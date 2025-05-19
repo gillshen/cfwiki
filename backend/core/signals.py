@@ -82,6 +82,7 @@ def handle_student_per_user_changes(sender, **_):
 @receiver([post_save, post_delete], sender=Application)
 @receiver([post_save, post_delete], sender=ApplicationLog)
 def handle_application_core_changes(sender, **_):
+    print("invalidating cache for ApplicationWithLogsListView")
     invalidate_view_cache(ApplicationWithLogsListView.__name__)
 
 
@@ -90,6 +91,7 @@ def handle_application_core_changes(sender, **_):
 @receiver([post_save, post_delete], sender=Program)
 @receiver([post_save, post_delete], sender=School)
 def handle_application_target_changes(sender, **_):
+    print("invalidating cache for ApplicationTargetListView")
     invalidate_view_cache(ApplicationTargetListView.__name__)
 
 

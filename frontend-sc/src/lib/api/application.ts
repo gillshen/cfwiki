@@ -163,10 +163,18 @@ export async function fetchComposedApplications(params?: {
 	]);
 
 	return applications.map((application: ApplicationWithLogs) => {
-		const target = targets.find((target: ApplicationTarget) => target.id === application.round)!;
+		const target = targets.find((target: ApplicationTarget) => target.id === application.round);
+		if (!target) {
+			throw new Error(`missing target for application ${application.id}`);
+		}
+
 		const contract = contracts.find(
 			(contract: ApplicationContract) => contract.id === application.contract
-		)!;
+		);
+		if (!contract) {
+			throw new Error(`missing contract for application ${application.id}`);
+		}
+
 		return {
 			...application,
 			round_name: target.name,

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { afterNavigate } from '$app/navigation';
+
 	import { superForm } from 'sveltekit-superforms';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Form from '$lib/components/ui/form/index';
@@ -15,6 +17,7 @@
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import SchoolForm from '$lib/components/forms/SchoolForm.svelte';
 	import ProgramFormFields from '$lib/components/forms/program-form/ProgramFormFields.svelte';
+	import NewApplicationRoundFormFields from '$lib/components/forms/application-round-form/NewApplicationRoundFormFields.svelte';
 	import StudentApplicationListItem from '$lib/components/widgets/StudentApplicationListItem.svelte';
 
 	import type { School } from '$lib/api/school';
@@ -26,12 +29,27 @@
 
 	export let data;
 
-	const form = superForm(data.newApplicationForm);
+	const form = superForm(data.newApplicationForm, {
+		resetForm: true,
+		invalidateAll: 'force',
+		onUpdated({ form }) {
+			if (form.valid) {
+				// reset form: TODO resetting school and program not working
+				console.log('clearing selected school and program');
+				selectedSchool = '';
+				selectedProgram = '';
+				// TODO staff_names preservation is buggy and works only sometimes
+				$formData.staff_names = [...form.data.staff_names];
+			}
+		}
+	});
 	const { form: formData, enhance } = form;
 
 	// Declare all forms here or it would be a pain to ensure reactivity
 
 	const schoolForm = superForm(data.newSchoolForm, {
+		id: 'new-school-form',
+		resetForm: true,
 		onUpdated({ form }) {
 			if (form.valid) {
 				// set school selection
@@ -42,7 +60,8 @@
 	const { enhance: schoolFormEnhance } = schoolForm;
 
 	const programForm = superForm(data.newProgramForm, {
-		resetForm: false, // avoid resetting the school and program type fields
+		id: 'new-program-form',
+		resetForm: true,
 		onUpdated: async ({ form }) => {
 			if (form.valid) {
 				// manually reset the degree and name fields
@@ -70,9 +89,17 @@
 	}
 
 	const roundForm = superForm(data.newApplicationRoundForm, {
-		resetForm: false,
-		onUpdated({ form }) {
-			// TODO set application round
+		id: 'new-application-round-form',
+		resetForm: true,
+		onUpdated: async ({ form }) => {
+			if (form.valid) {
+				// set application round selection
+				const applicationRounds = await data.applicationRounds;
+				// the newly created round should have the largest id
+				const newRoundId = Math.max(...applicationRounds.map((round) => round.id));
+				// must assign the id as a string to the form data to update the combobox selection
+				$formData.round = newRoundId.toString() as unknown as number;
+			}
 		}
 	});
 	const { enhance: roundFormEnhance } = roundForm;
@@ -80,10 +107,10 @@
 	const staffNameOptions = [...new Set(data.contract.services.map((s) => s.cf_username))].sort();
 
 	// initialize the `staff` field:
-	if (!$formData.staff_names.length) {
+	afterNavigate(() => {
 		const likelyServing = data.contract.services.filter((s) => !endedEarly(s));
 		$formData.staff_names = [...new Set(likelyServing.map((s) => s.cf_username).sort())];
-	}
+	});
 
 	const onSchoolSelection = (schools: School[]) => {
 		// TODO the current behavior is tha even if the user doesn't actually change
@@ -142,14 +169,14 @@
 
 		<form
 			method="POST"
-			class="max-w-prose flex flex-col gap-6"
+			class="max-w-prose flex flex-col gap-6 pb-4"
 			action="?/createApplication"
 			use:enhance
 			id="application-form"
 		>
-			{#await Promise.all([data.schools, data.programs])}
+			{#await Promise.all([data.schools, data.programs, data.applicationRounds])}
 				<LoadingSign />
-			{:then [schools, programs]}
+			{:then [schools, programs, applicationRounds]}
 				<div class="flex flex-col gap-2.5">
 					<Label>School</Label>
 					<NcCombobox
@@ -191,10 +218,7 @@
 							.filter((p) => p.schools.map((s) => s.name).includes(selectedSchool))
 							.sort(orderByProgramName)
 							.map((p) => ({ label: enhanceDisplayName(p), value: p.id.toString() }))}
-						onSelect={() => {
-							$formData.round = 0;
-							// TODO
-						}}
+						onSelect={() => ($formData.round = 0)}
 						emptyText={selectedSchool ? undefined : 'You need to select a school first'}
 					>
 						<div slot="if-not-found">
@@ -222,9 +246,7 @@
 						</div>
 					</NcCombobox>
 				</div>
-			{/await}
 
-			{#await data.applicationRounds then applicationRounds}
 				<Combobox
 					{form}
 					name="round"
@@ -235,10 +257,7 @@
 						.sort(orderByRoundName)
 						.sort(orderByDueDate)
 						.map((r) => ({ label: formatRound(r), value: r.id.toString() }))}
-					disableSearch
-					searchDisabledEmptyText={selectedProgram
-						? undefined
-						: 'You need to select a program first'}
+					emptyText={selectedProgram ? undefined : 'You need to select a program first'}
 				>
 					<div slot="if-not-found">
 						{#if selectedProgram}
@@ -253,91 +272,102 @@
 							>
 								<form
 									method="POST"
-									action="?/createProgram"
-									class="flex flex-col gap-4 items-start justify-start mx-auto my-4"
+									action="?/createApplicationRound"
+									class="flex flex-col gap-4 items-start justify-start text-left mx-auto my-4"
 									use:roundFormEnhance
 									id="round-form"
 								>
-									<pre>{JSON.stringify(roundForm.form, null, 2)}</pre>
+									<NewApplicationRoundFormFields
+										form={roundForm}
+										programId={parseInt(selectedProgram)}
+										year={data.year}
+										term={data.term}
+									/>
 								</form>
 							</ButtonDialog>
 						{/if}
 					</div>
 				</Combobox>
-			{/await}
 
-			<Input
-				{form}
-				name="major_1"
-				label="First-choice major or track"
-				maxlength={100}
-				inputClass="w-[420px]"
-				optional
-			/>
-
-			{#if $formData.major_1.trim()}
 				<Input
 					{form}
-					name="major_2"
-					label="Second-choice major or track"
+					name="major_1"
+					label="First-choice major or track"
 					maxlength={100}
 					inputClass="w-[420px]"
 					optional
 				/>
 
-				{#if $formData.major_2.trim()}
+				{#if $formData.major_1.trim()}
 					<Input
 						{form}
-						name="major_3"
-						label="Third-choice major or track"
+						name="major_2"
+						label="Second-choice major or track"
 						maxlength={100}
 						inputClass="w-[420px]"
 						optional
 					/>
+
+					{#if $formData.major_2.trim()}
+						<Input
+							{form}
+							name="major_3"
+							label="Third-choice major or track"
+							maxlength={100}
+							inputClass="w-[420px]"
+							optional
+						/>
+					{/if}
 				{/if}
-			{/if}
 
-			<MultipleSelect
-				{form}
-				name="staff_names"
-				label="CF Involvement"
-				items={staffNameOptions}
-				description="Select all and only those involved in this application"
-				disableSearch
-			/>
+				<MultipleSelect
+					{form}
+					name="staff_names"
+					label="CF Involvement"
+					items={staffNameOptions}
+					description="Select all and only those involved in this application"
+					disableSearch
+				/>
 
-			<Textarea
-				{form}
-				name="comments"
-				label="Comments"
-				class="w-[420px]"
-				maxlength={1000}
-				description="Anything you want to note about this application"
-				optional
-			/>
+				<Textarea
+					{form}
+					name="comments"
+					label="Comments"
+					class="max-w-[420px]"
+					maxlength={1000}
+					description="Anything you want to note about this application"
+					optional
+				/>
 
-			<input name="contract" type="number" value={data.contract.id} class="hidden" />
+				<input name="contract" type="number" value={data.contract.id} hidden />
 
-			<Form.Button class="w-fit min-w-24">Submit</Form.Button>
-			<!-- <SuperDebug data={$formData} /> -->
+				<Form.Button class="w-fit min-w-24">Submit</Form.Button>
+				<!-- <SuperDebug data={$formData} /> -->
+			{/await}
 		</form>
 	</section>
 
-	<section class="text-sm flex flex-col">
-		{#await data.applications then applications}
-			{#if applications.length}
-				<h3 class="text-base font-semibold w-fit flex items-center my-4">
-					{data.programType} Applications of {data.year}
-					<Badge class="ml-4 min-w-8 h-5 justify-center">{applications.length}</Badge>
-				</h3>
-				<div
-					class="max-h-[calc(100vh-240px)] min-h-[500px] flex flex-col rounded-[10px] border shadow-xl overflow-auto overscroll-none p-2"
-				>
-					{#each applications.sort().toReversed() as application}
-						<StudentApplicationListItem {application} />
-					{/each}
-				</div>
-			{/if}
-		{/await}
+	<section class="text-sm flex flex-col min-w-[320px] shrink-0">
+		{#key data.applications}
+			{#await data.applications then applications}
+				{#if applications.length}
+					<h3 class="text-base font-semibold w-fit my-4">
+						{data.programType} Applications of {data.year}
+					</h3>
+					<div class="relative">
+						<Badge class="absolute -top-2 -right-2 min-w-8 size-8 rounded-full justify-center"
+							>{applications.length}</Badge
+						>
+						<div
+							class="max-h-[calc(100vh-220px)] min-h-[500px] flex flex-col rounded-[10px] border shadow-xl overflow-auto overscroll-none p-2"
+						>
+							{#each applications.sort().toReversed() as application}
+								<StudentApplicationListItem {application} />
+							{/each}
+						</div>
+					</div>
+				{/if}
+			{/await}
+		{/key}
 	</section>
 </div>

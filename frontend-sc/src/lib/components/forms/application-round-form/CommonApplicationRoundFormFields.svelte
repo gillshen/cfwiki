@@ -58,13 +58,13 @@
 			type="button"
 			variant="secondary"
 			class="h-7 px-3 text-xs"
-			on:click={() => ($formData.timezone = 'America/New_York')}>US Eastern</Button
+			on:click={() => ($formData.timezone = 'applicant')}>Applicant&rsquo;s local time</Button
 		>
 		<Button
 			type="button"
 			variant="secondary"
 			class="h-7 px-3 text-xs"
-			on:click={() => ($formData.timezone = 'America/Chicago')}>US Central</Button
+			on:click={() => ($formData.timezone = 'America/New_York')}>US Eastern</Button
 		>
 		<Button
 			type="button"
