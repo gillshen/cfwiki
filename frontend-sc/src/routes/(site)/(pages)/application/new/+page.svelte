@@ -72,8 +72,10 @@
 				const programs = await data.programs;
 				// the newly created program should have the largest id
 				const newProgramId = Math.max(...programs.map((p) => p.id));
-				console.log(newProgramId);
 				selectedProgram = newProgramId.toString();
+
+				// set the staff_names field (cleared somehow by creating a new program)
+				setDefaultStaff();
 			}
 		}
 	});
@@ -99,6 +101,9 @@
 				const newRoundId = Math.max(...applicationRounds.map((round) => round.id));
 				// must assign the id as a string to the form data to update the combobox selection
 				$formData.round = newRoundId.toString() as unknown as number;
+
+				// set the staff_names field (cleared somehow by creating a new application round)
+				setDefaultStaff();
 			}
 		}
 	});
@@ -106,11 +111,15 @@
 
 	const staffNameOptions = [...new Set(data.contract.services.map((s) => s.cf_username))].sort();
 
-	// initialize the `staff` field:
-	afterNavigate(() => {
-		const likelyServing = data.contract.services.filter((s) => !endedEarly(s));
-		$formData.staff_names = [...new Set(likelyServing.map((s) => s.cf_username).sort())];
-	});
+	const setDefaultStaff = () => {
+		if (!$formData.staff_names.length) {
+			const likelyServing = data.contract.services.filter((s) => !endedEarly(s));
+			$formData.staff_names = [...new Set(likelyServing.map((s) => s.cf_username).sort())];
+		}
+	};
+
+	// initialize the `staff_names` field:
+	afterNavigate(setDefaultStaff);
 
 	const onSchoolSelection = (schools: School[]) => {
 		// TODO the current behavior is tha even if the user doesn't actually change
@@ -359,7 +368,7 @@
 							>{applications.length}</Badge
 						>
 						<div
-							class="max-h-[calc(100vh-220px)] min-h-[500px] flex flex-col rounded-[10px] border shadow-xl overflow-auto overscroll-none p-2"
+							class="max-h-[calc(100vh-220px)] flex flex-col rounded-[10px] border shadow-xl overflow-auto overscroll-contain p-2"
 						>
 							{#each applications.sort().toReversed() as application}
 								<StudentApplicationListItem {application} />

@@ -333,7 +333,7 @@
 			<!-- Use a non-negative min-width to prevent the side list going off the left edge as the viewport narrows -->
 			<div class="w-[1488px] min-w-[0px] mx-auto flex">
 				<aside
-					class="sticky top-[60px] max-w-[216px] min-w-[216px] shrink-0 h-[calc(100vh-60px)] overflow-auto px-2 py-8 mr-6"
+					class="sticky top-[60px] max-w-[216px] min-w-[216px] shrink-0 h-[calc(100vh-60px)] overflow-auto overscroll-contain px-2 py-8 mr-6"
 				>
 					{#await data.students then students}
 						<StudentSideList username={data.username} {students} {selectedStudentId} />

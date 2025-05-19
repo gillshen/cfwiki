@@ -124,8 +124,12 @@ const getStatusOrdering = ({ history }: { history: ApplicationStatus[] }): numbe
 export const orderByStatus = (a: ComposedApplication, b: ComposedApplication) =>
 	getStatusOrdering(a) - getStatusOrdering(b);
 
-export const orderByLastUpdatedDesc = (a: ComposedApplication, b: ComposedApplication) =>
-	(b.last_updated ?? '').localeCompare(a.last_updated ?? '');
+export const orderByLastUpdatedDesc = (a: ComposedApplication, b: ComposedApplication) => {
+	if (a.last_updated !== b.last_updated) {
+		return (b.last_updated ?? '').localeCompare(a.last_updated ?? '');
+	}
+	return b.id - a.id;
+};
 
 export function orderByType(a: ComposedApplication, b: ComposedApplication) {
 	return _typeOrdering[a.program.type] - _typeOrdering[b.program.type];
