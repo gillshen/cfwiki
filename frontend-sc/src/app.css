@@ -141,7 +141,7 @@
 
 .data-grid {
 	--ag-font-family: 'Twemoji Country Flags', 'Geist', 'Noto Sans SC', Roboto, sans-serif;
-	--ag-header-background-color: rgba(244, 244, 245);
+	--ag-header-background-color: transparent;
 	--ag-row-hover-color: rgba(244, 244, 245, 0.7);
 	--ag-accent-color: hsl(var(--primary) / 0.9);
 	--ag-checkbox-checked-background-color: hsl(var(--primary) / 0.9);
@@ -155,14 +155,14 @@
 }
 
 .data-grid .ag-menu {
-	border-radius: 12px;
-	@apply bg-muted/50 backdrop-blur shadow-lg;
+	border-radius: 8px;
+	@apply bg-white/80 backdrop-blur shadow-lg;
 }
 
 .data-grid .ag-picker-field-wrapper,
 .data-grid .ag-input-field-input {
 	border: solid 1px hsl(var(--primary) / 0.2);
-	border-radius: 6px;
+	border-radius: 4px;
 }
 
 .data-grid .ag-picker-field-wrapper:focus,

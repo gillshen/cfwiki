@@ -6,6 +6,7 @@
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as HoverCard from '$lib/components/ui/hover-card/index';
+	import * as Card from '$lib/components/ui/card';
 	import * as Alert from '$lib/components/ui/alert';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import LayoutGrid from 'lucide-svelte/icons/layout-grid';
@@ -14,7 +15,6 @@
 	import GraduationCap from 'lucide-svelte/icons/graduation-cap';
 	import BookCheck from 'lucide-svelte/icons/book-check';
 	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
-	import UserPen from 'lucide-svelte/icons/user-pen';
 
 	import * as Timeline from '$lib/components/widgets/timeline/index';
 	import * as ScoreCard from '$lib/components/widgets/score-card/index';
@@ -45,18 +45,27 @@
 	import { toTitleCase } from '$lib/util/stringUtils';
 	import Switch from '$lib/components/ui/switch/switch.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
+	import Plus from 'lucide-svelte/icons/plus';
+	import MoveRight from 'lucide-svelte/icons/move-right';
+	import FileUser from 'lucide-svelte/icons/file-user';
+	import Receipt from 'lucide-svelte/icons/receipt';
+	import BookOpenCheck from 'lucide-svelte/icons/book-open-check';
 
 	export let data;
+
+	let editMode = true;
 
 	const form = superForm(data.newApplicationPrepForm);
 	const { form: formData, enhance } = form;
 
-	$: contractItems = data.student.contracts
-		.filter((contract) => canEditContract({ user: data.user, contract }))
-		.map((contract) => ({
-			value: contract.id.toString(),
-			label: `${contract.type} ${contract.target_year}`
-		}));
+	$: editableContracts = data.student.contracts.filter((contract) =>
+		canEditContract({ user: data.user, contract })
+	);
+
+	$: contractItems = editableContracts.map((contract) => ({
+		value: contract.id.toString(),
+		label: `${contract.type} ${contract.target_year}`
+	}));
 
 	$: hasTestScores =
 		data.student.sat.length ||
@@ -90,9 +99,10 @@
 	};
 
 	afterNavigate(() => {
-		// simplify contract creation by writing in likely values
+		// simplify application creation by writing in likely values
 		const contractsInEffect = data.student.contracts.filter(
-			(contract) => contract.status === 'In effect'
+			(contract) =>
+				contract.status === 'In effect' && canEditContract({ user: data.user, contract })
 		);
 		if (contractsInEffect.length === 1) {
 			const { id, type, target_year } = contractsInEffect[0];
@@ -176,7 +186,7 @@
 
 			{#if data.userCanEdit}
 				<div class="flex items-center space-x-2 mt-12 my-8">
-					<Switch id="edit-mode" />
+					<Switch id="edit-mode" bind:checked={editMode} />
 					<Label for="edit-mode" class="font-normal">Edit Mode</Label>
 				</div>
 			{/if}
@@ -184,7 +194,201 @@
 	</div>
 
 	<div class="w-full">
-		<Section
+		<div class="pt-16 flex flex-col gap-8">
+			{#if editMode}
+				<hgroup>
+					<h3 class="text-sm text-muted-foreground mb-2 px-5 flex items-center">
+						<FileUser class="size-3 mr-2" />Profile
+					</h3>
+					<Card.Root class="text-sm shadow-none max-w-prose">
+						<Card.Content class="py-4">
+							<Button variant="link" href="/student/{data.student.id}/update"
+								>Edit profile<MoveRight class="size-4 ml-2" /></Button
+							>
+						</Card.Content>
+					</Card.Root>
+				</hgroup>
+			{/if}
+
+			<hgroup>
+				<h3 class="text-sm text-muted-foreground mb-2 px-5 flex items-center">
+					<Receipt class="size-3 mr-2" />Contract{data.student.contracts.length > 1 ? 's' : ''}
+				</h3>
+				<Card.Root class="text-sm shadow-none max-w-prose">
+					<Card.Content class="pt-4">
+						<!-- TODO refactor -->
+						<div class="flex flex-col gap-4">
+							{#each data.student.contracts as contract}
+								{@const editable = canEditContract({ user: data.user, contract })}
+								<div>
+									<Button
+										variant="link"
+										href={editMode && editable
+											? `/student/${data.student.id}/contract/${contract.id}`
+											: ''}
+										class={cn(
+											'w-full pb-1',
+											!editMode
+												? 'hover:no-underline hover:cursor-default'
+												: editable
+													? ''
+													: 'text-muted-foreground/70 hover:no-underline hover:cursor-not-allowed'
+										)}
+										><div>
+											{contract.type}
+											{contract.target_year}
+										</div>
+										{#if !editMode}
+											<div class="ml-auto text-muted-foreground">
+												{contract.status}
+											</div>
+										{:else if editable}
+											<MoveRight class="size-4 ml-2 mr-auto" />
+										{/if}</Button
+									>
+									<p
+										class={cn(
+											'text-xs pl-4',
+											editable ? 'text-muted-foreground' : 'text-muted-foreground/70'
+										)}
+									>
+										{contract.services
+											.map((s) => s.cf_username)
+											.sort()
+											.join(', ')}
+									</p>
+								</div>
+							{/each}
+						</div>
+					</Card.Content>
+					{#if editMode}
+						<Card.Footer class="border-t pb-4">
+							<Button
+								variant="ghost"
+								size="icon"
+								class="bg-white border rounded-full shadow-md ml-2 mt-4"
+								><Plus class="size-4" /></Button
+							>
+						</Card.Footer>
+					{/if}
+				</Card.Root>
+			</hgroup>
+
+			<hgroup>
+				<h3 class="text-sm text-muted-foreground mb-2 px-5 flex items-center">
+					<GraduationCap class="size-3 mr-2" />Educational Experiences
+				</h3>
+				<Card.Root class="text-sm shadow-none max-w-prose">
+					<Card.Content class="pt-4">
+						<div class="flex flex-col gap-4">
+							{#each data.student.enrollments as enrollment}
+								<div>
+									<Button
+										variant="link"
+										href="/student/{data.student.id}/edu/{enrollment.id}"
+										class="w-fit pb-1"
+										>{enrollment.school.name}<MoveRight class="size-4 ml-2" /></Button
+									>
+									<p class="text-xs pl-4 text-muted-foreground">
+										{formatEnrollmentDates(enrollment, toShortYearMonth)}
+									</p>
+								</div>
+							{/each}
+						</div>
+					</Card.Content>
+					{#if editMode}
+						<Card.Footer class="border-t pb-4">
+							<Button
+								variant="ghost"
+								size="icon"
+								class="bg-white border rounded-full shadow-md ml-2 mt-4"
+								><Plus class="size-4" /></Button
+							>
+						</Card.Footer>
+					{/if}
+				</Card.Root>
+			</hgroup>
+
+			<hgroup>
+				<h3 class="text-sm text-muted-foreground mb-2 px-5 flex items-center">
+					<BookOpenCheck class="size-3 mr-2" />Test Scores
+				</h3>
+				<Card.Root class="text-sm shadow-none max-w-prose">
+					<Card.Content class="pt-4">
+						<div class="flex flex-col gap-4">
+							{#key data.student}
+								{#if hasTestScores}
+									<!-- <div class="flex gap-4 flex-wrap items-stretch"> -->
+									{#each data.student.act as score}
+										<div>
+											<Button variant="link"
+												>ACT
+												<div class="ml-2">{actOverall(score)}</div></Button
+											>
+											<p class="text-xs text-muted-foreground pl-4">{score.date}</p>
+										</div>
+										<!-- <ScoreCard.Root
+												testName="ACT"
+												testDate={score.date}
+												scoreValue={actOverall(score)}
+											>
+												<ScoreCard.ActBarSet {score} />
+											</ScoreCard.Root> -->
+									{/each}
+									{#each data.student.toefl as score}
+										<div>
+											<Button variant="link"
+												>TOEFL
+												<div class="ml-2">{toeflOverall(score)}</div></Button
+											>
+											<p class="text-xs text-muted-foreground pl-4">{score.date}</p>
+										</div>
+										<!-- <ScoreCard.Root
+											testName="TOEFL"
+											testDate={score.date}
+											scoreValue={toeflOverall(score)}
+										>
+											<ScoreCard.ToeflBarSet {score} />
+										</ScoreCard.Root> -->
+									{/each}
+									<!-- {#each data.student.ielts as score}
+										<ScoreCard.Root
+											testName="IELTS"
+											testDate={score.date}
+											scoreValue={ieltsOverall(score)?.toFixed(1)}
+										>
+											<ScoreCard.IeltsBarSet {score} />
+										</ScoreCard.Root>
+									{/each}
+									{#each data.student.duolingo as score}
+										<ScoreCard.Root
+											testName="Duolingo"
+											testDate={score.date}
+											scoreValue={score.overall}
+										>
+											<ScoreCard.DuolingoBarSet {score} />
+										</ScoreCard.Root>
+									{/each} -->
+									<!-- </div> -->
+								{/if}
+							{/key}
+						</div>
+					</Card.Content>
+					{#if editMode}
+						<Card.Footer class="border-t pb-4">
+							<Button
+								variant="ghost"
+								size="icon"
+								class="bg-white border rounded-full shadow-md ml-2 mt-4"
+								><Plus class="size-4" /></Button
+							>
+						</Card.Footer>
+					{/if}
+				</Card.Root>
+			</hgroup>
+		</div>
+
+		<!-- <Section
 			id="contracts"
 			title={data.student.contracts.length > 1 ? 'Contracts' : 'Contract'}
 			class="bg-muted/50 px-8 py-6 mb-6 rounded-xl"
@@ -218,9 +422,9 @@
 					</Alert.Description>
 				</Alert.Root>
 			{/if}
-		</Section>
+		</Section> -->
 
-		<Section id="education" title="Education" class="bg-muted/50 px-8 py-6 mb-6 rounded-xl">
+		<!-- <Section id="education" title="Education" class="bg-muted/50 px-8 py-6 mb-6 rounded-xl">
 			{#key data.student}
 				{#if data.student.enrollments.length}
 					<Timeline.Root class="pb-2">
@@ -262,7 +466,6 @@
 											{/if}
 										</div>
 									</div>
-									<!-- TODO -->
 									<div class="text-muted-foreground flex items-center gap-2">
 										<BookCheck class="size-4 text-primary" />
 										<HoverCard.Root>
@@ -273,6 +476,7 @@
 											<HoverCard.Content class="w-[480px]">
 												<pre
 													class="mt-1 text-sm bg-gray-100 rounded-md p-2 w-full max-h-[200px] overflow-auto">{JSON.stringify(
+														// TODO
 														enrollment.grades,
 														null,
 														2
@@ -296,9 +500,9 @@
 					>
 				</div>
 			{/if}
-		</Section>
+		</Section> -->
 
-		<Section id="test-scores" title="Test Scores" class="bg-muted/50 px-8 py-6 rounded-xl">
+		<!-- <Section id="test-scores" title="Test Scores" class="bg-muted/50 px-8 py-6 rounded-xl">
 			{#key data.student}
 				{#if hasTestScores}
 					<div class="flex gap-6 flex-wrap items-stretch pt-2">
@@ -337,7 +541,7 @@
 					</ButtonDialog>
 				</div>
 			{/if}
-		</Section>
+		</Section> -->
 	</div>
 </section>
 
