@@ -108,234 +108,240 @@
 	<title>{createTitle(data.student.fullname)}</title>
 </svelte:head>
 
-<section
-	class="sticky top-[60px] h-[calc(100vh-60px)] w-[360px] max-w-[360px] shrink-0 px-4 pt-4 overflow-auto"
->
-	<BreadcrumbContainer class="static bg-transparent">
-		<Breadcrumb.Item>
-			<Breadcrumb.Link href="/student/index">Students</Breadcrumb.Link>
-		</Breadcrumb.Item>
-		<Breadcrumb.Separator />
-		<Breadcrumb.Item>
-			<Breadcrumb.Page>{data.student.fullname}</Breadcrumb.Page>
-		</Breadcrumb.Item>
-	</BreadcrumbContainer>
+<section class="ml-[240px] p-4 mb-8 flex items-start">
+	<div class="w-[360px] shrink-0 sticky top-[76px] px-4 max-h-[calc(100vh-76px)] overflow-auto">
+		<BreadcrumbContainer class="static bg-transparent">
+			<Breadcrumb.Item>
+				<Breadcrumb.Link href="/student/index">Students</Breadcrumb.Link>
+			</Breadcrumb.Item>
+			<Breadcrumb.Separator />
+			<Breadcrumb.Item>
+				<Breadcrumb.Page>{data.student.fullname}</Breadcrumb.Page>
+			</Breadcrumb.Item>
+		</BreadcrumbContainer>
 
-	<section class="flex flex-col text-sm h-[calc(100vh-60px-70px)] grow-0">
-		<div class="flex flex-col gap-4">
-			<div class="flex items-center gap-2 mb-4">
-				<h2 class="page-title">
-					{data.student.fullname}
-					{data.student.preferred_name || ''}
-				</h2>
+		<section class="flex flex-col text-sm grow-0 shrink-0">
+			<div class="flex flex-col gap-4">
+				<div class="flex items-center gap-2 mb-4">
+					<h2 class="page-title">
+						{data.student.fullname}
+						{data.student.preferred_name || ''}
+					</h2>
+				</div>
+
+				<!-- citizenship -->
+				<hgroup class="flex flex-col gap-0.5">
+					<h3 class="text-muted-foreground/70">Citizenship</h3>
+					<p>
+						{data.student.citizenship}&nbsp; {countryFlags[data.student.citizenship]}
+					</p>
+				</hgroup>
+
+				<!-- gender -->
+				<hgroup class="flex flex-col gap-0.5">
+					<h3 class="text-muted-foreground/70">Gender</h3>
+					<p>{toTitleCase(data.student.gender)}</p>
+				</hgroup>
+
+				<!-- date of birth -->
+				<hgroup class="flex flex-col gap-0.5">
+					<h3 class="text-muted-foreground/70">Date of Birth</h3>
+					{#if data.student.date_of_birth}
+						<p>{toShortDate(data.student.date_of_birth)}</p>
+					{:else}
+						<p class="text-muted-foreground/70">n/a</p>
+					{/if}
+				</hgroup>
+
+				<!-- residence -->
+				<hgroup class="flex flex-col gap-0.5">
+					<h3 class="text-muted-foreground/70">Residence</h3>
+					{#if data.student.base_country}
+						<p>{formatLocation(data.student)}</p>
+					{:else}
+						<p class="text-muted-foreground/70">n/a</p>
+					{/if}
+				</hgroup>
+
+				<!-- comments -->
+				<hgroup class="flex flex-col gap-0.5">
+					<h3 class="text-muted-foreground/70">Comments</h3>
+					{#if data.student.comments}
+						<p>{data.student.comments}</p>
+					{:else}
+						<p class="text-muted-foreground/70">n/a</p>
+					{/if}
+				</hgroup>
 			</div>
 
-			<!-- citizenship -->
-			<hgroup class="flex flex-col gap-0.5">
-				<h3 class="text-muted-foreground/70">Citizenship</h3>
-				<p>
-					{data.student.citizenship}&nbsp; {countryFlags[data.student.citizenship]}
-				</p>
-			</hgroup>
-
-			<!-- gender -->
-			<hgroup class="flex flex-col gap-0.5">
-				<h3 class="text-muted-foreground/70">Gender</h3>
-				<p>{toTitleCase(data.student.gender)}</p>
-			</hgroup>
-
-			<!-- date of birth -->
-			<hgroup class="flex flex-col gap-0.5">
-				<h3 class="text-muted-foreground/70">Date of Birth</h3>
-				{#if data.student.date_of_birth}
-					<p>{toShortDate(data.student.date_of_birth)}</p>
-				{:else}
-					<p class="text-muted-foreground/70">n/a</p>
-				{/if}
-			</hgroup>
-
-			<!-- residence -->
-			<hgroup class="flex flex-col gap-0.5">
-				<h3 class="text-muted-foreground/70">Residence</h3>
-				{#if data.student.base_country}
-					<p>{formatLocation(data.student)}</p>
-				{:else}
-					<p class="text-muted-foreground/70">n/a</p>
-				{/if}
-			</hgroup>
-
-			<!-- comments -->
-			<hgroup class="flex flex-col gap-0.5">
-				<h3 class="text-muted-foreground/70">Comments</h3>
-				{#if data.student.comments}
-					<p>{data.student.comments}</p>
-				{:else}
-					<p class="text-muted-foreground/70">n/a</p>
-				{/if}
-			</hgroup>
-		</div>
-
-		{#if data.userCanEdit}
-			<div class="flex items-center space-x-2 mt-12 my-8">
-				<Switch id="edit-mode" />
-				<Label for="edit-mode" class="font-normal">Edit Mode</Label>
-			</div>
-		{/if}
-	</section>
-</section>
-
-<div class="pt-8 pl-6 w-[752px]">
-	<Section
-		id="contracts"
-		title={data.student.contracts.length > 1 ? 'Contracts' : 'Contract'}
-		class="bg-muted/50 px-8 py-6 mb-6 rounded-xl"
-	>
-		{#if data.student.contracts.length}
-			<div class="flex gap-6 flex-wrap">
-				{#each data.student.contracts.sort(orderByStatusTargetYearDesc) as contract}
-					<ContractCard {contract} canEdit={canEditContract({ user: data.user, contract })} />
-				{/each}
-			</div>
 			{#if data.userCanEdit}
-				<div class="pt-4">
+				<div class="flex items-center space-x-2 mt-12 my-8">
+					<Switch id="edit-mode" />
+					<Label for="edit-mode" class="font-normal">Edit Mode</Label>
+				</div>
+			{/if}
+		</section>
+	</div>
+
+	<div class="w-full">
+		<Section
+			id="contracts"
+			title={data.student.contracts.length > 1 ? 'Contracts' : 'Contract'}
+			class="bg-muted/50 px-8 py-6 mb-6 rounded-xl"
+		>
+			{#if data.student.contracts.length}
+				<div class="flex gap-6 flex-wrap">
+					{#each data.student.contracts.sort(orderByStatusTargetYearDesc) as contract}
+						<ContractCard {contract} canEdit={canEditContract({ user: data.user, contract })} />
+					{/each}
+				</div>
+				{#if data.userCanEdit}
+					<div class="pt-4">
+						<Button
+							variant="outline"
+							href="/student/{data.student.id}/contract/new"
+							class="text-primary hover:no-underline">Add Contract</Button
+						>
+					</div>
+				{/if}
+			{:else}
+				<Alert.Root class="w-fit h-[180px] pr-8 mt-4 max-w-prose border-none bg-yellow-300">
+					<TriangleAlert class="size-4" />
+					<Alert.Title>We need a contract!</Alert.Title>
+					<Alert.Description class="h-full flex flex-col">
+						<p>This student is not associated with any contract. Add one below.</p>
+						<div class="flex-grow flex justify-center items-center">
+							<Button href="/student/{data.student.id}/contract/new" class="hover:no-underline"
+								>Add Contract</Button
+							>
+						</div>
+					</Alert.Description>
+				</Alert.Root>
+			{/if}
+		</Section>
+
+		<Section id="education" title="Education" class="bg-muted/50 px-8 py-6 mb-6 rounded-xl">
+			{#key data.student}
+				{#if data.student.enrollments.length}
+					<Timeline.Root class="pb-2">
+						{#each data.student.enrollments.sort(orderByDatesDesc) as enrollment, index}
+							<Timeline.Item class="min-h-[120px] w-full">
+								<h3 class="text-base font-semibold flex items-center pb-2 h-8 overflow-visible">
+									<a href="/school/{enrollment.school.id}" class="text-inherit"
+										>{enrollment.school.name}</a
+									>
+									{#if data.userCanEdit}
+										<MoveRightButton
+											href="/student/{data.student.id}/edu/{enrollment.id}"
+											class="ml-2"
+										/>
+									{/if}
+								</h3>
+
+								<fieldset
+									class={cn(
+										'flex flex-col gap-2 pt-2',
+										index < data.student.enrollments.length - 1 ? 'pb-8' : ''
+									)}
+								>
+									<div class="text-muted-foreground flex items-center gap-2">
+										<Calendar class="size-4 text-primary" />
+										{formatEnrollmentDates(enrollment, toShortYearMonth)}
+									</div>
+									<div class="text-muted-foreground flex items-center gap-2">
+										<GraduationCap class="size-4 text-primary" />
+										<div class="flex items-center gap-1">
+											{#if enrollment.curriculum}
+												{enrollment.curriculum}
+												{#if enrollment.program_type === 'UG Transfer'}
+													<div class="text-muted-foreground/50">&bullet;</div>
+													<div>Transfer</div>
+												{/if}
+											{:else}
+												{enrollment.program_type}
+											{/if}
+										</div>
+									</div>
+									<!-- TODO -->
+									<div class="text-muted-foreground flex items-center gap-2">
+										<BookCheck class="size-4 text-primary" />
+										<HoverCard.Root>
+											<HoverCard.Trigger
+												class="underline underline-offset-4 decoration-dotted hover:decoration-dotted hover:decoration-mint-600"
+												>GPA: (TODO)</HoverCard.Trigger
+											>
+											<HoverCard.Content class="w-[480px]">
+												<pre
+													class="mt-1 text-sm bg-gray-100 rounded-md p-2 w-full max-h-[200px] overflow-auto">{JSON.stringify(
+														enrollment.grades,
+														null,
+														2
+													)}</pre>
+											</HoverCard.Content>
+										</HoverCard.Root>
+									</div>
+								</fieldset>
+							</Timeline.Item>
+						{/each}
+					</Timeline.Root>
+				{/if}
+			{/key}
+
+			{#if data.userCanEdit}
+				<div class="pt-2">
 					<Button
 						variant="outline"
-						href="/student/{data.student.id}/contract/new"
-						class="text-primary hover:no-underline">Add Contract</Button
+						href="/student/{data.student.id}/edu/new"
+						class="text-primary hover:no-underline">Add Experience</Button
 					>
 				</div>
 			{/if}
-		{:else}
-			<Alert.Root class="w-fit h-[180px] pr-8 mt-4 max-w-prose border-none bg-yellow-300">
-				<TriangleAlert class="size-4" />
-				<Alert.Title>We need a contract!</Alert.Title>
-				<Alert.Description class="h-full flex flex-col">
-					<p>This student is not associated with any contract. Add one below.</p>
-					<div class="flex-grow flex justify-center items-center">
-						<Button href="/student/{data.student.id}/contract/new" class="hover:no-underline"
-							>Add Contract</Button
-						>
-					</div>
-				</Alert.Description>
-			</Alert.Root>
-		{/if}
-	</Section>
+		</Section>
 
-	<Section id="education" title="Education" class="bg-muted/50 px-8 py-6 mb-6 rounded-xl">
-		{#key data.student}
-			{#if data.student.enrollments.length}
-				<Timeline.Root class="pb-2">
-					{#each data.student.enrollments.sort(orderByDatesDesc) as enrollment, index}
-						<Timeline.Item class="min-h-[120px] w-full">
-							<h3 class="text-base font-semibold flex items-center pb-2 h-8 overflow-visible">
-								<a href="/school/{enrollment.school.id}" class="text-inherit"
-									>{enrollment.school.name}</a
-								>
-								{#if data.userCanEdit}
-									<MoveRightButton
-										href="/student/{data.student.id}/edu/{enrollment.id}"
-										class="ml-2"
-									/>
-								{/if}
-							</h3>
-
-							<fieldset
-								class={cn(
-									'flex flex-col gap-2 pt-2',
-									index < data.student.enrollments.length - 1 ? 'pb-8' : ''
-								)}
+		<Section id="test-scores" title="Test Scores" class="bg-muted/50 px-8 py-6 rounded-xl">
+			{#key data.student}
+				{#if hasTestScores}
+					<div class="flex gap-6 flex-wrap items-stretch pt-2">
+						{#each data.student.act as score}
+							<ScoreCard.Root testName="ACT" testDate={score.date} scoreValue={actOverall(score)}>
+								<ScoreCard.ActBarSet {score} />
+							</ScoreCard.Root>
+						{/each}{#each data.student.toefl as score}
+							<ScoreCard.Root
+								testName="TOEFL"
+								testDate={score.date}
+								scoreValue={toeflOverall(score)}
 							>
-								<div class="text-muted-foreground flex items-center gap-2">
-									<Calendar class="size-4 text-primary" />
-									{formatEnrollmentDates(enrollment, toShortYearMonth)}
-								</div>
-								<div class="text-muted-foreground flex items-center gap-2">
-									<GraduationCap class="size-4 text-primary" />
-									<div class="flex items-center gap-1">
-										{#if enrollment.curriculum}
-											{enrollment.curriculum}
-											{#if enrollment.program_type === 'UG Transfer'}
-												<div class="text-muted-foreground/50">&bullet;</div>
-												<div>Transfer</div>
-											{/if}
-										{:else}
-											{enrollment.program_type}
-										{/if}
-									</div>
-								</div>
-								<!-- TODO -->
-								<div class="text-muted-foreground flex items-center gap-2">
-									<BookCheck class="size-4 text-primary" />
-									<HoverCard.Root>
-										<HoverCard.Trigger
-											class="underline underline-offset-4 decoration-dotted hover:decoration-dotted hover:decoration-mint-600"
-											>GPA: (TODO)</HoverCard.Trigger
-										>
-										<HoverCard.Content class="w-[480px]">
-											<pre
-												class="mt-1 text-sm bg-gray-100 rounded-md p-2 w-full max-h-[200px] overflow-auto">{JSON.stringify(
-													enrollment.grades,
-													null,
-													2
-												)}</pre>
-										</HoverCard.Content>
-									</HoverCard.Root>
-								</div>
-							</fieldset>
-						</Timeline.Item>
-					{/each}
-				</Timeline.Root>
-			{/if}
-		{/key}
-
-		{#if data.userCanEdit}
-			<div class="pt-2">
-				<Button
-					variant="outline"
-					href="/student/{data.student.id}/edu/new"
-					class="text-primary hover:no-underline">Add Experience</Button
-				>
-			</div>
-		{/if}
-	</Section>
-
-	<Section id="test-scores" title="Test Scores" class="bg-muted/50 px-8 py-6 mb-6 rounded-xl">
-		{#key data.student}
-			{#if hasTestScores}
-				<div class="flex gap-6 flex-wrap items-stretch pt-2">
-					{#each data.student.act as score}
-						<ScoreCard.Root testName="ACT" testDate={score.date} scoreValue={actOverall(score)}>
-							<ScoreCard.ActBarSet {score} />
-						</ScoreCard.Root>
-					{/each}{#each data.student.toefl as score}
-						<ScoreCard.Root testName="TOEFL" testDate={score.date} scoreValue={toeflOverall(score)}>
-							<ScoreCard.ToeflBarSet {score} />
-						</ScoreCard.Root>
-					{/each}{#each data.student.ielts as score}
-						<ScoreCard.Root
-							testName="IELTS"
-							testDate={score.date}
-							scoreValue={ieltsOverall(score)?.toFixed(1)}
-						>
-							<ScoreCard.IeltsBarSet {score} />
-						</ScoreCard.Root>
-					{/each}{#each data.student.duolingo as score}
-						<ScoreCard.Root testName="Duolingo" testDate={score.date} scoreValue={score.overall}>
-							<ScoreCard.DuolingoBarSet {score} />
-						</ScoreCard.Root>
-					{/each}
+								<ScoreCard.ToeflBarSet {score} />
+							</ScoreCard.Root>
+						{/each}{#each data.student.ielts as score}
+							<ScoreCard.Root
+								testName="IELTS"
+								testDate={score.date}
+								scoreValue={ieltsOverall(score)?.toFixed(1)}
+							>
+								<ScoreCard.IeltsBarSet {score} />
+							</ScoreCard.Root>
+						{/each}{#each data.student.duolingo as score}
+							<ScoreCard.Root testName="Duolingo" testDate={score.date} scoreValue={score.overall}>
+								<ScoreCard.DuolingoBarSet {score} />
+							</ScoreCard.Root>
+						{/each}
+					</div>
+				{/if}
+			{/key}
+			{#if data.userCanEdit}
+				<div class={cn('w-full', hasTestScores ? 'pt-4' : 'pt-2')}>
+					<ButtonDialog buttonText="Add Test" dialogTitle="Add Test">
+						<div>Dialog body</div>
+					</ButtonDialog>
 				</div>
 			{/if}
-		{/key}
-		{#if data.userCanEdit}
-			<div class={cn('w-full', hasTestScores ? 'pt-4' : 'pt-2')}>
-				<ButtonDialog buttonText="Add Test" dialogTitle="Add Test">
-					<div>Dialog body</div>
-				</ButtonDialog>
-			</div>
-		{/if}
-	</Section>
+		</Section>
+	</div>
+</section>
 
+<div class="ml-[240px] pl-8 pr-4">
 	<Section id="applications" title="Applications">
 		{#await data.applications}
 			<LoadingSign />

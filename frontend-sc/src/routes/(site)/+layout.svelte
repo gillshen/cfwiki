@@ -20,8 +20,8 @@
 
 	export let data;
 
-	$: isStudentPgae = !!$page.url.pathname.match(/^[/]student[/]\d+$/);
-	$: isDataGridPage = !!$page.url.pathname.match(/^[/]data-grids[/](students|applications)/);
+	$: studentPgae = !!$page.url.pathname.match(/^[/]student[/]\d+$/);
+	$: dataGridPage = !!$page.url.pathname.match(/^[/]data-grids[/](students|applications)/);
 
 	$: selectedStudentId = (() => {
 		const match = $page.url.pathname.match('^/student/(\\d+)$');
@@ -31,244 +31,236 @@
 	})();
 </script>
 
-<div class="relative px-8 min-[1600px]:px-16 w-[calc(100vw-8px)]">
-	<header
-		id="navbar"
-		class="fixed top-0 left-0 w-[100vw] h-[60px] backdrop-blur-lg transparent z-40 flex px-4 min-[1600px]:px-16"
-	>
-		<div
+<div class="relative w-[calc(100vw-10px)]">
+	<header class="fixed top-0 left-0 w-[100vw] h-[60px] backdrop-blur-lg z-40 flex">
+		<nav
 			class={cn(
-				'mx-auto flex items-center justify-between space-between',
-				isDataGridPage ? 'w-full' : 'w-[1496px] mx-auto'
+				'flex items-center gap-6 -translate-x-[5px] px-4 h-full m-auto w-full',
+				dataGridPage ? 'pl-6 min-[1600px]:pl-16 min-[1600px]:pr-14' : 'max-w-[1500px]'
 			)}
 		>
-			<nav class="flex gap-4 my-2 flex-grow-1">
-				<Button
-					variant="outline"
-					href="/home"
-					class="text-primary font-medium hover:no-underline mr-12">Home</Button
-				>
+			<Button
+				variant="outline"
+				href="/home"
+				class="text-primary font-medium hover:no-underline mr-12">Home</Button
+			>
 
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger asChild let:builder>
-						<Button variant="ghost" builders={[builder]}>CF People</Button>
-					</DropdownMenu.Trigger>
-					<DropdownMenu.Content transition={slide} transitionConfig={{ duration: 200 }}>
-						<DropdownMenu.Group class="grid grid-cols-2 items-start">
-							{#each Object.values(Departments) as department}
-								<div class="grid grid-cols-2 gap-x-4 mx-4 mb-2">
-									<DropdownMenu.Label class="col-span-2 px-4 pt-2.5 pb-1.5"
-										>{department}部</DropdownMenu.Label
-									>
-									<DropdownMenu.Separator class="col-span-2 my-1" />
-									<UserMenuDirectory
-										users={data.cfUsers}
-										{department}
-										itemClass="px-4 py-1.5 min-w-[100px]"
-									/>
-								</div>
-							{/each}
-						</DropdownMenu.Group>
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
-
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger asChild let:builder>
-						<Button variant="ghost" builders={[builder]}>Students</Button>
-					</DropdownMenu.Trigger>
-					<DropdownMenu.Content
-						class="min-w-[190px]"
-						transition={slide}
-						transitionConfig={{ duration: 150 }}
-					>
-						<DropdownMenu.Group class="flex flex-col">
-							<DropdownMenu.Item
-								href="/data-grids/students?contractStatus=In+effect"
-								class="text-inherit hover:no-underline px-3 py-1.5">Current</DropdownMenu.Item
-							>
-							<DropdownMenu.Separator />
-							<DropdownMenu.Sub>
-								<DropdownMenu.SubTrigger class="px-3 py-1.5">UG Freshman</DropdownMenu.SubTrigger>
-								<DropdownMenu.SubContent class="min-w-[180px]">
-									{#each quickAccessYears() as year}
-										<DropdownMenu.Item
-											href="/data-grids/students?contractType=UG+Freshman&targetYear={year}"
-											class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
-										>
-									{/each}
-								</DropdownMenu.SubContent>
-							</DropdownMenu.Sub>
-							<DropdownMenu.Sub>
-								<DropdownMenu.SubTrigger class="px-3 py-1.5">UG Transfer</DropdownMenu.SubTrigger>
-								<DropdownMenu.SubContent class="min-w-[180px]">
-									{#each quickAccessYears() as year}
-										<DropdownMenu.Item
-											href="/data-grids/students?contractType=UG+Transfer&targetYear={year}"
-											class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
-										>
-									{/each}
-								</DropdownMenu.SubContent>
-							</DropdownMenu.Sub>
-							<DropdownMenu.Sub>
-								<DropdownMenu.SubTrigger class="px-3 py-1.5">Graduate</DropdownMenu.SubTrigger>
-								<DropdownMenu.SubContent class="min-w-[180px]">
-									{#each quickAccessYears() as year}
-										<DropdownMenu.Item
-											href="/data-grids/students?contractType=Graduate&targetYear={year}"
-											class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
-										>
-									{/each}
-								</DropdownMenu.SubContent>
-							</DropdownMenu.Sub>
-							<DropdownMenu.Separator />
-							<DropdownMenu.Item
-								href="/data-grids/students"
-								class="text-inherit hover:no-underline px-3 py-1.5">All Students</DropdownMenu.Item
-							>
-						</DropdownMenu.Group>
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
-
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger asChild let:builder>
-						<Button variant="ghost" builders={[builder]}>Applications</Button>
-					</DropdownMenu.Trigger>
-					<DropdownMenu.Content
-						class="min-w-[200px]"
-						transition={slide}
-						transitionConfig={{ duration: 200 }}
-					>
-						<DropdownMenu.Group class="flex flex-col">
-							<DropdownMenu.Item
-								href="/data-grids/applications?status=pending"
-								class="text-inherit hover:no-underline px-3 py-1.5">In Progress</DropdownMenu.Item
-							>
-							<DropdownMenu.Separator />
-							<DropdownMenu.Label class="px-3 py-1.5">Undergraduate</DropdownMenu.Label>
-							<DropdownMenu.Sub>
-								<DropdownMenu.SubTrigger class="px-3 py-1.5">Freshman</DropdownMenu.SubTrigger>
-								<DropdownMenu.SubContent class="min-w-[180px]">
-									{#each quickAccessYears() as year}
-										<DropdownMenu.Item
-											href="/data-grids/applications?applicationType=freshman&year={year}"
-											class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
-										>
-									{/each}
-								</DropdownMenu.SubContent>
-							</DropdownMenu.Sub>
-							<DropdownMenu.Sub>
-								<DropdownMenu.SubTrigger class="px-3 py-1.5">Transfer</DropdownMenu.SubTrigger>
-								<DropdownMenu.SubContent class="min-w-[180px]">
-									{#each quickAccessYears() as year}
-										<DropdownMenu.Item
-											href="/data-grids/applications?applicationType=transfer&year={year}"
-											class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
-										>
-									{/each}
-								</DropdownMenu.SubContent>
-							</DropdownMenu.Sub>
-							<DropdownMenu.Label class="px-3 py-1.5">Graduate</DropdownMenu.Label>
-							<DropdownMenu.Sub>
-								<DropdownMenu.SubTrigger class="px-3 py-1.5">Master&rsquo;s</DropdownMenu.SubTrigger
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger asChild let:builder>
+					<Button variant="ghost" builders={[builder]}>CF People</Button>
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content transition={slide} transitionConfig={{ duration: 200 }}>
+					<DropdownMenu.Group class="grid grid-cols-2 items-start">
+						{#each Object.values(Departments) as department}
+							<div class="grid grid-cols-2 gap-x-4 mx-4 mb-2">
+								<DropdownMenu.Label class="col-span-2 px-4 pt-2.5 pb-1.5"
+									>{department}部</DropdownMenu.Label
 								>
-								<DropdownMenu.SubContent class="min-w-[180px]">
-									{#each quickAccessYears() as year}
-										<DropdownMenu.Item
-											href="/data-grids/applications?applicationType=masters&year={year}"
-											class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
-										>
-									{/each}
-								</DropdownMenu.SubContent>
-							</DropdownMenu.Sub>
-							<DropdownMenu.Sub>
-								<DropdownMenu.SubTrigger class="px-3 py-1.5">Doctorate</DropdownMenu.SubTrigger>
-								<DropdownMenu.SubContent class="min-w-[180px]">
-									{#each quickAccessYears() as year}
-										<DropdownMenu.Item
-											href="/data-grids/applications?applicationType=doctorate&year={year}"
-											class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
-										>
-									{/each}
-								</DropdownMenu.SubContent>
-							</DropdownMenu.Sub>
-							<DropdownMenu.Label class="px-3 py-1.5">Other</DropdownMenu.Label>
-							<DropdownMenu.Sub>
-								<DropdownMenu.SubTrigger class="px-3 py-1.5">Non-degree</DropdownMenu.SubTrigger>
-								<DropdownMenu.SubContent class="min-w-[180px]">
-									{#each quickAccessYears() as year}
-										<DropdownMenu.Item
-											href="/data-grids/applications?applicationType=other&year={year}"
-											class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
-										>
-									{/each}
-								</DropdownMenu.SubContent>
-							</DropdownMenu.Sub>
-							<DropdownMenu.Separator />
-							<DropdownMenu.Item
-								href="/data-grids/applications"
-								class="text-inherit hover:no-underline px-3 py-1.5"
-								>All Applications</DropdownMenu.Item
-							>
-						</DropdownMenu.Group>
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
+								<DropdownMenu.Separator class="col-span-2 my-1" />
+								<UserMenuDirectory
+									users={data.cfUsers}
+									{department}
+									itemClass="px-4 py-1.5 min-w-[100px]"
+								/>
+							</div>
+						{/each}
+					</DropdownMenu.Group>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger asChild let:builder>
-						<Button variant="ghost" builders={[builder]}>Institutions</Button>
-					</DropdownMenu.Trigger>
-					<DropdownMenu.Content
-						class="min-w-[200px]"
-						transition={slide}
-						transitionConfig={{ duration: 200 }}
-					>
-						<DropdownMenu.Group class="flex flex-col">
-							<DropdownMenu.Label class="px-3 py-1.5">Schools</DropdownMenu.Label>
-							<DropdownMenu.Item
-								href="/school/index/#universities"
-								class="text-inherit hover:no-underline px-3 py-1.5">Universities</DropdownMenu.Item
-							>
-							<DropdownMenu.Item
-								href="/school/index/#secondary-schools"
-								class="text-inherit hover:no-underline px-3 py-1.5"
-								>Secondary Schools</DropdownMenu.Item
-							>
-							<DropdownMenu.Item
-								href="/school/index/#other-institutions"
-								class="text-inherit hover:no-underline px-3 py-1.5"
-								>Other Institutions</DropdownMenu.Item
-							>
-							<DropdownMenu.Separator />
-							<DropdownMenu.Item disabled class=" px-3 py-1.5">School Rankings</DropdownMenu.Item>
-							<DropdownMenu.Separator />
-							<DropdownMenu.Label class=" px-3 py-1.5">Programs</DropdownMenu.Label>
-							<DropdownMenu.Item
-								href="/program/index/#ug-freshman"
-								class="text-inherit hover:no-underline px-3 py-1.5">Undergraduate</DropdownMenu.Item
-							>
-							<DropdownMenu.Item
-								href="/program/index/#masters"
-								class="text-inherit hover:no-underline px-3 py-1.5">Graduate</DropdownMenu.Item
-							>
-							<DropdownMenu.Item
-								href="/program/index/#non-degree"
-								class="text-inherit hover:no-underline px-3 py-1.5">Non-degree</DropdownMenu.Item
-							>
-							<DropdownMenu.Separator />
-							<DropdownMenu.Item disabled class=" px-3 py-1.5"
-								>Program Collections</DropdownMenu.Item
-							>
-						</DropdownMenu.Group>
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
-			</nav>
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger asChild let:builder>
+					<Button variant="ghost" builders={[builder]}>Students</Button>
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content
+					class="min-w-[190px]"
+					transition={slide}
+					transitionConfig={{ duration: 150 }}
+				>
+					<DropdownMenu.Group class="flex flex-col">
+						<DropdownMenu.Item
+							href="/data-grids/students?contractStatus=In+effect"
+							class="text-inherit hover:no-underline px-3 py-1.5">Current</DropdownMenu.Item
+						>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Sub>
+							<DropdownMenu.SubTrigger class="px-3 py-1.5">UG Freshman</DropdownMenu.SubTrigger>
+							<DropdownMenu.SubContent class="min-w-[180px]">
+								{#each quickAccessYears() as year}
+									<DropdownMenu.Item
+										href="/data-grids/students?contractType=UG+Freshman&targetYear={year}"
+										class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
+									>
+								{/each}
+							</DropdownMenu.SubContent>
+						</DropdownMenu.Sub>
+						<DropdownMenu.Sub>
+							<DropdownMenu.SubTrigger class="px-3 py-1.5">UG Transfer</DropdownMenu.SubTrigger>
+							<DropdownMenu.SubContent class="min-w-[180px]">
+								{#each quickAccessYears() as year}
+									<DropdownMenu.Item
+										href="/data-grids/students?contractType=UG+Transfer&targetYear={year}"
+										class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
+									>
+								{/each}
+							</DropdownMenu.SubContent>
+						</DropdownMenu.Sub>
+						<DropdownMenu.Sub>
+							<DropdownMenu.SubTrigger class="px-3 py-1.5">Graduate</DropdownMenu.SubTrigger>
+							<DropdownMenu.SubContent class="min-w-[180px]">
+								{#each quickAccessYears() as year}
+									<DropdownMenu.Item
+										href="/data-grids/students?contractType=Graduate&targetYear={year}"
+										class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
+									>
+								{/each}
+							</DropdownMenu.SubContent>
+						</DropdownMenu.Sub>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item
+							href="/data-grids/students"
+							class="text-inherit hover:no-underline px-3 py-1.5">All Students</DropdownMenu.Item
+						>
+					</DropdownMenu.Group>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger asChild let:builder>
+					<Button variant="ghost" builders={[builder]}>Applications</Button>
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content
+					class="min-w-[200px]"
+					transition={slide}
+					transitionConfig={{ duration: 200 }}
+				>
+					<DropdownMenu.Group class="flex flex-col">
+						<DropdownMenu.Item
+							href="/data-grids/applications?status=pending"
+							class="text-inherit hover:no-underline px-3 py-1.5">In Progress</DropdownMenu.Item
+						>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Label class="px-3 py-1.5">Undergraduate</DropdownMenu.Label>
+						<DropdownMenu.Sub>
+							<DropdownMenu.SubTrigger class="px-3 py-1.5">Freshman</DropdownMenu.SubTrigger>
+							<DropdownMenu.SubContent class="min-w-[180px]">
+								{#each quickAccessYears() as year}
+									<DropdownMenu.Item
+										href="/data-grids/applications?applicationType=freshman&year={year}"
+										class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
+									>
+								{/each}
+							</DropdownMenu.SubContent>
+						</DropdownMenu.Sub>
+						<DropdownMenu.Sub>
+							<DropdownMenu.SubTrigger class="px-3 py-1.5">Transfer</DropdownMenu.SubTrigger>
+							<DropdownMenu.SubContent class="min-w-[180px]">
+								{#each quickAccessYears() as year}
+									<DropdownMenu.Item
+										href="/data-grids/applications?applicationType=transfer&year={year}"
+										class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
+									>
+								{/each}
+							</DropdownMenu.SubContent>
+						</DropdownMenu.Sub>
+						<DropdownMenu.Label class="px-3 py-1.5">Graduate</DropdownMenu.Label>
+						<DropdownMenu.Sub>
+							<DropdownMenu.SubTrigger class="px-3 py-1.5">Master&rsquo;s</DropdownMenu.SubTrigger>
+							<DropdownMenu.SubContent class="min-w-[180px]">
+								{#each quickAccessYears() as year}
+									<DropdownMenu.Item
+										href="/data-grids/applications?applicationType=masters&year={year}"
+										class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
+									>
+								{/each}
+							</DropdownMenu.SubContent>
+						</DropdownMenu.Sub>
+						<DropdownMenu.Sub>
+							<DropdownMenu.SubTrigger class="px-3 py-1.5">Doctorate</DropdownMenu.SubTrigger>
+							<DropdownMenu.SubContent class="min-w-[180px]">
+								{#each quickAccessYears() as year}
+									<DropdownMenu.Item
+										href="/data-grids/applications?applicationType=doctorate&year={year}"
+										class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
+									>
+								{/each}
+							</DropdownMenu.SubContent>
+						</DropdownMenu.Sub>
+						<DropdownMenu.Label class="px-3 py-1.5">Other</DropdownMenu.Label>
+						<DropdownMenu.Sub>
+							<DropdownMenu.SubTrigger class="px-3 py-1.5">Non-degree</DropdownMenu.SubTrigger>
+							<DropdownMenu.SubContent class="min-w-[180px]">
+								{#each quickAccessYears() as year}
+									<DropdownMenu.Item
+										href="/data-grids/applications?applicationType=other&year={year}"
+										class="text-inherit hover:no-underline px-3 py-1.5">{year}</DropdownMenu.Item
+									>
+								{/each}
+							</DropdownMenu.SubContent>
+						</DropdownMenu.Sub>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item
+							href="/data-grids/applications"
+							class="text-inherit hover:no-underline px-3 py-1.5"
+							>All Applications</DropdownMenu.Item
+						>
+					</DropdownMenu.Group>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger asChild let:builder>
+					<Button variant="ghost" builders={[builder]}>Institutions</Button>
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content
+					class="min-w-[200px]"
+					transition={slide}
+					transitionConfig={{ duration: 200 }}
+				>
+					<DropdownMenu.Group class="flex flex-col">
+						<DropdownMenu.Label class="px-3 py-1.5">Schools</DropdownMenu.Label>
+						<DropdownMenu.Item
+							href="/school/index/#universities"
+							class="text-inherit hover:no-underline px-3 py-1.5">Universities</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/school/index/#secondary-schools"
+							class="text-inherit hover:no-underline px-3 py-1.5"
+							>Secondary Schools</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/school/index/#other-institutions"
+							class="text-inherit hover:no-underline px-3 py-1.5"
+							>Other Institutions</DropdownMenu.Item
+						>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item disabled class=" px-3 py-1.5">School Rankings</DropdownMenu.Item>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Label class=" px-3 py-1.5">Programs</DropdownMenu.Label>
+						<DropdownMenu.Item
+							href="/program/index/#ug-freshman"
+							class="text-inherit hover:no-underline px-3 py-1.5">Undergraduate</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/program/index/#masters"
+							class="text-inherit hover:no-underline px-3 py-1.5">Graduate</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/program/index/#non-degree"
+							class="text-inherit hover:no-underline px-3 py-1.5">Non-degree</DropdownMenu.Item
+						>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item disabled class=" px-3 py-1.5">Program Collections</DropdownMenu.Item>
+					</DropdownMenu.Group>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button
 						variant="outline"
 						size="icon"
-						class="flex w-[40px] h-[40px] rounded-full"
+						class="flex w-[40px] h-[40px] rounded-full ml-auto"
 						builders={[builder]}
 					>
 						<Avatar.Root class="flex bg-primary/5">
@@ -315,40 +307,37 @@
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
-		</div>
+		</nav>
 	</header>
 
 	<div
 		class={cn(
-			// Use a non-negative min-width to prevent the side list going off the left edge as the viewport narrows
-			'pt-[60px] min-h-[calc(100vh-340px)] w-[100vw] min-w-[0px] flex justify-center',
-			isDataGridPage ? 'max-w-full' : 'max-w-[1488px] mx-auto'
+			'mx-auto mt-[60px] flex flex-col justify-center',
+			dataGridPage ? 'w-full' : 'max-w-[1500px]'
 		)}
 	>
-		{#if isDataGridPage}
-			<article class="flex flex-col w-full pt-4">
+		{#if dataGridPage}
+			<article class="flex flex-col w-full pt-4 pl-6 pr-4 min-[1600px]:pl-16 min-[1600px]:pr-14">
 				<slot />
 			</article>
 		{:else}
-			<!-- Use a non-negative min-width to prevent the side list going off the left edge as the viewport narrows -->
-			<div class="w-[1488px] min-w-[0px] mx-auto flex">
-				<aside
-					class="sticky top-[60px] max-w-[216px] min-w-[216px] shrink-0 h-[calc(100vh-60px)] overflow-auto overscroll-contain px-2 py-8 mr-6"
-				>
-					{#await data.students then students}
-						<StudentSideList username={data.username} {students} {selectedStudentId} />
-					{/await}
-				</aside>
+			<!-- pl-5 instead of pl-4 for better visual alignment with the home button -->
+			<aside
+				class="fixed top-[60px] w-[240px] h-[calc(100vh-60px)] pr-4 pl-5 py-8 overflow-auto mr-4 overscroll-contained"
+			>
+				{#await data.students then students}
+					<StudentSideList username={data.username} {students} {selectedStudentId} />
+				{/await}
+			</aside>
 
-				{#if isStudentPgae}
+			{#if studentPgae}
+				<slot />
+			{:else}
+				<article class="ml-[240px] p-4 pl-8">
+					<!-- main body has a max content width of 1212px -->
 					<slot />
-				{:else}
-					<article class="flex flex-col w-full pt-4 pb-6 pl-4 pr-8 max-w-[1112px]">
-						<!-- main body has a max content width of 1064px -->
-						<slot />
-					</article>
-				{/if}
-			</div>
+				</article>
+			{/if}
 		{/if}
 	</div>
 </div>

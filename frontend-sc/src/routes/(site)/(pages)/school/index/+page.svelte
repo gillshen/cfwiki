@@ -12,10 +12,10 @@
 
 	export let data;
 
-	const sectionIdMap: Record<SchoolType, string> = {
-		University: 'universities',
-		'Secondary School': 'secondary-schools',
-		Other: 'other-institutions'
+	const sectionMap: Record<SchoolType, { id: string; title: string }> = {
+		University: { id: 'universities', title: 'Universities' },
+		'Secondary School': { id: 'secondary-schools', title: 'Secondary Schools' },
+		Other: { id: 'other-institutions', title: 'Other Institutions' }
 	};
 
 	afterNavigate(scrollToHash);
@@ -36,8 +36,9 @@
 {:then schoolsGrouped}
 	{#each SCHOOL_TYPES as schoolType}
 		{@const schools = schoolsGrouped[schoolType]}
+		{@const { id, title } = sectionMap[schoolType]}
 		{#if schools?.length}
-			<Section id={sectionIdMap[schoolType]} title={schoolType} class="scroll-mt-[116px] gap-2">
+			<Section {id} {title} class="scroll-mt-[92px] gap-2">
 				<div class="grid lg:grid-cols-2 md:grid-cols-1 gap-y-2 gap-x-6">
 					{#each schools.sort(orderByName) as school}
 						<a href="/school/{school.id}" class="w-fit">{school.name}</a>
