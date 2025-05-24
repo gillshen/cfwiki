@@ -18,18 +18,15 @@
 
 	import * as Timeline from '$lib/components/widgets/timeline/index';
 	import * as ScoreCard from '$lib/components/widgets/score-card/index';
+	import * as StudentPage from '$lib/components/widgets/student-page/index';
 	import Section from '$lib/components/containers/Section.svelte';
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
 	import LoadingSign from '$lib/components/misc/LoadingSign.svelte';
 	import MoveRightButton from '$lib/components/misc/MoveRightButton.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import Combobox from '$lib/components/forms/Combobox.svelte';
-	import ContractCard from '$lib/components/widgets/ContractCard.svelte';
 	import StudentApplicationCard from '$lib/components/widgets/StudentApplicationCard.svelte';
 	import StudentApplicationsTable from '$lib/components/widgets/StudentApplicationsTable.svelte';
-
-	import countryFlags from '$lib/constants/countries';
-	import { formatLocation } from '$lib/util/studentUtils';
 
 	import {
 		userCanEdit as canEditContract,
@@ -47,7 +44,8 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Plus from 'lucide-svelte/icons/plus';
 	import MoveRight from 'lucide-svelte/icons/move-right';
-	import FileUser from 'lucide-svelte/icons/file-user';
+	import UserPen from 'lucide-svelte/icons/user-pen';
+	// import FileUser from 'lucide-svelte/icons/file-user';
 	import Receipt from 'lucide-svelte/icons/receipt';
 	import BookOpenCheck from 'lucide-svelte/icons/book-open-check';
 
@@ -119,7 +117,9 @@
 </svelte:head>
 
 <section class="ml-[240px] p-4 mb-8 flex items-start">
-	<div class="w-[360px] shrink-0 sticky top-[76px] px-4 max-h-[calc(100vh-76px)] overflow-auto">
+	<div
+		class="w-[360px] shrink-0 sticky top-[76px] pl-4 pr-6 pb-4 mr-6 max-h-[calc(100vh-76px)] overflow-auto"
+	>
 		<BreadcrumbContainer class="static bg-transparent">
 			<Breadcrumb.Item>
 				<Breadcrumb.Link href="/student/index">Students</Breadcrumb.Link>
@@ -130,151 +130,77 @@
 			</Breadcrumb.Item>
 		</BreadcrumbContainer>
 
-		<section class="flex flex-col text-sm grow-0 shrink-0">
-			<div class="flex flex-col gap-4">
-				<div class="flex items-center gap-2 mb-4">
-					<h2 class="page-title">
-						{data.student.fullname}
-						{data.student.preferred_name || ''}
-					</h2>
-				</div>
-
-				<!-- citizenship -->
-				<hgroup class="flex flex-col gap-0.5">
-					<h3 class="text-muted-foreground/70">Citizenship</h3>
-					<p>
-						{data.student.citizenship}&nbsp; {countryFlags[data.student.citizenship]}
-					</p>
-				</hgroup>
-
-				<!-- gender -->
-				<hgroup class="flex flex-col gap-0.5">
-					<h3 class="text-muted-foreground/70">Gender</h3>
-					<p>{toTitleCase(data.student.gender)}</p>
-				</hgroup>
-
-				<!-- date of birth -->
-				<hgroup class="flex flex-col gap-0.5">
-					<h3 class="text-muted-foreground/70">Date of Birth</h3>
-					{#if data.student.date_of_birth}
-						<p>{toShortDate(data.student.date_of_birth)}</p>
-					{:else}
-						<p class="text-muted-foreground/70">n/a</p>
-					{/if}
-				</hgroup>
-
-				<!-- residence -->
-				<hgroup class="flex flex-col gap-0.5">
-					<h3 class="text-muted-foreground/70">Residence</h3>
-					{#if data.student.base_country}
-						<p>{formatLocation(data.student)}</p>
-					{:else}
-						<p class="text-muted-foreground/70">n/a</p>
-					{/if}
-				</hgroup>
-
-				<!-- comments -->
-				<hgroup class="flex flex-col gap-0.5">
-					<h3 class="text-muted-foreground/70">Comments</h3>
-					{#if data.student.comments}
-						<p>{data.student.comments}</p>
-					{:else}
-						<p class="text-muted-foreground/70">n/a</p>
-					{/if}
-				</hgroup>
-			</div>
-
-			{#if data.userCanEdit}
-				<div class="flex items-center space-x-2 mt-12 my-8">
-					<Switch id="edit-mode" bind:checked={editMode} />
-					<Label for="edit-mode" class="font-normal">Edit Mode</Label>
-				</div>
-			{/if}
-		</section>
+		<StudentPage.Header student={data.student} />
 	</div>
 
 	<div class="w-full">
-		<div class="pt-16 flex flex-col gap-8">
+		{#if data.userCanEdit}
+			<div class="py-5 w-[600px]">
+				<div class="flex items-center space-x-2 w-fit ml-auto">
+					<Switch id="edit-mode" bind:checked={editMode} />
+					<Label
+						for="edit-mode"
+						class={cn('font-normal text-sm', editMode ? '' : 'text-muted-foreground')}>Edit</Label
+					>
+				</div>
+			</div>
+		{/if}
+
+		<div class={cn('flex flex-col gap-8', data.userCanEdit ? 'pt-4' : 'pt-[76px]')}>
 			{#if editMode}
-				<hgroup>
-					<h3 class="text-sm text-muted-foreground mb-2 px-5 flex items-center">
-						<FileUser class="size-3 mr-2" />Profile
-					</h3>
-					<Card.Root class="text-sm shadow-none max-w-prose">
-						<Card.Content class="py-4">
-							<Button variant="link" href="/student/{data.student.id}/update"
-								>Edit profile<MoveRight class="size-4 ml-2" /></Button
-							>
-						</Card.Content>
-					</Card.Root>
-				</hgroup>
+				<StudentPage.Section title="Profile" icon={UserPen}>
+					<Button variant="link" href="/student/{data.student.id}/update"
+						>Edit profile<MoveRight class="size-4 ml-2" /></Button
+					>
+				</StudentPage.Section>
 			{/if}
 
-			<hgroup>
-				<h3 class="text-sm text-muted-foreground mb-2 px-5 flex items-center">
-					<Receipt class="size-3 mr-2" />Contract{data.student.contracts.length > 1 ? 's' : ''}
-				</h3>
-				<Card.Root class="text-sm shadow-none max-w-prose">
-					<Card.Content class="pt-4">
-						<!-- TODO refactor -->
-						<div class="flex flex-col gap-4">
-							{#each data.student.contracts as contract}
-								{@const editable = canEditContract({ user: data.user, contract })}
-								<div>
-									<Button
-										variant="link"
-										href={editMode && editable
-											? `/student/${data.student.id}/contract/${contract.id}`
-											: ''}
-										class={cn(
-											'w-full pb-1',
-											!editMode
-												? 'hover:no-underline hover:cursor-default'
-												: editable
-													? ''
-													: 'text-muted-foreground/70 hover:no-underline hover:cursor-not-allowed'
-										)}
-										><div>
-											{contract.type}
-											{contract.target_year}
-										</div>
-										{#if !editMode}
-											<div class="ml-auto text-muted-foreground">
-												{contract.status}
-											</div>
-										{:else if editable}
-											<MoveRight class="size-4 ml-2 mr-auto" />
-										{/if}</Button
-									>
-									<p
-										class={cn(
-											'text-xs pl-4',
-											editable ? 'text-muted-foreground' : 'text-muted-foreground/70'
-										)}
-									>
-										{contract.services
-											.map((s) => s.cf_username)
-											.sort()
-											.join(', ')}
-									</p>
-								</div>
-							{/each}
-						</div>
-					</Card.Content>
-					{#if editMode}
-						<Card.Footer class="border-t pb-4">
-							<Button
-								variant="ghost"
-								size="icon"
-								class="bg-white border rounded-full shadow-md ml-2 mt-4"
-								><Plus class="size-4" /></Button
-							>
-						</Card.Footer>
-					{/if}
-				</Card.Root>
-			</hgroup>
+			<StudentPage.Section
+				title={data.student.contracts.length > 1 ? 'Contacts' : 'Contract'}
+				icon={Receipt}
+				footer={editMode}
+			>
+				<div class="flex flex-col gap-2">
+					{#each data.student.contracts as contract}
+						<StudentPage.Contract
+							{contract}
+							{editMode}
+							editable={canEditContract({ user: data.user, contract })}
+							href="/student/{data.student.id}/contract/{contract.id}"
+						/>
+					{/each}
+				</div>
+				<Button
+					slot="footer"
+					variant="ghost"
+					size="icon"
+					class="bg-white border rounded-full shadow-md ml-2 mt-4"><Plus class="size-4" /></Button
+				>
+			</StudentPage.Section>
 
-			<hgroup>
+			<StudentPage.Section title="Educational Experiences" icon={GraduationCap} footer={editMode}>
+				<div class="flex flex-col gap-2">
+					{#if data.student.enrollments.length}
+						{#each data.student.enrollments.sort(orderByDatesDesc) as enrollment}
+							<StudentPage.Enrollment
+								{enrollment}
+								{editMode}
+								editable={data.userCanEdit}
+								href="/student/{data.student.id}/edu/{enrollment.id}"
+							/>
+						{/each}
+					{:else}
+						<p class="text-muted-foreground px-4">No record</p>
+					{/if}
+				</div>
+				<Button
+					slot="footer"
+					variant="ghost"
+					size="icon"
+					class="bg-white border rounded-full shadow-md ml-2 mt-4"><Plus class="size-4" /></Button
+				>
+			</StudentPage.Section>
+			<!-- <hgroup>
 				<h3 class="text-sm text-muted-foreground mb-2 px-5 flex items-center">
 					<GraduationCap class="size-3 mr-2" />Educational Experiences
 				</h3>
@@ -307,7 +233,7 @@
 						</Card.Footer>
 					{/if}
 				</Card.Root>
-			</hgroup>
+			</hgroup> -->
 
 			<hgroup>
 				<h3 class="text-sm text-muted-foreground mb-2 px-5 flex items-center">

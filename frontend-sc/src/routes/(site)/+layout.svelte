@@ -36,7 +36,7 @@
 		<nav
 			class={cn(
 				'flex items-center gap-6 -translate-x-[5px] px-4 h-full m-auto w-full',
-				dataGridPage ? 'pl-6 min-[1600px]:pl-16 min-[1600px]:pr-14' : 'max-w-[1500px]'
+				dataGridPage ? 'pl-6 min-[1500px]:pl-16 min-[1500px]:pr-14' : 'max-w-[1400px]'
 			)}
 		>
 			<Button
@@ -313,11 +313,11 @@
 	<div
 		class={cn(
 			'mx-auto mt-[60px] flex flex-col justify-center',
-			dataGridPage ? 'w-full' : 'max-w-[1500px]'
+			dataGridPage ? 'w-full' : 'max-w-[1400px]'
 		)}
 	>
 		{#if dataGridPage}
-			<article class="flex flex-col w-full pt-4 pl-6 pr-4 min-[1600px]:pl-16 min-[1600px]:pr-14">
+			<article class="flex flex-col w-full pt-4 pl-6 pr-4 min-[1500px]:pl-16 min-[1500px]:pr-14">
 				<slot />
 			</article>
 		{:else}
@@ -334,7 +334,7 @@
 				<slot />
 			{:else}
 				<article class="ml-[240px] p-4 pl-8">
-					<!-- main body has a max content width of 1212px -->
+					<!-- main body has a max content width of 1112px -->
 					<slot />
 				</article>
 			{/if}
