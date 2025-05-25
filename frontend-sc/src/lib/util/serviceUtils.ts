@@ -17,6 +17,14 @@ export function filterForActive(services: Service[]): Service[] {
 }
 
 export function orderByRoleUsername(a: Service, b: Service): number {
+	// if one ended early and the other is still ongoing, place the ongoing one first
+	if (a.end_date && !b.end_date) {
+		return 1;
+	}
+	if (b.end_date && !a.end_date) {
+		return -1;
+	}
+
 	const roles = [...CF_ROLES] as string[];
 	const indexA = roles.indexOf(a.role) ?? 99;
 	const indexB = roles.indexOf(b.role) ?? 99;

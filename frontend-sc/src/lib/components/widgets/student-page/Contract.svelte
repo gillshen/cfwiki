@@ -35,7 +35,7 @@
 	{#if !editMode}
 		<div class="flex items-center justify-between h-6 px-4">
 			<h3 class="font-medium py-0">{contractTitle}</h3>
-			<div class="flex items-center gap-1.5 text-xs">
+			<div class="flex items-center gap-2">
 				<div class={cn('size-3 shrink-0 rounded-full', styleMap[contract.status])}></div>
 				<p class={contract.status === 'In effect' ? '' : 'text-muted-foreground'}>
 					{contract.status}
@@ -92,46 +92,31 @@
 				</div>
 
 				<!-- staff -->
-				<div class="flex flex-col gap-4 pt-4">
+				<div class="flex flex-col gap-4 px-6 py-4 mt-2">
 					{#each Object.entries(servicesGrouped) as [username, services]}
-						<div class="flex items-start gap-2">
+						<a class="flex items-center gap-2 group w-fit hover:no-underline" href="/cf/{username}">
 							<UserAvatar {username} class="size-[32px]" imageClass="size-[20px]" />
 
-							<div>
-								<a href="/cf/{username}" class="text-primary">{username}</a>
+							<div class="flex flex-col gap-1">
+								<p class="text-primary group-hover:underline">{username}</p>
 
-								{#if services.some((s) => s.start_date || s.end_date)}
-									<!-- use the full layout if some services have start/end dates -->
-									<ul class="flex flex-col text-xs">
-										{#each services as service}
-											{@const startDate = toShortDate(service.start_date)}
-											{@const endDate = toShortDate(service.end_date)}
-											<li class="inline-flex gap-1.5">
-												<span>{service.role}</span>
-												{#if startDate && endDate}
-													<span>&bull;</span>
-													<span>{startDate} - {endDate}</span>
-												{:else if startDate}
-													<span>&bull;</span>
-													<span>Starting {startDate}</span>
-												{:else if endDate}
-													<span>&bull;</span>
-													<span>Ended {endDate}</span>
-												{/if}
-											</li>
-										{/each}
-									</ul>
-								{:else}
-									<!-- use a compact layout otherwise -->
-									<ul class="flex items-center gap-1 text-muted-foreground text-xs">
-										{#each services as service, index}
-											{#if index}&bull;{/if}
-											<li>{service.role}</li>
-										{/each}
-									</ul>
-								{/if}
+								<ul class="flex items-center gap-1.5 text-xs">
+									{#each services as service, index}
+										{#if index}&bull;{/if}
+										<li class="inline-flex gap-1">
+											<span>{service.role}</span>
+											{#if service.start_date && service.end_date}
+												<span>{toShortDate(service.start_date, service.end_date)}</span>
+											{:else if service.start_date}
+												<span>starting {toShortDate(service.start_date)}</span>
+											{:else if service.end_date}
+												<span>until {toShortDate(service.end_date)}</span>
+											{/if}
+										</li>
+									{/each}
+								</ul>
 							</div>
-						</div>
+						</a>
 					{/each}
 				</div>
 			</Accordion.Content>

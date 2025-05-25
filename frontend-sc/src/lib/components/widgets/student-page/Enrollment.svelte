@@ -3,9 +3,9 @@
 	import * as Table from '$lib/components/ui/table/';
 	import MoveRight from 'lucide-svelte/icons/move-right';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import BookOpen from 'lucide-svelte/icons/book-open';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import BookCheck from 'lucide-svelte/icons/book-check';
+	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 	import SquareArrowOutUpRight from 'lucide-svelte/icons/square-arrow-out-up-right';
 
 	import type { EnrollmentByStudent } from '$lib/api/enrollment';
@@ -55,7 +55,7 @@
 				<a
 					href="/school/{enrollment.school.id}"
 					target="_blank"
-					class="flex items-center w-fit underline underline-offset-2"
+					class="flex items-center w-fit underline"
 				>
 					<SquareArrowOutUpRight class="size-3.5 mr-2 translate-y-[2px]" />
 					View school
@@ -63,8 +63,17 @@
 
 				<!-- curriculum/major -->
 				<div class="flex items-center mt-2">
-					<BookOpen class="size-3.5 mr-2" />
-					{enrollment.curriculum || 'No curriculum/major information'}
+					{#if !enrollment.curriculum}
+						<TriangleAlert class="size-3.5 mr-2" />
+						No curriculum/major information
+					{:else}
+						<BookCheck class="size-3.5 mr-2" />
+						{#if enrollment.program_type === 'Secondary School'}
+							Curriculum: {enrollment.curriculum}
+						{:else}
+							Major: {enrollment.curriculum}
+						{/if}
+					{/if}
 				</div>
 
 				<!-- grades -->
@@ -81,12 +90,12 @@
 										<Table.Cell class="w-20">{grade.term}</Table.Cell>
 										<Table.Cell class="tabular-nums flex-grow">{formatGrade(grade)}</Table.Cell>
 										{#if parseInt(String(grade.scale))}
-											<Table.Cell class="inline-flex pr-0 text-right w-fit">
-												<Badge variant="secondary" class="font-normal mr-2"
+											<Table.Cell class="inline-flex pr-0 pl-2 text-right w-fit">
+												<Badge variant="secondary" class="font-normal ml-2"
 													>{grade.is_weighted ? 'Weighted' : 'Unweighted'}</Badge
 												>
 												{#if grade.is_cumulative}
-													<Badge variant="secondary" class="font-normal mr-2">Cumul</Badge>
+													<Badge variant="secondary" class="font-normal ml-2">Cumul</Badge>
 												{/if}
 											</Table.Cell>
 										{/if}
@@ -97,7 +106,7 @@
 					</div>
 				{:else}
 					<div class="flex items-center mt-2">
-						<BookCheck class="size-3.5 mr-2" />
+						<TriangleAlert class="size-3.5 mr-2" />
 						No grade information
 					</div>
 				{/if}

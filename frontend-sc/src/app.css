@@ -137,6 +137,7 @@
 .font-heading,
 * {
 	font-family: 'Twemoji Country Flags', 'Geist', 'Noto Sans SC', Roboto, sans-serif;
+	text-underline-offset: 2px;
 }
 
 .data-grid {

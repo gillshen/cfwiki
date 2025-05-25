@@ -11,7 +11,7 @@ import { lexicalChineseLast, padChineseRuns, toTitleCase } from '$lib/util/strin
 import { formatEnrollments } from '$lib/util/enrollmentUtils';
 import { getSchoolRankingEntry } from '$lib/util/schoolUtils';
 import { formatHistory } from '$lib/util/applicationUtils';
-import { makeDate, toShortDate } from '$lib/util/dateUtils';
+import { parseISO, toShortDate } from '$lib/util/dateUtils';
 
 import {
 	formatCfNames,
@@ -338,7 +338,7 @@ export const getColumnDefs = (params: PageParams) => {
 		},
 		{
 			headerName: 'Last Updated',
-			valueGetter: (params: ValueGetterParams) => makeDate(params.data.last_updated),
+			valueGetter: (params: ValueGetterParams) => parseISO(params.data.last_updated),
 			valueFormatter: (params: ValueFormatterParams) => toShortDate(params.value),
 			filter: 'agDateColumnFilter',
 			hide: true
