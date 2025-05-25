@@ -1,5 +1,8 @@
 import { error } from '@sveltejs/kit';
-// import type { Writable } from 'svelte/store';
+
+export type Prettify<T> = {
+	[K in keyof T]: T[K];
+} & {};
 
 export const scrollToHash = () => {
 	const hash = window.location.hash;

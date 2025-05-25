@@ -268,19 +268,82 @@ class StudentDetailSerializer(serializers.ModelSerializer):
     contracts = ContractPerStudentSerializer(many=True)
 
     enrollments = academics.serializers.EnrollmentPerStudentSerializer(many=True)
-    toefl = academics.serializers.TOEFLScoreCRUDSerializer(many=True)
-    ielts = academics.serializers.IELTSScoreCRUDSerializer(many=True)
-    duolingo = academics.serializers.DuolingoScoreCRUDSerializer(many=True)
-    sat = academics.serializers.SATScoreCRUDSerializer(many=True)
-    act = academics.serializers.ACTScoreCRUDSerializer(many=True)
-    ap = academics.serializers.APScoreCRUDSerializer(many=True)
-    ib = academics.serializers.IBGradeCRUDSerializer(many=True)
-    alevel = academics.serializers.ALevelGradeCRUDSerializer(many=True)
-    gre = academics.serializers.GREScoreCRUDSerializer(many=True)
-    gmat = academics.serializers.GMATScoreCRUDSerializer(many=True)
-    lsat = academics.serializers.LSATScoreCRUDSerializer(many=True)
-
     cf_academy_programs = cf.serializers.AcademyProgramCRUDSerializer(many=True)
+
+    test_scores = serializers.SerializerMethodField()
+
+    def get_test_scores(self, student):
+        test_scores = []
+
+        for score in student.toefl.all():
+            toefl_serializer = academics.serializers.TOEFLScoreCRUDSerializer(score)
+            toefl_data = toefl_serializer.data
+            toefl_data["type"] = "TOEFL"
+            test_scores.append(toefl_data)
+
+        for score in student.ielts.all():
+            ielts_serializer = academics.serializers.IELTSScoreCRUDSerializer(score)
+            ielts_data = ielts_serializer.data
+            ielts_data["type"] = "IELTS"
+            test_scores.append(ielts_data)
+
+        for score in student.duolingo.all():
+            duolingo_serializer = academics.serializers.DuolingoScoreCRUDSerializer(
+                score
+            )
+            duolingo_data = duolingo_serializer.data
+            duolingo_data["type"] = "Duolingo"
+            test_scores.append(duolingo_data)
+
+        for score in student.sat.all():
+            sat_serializer = academics.serializers.SATScoreCRUDSerializer(score)
+            sat_data = sat_serializer.data
+            sat_data["type"] = "SAT"
+            test_scores.append(sat_data)
+
+        for score in student.act.all():
+            act_serializer = academics.serializers.ACTScoreCRUDSerializer(score)
+            act_data = act_serializer.data
+            act_data["type"] = "ACT"
+            test_scores.append(act_data)
+
+        for score in student.ap.all():
+            ap_serializer = academics.serializers.APScoreCRUDSerializer(score)
+            ap_data = ap_serializer.data
+            ap_data["type"] = "AP"
+            test_scores.append(ap_data)
+
+        for score in student.ib.all():
+            ib_serializer = academics.serializers.IBGradeCRUDSerializer(score)
+            ib_data = ib_serializer.data
+            ib_data["type"] = "IB"
+            test_scores.append(ib_data)
+
+        for score in student.alevel.all():
+            alevel_serializer = academics.serializers.ALevelGradeCRUDSerializer(score)
+            alevel_data = alevel_serializer.data
+            alevel_data["type"] = "A-level"
+            test_scores.append(alevel_data)
+
+        for score in student.gre.all():
+            gre_serializer = academics.serializers.GREScoreCRUDSerializer(score)
+            gre_data = gre_serializer.data
+            gre_data["type"] = "GRE"
+            test_scores.append(gre_data)
+
+        for score in student.gmat.all():
+            gmat_serializer = academics.serializers.GMATScoreCRUDSerializer(score)
+            gmat_data = gmat_serializer.data
+            gmat_data["type"] = "GMAT"
+            test_scores.append(gmat_data)
+
+        for score in student.lsat.all():
+            lsat_serializer = academics.serializers.LSATScoreCRUDSerializer(score)
+            lsat_data = lsat_serializer.data
+            lsat_data["type"] = "LSAT"
+            test_scores.append(lsat_data)
+
+        return test_scores
 
 
 class StudentStaffListSerializer(serializers.ModelSerializer):

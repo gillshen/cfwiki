@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { get, destroy, createOrUpdate, makeUrl } from '$lib/api/core';
+import type { Prettify } from '$lib/util/siteUtils';
 import type { StudentSchema } from '$lib/schemas/student';
 import type { ContractType, Service } from '$lib/api/contract';
 import type { EnrollmentByStudent } from '$lib/api/enrollment';
@@ -44,12 +45,14 @@ export type ContractSummary = {
 	services: Service[];
 };
 
-export type Contract = ContractSummary & {
-	id: number;
-	student: number;
-	date: string | null;
-	student_progression_when_signed: string;
-};
+export type Contract = Prettify<
+	ContractSummary & {
+		id: number;
+		student: number;
+		date: string | null;
+		student_progression_when_signed: string;
+	}
+>;
 
 export type StudentEnrollmentItem = {
 	school_name: string;
@@ -98,28 +101,34 @@ export type AcademicFields = {
 	cf_academy_programs: AcademyProgram[];
 };
 
-export type StudentListItem = BaseStudent & { contracts: ContractSummary[] } & AcademicFields;
+export type StudentListItem = Prettify<
+	BaseStudent & { contracts: ContractSummary[] } & AcademicFields
+>;
 
 export type StudentOfCferListItem = BaseStudent & {
 	contracts: Contract[];
 };
 
-export type StudentDetail = BaseStudent & {
-	contracts: Contract[];
-	enrollments: EnrollmentByStudent[];
-	toefl: ToeflScore[];
-	ielts: IeltsScore[];
-	duolingo: DuolingoScore[];
-	sat: SatScore[];
-	act: ActScore[];
-	ap: ApScore[];
-	ib: IbGrade[];
-	alevel: AlevelGrade[];
-	gre: GreScore[];
-	gmat: GmatScore[];
-	lsat: LsatScore[];
-	cf_academy_programs: AcademyProgramListItem[];
-};
+export type StudentDetail = Prettify<
+	BaseStudent & {
+		contracts: Contract[];
+		enrollments: EnrollmentByStudent[];
+		cf_academy_programs: AcademyProgramListItem[];
+		test_scores: Array<
+			| (ToeflScore & { type: 'TOEFL' })
+			| (IeltsScore & { type: 'IELTS' })
+			| (DuolingoScore & { type: 'Duolingo' })
+			| (SatScore & { type: 'SAT' })
+			| (ActScore & { type: 'ACT' })
+			| (ApScore & { type: 'AP' })
+			| (IbGrade & { type: 'IB' })
+			| (AlevelGrade & { type: 'A-level' })
+			| (GreScore & { type: 'GRE' })
+			| (GmatScore & { type: 'GMAT' })
+			| (LsatScore & { type: 'LSAT' })
+		>;
+	}
+>;
 
 export async function fetchStudents(params?: {
 	cfer?: string | null;

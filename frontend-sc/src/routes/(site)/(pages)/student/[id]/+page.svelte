@@ -45,13 +45,12 @@
 	import Plus from 'lucide-svelte/icons/plus';
 	import MoveRight from 'lucide-svelte/icons/move-right';
 	import UserPen from 'lucide-svelte/icons/user-pen';
-	// import FileUser from 'lucide-svelte/icons/file-user';
 	import Receipt from 'lucide-svelte/icons/receipt';
 	import BookOpenCheck from 'lucide-svelte/icons/book-open-check';
 
 	export let data;
 
-	let editMode = true;
+	let editMode = false;
 
 	const form = superForm(data.newApplicationPrepForm);
 	const { form: formData, enhance } = form;
@@ -64,19 +63,6 @@
 		value: contract.id.toString(),
 		label: `${contract.type} ${contract.target_year}`
 	}));
-
-	$: hasTestScores =
-		data.student.sat.length ||
-		data.student.act.length ||
-		data.student.ap.length ||
-		data.student.ib.length ||
-		data.student.alevel.length ||
-		data.student.gre.length ||
-		data.student.gmat.length ||
-		data.student.lsat.length ||
-		data.student.toefl.length ||
-		data.student.ielts.length ||
-		data.student.duolingo.length;
 
 	const applicationTypeMap: Record<string, string[]> = {
 		'': [],
@@ -135,7 +121,7 @@
 
 	<div class="w-full">
 		{#if data.userCanEdit}
-			<div class="py-5 w-[600px]">
+			<div class="w-[600px] mt-[72px] mb-[30px]">
 				<div class="flex items-center space-x-2 w-fit ml-auto">
 					<Switch id="edit-mode" bind:checked={editMode} />
 					<Label
@@ -146,7 +132,7 @@
 			</div>
 		{/if}
 
-		<div class={cn('flex flex-col gap-8', data.userCanEdit ? 'pt-4' : 'pt-[76px]')}>
+		<div class={cn('flex flex-col gap-8', data.userCanEdit ? 'pt-4' : 'mt-[138px]')}>
 			{#if editMode}
 				<StudentPage.Section title="Profile" icon={UserPen}>
 					<Button variant="link" href="/student/{data.student.id}/update"
@@ -200,40 +186,6 @@
 					class="bg-white border rounded-full shadow-md ml-2 mt-4"><Plus class="size-4" /></Button
 				>
 			</StudentPage.Section>
-			<!-- <hgroup>
-				<h3 class="text-sm text-muted-foreground mb-2 px-5 flex items-center">
-					<GraduationCap class="size-3 mr-2" />Educational Experiences
-				</h3>
-				<Card.Root class="text-sm shadow-none max-w-prose">
-					<Card.Content class="pt-4">
-						<div class="flex flex-col gap-4">
-							{#each data.student.enrollments as enrollment}
-								<div>
-									<Button
-										variant="link"
-										href="/student/{data.student.id}/edu/{enrollment.id}"
-										class="w-fit pb-1"
-										>{enrollment.school.name}<MoveRight class="size-4 ml-2" /></Button
-									>
-									<p class="text-xs pl-4 text-muted-foreground">
-										{formatEnrollmentDates(enrollment, toShortYearMonth)}
-									</p>
-								</div>
-							{/each}
-						</div>
-					</Card.Content>
-					{#if editMode}
-						<Card.Footer class="border-t pb-4">
-							<Button
-								variant="ghost"
-								size="icon"
-								class="bg-white border rounded-full shadow-md ml-2 mt-4"
-								><Plus class="size-4" /></Button
-							>
-						</Card.Footer>
-					{/if}
-				</Card.Root>
-			</hgroup> -->
 
 			<hgroup>
 				<h3 class="text-sm text-muted-foreground mb-2 px-5 flex items-center">
@@ -243,9 +195,9 @@
 					<Card.Content class="pt-4">
 						<div class="flex flex-col gap-4">
 							{#key data.student}
-								{#if hasTestScores}
+								{#if data.student.test_scores.length}
 									<!-- <div class="flex gap-4 flex-wrap items-stretch"> -->
-									{#each data.student.act as score}
+									{#each data.student.test_scores.filter((s) => s.type === 'ACT') as score}
 										<div>
 											<Button variant="link"
 												>ACT
@@ -261,7 +213,7 @@
 												<ScoreCard.ActBarSet {score} />
 											</ScoreCard.Root> -->
 									{/each}
-									{#each data.student.toefl as score}
+									{#each data.student.test_scores.filter((s) => s.type === 'TOEFL') as score}
 										<div>
 											<Button variant="link"
 												>TOEFL
