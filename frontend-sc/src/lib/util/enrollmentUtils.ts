@@ -10,14 +10,16 @@ export function formatEnrollment(e: StudentEnrollmentItem): string {
 	const dash = ' \u2013 '; // en dash surrounded by space
 	let progression: string;
 
+	const startProgression = formatProgression(e.start_progression);
+
 	if (e.start_progression == e.end_progression) {
-		progression = e.start_progression;
+		progression = startProgression;
 	} else if (e.start_progression.startsWith('G') && e.end_progression.startsWith('G')) {
-		progression = `${e.start_progression}${dash}${e.end_progression.slice(1)}`;
+		progression = `${startProgression}${dash}${e.end_progression.slice(1)}`;
 	} else if (e.start_progression.startsWith('Year ') && e.end_progression.startsWith('Year ')) {
-		progression = `${e.start_progression}${dash}${e.end_progression.slice(5)}`;
+		progression = `${startProgression}${dash}${e.end_progression.slice(5)}`;
 	} else {
-		progression = `${e.start_progression}${dash}${e.end_progression || 'Now'}`;
+		progression = `${startProgression}${dash}${formatProgression(e.end_progression) || 'Present'}`;
 	}
 
 	const extra = [progression, e.curriculum].filter(Boolean).join(', ');
@@ -30,14 +32,19 @@ export function formatEnrollmentDates(
 ): string {
 	return [
 		dateFormatter(e.start_date),
-		e.start_progression ? `(${e.start_progression})` : '',
+		e.start_progression ? `(${formatProgression(e.start_progression)})` : '',
 		'\u2013', // n dash
-		dateFormatter(e.end_date) || '?',
-		e.end_progression ? `(${e.end_progression})` : ''
+		dateFormatter(e.end_date) || 'Present',
+		e.end_progression ? `(${formatProgression(e.end_progression)})` : ''
 	]
 		.filter(Boolean)
 		.join(' ');
 }
+
+export const formatProgression = (progression: string): string => {
+	// replace 'Year ' with 'Yr ' and "Gxx" with "G-xx" for better readability
+	return progression.replace('Year ', 'Yr ').replace(/G(\d+)/, 'G-$1');
+};
 
 export function orderByDatesDesc(
 	a: { start_date: string; end_date: string | null },

@@ -134,9 +134,9 @@
 
 		<div class={cn('flex flex-col gap-8', data.userCanEdit ? 'pt-4' : 'mt-[138px]')}>
 			{#if editMode}
-				<StudentPage.Section title="Profile" icon={UserPen}>
+				<StudentPage.Section title="Personal Info" icon={UserPen}>
 					<Button variant="link" href="/student/{data.student.id}/update"
-						>Edit profile<MoveRight class="size-4 ml-2" /></Button
+						>Edit personal info<MoveRight class="size-4 ml-2" /></Button
 					>
 				</StudentPage.Section>
 			{/if}
@@ -268,24 +268,9 @@
 
 		<!-- <Section
 			id="contracts"
-			title={data.student.contracts.length > 1 ? 'Contracts' : 'Contract'}
-			class="bg-muted/50 px-8 py-6 mb-6 rounded-xl"
 		>
 			{#if data.student.contracts.length}
-				<div class="flex gap-6 flex-wrap">
-					{#each data.student.contracts.sort(orderByStatusTargetYearDesc) as contract}
-						<ContractCard {contract} canEdit={canEditContract({ user: data.user, contract })} />
-					{/each}
-				</div>
-				{#if data.userCanEdit}
-					<div class="pt-4">
-						<Button
-							variant="outline"
-							href="/student/{data.student.id}/contract/new"
-							class="text-primary hover:no-underline">Add Contract</Button
-						>
-					</div>
-				{/if}
+				
 			{:else}
 				<Alert.Root class="w-fit h-[180px] pr-8 mt-4 max-w-prose border-none bg-yellow-300">
 					<TriangleAlert class="size-4" />

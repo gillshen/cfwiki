@@ -18,46 +18,46 @@
 		</div>
 
 		<!-- citizenship -->
-		<hgroup class="flex flex-col gap-0.5">
-			<h3 class="text-muted-foreground/80">Citizenship</h3>
+		<hgroup class="flex flex-col gap-1">
+			<h3 class="text-muted-foreground">Citizenship</h3>
 			<p>
 				{student.citizenship}&nbsp; {countryFlags[student.citizenship]}
 			</p>
 		</hgroup>
 
 		<!-- gender -->
-		<hgroup class="flex flex-col gap-0.5">
-			<h3 class="text-muted-foreground/80">Gender</h3>
+		<hgroup class="flex flex-col gap-1">
+			<h3 class="text-muted-foreground">Gender</h3>
 			<p>{toTitleCase(student.gender)}</p>
 		</hgroup>
 
 		<!-- date of birth -->
-		<hgroup class="flex flex-col gap-0.5">
-			<h3 class="text-muted-foreground/80">Date of Birth</h3>
+		<hgroup class="flex flex-col gap-1">
+			<h3 class="text-muted-foreground">Date of Birth</h3>
 			{#if student.date_of_birth}
 				<p>{toShortDate(student.date_of_birth)}</p>
 			{:else}
-				<p class="text-muted-foreground/80">n/a</p>
+				<p class="text-muted-foreground">n/a</p>
 			{/if}
 		</hgroup>
 
 		<!-- residence -->
-		<hgroup class="flex flex-col gap-0.5">
-			<h3 class="text-muted-foreground/80">Residence</h3>
+		<hgroup class="flex flex-col gap-1">
+			<h3 class="text-muted-foreground">Residence</h3>
 			{#if student.base_country}
-				<p>{formatLocation(student)}</p>
+				<p>{formatLocation(student)}&nbsp; {countryFlags[student.base_country]}</p>
 			{:else}
-				<p class="text-muted-foreground/80">n/a</p>
+				<p class="text-muted-foreground">n/a</p>
 			{/if}
 		</hgroup>
 
 		<!-- comments -->
-		<hgroup class="flex flex-col gap-0.5">
-			<h3 class="text-muted-foreground/80">Comments</h3>
+		<hgroup class="flex flex-col gap-1">
+			<h3 class="text-muted-foreground">Comments</h3>
 			{#if student.comments}
 				<p class="line-clamp-6">{student.comments}</p>
 			{:else}
-				<p class="text-muted-foreground/80">n/a</p>
+				<p class="text-muted-foreground">n/a</p>
 			{/if}
 		</hgroup>
 	</div>
