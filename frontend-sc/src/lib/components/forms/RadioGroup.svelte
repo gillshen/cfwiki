@@ -20,7 +20,7 @@
 </script>
 
 <Form.Fieldset {form} {name}>
-	<Form.Legend class={cn('pb-1 pt-2', labelClass)}>{label}</Form.Legend>
+	<Form.Legend class={cn('pb-1.5', labelClass)}>{label}</Form.Legend>
 	<Form.Control>
 		<RadioGroup.Root
 			bind:value={//

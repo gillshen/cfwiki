@@ -172,32 +172,35 @@ export const formatResidence = (student: StudentListItem): string => {
 	return `${flag}\xa0\xa0${residence}`;
 };
 
-export const gradeValueGetter =
-	({
-		progression,
-		enrollmentsGetter
-	}: {
-		progression: string;
-		enrollmentsGetter: (params: ValueGetterParams) => StudentEnrollmentItem[];
-	}): ValueGetterFunc =>
-	(valueGetterParams: ValueGetterParams): string => {
+export const gradeValueGetter = (params: {
+	progression: string;
+	enrollmentsGetter: (params: ValueGetterParams) => StudentEnrollmentItem[];
+}): ValueGetterFunc => {
+	const { progression, enrollmentsGetter } = params;
+
+	// This function returns a formatted string of grades for a given progression
+	// across all schools the student is enrolled in
+	return (valueGetterParams: ValueGetterParams): string => {
 		// student may be enrolled in more than one school during a progression
 		// but each (school, progression) combination is unique
-		const gradePerSchool = enrollmentsGetter(valueGetterParams)
+		const gradesBySchool = enrollmentsGetter(valueGetterParams)
 			.map((enrollment) => ({
 				schoolName: enrollment.school_name,
-				grade: formatGradeOfProgression({ enrollment, progression, precision: 2 })
+				grade: formatGradeOfProgression({ enrollment, progression })
 			}))
 			.filter((item) => item.grade !== undefined) as { schoolName: string; grade: string }[];
 
-		if (!gradePerSchool.length) {
-			return '';
+		if (!gradesBySchool.length) return '';
+
+		if (gradesBySchool.length === 1) {
+			// if only one school, return the grade directly
+			return gradesBySchool[0].grade;
 		}
-		if (gradePerSchool.length === 1) {
-			return gradePerSchool[0].grade;
-		}
-		return gradePerSchool.map((obj) => `${obj.schoolName}: ${obj.grade}`).join('; ');
+		// if multiple schools, return a formatted string of grades
+		// e.g. "School A: 3.5/4; School B: 3.8/4"
+		return gradesBySchool.map((obj) => `${obj.schoolName}: ${obj.grade}`).join('; ');
 	};
+};
 
 export const formatCfNames = (
 	services: { role: string; cf_username: string }[],

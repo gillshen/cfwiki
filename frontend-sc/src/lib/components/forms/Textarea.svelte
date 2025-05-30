@@ -40,7 +40,7 @@
 			{placeholder}
 			{maxlength}
 			{rows}
-			class={textareaClass}
+			class={cn('w-[450px] max-w-[450px]', textareaClass)}
 			{...attrs}
 			value={String($formData[name] ?? '')}
 			on:input={handleInput}

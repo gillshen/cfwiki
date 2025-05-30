@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { slide } from 'svelte/transition';
 
 	import { cn } from '$lib/utils';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
@@ -20,7 +19,7 @@
 
 	export let data;
 
-	$: studentPgae = !!$page.url.pathname.match(/^[/]student[/]\d+$/);
+	$: studentPgae = !!$page.url.pathname.match(/^[/]student[/]\d+/);
 	$: dataGridPage = !!$page.url.pathname.match(/^[/]data-grids[/](students|applications)/);
 
 	$: selectedStudentId = (() => {
@@ -49,7 +48,7 @@
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="ghost" builders={[builder]}>CF People</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content transition={slide} transitionConfig={{ duration: 200 }}>
+				<DropdownMenu.Content transitionConfig={{ duration: 200 }}>
 					<DropdownMenu.Group class="grid grid-cols-2 items-start">
 						{#each Object.values(Departments) as department}
 							<div class="grid grid-cols-2 gap-x-4 mx-4 mb-2">
@@ -72,11 +71,7 @@
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="ghost" builders={[builder]}>Students</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content
-					class="min-w-[190px]"
-					transition={slide}
-					transitionConfig={{ duration: 150 }}
-				>
+				<DropdownMenu.Content class="min-w-[190px]" transitionConfig={{ duration: 150 }}>
 					<DropdownMenu.Group class="flex flex-col">
 						<DropdownMenu.Item
 							href="/data-grids/students?contractStatus=In+effect"
@@ -129,11 +124,7 @@
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="ghost" builders={[builder]}>Applications</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content
-					class="min-w-[200px]"
-					transition={slide}
-					transitionConfig={{ duration: 200 }}
-				>
+				<DropdownMenu.Content class="min-w-[200px]" transitionConfig={{ duration: 200 }}>
 					<DropdownMenu.Group class="flex flex-col">
 						<DropdownMenu.Item
 							href="/data-grids/applications?status=pending"
@@ -212,11 +203,7 @@
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="ghost" builders={[builder]}>Institutions</Button>
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content
-					class="min-w-[200px]"
-					transition={slide}
-					transitionConfig={{ duration: 200 }}
-				>
+				<DropdownMenu.Content class="min-w-[200px]" transitionConfig={{ duration: 200 }}>
 					<DropdownMenu.Group class="flex flex-col">
 						<DropdownMenu.Label class="px-3 py-1.5">Schools</DropdownMenu.Label>
 						<DropdownMenu.Item

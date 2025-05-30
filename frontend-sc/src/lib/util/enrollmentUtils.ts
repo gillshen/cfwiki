@@ -41,9 +41,17 @@ export function formatEnrollmentDates(
 		.join(' ');
 }
 
-export const formatProgression = (progression: string): string => {
-	// replace 'Year ' with 'Yr ' and "Gxx" with "G-xx" for better readability
-	return progression.replace('Year ', 'Yr ').replace(/G(\d+)/, 'G-$1');
+export const formatProgression = (
+	progression: string,
+	options: { shortenYear: boolean } = { shortenYear: true }
+): string => {
+	// replace "Gxx" with "G-xx" for better readability
+	let formatted = progression.replace(/G(\d+)/, 'G-$1');
+	// replace "Year xx" with "Yr xx" if shortenYear is true
+	if (options.shortenYear) {
+		formatted = formatted.replace(/Year (\d+)/, 'Yr $1');
+	}
+	return formatted;
 };
 
 export function orderByDatesDesc(
@@ -60,21 +68,16 @@ export function orderByDatesDesc(
 	return endDateB.localeCompare(endDateA);
 }
 
-export const formatGradeOfProgression = ({
-	enrollment,
-	progression,
-	precision = 3
-}: {
+export const formatGradeOfProgression = (params: {
 	enrollment: StudentEnrollmentItem;
 	progression: string;
-	precision?: number;
 }): string | undefined => {
+	const { enrollment, progression } = params;
 	const grades = enrollment.grades.filter((grade) => grade.progression === progression);
 
-	if (!grades.length) {
-		return undefined;
-	}
+	if (!grades.length) return undefined;
+
 	// grades always come sorted from the backend
 	const lastGrade = grades[grades.length - 1];
-	return formatGrade(lastGrade, precision);
+	return formatGrade(lastGrade);
 };

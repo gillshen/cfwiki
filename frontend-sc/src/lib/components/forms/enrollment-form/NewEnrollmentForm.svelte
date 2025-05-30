@@ -7,7 +7,7 @@
 	import type { School } from '$lib/api/school';
 	import type { SchoolSchema } from '$lib/schemas/school';
 	import CommonEnrollmentFormFields from './CommonEnrollmentFormFields.svelte';
-	import Combobox from '$lib/components/forms/Combobox.svelte';
+	import RadioGroup from '$lib/components/forms/RadioGroup.svelte';
 	import NcCombobox from '$lib/components/interactive/Combobox.svelte'; // non-form-controlled
 	import NcRadioGroup from '$lib/components/interactive/RadioGroup.svelte'; // non-form-controlled
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
@@ -49,20 +49,32 @@
 
 	let progressions: string[];
 
+	const onSchoolTypeChange = () => {
+		// Reset enrollment form data related to school type
+		selectedSchool = '';
+		$formData.start_progression = '';
+		$formData.end_progression = '';
+		$formData.curriculum = '';
+	};
+
 	$: {
+		// Reset the program type and progression options in the enrollment form
+		// Reset the school type in the new school form
 		switch (selectedSchoolType) {
 			case 'Secondary School':
+				$formData.program_type = 'Secondary School';
 				progressions = [...SECONDARY_PROGRESSIONS];
 				$schoolFormData.type = 'Secondary School';
 				break;
 			case 'University':
-				progressions = [...UNIVERSITY_PROGRESSIONS];
 				if ($formData.program_type === 'Secondary School') {
 					$formData.program_type = '';
 				}
+				progressions = [...UNIVERSITY_PROGRESSIONS];
 				$schoolFormData.type = 'University';
 				break;
 			default:
+				$formData.program_type = '';
 				progressions = [];
 				$schoolFormData.type = '';
 		}
@@ -81,14 +93,11 @@
 	<input type="number" name="student" value={$formData.student} hidden />
 
 	<div class="flex flex-col gap-2.5 pb-2">
-		<Label>School type</Label>
+		<Label class="pb-1">School type</Label>
 		<NcRadioGroup
 			bind:value={selectedSchoolType}
 			items={['University', 'Secondary School']}
-			onValueChange={() => {
-				selectedSchool = '';
-				$formData.curriculum = '';
-			}}
+			onValueChange={onSchoolTypeChange}
 		/>
 	</div>
 
@@ -100,7 +109,7 @@
 				.filter((school) => school.type === selectedSchoolType)
 				.map((school) => school.name)
 				.sort()}
-			width="w-[420px]"
+			width="w-[450px]"
 			disableSearch={!selectedSchoolType}
 			searchDisabledEmptyText={selectedSchoolType
 				? undefined
@@ -140,15 +149,8 @@
 
 	{#if selectedSchoolType === 'Secondary School'}
 		<input name="program_type" value="Secondary School" hidden />
-	{:else}
-		<Combobox
-			{form}
-			name="program_type"
-			label="Program type"
-			items={selectedSchoolType ? programTypeItems : []}
-			disableSearch
-			searchDisabledEmptyText="You need to select a school type first"
-		/>
+	{:else if selectedSchoolType === 'University'}
+		<RadioGroup {form} name="program_type" label="Program type" items={programTypeItems} />
 	{/if}
 
 	<CommonEnrollmentFormFields form={_form} programType={selectedSchoolType} {progressions} />

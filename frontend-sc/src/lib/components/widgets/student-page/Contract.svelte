@@ -3,12 +3,13 @@
 	import * as Accordion from '$lib/components/ui/accordion/';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import MoveRight from 'lucide-svelte/icons/move-right';
-	import Calendar from 'lucide-svelte/icons/calendar';
+	import CalendarDays from 'lucide-svelte/icons/calendar-days';
 
 	import type { Contract } from '$lib/api/student';
 	import type { ContractStatus, Service } from '$lib/api/contract';
 	import UserAvatar from '$lib/components/misc/UserAvatar.svelte';
-	import { endedEarly, orderByRoleUsername } from '$lib/util/serviceUtils';
+	import ContractSubhead from './ContractSubhead.svelte';
+	import { orderByRoleUsername } from '$lib/util/serviceUtils';
 	import { toShortDate, toShortYearMonth } from '$lib/util/dateUtils';
 
 	export let contract: Contract;
@@ -42,84 +43,80 @@
 				</p>
 			</div>
 		</div>
-	{:else if editable}
-		<div class="flex items-center justify-between">
-			<Button variant="link" {href} class="h-6"
-				>{contractTitle}<MoveRight class="size-4 ml-2" /></Button
-			>
-		</div>
-	{:else}
-		<div class="flex items-center justify-between">
-			<Button
-				variant="link"
-				href=""
-				class="h-6 text-muted-foreground hover:no-underline hover:cursor-not-allowed"
-				>{contractTitle}</Button
-			>
-		</div>
-	{/if}
 
-	<Accordion.Root>
-		<Accordion.Item value="contract-{contract.id}" class="border-none">
-			<Accordion.Trigger
-				class="font-normal px-4 inline-flex items-center py-0 text-muted-foreground hover:text-primary"
-			>
-				<div class="w-fit">
-					{#each Object.entries(servicesGrouped) as [username, services], index}
-						{@const stayedTillEnd = services.map((s) => !endedEarly(s)).some(Boolean)}
-						<span class="inline-flex items-center gap-1">
-							{#if index},
-							{/if}<span class={stayedTillEnd ? '' : 'line-through'}>{username}</span>
-						</span>
-					{/each}
-				</div>
-			</Accordion.Trigger>
-			<Accordion.Content class="px-4 pt-4 text-muted-foreground">
-				<!-- date -->
-				<div class="flex items-center">
-					<Calendar class="size-3.5 mr-2" />
-					{#if contract.date && contract.student_progression_when_signed}
-						<p>
-							{toShortYearMonth(contract.date)} / {contract.student_progression_when_signed}
-						</p>
-					{:else if contract.date}
-						<p>{toShortYearMonth(contract.date)}</p>
-					{:else if contract.student_progression_when_signed}
-						<p>{contract.student_progression_when_signed}</p>
-					{:else}
-						<p>Date n/a</p>
-					{/if}
-				</div>
-
-				<!-- staff -->
-				<div class="flex flex-col gap-4 px-6 py-4 mt-2">
-					{#each Object.entries(servicesGrouped) as [username, services]}
-						<a class="flex items-center gap-2 group w-fit hover:no-underline" href="/cf/{username}">
-							<UserAvatar {username} class="size-[32px]" imageClass="size-[20px]" />
-
-							<div class="flex flex-col gap-1">
-								<p class="text-primary group-hover:underline">{username}</p>
-
-								<ul class="flex items-center gap-1.5 text-xs">
-									{#each services as service, index}
-										{#if index}&bull;{/if}
-										<li class="inline-flex gap-1">
-											<span>{service.role}</span>
-											{#if service.start_date && service.end_date}
-												<span>{toShortDate(service.start_date, service.end_date)}</span>
-											{:else if service.start_date}
-												<span>starting {toShortDate(service.start_date)}</span>
-											{:else if service.end_date}
-												<span>until {toShortDate(service.end_date)}</span>
-											{/if}
-										</li>
-									{/each}
-								</ul>
+		<Accordion.Root>
+			<Accordion.Item value="contract-{contract.id}" class="border-none">
+				<Accordion.Trigger
+					class="font-normal py-0 pr-4 text-muted-foreground hover:no-underline hover:text-primary"
+				>
+					<ContractSubhead {servicesGrouped} />
+				</Accordion.Trigger>
+				<Accordion.Content class="px-4 py-3 text-muted-foreground">
+					<div class="flex flex-col gap-4">
+						<!-- date -->
+						{#if contract.date || contract.student_progression_when_signed}
+							<div class="flex items-center">
+								<CalendarDays class="size-3.5 mr-1.5" />
+								<p>
+									{[toShortYearMonth(contract.date), contract.student_progression_when_signed]
+										.filter(Boolean)
+										.join(' / ')}
+								</p>
 							</div>
-						</a>
-					{/each}
-				</div>
-			</Accordion.Content>
-		</Accordion.Item>
-	</Accordion.Root>
+						{/if}
+
+						<!-- staff -->
+						<div class="flex flex-col gap-4 px-6 mt-2">
+							{#each Object.entries(servicesGrouped) as [username, services]}
+								<a
+									class="flex items-center gap-2 group w-fit hover:no-underline"
+									href="/cf/{username}"
+								>
+									<UserAvatar {username} class="size-[32px]" imageClass="size-[20px]" />
+
+									<div class="flex flex-col gap-1">
+										<p class="text-primary group-hover:underline">{username}</p>
+
+										<ul class="flex items-center gap-1.5 text-xs">
+											{#each services as service, index}
+												{#if index}&bull;{/if}
+												<li class="inline-flex gap-1">
+													<span>{service.role}</span>
+													{#if service.start_date && service.end_date}
+														<span>{toShortDate(service.start_date, service.end_date)}</span>
+													{:else if service.start_date}
+														<span>starting {toShortDate(service.start_date)}</span>
+													{:else if service.end_date}
+														<span>until {toShortDate(service.end_date)}</span>
+													{/if}
+												</li>
+											{/each}
+										</ul>
+									</div>
+								</a>
+							{/each}
+						</div>
+					</div>
+				</Accordion.Content>
+			</Accordion.Item>
+		</Accordion.Root>
+	{:else}
+		{#if editable}
+			<div class="flex items-center justify-between">
+				<Button variant="link" {href} class="h-6"
+					>{contractTitle}<MoveRight class="size-4 ml-2" /></Button
+				>
+			</div>
+		{:else}
+			<div class="flex items-center justify-between">
+				<Button
+					variant="link"
+					href=""
+					class="h-6 text-muted-foreground hover:no-underline hover:cursor-not-allowed"
+					>{contractTitle}</Button
+				>
+			</div>
+		{/if}
+		<ContractSubhead {servicesGrouped} class="text-xs text-muted-foreground" />
+	{/if}
 </div>

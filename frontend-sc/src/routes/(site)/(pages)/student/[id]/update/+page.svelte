@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
-	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
-	import Section from '$lib/components/containers/Section.svelte';
+	import * as StudentPage from '$lib/components/widgets/student-page/index';
 	import StudentForm from '$lib/components/forms/StudentForm.svelte';
 
 	export let data;
@@ -11,30 +10,30 @@
 	const { enhance } = form;
 </script>
 
-<BreadcrumbContainer>
-	<Breadcrumb.Item>
-		<Breadcrumb.Link href="/student/index">Students</Breadcrumb.Link>
-	</Breadcrumb.Item>
-	<Breadcrumb.Separator />
-	<Breadcrumb.Item>
-		<Breadcrumb.Link href="/student/{data.student.id}">{data.student.fullname}</Breadcrumb.Link>
-	</Breadcrumb.Item>
-	<Breadcrumb.Separator />
-	<Breadcrumb.Item>
-		<Breadcrumb.Page>Update</Breadcrumb.Page>
-	</Breadcrumb.Item>
-</BreadcrumbContainer>
+<StudentPage.Layout>
+	<svelte:fragment slot="breadcrumb">
+		<Breadcrumb.Item>
+			<Breadcrumb.Link href="/student/{data.student.id}">{data.student.fullname}</Breadcrumb.Link>
+		</Breadcrumb.Item>
+		<Breadcrumb.Separator />
+		<Breadcrumb.Item>
+			<Breadcrumb.Page>Update</Breadcrumb.Page>
+		</Breadcrumb.Item>
+	</svelte:fragment>
 
-<h2 class="page-title mb-2">Update Student Profile</h2>
+	<StudentPage.Header student={data.student} slot="header" />
 
-<Section id="student-form-section">
-	<form
-		method="POST"
-		class="max-w-prose space-y-6 mt-4"
-		action="?/updateStudent"
-		use:enhance
-		id="student-form"
-	>
-		<StudentForm {form} />
-	</form>
-</Section>
+	<h3 class="pb-2 pt-[72px] px-6 text-sm text-muted-foreground">Update Profile</h3>
+
+	<section class="border rounded-xl px-12 py-4 bg-white max-w-prose w-fit">
+		<form
+			method="POST"
+			class="max-w-prose space-y-6 my-4"
+			action="?/updateStudent"
+			use:enhance
+			id="student-form"
+		>
+			<StudentForm {form} />
+		</form>
+	</section>
+</StudentPage.Layout>

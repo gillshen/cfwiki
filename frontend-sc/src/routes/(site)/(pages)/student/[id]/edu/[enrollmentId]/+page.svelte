@@ -7,7 +7,7 @@
 	import GraduationCap from 'lucide-svelte/icons/graduation-cap';
 	import Check from 'lucide-svelte/icons/check';
 
-	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
+	import * as StudentPage from '$lib/components/widgets/student-page/index';
 	import Section from '$lib/components/containers/Section.svelte';
 	import ButtonDialog from '$lib/components/containers/ButtonDialog.svelte';
 	import PencilEditButton from '$lib/components/misc/PencilEditButton.svelte';
@@ -41,169 +41,166 @@
 	<title>{createTitle(`${data.student.fullname} @ ${data.enrollment.school.name}`)}</title>
 </svelte:head>
 
-<BreadcrumbContainer>
-	<Breadcrumb.Item>
-		<Breadcrumb.Link href="/student/index">Students</Breadcrumb.Link>
-	</Breadcrumb.Item>
-	<Breadcrumb.Separator />
-	<Breadcrumb.Item>
-		<Breadcrumb.Link href="/student/{data.student.id}">{data.student.fullname}</Breadcrumb.Link>
-	</Breadcrumb.Item>
-	<Breadcrumb.Separator />
-	<Breadcrumb.Item>
-		<Breadcrumb.Page
-			>@ {data.enrollment.school.alt_name || data.enrollment.school.name}</Breadcrumb.Page
-		>
-	</Breadcrumb.Item>
-</BreadcrumbContainer>
-
-<section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-4">
-	<h2 class="page-title flex items-center gap-1">
-		{data.student.fullname}
-		<span class="scale-[80%]">@</span>
-		{data.enrollment.school.name}
-	</h2>
-	<div class="flex flex-col gap-2 text-sm">
-		<div class="flex items-center gap-2">
-			<Calendar class="size-4" />
-			{formatEnrollmentDates(data.enrollment, toShortYearMonth)}
-		</div>
-		{#if data.enrollment.curriculum}
-			<div class="flex items-center gap-2">
-				<GraduationCap class="size-4" />
-				<div>{data.enrollment.curriculum}</div>
-			</div>
-		{/if}
-		<div class="=w-fit -mt-2">
-			<ButtonDialog
-				buttonSlot
-				dialogTitle="Update Educational Experience"
-				bind:open={enrollmentUpdateModal}
+<StudentPage.Layout>
+	<svelte:fragment slot="breadcrumb">
+		<Breadcrumb.Item>
+			<Breadcrumb.Link href="/student/{data.student.id}">{data.student.fullname}</Breadcrumb.Link>
+		</Breadcrumb.Item>
+		<Breadcrumb.Separator />
+		<Breadcrumb.Item>
+			<Breadcrumb.Page
+				>@ {data.enrollment.school.alt_name || data.enrollment.school.name}</Breadcrumb.Page
 			>
-				<PencilEditButton slot="button" class="p-0 mt-2" iconClass="mr-2" />
-				<EnrollmentForm
-					data={data.enrollmentForm}
-					enrollment={{ ...data.enrollment, school: data.enrollment.school.id }}
-					onUpdated={({ form }) => form.valid && (enrollmentUpdateModal = false)}
-				/>
-			</ButtonDialog>
+		</Breadcrumb.Item>
+	</svelte:fragment>
+
+	<StudentPage.Header student={data.student} slot="header" />
+
+	<section class="w-fit mb-2 space-y-2 py-4">
+		<div class="flex flex-col gap-2 text-sm">
+			<div class="flex items-center gap-2">
+				<Calendar class="size-4" />
+				{formatEnrollmentDates(data.enrollment, toShortYearMonth)}
+			</div>
+			{#if data.enrollment.curriculum}
+				<div class="flex items-center gap-2">
+					<GraduationCap class="size-4" />
+					<div>{data.enrollment.curriculum}</div>
+				</div>
+			{/if}
+			<div class="=w-fit -mt-2">
+				<ButtonDialog
+					buttonSlot
+					dialogTitle="Update Educational Experience"
+					bind:open={enrollmentUpdateModal}
+				>
+					<PencilEditButton slot="button" class="p-0 mt-2" iconClass="mr-2" />
+					<EnrollmentForm
+						data={data.enrollmentForm}
+						enrollment={{ ...data.enrollment, school: data.enrollment.school.id }}
+						onUpdated={({ form }) => form.valid && (enrollmentUpdateModal = false)}
+					/>
+				</ButtonDialog>
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<Section id="grades">
-	<Card.Root class={cn('shadow-none', hasGrades ? 'w-fit' : 'w-[450px]')}>
-		<Card.Header>
-			<Card.Title class="tracking-normal">Grades</Card.Title>
-			{#if !hasGrades}
-				<Card.Description><p class="text-balance">None has been reported yet.</p></Card.Description>
-			{/if}
-		</Card.Header>
-		<Card.Content class="min-h-[160px] flex">
-			{#if hasGrades}
-				<Table.Root class="w-[744px]">
-					<Table.Header>
-						<Table.Row>
-							<Table.Head class="font-semibold">Year</Table.Head>
-							<Table.Head class="font-semibold">Period</Table.Head>
-							<Table.Head class="font-semibold">GPA or Description</Table.Head>
-							<Table.Head class="font-semibold w-[105px] text-center">Weighted</Table.Head>
-							<Table.Head class="font-semibold w-[90px] text-center">Cumul.</Table.Head>
-							<Table.Head class="font-semibold w-[90px] flex-grow-0"></Table.Head>
-						</Table.Row>
-					</Table.Header>
-					<Table.Body>
-						{#each data.enrollment.grades as grade}
+	<Section id="grades">
+		<Card.Root class={cn('shadow-none w-fit')}>
+			<Card.Header>
+				<Card.Title class="tracking-normal">Grades</Card.Title>
+				{#if !hasGrades}
+					<Card.Description
+						><p class="text-balance">None has been reported yet.</p></Card.Description
+					>
+				{/if}
+			</Card.Header>
+			<Card.Content class="min-h-[160px] flex">
+				{#if hasGrades}
+					<Table.Root class="w-full">
+						<Table.Header>
 							<Table.Row>
-								<Table.Cell>{grade.progression}</Table.Cell>
-								<Table.Cell>{grade.term}</Table.Cell>
-								<Table.Cell class="tabular-nums max-w-[320px]">{formatGrade(grade)}</Table.Cell>
-								<Table.Cell class="text-center">
-									{#if grade.is_weighted}
-										<Check class="size-4 mx-auto" />
-									{:else}
-										<div class="text-muted-foreground size-4 mx-auto">-</div>
-									{/if}
-								</Table.Cell>
-								<Table.Cell class="text-center">
-									{#if grade.is_cumulative}
-										<Check class="size-4 mx-auto" />
-									{:else}
-										<div class="text-muted-foreground size-4 mx-auto">-</div>
-									{/if}
-								</Table.Cell>
-								<Table.Cell>
-									<div class="flex items-center gap-4 pr-6">
-										<GradeActionItem
-											{grade}
-											enrollmentId={data.enrollment.id}
-											{progressions}
-											updateForm={data.gradeForm}
-											deleteForm={data.deleteForm}
-										/>
-									</div>
-								</Table.Cell>
+								<Table.Head class="font-semibold">Year</Table.Head>
+								<Table.Head class="font-semibold">Period</Table.Head>
+								<Table.Head class="font-semibold">GPA or Description</Table.Head>
+								<Table.Head class="font-semibold w-[105px] text-center">Weighted</Table.Head>
+								<Table.Head class="font-semibold w-[90px] text-center">Cumul.</Table.Head>
+								<Table.Head class="font-semibold w-[90px] flex-grow-0"></Table.Head>
 							</Table.Row>
-						{/each}
-					</Table.Body>
-				</Table.Root>
-			{:else}
-				<ButtonDialog
-					buttonVariant="default"
-					buttonText="Report Grade"
-					dialogTitle="Report Grade"
-					buttonClass="w-fit m-auto"
-					bind:open={newGradeModal}
-				>
-					<GradeForm
-						data={data.gradeForm}
-						enrollmentId={data.enrollment.id}
-						{progressions}
-						onUpdated={({ form }) => form.valid && (newGradeModal = false)}
-					/>
-				</ButtonDialog>
+						</Table.Header>
+						<Table.Body>
+							{#each data.enrollment.grades as grade}
+								<Table.Row>
+									<Table.Cell>{grade.progression}</Table.Cell>
+									<Table.Cell>{grade.term}</Table.Cell>
+									<Table.Cell class="tabular-nums max-w-[320px]">{formatGrade(grade)}</Table.Cell>
+									<Table.Cell class="text-center">
+										{#if grade.is_weighted}
+											<Check class="size-4 mx-auto" />
+										{:else}
+											<div class="text-muted-foreground size-4 mx-auto">-</div>
+										{/if}
+									</Table.Cell>
+									<Table.Cell class="text-center">
+										{#if grade.is_cumulative}
+											<Check class="size-4 mx-auto" />
+										{:else}
+											<div class="text-muted-foreground size-4 mx-auto">-</div>
+										{/if}
+									</Table.Cell>
+									<Table.Cell>
+										<div class="flex items-center gap-4 pr-6">
+											<GradeActionItem
+												{grade}
+												enrollmentId={data.enrollment.id}
+												{progressions}
+												updateForm={data.gradeForm}
+												deleteForm={data.deleteForm}
+											/>
+										</div>
+									</Table.Cell>
+								</Table.Row>
+							{/each}
+						</Table.Body>
+					</Table.Root>
+				{:else}
+					<ButtonDialog
+						buttonVariant="default"
+						buttonText="Report Grade"
+						dialogTitle="Report Grade"
+						buttonClass="w-fit m-auto"
+						bind:open={newGradeModal}
+					>
+						<GradeForm
+							data={data.gradeForm}
+							enrollmentId={data.enrollment.id}
+							{progressions}
+							onUpdated={({ form }) => form.valid && (newGradeModal = false)}
+						/>
+					</ButtonDialog>
+				{/if}
+			</Card.Content>
+			{#if hasGrades}
+				<Card.Footer>
+					<ButtonDialog
+						buttonVariant="outline"
+						buttonText="Report Grade"
+						dialogTitle="Report Grade"
+						buttonClass="w-fit mt-2"
+						bind:open={newGradeModal}
+					>
+						<GradeForm
+							data={data.gradeForm}
+							enrollmentId={data.enrollment.id}
+							progressions={[...progressions]}
+							onUpdated={({ form }) => form.valid && (newGradeModal = false)}
+						/>
+					</ButtonDialog>
+				</Card.Footer>
 			{/if}
-		</Card.Content>
-		{#if hasGrades}
-			<Card.Footer>
-				<ButtonDialog
-					buttonVariant="outline"
-					buttonText="Report Grade"
-					dialogTitle="Report Grade"
-					buttonClass="w-fit mt-2"
-					bind:open={newGradeModal}
-				>
-					<GradeForm
-						data={data.gradeForm}
-						enrollmentId={data.enrollment.id}
-						progressions={[...progressions]}
-						onUpdated={({ form }) => form.valid && (newGradeModal = false)}
-					/>
-				</ButtonDialog>
-			</Card.Footer>
-		{/if}
-	</Card.Root>
-</Section>
+		</Card.Root>
+	</Section>
 
-<Section id="delete" class="mt-auto">
-	<ButtonDialog
-		buttonText="Delete Experience"
-		buttonVariant="destructive"
-		buttonClass="w-fit"
-		dialogTitle="Delete this educational experience?"
-		contentClass="pb-2"
-		bind:open={enrollmentDeleteModal}
-	>
-		<p slot="description" class="text-pretty">
-			Deletion is instant and irreversible. It will also cause all the associated grades to be
-			deleted instantly and irreversibly.
-		</p>
-		<DeleteForm
-			data={data.deleteForm}
-			objectId={data.enrollment.id}
-			action="?/deleteEnrollment"
-			onUpdated={({ form }) => form.valid && (enrollmentDeleteModal = false)}
-			onCancel={() => (enrollmentDeleteModal = false)}
-		/>
-	</ButtonDialog>
-</Section>
+	<Section id="delete" class="mt-auto">
+		<ButtonDialog
+			buttonText="Delete Experience"
+			buttonVariant="destructive"
+			buttonClass="w-fit"
+			dialogTitle="Delete this educational experience?"
+			contentClass="pb-2"
+			bind:open={enrollmentDeleteModal}
+		>
+			<p slot="description" class="text-pretty">
+				Deletion is instant and irreversible. It will also cause all the associated grades to be
+				deleted instantly and irreversibly.
+			</p>
+			<DeleteForm
+				data={data.deleteForm}
+				objectId={data.enrollment.id}
+				action="?/deleteEnrollment"
+				onUpdated={({ form }) => form.valid && (enrollmentDeleteModal = false)}
+				onCancel={() => (enrollmentDeleteModal = false)}
+			/>
+		</ButtonDialog>
+	</Section>
+</StudentPage.Layout>

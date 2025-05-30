@@ -10,29 +10,48 @@
 	export let progressions: string[];
 </script>
 
-<Input {form} name="start_date" label="Start date" type="date" class="pb-0.5" />
+<fieldset class="contents">
+	<Input
+		{form}
+		name="start_date"
+		label="Start date"
+		type="date"
+		class="pb-0.5"
+		inputClass="w-[300px]"
+	/>
+	<Combobox
+		{form}
+		name="start_progression"
+		label="Entering as"
+		items={progressions}
+		optional
+		searchDisabledEmptyText="You need to select a school type first"
+		disableSearch
+		width="w-[300px]"
+	/>
+</fieldset>
 
-<Combobox
-	{form}
-	name="start_progression"
-	label="Entering as"
-	items={progressions}
-	optional
-	searchDisabledEmptyText="You need to select a school type first"
-	disableSearch
-/>
-
-<Input {form} name="end_date" label="End date" type="date" class="pb-0.5" optional />
-
-<Combobox
-	{form}
-	name="end_progression"
-	label="Leaving as"
-	items={progressions}
-	optional
-	disableSearch
-	searchDisabledEmptyText="You need to select a school type first"
-/>
+<fieldset class="contents">
+	<Input
+		{form}
+		name="end_date"
+		label="End date"
+		type="date"
+		class="pb-0.5"
+		inputClass="w-[300px]"
+		optional
+	/>
+	<Combobox
+		{form}
+		name="end_progression"
+		label="Leaving as"
+		items={progressions}
+		optional
+		disableSearch
+		searchDisabledEmptyText="You need to select a school type first"
+		width="w-[300px]"
+	/>
+</fieldset>
 
 {#if programType === 'Secondary School'}
 	<Combobox
@@ -42,9 +61,17 @@
 		items={['A-level', 'AP', 'IB', 'Other']}
 		optional
 		disableSearch
+		width="w-[450px]"
 	/>
 {:else if programType}
-	<Input {form} name="curriculum" label="Program or major" maxlength={50} optional />
+	<Input
+		{form}
+		name="curriculum"
+		label="Program or major"
+		maxlength={50}
+		inputClass="w-[450px]"
+		optional
+	/>
 {/if}
 
 <Form.Button class="w-fit min-w-24">Submit</Form.Button>

@@ -138,7 +138,7 @@
 	name="comments"
 	label="Comments"
 	maxlength={5000}
-	class="max-w-[50ch]"
+	textareaClass="w-[450px]"
 	description="Anything you want to note about the student"
 	optional
 />

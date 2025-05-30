@@ -5,8 +5,9 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import * as Table from '$lib/components/ui/table/index';
 	import * as Card from '$lib/components/ui/card/index';
+	import Receipt from 'lucide-svelte/icons/receipt';
 
-	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
+	import * as StudentPage from '$lib/components/widgets/student-page/';
 	import Section from '$lib/components/containers/Section.svelte';
 	import ServiceForm from '$lib/components/forms/ServiceForm.svelte';
 	import ServiceActionItem from '$lib/components/widgets/ServiceActionItem.svelte';
@@ -71,184 +72,196 @@
 	<title>{createTitle(title)}</title>
 </svelte:head>
 
-<BreadcrumbContainer>
-	<Breadcrumb.Link href="/student/index">Students</Breadcrumb.Link>
-	<Breadcrumb.Separator />
-	<Breadcrumb.Link href="/student/{data.student.id}">{data.student.fullname}</Breadcrumb.Link>
-	<Breadcrumb.Separator />
-	<Breadcrumb.Item>
-		<Breadcrumb.Page>Contract</Breadcrumb.Page>
-	</Breadcrumb.Item>
-</BreadcrumbContainer>
-
-<section class="w-fit min-w-[60ch] mb-2 space-y-2 pb-4">
-	<h2 class="page-title flex gap-2">
-		<div>{data.student.fullname}</div>
-		<div class="scale-[80%]">&bullet;</div>
-		<div>{data.contract.type} {data.contract.target_year}</div>
-	</h2>
-	<div class="flex flex-row gap-2 items-center text-sm h-5">
-		<ContractStatusSign status={data.contract.status} />
-		{#if data.contract.date}
-			<div class="text-muted-foreground/50">&bullet;</div>
-			<Tooltip text="Date of signature">
-				{toShortDate(data.contract.date)}
-			</Tooltip>
-		{/if}
-		{#if data.contract.student_progression_when_signed}
-			<div class="text-muted-foreground/50">&bullet;</div>
-			<Tooltip text="Student progression when signed">
-				{data.contract.student_progression_when_signed}
-			</Tooltip>
-		{/if}
-		<ButtonDialog buttonSlot dialogTitle="Update Contract" bind:open={contractUpdateModal}>
-			<PencilEditButton slot="button" />
-			<form
-				method="POST"
-				class="max-w-prose space-y-4 my-4 mx-auto"
-				action="?/updateContract"
-				use:contractFormEnhance
-				id="contract-form"
+<StudentPage.Layout>
+	<svelte:fragment slot="breadcrumb">
+		<Breadcrumb.Item>
+			<Breadcrumb.Link href="/student/{data.student.id}">{data.student.fullname}</Breadcrumb.Link>
+		</Breadcrumb.Item>
+		<Breadcrumb.Separator />
+		<Breadcrumb.Item>
+			<Breadcrumb.Page class="flex items-center"
+				><Receipt class="size-3.5 mr-1.5" />
+				{data.contract.type}
+				{data.contract.target_year}</Breadcrumb.Page
 			>
-				<input type="number" name="id" bind:value={data.contract.id} hidden />
-				<input type="number" name="student" bind:value={data.student.id} hidden />
-				<input name="type" bind:value={data.contract.type} hidden />
-				<input type="number" name="target_year" bind:value={data.contract.target_year} hidden />
+		</Breadcrumb.Item>
+	</svelte:fragment>
 
-				<Combobox form={contractForm} name="status" label="Status" items={[...CONTRACT_STATUSES]} />
-				<Input
-					form={contractForm}
-					name="date"
-					label="Date signed"
-					type="date"
-					class="pb-1.5"
-					optional
-				/>
-				<Combobox
-					form={contractForm}
-					name="student_progression_when_signed"
-					label="Student progression"
-					items={progressions}
-					optional
-				/>
-				<Form.Button class="w-fit min-w-24">Submit</Form.Button>
-			</form>
-		</ButtonDialog>
-	</div>
-</section>
+	<StudentPage.Header student={data.student} slot="header" />
 
-<Section id="team" class="mt-4">
-	<Card.Root class={cn('shadow-none', hasServices ? 'w-fit' : 'w-[450px]')}>
-		<Card.Header>
-			<Card.Title class="tracking-normal">CF Team</Card.Title>
-			{#if !hasServices}
-				<Card.Description
-					><p class="text-balance">Make sure you add yourself first.</p></Card.Description
-				>
+	<section class="w-fit min-w-[60ch] mb-2 space-y-2 py-4">
+		<div class="flex flex-row gap-2 items-center text-sm h-5">
+			<ContractStatusSign status={data.contract.status} />
+			{#if data.contract.date}
+				<div class="text-muted-foreground/50">&bullet;</div>
+				<Tooltip text="Date of signature">
+					{toShortDate(data.contract.date)}
+				</Tooltip>
 			{/if}
-		</Card.Header>
-		<Card.Content class="min-h-[160px] flex">
-			{#if hasServices}
-				<Table.Root class="w-[653px]">
-					<Table.Header>
-						<Table.Row>
-							<Table.Head class="font-semibold min-w-[100px] ">Person</Table.Head>
-							<Table.Head class="font-semibold min-w-[100px]">Role</Table.Head>
-							<Table.Head class="font-semibold min-w-[120px]">Start Date</Table.Head>
-							<Table.Head class="font-semibold min-w-[120px]">End Date</Table.Head>
-							<Table.Head class="font-semibold w-[90px] flex-grow-0"></Table.Head>
-						</Table.Row>
-					</Table.Header>
-					<Table.Body>
-						{#each data.contract.services.sort(orderByRoleUsername) as service}
-							{@const { startDate, endDate } = formatDates({ service, contract: data.contract })}
+			{#if data.contract.student_progression_when_signed}
+				<div class="text-muted-foreground/50">&bullet;</div>
+				<Tooltip text="Student progression when signed">
+					{data.contract.student_progression_when_signed}
+				</Tooltip>
+			{/if}
+			<ButtonDialog buttonSlot dialogTitle="Update Contract" bind:open={contractUpdateModal}>
+				<PencilEditButton slot="button" />
+				<form
+					method="POST"
+					class="max-w-prose space-y-4 my-4 mx-auto"
+					action="?/updateContract"
+					use:contractFormEnhance
+					id="contract-form"
+				>
+					<input type="number" name="id" bind:value={data.contract.id} hidden />
+					<input type="number" name="student" bind:value={data.student.id} hidden />
+					<input name="type" bind:value={data.contract.type} hidden />
+					<input type="number" name="target_year" bind:value={data.contract.target_year} hidden />
+
+					<Combobox
+						form={contractForm}
+						name="status"
+						label="Status"
+						items={[...CONTRACT_STATUSES]}
+					/>
+					<Input
+						form={contractForm}
+						name="date"
+						label="Date signed"
+						type="date"
+						class="pb-1.5"
+						optional
+					/>
+					<Combobox
+						form={contractForm}
+						name="student_progression_when_signed"
+						label="Student progression"
+						items={progressions}
+						optional
+					/>
+					<Form.Button class="w-fit min-w-24">Submit</Form.Button>
+				</form>
+			</ButtonDialog>
+		</div>
+	</section>
+
+	<Section id="team" class="mt-4">
+		<Card.Root class={cn('shadow-none', hasServices ? 'w-fit' : 'w-[450px]')}>
+			<Card.Header>
+				<Card.Title class="tracking-normal">CF Team</Card.Title>
+				{#if !hasServices}
+					<Card.Description
+						><p class="text-balance">Make sure you add yourself first.</p></Card.Description
+					>
+				{/if}
+			</Card.Header>
+			<Card.Content class="min-h-[160px] flex">
+				{#if hasServices}
+					<Table.Root class="w-[653px]">
+						<Table.Header>
 							<Table.Row>
-								<Table.Cell>
-									<div class="flex items-center gap-2">
-										<UserAvatar username={service.cf_username} class="size-8" imageClass="size-5" />
-										<a href="/cf/{service.cf_username}" class="text-inherit"
-											>{service.cf_username}</a
-										>
-									</div>
-								</Table.Cell>
-								<Table.Cell>{service.role}</Table.Cell>
-								<Table.Cell class={service.start_date ? '' : 'text-muted-foreground'}
-									>{startDate}</Table.Cell
-								>
-								<Table.Cell class={service.end_date ? '' : 'text-muted-foreground'}
-									>{endDate}</Table.Cell
-								>
-								<Table.Cell>
-									<div class="flex items-center gap-4 pr-6">
-										<ServiceActionItem
-											{service}
-											contractId={data.contract.id}
-											updateForm={data.serviceForm}
-											deleteForm={data.deleteForm}
-										/>
-									</div>
-								</Table.Cell>
+								<Table.Head class="font-semibold min-w-[100px] ">Person</Table.Head>
+								<Table.Head class="font-semibold min-w-[100px]">Role</Table.Head>
+								<Table.Head class="font-semibold min-w-[120px]">Start Date</Table.Head>
+								<Table.Head class="font-semibold min-w-[120px]">End Date</Table.Head>
+								<Table.Head class="font-semibold w-[90px] flex-grow-0"></Table.Head>
 							</Table.Row>
-						{/each}
-					</Table.Body>
-				</Table.Root>
-			{:else}
-				<ButtonDialog
-					buttonVariant="default"
-					buttonText="Add Member"
-					dialogTitle="Add Member"
-					buttonClass="w-fit m-auto"
-					bind:open={newServiceModal}
-				>
-					<ServiceForm
-						data={data.serviceForm}
-						cfUsers={data.cfUsers}
-						contractId={data.contract.id}
-						onUpdated={({ form }) => form.valid && (newServiceModal = false)}
-					/>
-				</ButtonDialog>
+						</Table.Header>
+						<Table.Body>
+							{#each data.contract.services.sort(orderByRoleUsername) as service}
+								{@const { startDate, endDate } = formatDates({ service, contract: data.contract })}
+								<Table.Row>
+									<Table.Cell>
+										<div class="flex items-center gap-2">
+											<UserAvatar
+												username={service.cf_username}
+												class="size-8"
+												imageClass="size-5"
+											/>
+											<a href="/cf/{service.cf_username}" class="text-inherit"
+												>{service.cf_username}</a
+											>
+										</div>
+									</Table.Cell>
+									<Table.Cell>{service.role}</Table.Cell>
+									<Table.Cell class={service.start_date ? '' : 'text-muted-foreground'}
+										>{startDate}</Table.Cell
+									>
+									<Table.Cell class={service.end_date ? '' : 'text-muted-foreground'}
+										>{endDate}</Table.Cell
+									>
+									<Table.Cell>
+										<div class="flex items-center gap-4 pr-6">
+											<ServiceActionItem
+												{service}
+												contractId={data.contract.id}
+												updateForm={data.serviceForm}
+												deleteForm={data.deleteForm}
+											/>
+										</div>
+									</Table.Cell>
+								</Table.Row>
+							{/each}
+						</Table.Body>
+					</Table.Root>
+				{:else}
+					<ButtonDialog
+						buttonVariant="default"
+						buttonText="Add Member"
+						dialogTitle="Add Member"
+						buttonClass="w-fit m-auto"
+						bind:open={newServiceModal}
+					>
+						<ServiceForm
+							data={data.serviceForm}
+							cfUsers={data.cfUsers}
+							contractId={data.contract.id}
+							onUpdated={({ form }) => form.valid && (newServiceModal = false)}
+						/>
+					</ButtonDialog>
+				{/if}
+			</Card.Content>
+			{#if hasServices}
+				<Card.Footer>
+					<ButtonDialog
+						buttonVariant="outline"
+						buttonText="Add Member"
+						dialogTitle="Add Member"
+						buttonClass="w-fit mt-2"
+						bind:open={newServiceModal}
+					>
+						<ServiceForm
+							data={data.serviceForm}
+							cfUsers={data.cfUsers}
+							contractId={data.contract.id}
+							onUpdated={({ form }) => form.valid && (newServiceModal = false)}
+						/>
+					</ButtonDialog>
+				</Card.Footer>
 			{/if}
-		</Card.Content>
-		{#if hasServices}
-			<Card.Footer>
-				<ButtonDialog
-					buttonVariant="outline"
-					buttonText="Add Member"
-					dialogTitle="Add Member"
-					buttonClass="w-fit mt-2"
-					bind:open={newServiceModal}
-				>
-					<ServiceForm
-						data={data.serviceForm}
-						cfUsers={data.cfUsers}
-						contractId={data.contract.id}
-						onUpdated={({ form }) => form.valid && (newServiceModal = false)}
-					/>
-				</ButtonDialog>
-			</Card.Footer>
-		{/if}
-	</Card.Root>
-</Section>
+		</Card.Root>
+	</Section>
 
-<Section id="delete" class="mt-auto">
-	<ButtonDialog
-		buttonText="Delete Contract"
-		buttonVariant="destructive"
-		buttonClass="w-fit"
-		dialogTitle="Delete this contract?"
-		contentClass="pb-2"
-		bind:open={contractDeleteModal}
-	>
-		<p slot="description" class="text-pretty">
-			Deletion is instant and irreversible. It will also cause all the associated applications to be
-			deleted instantly and irreversibly.
-		</p>
-		<DeleteForm
-			data={data.deleteForm}
-			objectId={data.contract.id}
-			action="?/deleteContract"
-			onUpdated={({ form }) => form.valid && (contractDeleteModal = false)}
-			onCancel={() => (contractDeleteModal = false)}
-		/>
-	</ButtonDialog>
-</Section>
+	<Section id="delete" class="mt-auto">
+		<ButtonDialog
+			buttonText="Delete Contract"
+			buttonVariant="destructive"
+			buttonClass="w-fit"
+			dialogTitle="Delete this contract?"
+			contentClass="pb-2"
+			bind:open={contractDeleteModal}
+		>
+			<p slot="description" class="text-pretty">
+				Deletion is instant and irreversible. It will also cause all the associated applications to
+				be deleted instantly and irreversibly.
+			</p>
+			<DeleteForm
+				data={data.deleteForm}
+				objectId={data.contract.id}
+				action="?/deleteContract"
+				onUpdated={({ form }) => form.valid && (contractDeleteModal = false)}
+				onCancel={() => (contractDeleteModal = false)}
+			/>
+		</ButtonDialog>
+	</Section>
+</StudentPage.Layout>
