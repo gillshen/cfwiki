@@ -9,7 +9,7 @@
 
 <div class={cn('py-4 top-[60px] bg-transparent z-20', className)}>
 	<Breadcrumb.Root>
-		<Breadcrumb.List>
+		<Breadcrumb.List class="flex-nowrap truncate">
 			{#if includeHome}
 				<Breadcrumb.Item>
 					<Breadcrumb.Link href="/home">Home</Breadcrumb.Link>

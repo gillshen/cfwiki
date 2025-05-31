@@ -21,8 +21,8 @@
 	let deleteModal = false;
 </script>
 
-<ButtonDialog buttonSlot dialogTitle="Update Member Involvement" bind:open={updateModal}>
-	<Pencil class="size-4 text-muted-foreground hover:text-mint-600" slot="button" />
+<ButtonDialog buttonSlot dialogTitle="Update service dates" bind:open={updateModal}>
+	<Pencil class="size-3.5 text-muted-foreground hover:text-primary" slot="button" />
 	<p slot="description">{service.cf_username} &bullet; {service.role}</p>
 	<ServiceForm
 		data={updateForm}
@@ -39,7 +39,7 @@
 	contentClass="pb-2"
 	bind:open={deleteModal}
 >
-	<X class="size-4 text-muted-foreground hover:text-mint-600" slot="button" />
+	<X class="size-3.5 text-muted-foreground hover:text-red-500" slot="button" />
 	<p slot="description" class="text-pretty">
 		Do this only if the member was never assigned to this role in the first place. If they ceased to
 		perform the role, <button

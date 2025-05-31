@@ -69,7 +69,7 @@
 						<div class="flex flex-col gap-4 px-6 mt-2">
 							{#each Object.entries(servicesGrouped) as [username, services]}
 								<a
-									class="flex items-center gap-2 group w-fit hover:no-underline"
+									class="flex items-center gap-3 group w-fit hover:no-underline"
 									href="/cf/{username}"
 								>
 									<UserAvatar {username} class="size-[32px]" imageClass="size-[20px]" />

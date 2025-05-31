@@ -41,7 +41,7 @@
 			<Button
 				variant="outline"
 				href="/home"
-				class="text-primary font-medium hover:no-underline mr-12">Home</Button
+				class="text-primary font-medium hover:no-underline mr-6">Home</Button
 			>
 
 			<DropdownMenu.Root>
@@ -63,6 +63,49 @@
 								/>
 							</div>
 						{/each}
+					</DropdownMenu.Group>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger asChild let:builder>
+					<Button variant="ghost" builders={[builder]}>Institutions</Button>
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content class="min-w-[200px]" transitionConfig={{ duration: 200 }}>
+					<DropdownMenu.Group class="flex flex-col">
+						<DropdownMenu.Label class="px-3 py-1.5">Schools</DropdownMenu.Label>
+						<DropdownMenu.Item
+							href="/school/index/#universities"
+							class="text-inherit hover:no-underline px-3 py-1.5">Universities</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/school/index/#secondary-schools"
+							class="text-inherit hover:no-underline px-3 py-1.5"
+							>Secondary Schools</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/school/index/#other-institutions"
+							class="text-inherit hover:no-underline px-3 py-1.5"
+							>Other Institutions</DropdownMenu.Item
+						>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item disabled class=" px-3 py-1.5">School Rankings</DropdownMenu.Item>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Label class=" px-3 py-1.5">Programs</DropdownMenu.Label>
+						<DropdownMenu.Item
+							href="/program/index/#ug-freshman"
+							class="text-inherit hover:no-underline px-3 py-1.5">Undergraduate</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/program/index/#masters"
+							class="text-inherit hover:no-underline px-3 py-1.5">Graduate</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							href="/program/index/#non-degree"
+							class="text-inherit hover:no-underline px-3 py-1.5">Non-degree</DropdownMenu.Item
+						>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item disabled class=" px-3 py-1.5">Program Collections</DropdownMenu.Item>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
@@ -195,49 +238,6 @@
 							class="text-inherit hover:no-underline px-3 py-1.5"
 							>All Applications</DropdownMenu.Item
 						>
-					</DropdownMenu.Group>
-				</DropdownMenu.Content>
-			</DropdownMenu.Root>
-
-			<DropdownMenu.Root>
-				<DropdownMenu.Trigger asChild let:builder>
-					<Button variant="ghost" builders={[builder]}>Institutions</Button>
-				</DropdownMenu.Trigger>
-				<DropdownMenu.Content class="min-w-[200px]" transitionConfig={{ duration: 200 }}>
-					<DropdownMenu.Group class="flex flex-col">
-						<DropdownMenu.Label class="px-3 py-1.5">Schools</DropdownMenu.Label>
-						<DropdownMenu.Item
-							href="/school/index/#universities"
-							class="text-inherit hover:no-underline px-3 py-1.5">Universities</DropdownMenu.Item
-						>
-						<DropdownMenu.Item
-							href="/school/index/#secondary-schools"
-							class="text-inherit hover:no-underline px-3 py-1.5"
-							>Secondary Schools</DropdownMenu.Item
-						>
-						<DropdownMenu.Item
-							href="/school/index/#other-institutions"
-							class="text-inherit hover:no-underline px-3 py-1.5"
-							>Other Institutions</DropdownMenu.Item
-						>
-						<DropdownMenu.Separator />
-						<DropdownMenu.Item disabled class=" px-3 py-1.5">School Rankings</DropdownMenu.Item>
-						<DropdownMenu.Separator />
-						<DropdownMenu.Label class=" px-3 py-1.5">Programs</DropdownMenu.Label>
-						<DropdownMenu.Item
-							href="/program/index/#ug-freshman"
-							class="text-inherit hover:no-underline px-3 py-1.5">Undergraduate</DropdownMenu.Item
-						>
-						<DropdownMenu.Item
-							href="/program/index/#masters"
-							class="text-inherit hover:no-underline px-3 py-1.5">Graduate</DropdownMenu.Item
-						>
-						<DropdownMenu.Item
-							href="/program/index/#non-degree"
-							class="text-inherit hover:no-underline px-3 py-1.5">Non-degree</DropdownMenu.Item
-						>
-						<DropdownMenu.Separator />
-						<DropdownMenu.Item disabled class=" px-3 py-1.5">Program Collections</DropdownMenu.Item>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>

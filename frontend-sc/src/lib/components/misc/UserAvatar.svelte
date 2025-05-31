@@ -13,7 +13,7 @@
 		$page.data.cfUsers.find((user: CfUserListItem) => user.username === username)?.avatar;
 </script>
 
-<Avatar.Root class={cn('-translate-x-1 flex bg-muted', className)}>
+<Avatar.Root class={cn('flex bg-muted border', className)}>
 	<Avatar.Image
 		src={findAvatar(username)}
 		class={cn('size-7 m-auto', imageClass)}

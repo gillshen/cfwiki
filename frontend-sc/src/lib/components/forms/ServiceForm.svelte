@@ -68,18 +68,16 @@
 	<Input
 		{form}
 		name="start_date"
-		label="Start date"
+		label="Start date, if after start of contract"
 		type="date"
-		description="If same as contract start date, leave blank"
 		optional
 	/>
 
 	<Input
 		{form}
 		name="end_date"
-		label="End date"
+		label="End date, if prior to end of contract"
 		type="date"
-		description="If same as contract end date, leave blank"
 		optional
 	/>
 

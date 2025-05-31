@@ -73,8 +73,7 @@
 			<Combobox {form} name="type" label="Type" items={[...CONTRACT_TYPES]} />
 			<Combobox {form} name="target_year" label="Target year" items={activeYears()} />
 			<RadioGroup {form} name="status" label="Status" items={[...CONTRACT_STATUSES]} />
-			<!-- <Combobox {form} name="status" label="Status" items={[...CONTRACT_STATUSES]} /> -->
-			<Input {form} name="date" label="Date signed" type="date" class="pb-0.5" optional />
+			<Input {form} name="date" label="Effective date" type="date" class="pb-0.5" optional />
 			<Combobox
 				{form}
 				name="student_progression_when_signed"

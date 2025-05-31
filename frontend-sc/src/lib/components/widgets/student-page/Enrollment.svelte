@@ -60,7 +60,7 @@
 								class="mt-4 mb-2 px-4 pt-2 py-2 rounded-lg border border-secondary shadow-sm relative"
 							>
 								<div class="py-1 pl-1 pr-2 absolute -top-[16px] -left-1 bg-white flex items-center">
-									<NotebookPen class="size-3.5 mr-1.5" />Grades
+									<NotebookPen class="size-3.5 mr-1.5" />GPA
 								</div>
 								<Table.Root>
 									<Table.Body>
