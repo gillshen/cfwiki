@@ -3,7 +3,11 @@
 	import * as Form from '$lib/components/ui/form/index';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import Receipt from 'lucide-svelte/icons/receipt';
+	import FileType from 'lucide-svelte/icons/file-type';
+	import Crosshair from 'lucide-svelte/icons/crosshair';
+	import CalendarDays from 'lucide-svelte/icons/calendar-days';
+	import CalendarClock from 'lucide-svelte/icons/calendar-clock';
+	import Clock from 'lucide-svelte/icons/clock';
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import Users from 'lucide-svelte/icons/users';
 	import Plus from 'lucide-svelte/icons/plus';
@@ -20,6 +24,7 @@
 	import { CONTRACT_STATUSES } from '$lib/api/contract';
 	import { createTitle } from '$lib/util/siteUtils';
 	import { orderByRoleUsername } from '$lib/util/serviceUtils';
+	import { toShortDate } from '$lib/util/dateUtils';
 
 	import {
 		allProgsWithContractTerms,
@@ -73,32 +78,50 @@
 		</Breadcrumb.Item>
 		<Breadcrumb.Separator />
 		<Breadcrumb.Item>
-			<Breadcrumb.Page class="inline-flex items-center"
-				><Receipt class="size-3.5 mr-1.5" />{data.contract.type}</Breadcrumb.Page
+			<Breadcrumb.Page class="inline-flex items-center">Contract {data.contract.id}</Breadcrumb.Page
 			>
 		</Breadcrumb.Item>
 	</svelte:fragment>
 
 	<StudentPage.Header student={data.student} slot="header" />
 
+	<section class="flex flex-col gap-4 text-sm grow-0 shrink-0" slot="aside">
+		<StudentPage.Field icon={FileType} key="Type" value={data.contract.type} />
+
+		<StudentPage.Field
+			icon={Crosshair}
+			key="Target Year"
+			value={data.contract.target_year.toString()}
+		/>
+
+		<StudentPage.Field
+			icon={CalendarDays}
+			key="Effective Date"
+			value={toShortDate(data.contract.date)}
+		/>
+
+		<StudentPage.Field
+			icon={CalendarClock}
+			key="Student Progression"
+			value={data.contract.student_progression_when_signed}
+		/>
+
+		<StudentPage.Field icon={Clock} key="Status" value={data.contract.status} />
+	</section>
+
 	<StudentPage.Section title="Update Contract" icon={Pencil} class="mt-[72px]" contentClass="px-12">
 		<form
 			method="POST"
-			class="max-w-prose min-w-[450px] space-y-4 my-4"
+			class="max-w-prose min-w-[450px] space-y-6 my-4"
 			action="?/updateContract"
 			use:contractFormEnhance
 			id="contract-form"
 		>
 			<input type="number" name="id" bind:value={data.contract.id} hidden />
 			<input type="number" name="student" bind:value={data.student.id} hidden />
+			<input name="type" value={data.contract.type} hidden />
+			<input type="number" name="target_year" value={data.contract.target_year} hidden />
 
-			<Input form={contractForm} name="type" label="Type" class="pb-1.5" disabled />
-			<input name="type" bind:value={data.contract.type} hidden />
-
-			<Input form={contractForm} name="target_year" label="Target year" class="pb-1.5" disabled />
-			<input type="number" name="target_year" bind:value={data.contract.target_year} hidden />
-
-			<RadioGroup form={contractForm} name="status" label="Status" items={[...CONTRACT_STATUSES]} />
 			<Input
 				form={contractForm}
 				name="date"
@@ -114,7 +137,8 @@
 				items={progressions}
 				optional
 			/>
-			<Form.Button class="w-fit min-w-24">Save changes</Form.Button>
+			<RadioGroup form={contractForm} name="status" label="Status" items={[...CONTRACT_STATUSES]} />
+			<Form.Button class="w-fit min-w-24">Save Changes</Form.Button>
 		</form>
 	</StudentPage.Section>
 
@@ -166,7 +190,7 @@
 		</ButtonDialog>
 	</StudentPage.Section>
 
-	<StudentPage.Section title="" class="mt-8" contentClass="px-12 py-6">
+	<section class="mt-8 px-12">
 		<ButtonDialog
 			buttonText="Delete Contract"
 			buttonVariant="destructive"
@@ -187,5 +211,5 @@
 				onCancel={() => (contractDeleteModal = false)}
 			/>
 		</ButtonDialog>
-	</StudentPage.Section>
+	</section>
 </StudentPage.Layout>

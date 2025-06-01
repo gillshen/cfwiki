@@ -6,13 +6,12 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import BookOpen from 'lucide-svelte/icons/book-open';
-	import NotebookPen from 'lucide-svelte/icons/notebook-pen';
 	import SquareArrowOutUpRight from 'lucide-svelte/icons/square-arrow-out-up-right';
 
 	import type { EnrollmentByStudent } from '$lib/api/enrollment';
 	import EnrollmentSubhead from './EnrollmentSubhead.svelte';
 	import GradeLabel from '$lib/components/misc/GradeLabel.svelte';
-	import { formatProgression } from '$lib/util/enrollmentUtils';
+	import { formatCurriculum, formatProgression } from '$lib/util/enrollmentUtils';
 
 	export let enrollment: EnrollmentByStudent;
 	export let editable: boolean = false;
@@ -45,27 +44,17 @@
 						<!-- curriculum/major -->
 						{#if enrollment.curriculum}
 							<div class="flex items-center">
-								<BookOpen class="size-3.5 mr-1.5" />
-								{#if enrollment.program_type === 'Secondary School'}
-									Curriculum: {enrollment.curriculum}
-								{:else}
-									Major: {enrollment.curriculum}
-								{/if}
+								<BookOpen class="size-3.5 mr-1.5" />{formatCurriculum(enrollment.curriculum)}
 							</div>
 						{/if}
 
 						<!-- grades -->
 						{#if enrollment.grades.length}
-							<div
-								class="mt-4 mb-2 px-4 pt-2 py-2 rounded-lg border border-secondary shadow-sm relative"
-							>
-								<div class="py-1 pl-1 pr-2 absolute -top-[16px] -left-1 bg-white flex items-center">
-									<NotebookPen class="size-3.5 mr-1.5" />GPA
-								</div>
+							<div class="my-2 px-4 py-2 rounded-lg border border-muted shadow-sm">
 								<Table.Root>
 									<Table.Body>
 										{#each Object.entries(gradesGrouped) as [progression, grades]}
-											<Table.Row class="hover:bg-inherit border-b-0">
+											<Table.Row class="hover:bg-inherit border-b-0 border-muted">
 												<Table.Cell class="pl-4 py-3 font-semibold"
 													>{formatProgression(progression, { shortenYear: false })}</Table.Cell
 												>

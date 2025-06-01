@@ -5,7 +5,7 @@
 
 <section class="ml-[240px] p-4 mb-8 flex items-start">
 	<div
-		class="w-[360px] shrink-0 sticky top-[76px] pl-4 pr-6 pb-4 mr-6 max-h-[calc(100vh-76px)] overflow-auto"
+		class="w-[360px] shrink-0 sticky top-[76px] pl-4 pr-6 mr-6 max-h-[calc(100vh-76px)] overflow-auto"
 	>
 		<BreadcrumbContainer class="static bg-transparent">
 			<Breadcrumb.Item>
@@ -15,7 +15,10 @@
 			<slot name="breadcrumb" />
 		</BreadcrumbContainer>
 
-		<slot name="header" />
+		<div class="flex flex-col gap-4">
+			<slot name="header" />
+			<slot name="aside" />
+		</div>
 	</div>
 
 	<div class="w-full">

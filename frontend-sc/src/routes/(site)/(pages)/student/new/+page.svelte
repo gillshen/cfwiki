@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
+	import FormButton from '$lib/components/ui/form/form-button.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index';
 
 	import BreadcrumbContainer from '$lib/components/containers/BreadcrumbContainer.svelte';
@@ -38,5 +39,6 @@
 		id="student-form"
 	>
 		<StudentForm {form} />
+		<FormButton class="w-fit min-w-24">Submit</FormButton>
 	</form>
 </Section>

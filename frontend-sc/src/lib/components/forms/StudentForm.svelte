@@ -8,10 +8,10 @@
 	import Input from '$lib/components/forms/Input.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
 	import RadioGroup from '$lib/components/forms/RadioGroup.svelte';
-	import { names } from '$lib/constants/fake';
 	import americanStates from '$lib/constants/americanStates';
 	import canadianProvinces from '$lib/constants/canadianProvinces';
 	import chineseProvinces from '$lib/constants/chineseProvinces';
+	import { names } from '$lib/constants/fake';
 
 	import countryFlags, {
 		isCityState,
@@ -73,13 +73,17 @@
 		<Checkbox {...attrs} bind:checked={$formData.surname_first} />
 		<div class="space-y-1 leading-none">
 			<Form.Label>Last name first</Form.Label>
-			<Form.Description class="text-xs">As in a typical Chinese name</Form.Description>
+			<Form.Description class="text-xs"
+				>Display the full name as &ldquo;{$formData.surname_first
+					? `${$formData.surname || fakeName.surname}${$formData.given_name || fakeName.givenName}`
+					: `${$formData.given_name || fakeName.givenName} ${$formData.surname || fakeName.surname}`}&rdquo;</Form.Description
+			>
 		</div>
 		<input name={attrs.name} value={$formData.surname_first} hidden />
 	</Form.Control>
 </Form.Field>
 
-<Input {form} name="preferred_name" label="Preferred name" maxlength={50} optional />
+<Input {form} name="preferred_name" label="Preferred name" maxlength={50} class="pb-0.5" optional />
 
 <RadioGroup
 	{form}
@@ -99,9 +103,8 @@
 <Combobox
 	{form}
 	name="base_country"
-	label="Home country"
+	label="Country of primary residence"
 	items={countryItems}
-	description="Country of primary residence"
 	onSelect={() => {
 		$formData.base_subnational = '';
 		$formData.base_city = '';
@@ -142,5 +145,3 @@
 	description="Anything you want to note about the student"
 	optional
 />
-
-<Form.Button class="w-fit min-w-24">Submit</Form.Button>

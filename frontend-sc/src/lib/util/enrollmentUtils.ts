@@ -81,3 +81,16 @@ export const formatGradeOfProgression = (params: {
 	const lastGrade = grades[grades.length - 1];
 	return formatGrade(lastGrade);
 };
+
+export const formatCurriculum = (curriculum: string): string => {
+	switch (curriculum) {
+		case 'AP':
+			return 'Advanced Placement';
+		case 'IB':
+			return 'International Baccalaureate';
+		case 'A-Level':
+			return 'A-Level';
+		default:
+			return curriculum;
+	}
+};

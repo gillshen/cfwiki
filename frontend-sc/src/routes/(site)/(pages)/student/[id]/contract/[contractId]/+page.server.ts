@@ -30,12 +30,7 @@ export async function load(event) {
 }
 
 export const actions = {
-	updateContract: formAction(contractSchema, createOrUpdateContract, {
-		onSuccess: async ({ event }) => {
-			const id = event!.params.id;
-			throw redirect(303, `/student/${id}`);
-		}
-	}),
+	updateContract: formAction(contractSchema, createOrUpdateContract),
 
 	deleteContract: formAction(deleteSchema, deleteContract, {
 		onSuccess: async ({ event }) => {

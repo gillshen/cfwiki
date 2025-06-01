@@ -102,8 +102,20 @@
 
 	<StudentPage.Header student={data.student} slot="header" />
 
+	<div slot="aside">
+		{#if editMode}
+			<StudentPage.Section title="Personal Info" icon={UserPen} contentClass="min-h-[160px]">
+				<Button variant="link" href="/student/{data.student.id}/update"
+					>Edit personal info<MoveRight class="size-4 ml-2" /></Button
+				>
+			</StudentPage.Section>
+		{:else}
+			<StudentPage.Bio student={data.student} />
+		{/if}
+	</div>
+
 	{#if data.userCanEdit}
-		<div class="w-[600px] mt-[72px] mb-[30px]">
+		<div class="w-[600px] mt-[72px] mb-[27px]">
 			<div class="flex items-center space-x-2 w-fit ml-auto">
 				<Switch id="edit-mode" bind:checked={editMode} />
 				<Label
@@ -115,14 +127,6 @@
 	{/if}
 
 	<div class={cn('flex flex-col gap-8', data.userCanEdit ? 'pt-4' : 'mt-[138px]')}>
-		{#if editMode}
-			<StudentPage.Section title="Personal Info" icon={UserPen}>
-				<Button variant="link" href="/student/{data.student.id}/update"
-					>Edit personal info<MoveRight class="size-4 ml-2" /></Button
-				>
-			</StudentPage.Section>
-		{/if}
-
 		<StudentPage.Section
 			title={data.student.contracts.length > 1 ? 'Contacts' : 'Contract'}
 			icon={Receipt}
